@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% import "csvtable-macros.html" as tbl with context %}
+{% import "base-macros.html" as base with context %}
+
+{#  Macro file_item: 
+    erzeugt einen Listeneintrag in den Fileselector, mit dem die
+    anzuzeigende Tabelle ausgewählt wird
+#}
+{% macro file_item (text, loc) -%}
+  {% if loc.status == "active" %}
+  <a href="#" 
+     class="list-group-item list-group-item-action active" 
+     aria-current="true">
+     {{ text }}
+  </a>
+  {% else %}
+  <a href="{{ url_for ('basic.fadertable', sel=loc.cuelist) }}" 
+     class="list-group-item list-group-item-action">
+    {{ text }}
+  </a>
+  {% endif %}  
+{%- endmacro %}
+
+
+{% block header %}
+  <h2> {% block title %} Fader-Info {% endblock %} </h2>
+{% endblock %}
+
+{% block subtitle %}
+  {{ base.subtitle_with_backbutton (shortname) }}
+{% endblock %}
+
+{% block content %}
+  <!-- Button für modaldialogToPython -->
+  <div id="showCueModal"></div>
+
+  <!-- File-Selector -->
+  <div id="fileselector" > 
+    <div class="list-group mb-4">
+      {# Reihenfolge wie in cuefader.html #}
+      {% set title1 = "Fader im Executer: " ~ locations.exefaders.text %}
+      {{ file_item (title1,locations.exefaders) }}
+
+      {% set title2 = "Zusätzliche Fader: " ~ locations.cuefaders.text %}
+      {{ file_item (title2, locations.cuefaders) }}
+    </div>
+  </div>
+
+  <div id="center">
+    <div id="upload_point"></div>
+    <!-- Tabelle mit Buttons -->
+    {{ tbl.csv_buttons() }}
+    {{ tbl.table() }}
+  </div>
+  <div class="row">
+    <div class="col" id="links"></div>
+    <div class="col" id="rechts"></div>
+  </div>  
+{% endblock %}
+
+{% block javascript %}
+<script>
+  $("document").ready(function() {
+
+    $(".location").click (function () {
+      var txt = $(this).attr ("cuelist");
+      console.log ("click: " + txt);
+    })
+      editableCsvFields ();
+      selectableCsvLines ();
+      // speichern/verwerfen-Buttons
+      csvSavediscardButtons ();
+
+      var location = $("#csvtable").attr ("loc");
+      // cuefaders oder exefaders
+      filedialogToPython (".openButton", "/csv/open", 
+        {"option":"cuefader", "location":location});
+      filedialogToPython (".saveasButton", "/csv/saveas",
+        {"option":"cuefader", "location":location});
+
+      activateUploadCsv ("#upload_point");
+      activateCuedetails ();
+      $("#sessiondata").attr ("history", "/cuefader");
+  }); 
+</script>
+{% endblock %}
+
+
+

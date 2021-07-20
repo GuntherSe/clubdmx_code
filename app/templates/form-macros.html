@@ -1,0 +1,56 @@
+{# Form-Macros #}
+
+{# https://flask.palletsprojects.com/en/1.1.x/patterns/wtforms/ #}
+
+{# Form-Feld allgemein #}
+{% macro render_bs_field(field) %} 
+<div class="form-group row my-1">
+  <label for="{{ field.id }}" 
+         class="col-4 col-form-label">
+         {% if field.description.label %}
+          {{ field.description.label }}
+         {% else %}
+          {{ field.label }}
+         {% endif %}
+  </label>
+  <div class="col-8">
+    {{ field(class="form-control", **kwargs)|safe  }}
+    {% if field.errors %}
+    <ul class=errors>
+      {% for error in field.errors %}
+        <li>{{ error }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </div>
+</div>
+{% endmacro %}
+
+
+{% macro config_header () %} 
+<div class="d-flex justify-content-between">  
+  <div>
+    <h5>
+    Aktuelle Config: <strong> {{ confname }}</strong>
+    </h5>
+  </div>
+  <div>
+    <button type="submit" 
+        class="btn btn-light text-primary" name="submit_button" value="true">
+        speichern
+    </button>
+  </div>
+</div>
+<!-- errors anzeigen -->
+<div>
+{% if configform.errors %}
+<div class="alert alert-danger" role="alert">
+  Fehler
+</div>
+  {% for key, value in configform.errors.items() %}
+    <p class="text-danger">{{ key }}</p>
+  {% endfor %}
+{% endif %}
+</div>
+
+{% endmacro %}

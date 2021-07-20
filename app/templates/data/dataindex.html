@@ -1,0 +1,178 @@
+<!-- data.html -->
+{% extends 'base.html' %}
+
+{% import "index-macros.html" as idx %}
+{% from "form-macros.html" import render_bs_field %}
+{% from "form-macros.html" import config_header with context %}
+
+
+{% block header %} 
+  <h2> {% block title %}Daten Manager{% endblock %} </h2>
+{% endblock %}
+
+{% block subtitle %} {% endblock %}
+
+{% block content %}
+<div id="activetabName" activetab="{{ datatab }}"></div>
+<div class="roomRestoreSource" usbcheck="{{ session['usbcheck'] }}">
+  <!-- für Javascript filedialogToPython -->
+</div>
+
+<div class="container-fluid">
+  <h2 class="text-primary mb-3">Daten in übersichtlichen Bereichen</h2>
+
+  <!-- Einleitung -->
+  <div class="row row-cols-1">
+    <div class="col mb-4">
+      <p>
+        Eine <a href="#data-overview" data-toggle="collapse" class="px-2" > 
+          Übersicht zur Daten-Organisation </a>
+        findest du hier.
+      </p>
+    </div>
+    <!-- help -->
+    <div class="col mb-4 collapse" id="data-overview">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Daten-Organisation</h5>
+          <p class="card-text">
+            Die Benutzerdaten werden in Räumen organisiert. Ein <strong>Raum</strong> ist also die oberste 
+            Hierarchie in der Datenstruktur. Die physische Entsprechung in der realen Welt ist 
+            ein Ort mit Licht-Ausstattung, Verkabelung und passender Hardware-Einrichtung.
+          </p>
+          <p class="card-text">
+            Die nächste Hierarchie-Ebene innerhalb eines Raums ist die <strong>Konfiguration.</strong>
+            Hier wird festgehalten, wie die Hardware mit den Bedienelementen zusammenspielt. Zum Beispiel, welche 
+            DMX-Adressen die Geräte haben (<strong>Patch</strong>), mit welchen Fadern bestimmte Geräte
+            bedient werden etc.
+          </p>
+        </div>
+      </div>
+    </div>
+    <!-- Tabs zur Daten-Organisation -->
+    <ul class="nav nav-tabs" id="dataTab" role="tablist">
+      <li class="nav-item" role="presentation">
+        <a class="nav-link" id="room-tab" data-toggle="tab" href="#room" 
+           role="tab" aria-controls="room" aria-selected="true">Raum</a>
+      </li>
+      <li class="nav-item" role="presentation">
+        <a class="nav-link" id="config-tab" data-toggle="tab" href="#config" 
+           role="tab" aria-controls="config" aria-selected="false">Config</a>
+      </li>
+      <li class="nav-item" role="presentation">
+        <a class="nav-link" id="elements-tab" data-toggle="tab" href="#elements" 
+           role="tab" aria-controls="elements" aria-selected="false">Bedienelemente</a>
+      </li>
+      <li class="nav-item" role="presentation">
+        <a class="nav-link" id="midi-tab" data-toggle="tab" href="#midi" 
+           role="tab" aria-controls="midi" aria-selected="false">Midi</a>
+      </li>
+      <li class="nav-item" role="presentation">
+        <a class="nav-link" id="database-tab" data-toggle="tab" href="#database" 
+           role="tab" aria-controls="database" aria-selected="false">Datenbank</a>
+      </li>
+      {% if current_user.role == "admin" %}
+      <li class="nav-item" role="presentation">
+        <a class="nav-link" id="admin-tab" data-toggle="tab" href="#admin" 
+           role="tab" aria-controls="admin" aria-selected="false">Admin</a>
+      </li>
+      {% endif %}
+    </ul>
+
+    <!-- TAB Content -->
+    <div class="tab-content" id="dataTabContent">
+      <!-- Raum-Tab -->
+      <div class="tab-pane fade show" id="room" role="tabpanel" 
+           aria-labelledby="room-tab">
+        {% include "data/room-tab.html" %}
+      </div>
+
+      <!-- Config-Tab -->
+      <div class="tab-pane fade show" id="config" role="tabpanel" 
+           aria-labelledby="config-tab">
+        {% include "data/config-tab.html" %}
+      </div>
+
+      <!-- Elements-Tab -->
+      <div class="tab-pane fade show" id="elements" role="tabpanel" 
+           aria-labelledby="elements-tab">
+        {% include "data/elements-tab.html" %}
+      </div>
+
+      <!-- Midi-Tab -->
+      <div class="tab-pane fade show" id="midi" role="tabpanel" 
+           aria-labelledby="midi-tab">
+        {% include "data/midi-tab.html" %} 
+      </div>
+
+      <!-- Database-Tab -->
+      <div class="tab-pane fade show" id="database" role="tabpanel" 
+           aria-labelledby="database-tab">
+        {% include "data/database-tab.html" %} 
+      </div>
+
+      <!-- Admin-Tab -->
+      <div class="tab-pane fade show" id="admin" role="tabpanel" 
+           aria-labelledby="admin-tab">
+        {% include "data/admin-tab.html" %} 
+      </div>
+
+    </div>
+  </div>
+
+
+</div>
+{% endblock %}
+
+ 
+{% block javascript %}
+<script>
+
+  var activeTab;
+  $("document").ready(function () {
+
+    filedialogToPython (".roomChange", "/room/change");
+    modaldialogToPython (".roomRename", "/room/rename");
+    filedialogToPython (".roomSaveas", "/room/saveas");
+    modaldialogToPython (".roomNew", "/room/new");
+    filedialogToPython (".roomRemove", "/room/remove");
+    modaldialogToPython (".roomBackup", "/forms/usb/backup");
+    modaldialogToPython (".roomBackupNew", "/forms/usb/backupnew");
+    modaldialogToPython (".userdbBackup", "/forms/usb/dbbackup");
+    modaldialogToPython (".userdbRestore", "/forms/usb/dbrestore");
+    // USB Aktionen 
+    modaldialogToPython (".roomRestore", "/forms/usb/restore"); 
+    filedialogToPython (".roomRestoreSource", "/room/restoresource");
+    // Room Upload aktivieren:
+    activateUploadRoom ("#uploadroom_point");
+
+
+    // Config Buttons:
+    filedialogToPython (".configOpenButton", "/csv/open", {"option":"config"});
+    filedialogToPython (".configSaveasButton", "/csv/saveas", {"option":"config"});
+    modaldialogToPython (".configRenameButton", "/csv/rename", {"option":"config"});
+
+    // aktiven Tab speichern:
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+      activeTab = $(e.target).attr('id');
+      //console.log ( activeTab );
+      $.post ("/dataform/datatab/" + activeTab);
+    });
+
+    // activeTab anzeigen:
+    activeTab = $("#activetabName").attr ("activetab");
+    if (activeTab) {
+      var tabId = "#" + activeTab;
+      $(tabId).tab ("show");
+    };
+
+    // Restore-Verzeichnis auswählen:
+    if ($(".roomRestoreSource").attr ("usbcheck") == "true") {
+      $(".roomRestoreSource").trigger ("click")  ;
+    };
+
+  });
+</script>
+{% endblock %}
+
+

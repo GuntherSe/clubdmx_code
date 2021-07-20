@@ -1,0 +1,283 @@
+
+<!DOCTYPE html>
+
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Grundlagen &#8212; ClubDMX Doku 0.9 Dokumentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/translations.js"></script>
+    <link rel="index" title="Stichwortverzeichnis" href="genindex.html" />
+    <link rel="search" title="Suche" href="search.html" />
+    <link rel="next" title="Entwicklungsschritte" href="history.html" />
+    <link rel="prev" title="Patch" href="patch.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+              <div class="related top">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="patch.html" title="Previous document">Patch</a>
+        </li>
+        <li>
+          <a href="history.html" title="Next document">Entwicklungsschritte</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="grundlagen">
+<h1>Grundlagen<a class="headerlink" href="#grundlagen" title="Link zu dieser Überschrift">¶</a></h1>
+<div class="section" id="dmx">
+<h2>DMX<a class="headerlink" href="#dmx" title="Link zu dieser Überschrift">¶</a></h2>
+<p>Über das DMX-Protokoll können alle möglichen unterschiedlichen Geräte bedient
+werden, zum Beispiel Dimmer, LED-Scheinwerfer, Nebelmaschinen etc. Diese Geräte
+haben ein oder mehrere Attribute, wie Intensität, Farben,
+Position oder Geschwindigkeit.
+Ein Gerät hat eine Startadresse, das ist eine Zahl zwischen 1 und 512.
+So ein Zahlenbereich von 1-512 wird als Universum bezeichnet, was natürlich
+verglichen mit dem realen Universum reichlich übertrieben ist.
+Daher ist es mit dieser Lichttechniker-Definition von Universum möglich,
+dass sich in einem Raum mehrere Universen befinden.</p>
+</div>
+<div class="section" id="hardware">
+<h2>Hardware<a class="headerlink" href="#hardware" title="Link zu dieser Überschrift">¶</a></h2>
+<p>Geräte-Eigenschaften werden mit Attributen beschrieben.
+Diese Beschreibung nennt man Head-Definition.
+In ClubDMX werden Head-Definitionen wie alle anderen Daten in CSV-Tabellen
+gespeichert.</p>
+<p>Ein Gerät im Universum könnte zum Beispiel ein LED-Scheinwerfer mit den
+Farben rot, grün und blau sein. Diese Farben sind die Attribute, die unabhängig
+voneinander in der Intensität verändert werden können.
+In einer simplen Lichtsteuerung erhält jede Farbe einen Regler zugewiesen,
+mit dem dann die Intensität eingestellt wird.
+Wenn ich jetzt aus den drei Farben einen schönen Farbton gemischt habe,
+dann wäre es wünschenswert, wenn ich diesen Farbton nun in der Intensität
+verändern könnte. Das ist mit drei Reglern etwas schwierig, da ich ja
+die drei Regler im richtigen Verhältnis zueinander auf oder ab schieben soll.</p>
+<p>Und hier kommt ein Konzept der Lichttechnik ins Spiel, das sich
+in den letzten Jahren verbreitet hat, nämlich der <em>virtuelle Dimmer</em>.
+Ein virtueller Dimmer ist ein Faktor (zwischen 0 und 1),
+mit dem jeder Farbwert des LED-Scheinwerfers multipliziert wird.
+In der Lichttechnik ist der virtuelle Dimmer nun ebenso ein Regler,
+der zusätzlich zu den Farben des LED-Scheinwerfers zur Verfügung steht.</p>
+</div>
+<div class="section" id="raume-und-config">
+<span id="raum-config-label"></span><h2>Räume und Config<a class="headerlink" href="#raume-und-config" title="Link zu dieser Überschrift">¶</a></h2>
+<p>In ClubDMX werden in einem <em>Raum</em> alle Daten der Datenbank zusammengefasst, die
+für die Steuerung notwendig sind. Das sind unter anderem Konfigurationen,
+Patches, Head-Daten, Cues, Stages, Fadertabellen und Buttontabellen.
+Durch diese Struktur ist es einfach, alle zu einem Projekt gehörenden Daten
+zu sichern und auch, ClubDMX in verschiedenen Anwendungsbereichen zu betreiben.</p>
+<p>Die Aufgabe der Config ist es, für einen Raum die Anforderungen an eine spezielle
+Aufgabe anzupassen, zum Beispiel für eine Aufführung oder eine
+Personengruppe, die einen Veranstaltungsort nützt.</p>
+<p>Besipiele dazu wären, wenn man für einen Club verschiedene Configs für
+Standard- und Session-Bespielung oder für einen Probenraum verschiedene
+Configs für die jeweiligen Nutzer anlegt.</p>
+</div>
+<div class="section" id="bearbeitungsmodus">
+<span id="bearbeitungsmoduslabel"></span><h2>Bearbeitungsmodus<a class="headerlink" href="#bearbeitungsmodus" title="Link zu dieser Überschrift">¶</a></h2>
+<p>Wie aus anderen Tabellenkalkulationen bekannt, werden zwei unterschiedliche
+Editiermethoden benötigt: Zellenweises Editieren und Zeilenoprerationen.</p>
+<p>In ClubDMX ist es genauso, daher wird der Begriff des Bearbeitungsmodus
+eingeführt. Das Editieren von Text in Zellen geschieht im Modus <em>EDIT</em>,
+Zeilenoperationen wie Ausschneiden, Kopieren und Einfügen geschieht im
+Modus <em>SELECT</em>.</p>
+<p>Auf der <strong>Stage</strong>-Seite hat der Modus <em>SELECT</em> eine weitere Aufgabe:
+In diesem Modus werden Symbole selektiert,
+die dann in der Größe verändert und verschoben
+werden können. Für die selektierten <em>Heads</em> werden Attribut-Slider
+angezeigt, mit denen die Attribute verändert werden können.</p>
+</div>
+<div class="section" id="htp-und-ltp">
+<span id="htpltplabel"></span><h2>HTP und LTP<a class="headerlink" href="#htp-und-ltp" title="Link zu dieser Überschrift">¶</a></h2>
+<p>Zu Zeiten, als in der Theaterbeleuchtung außer Dimmern bestenfalls noch
+ansteuerbare Schalter zu finden waren, gab es eine klare Regelung: Wenn
+ein Dimmer von einem Regler in einem bestimmten Wert angefordert wurde
+und von einem anderen Regler in einem anderen Wert, so galt der höhere Wert.</p>
+<p>In Zeiten von Moving Lights, Farbwechslern und Equipment, das andere
+Parameter als Intensität kennt, ist diese einfache Regel nicht mehr ausreichend.</p>
+<p>Ein einfaches Beispiel: Wird die Position eines Moving Light mit zwei Werten
+für die
+x- und die y-Achse beschrieben, so definiert zum Beispiel Szene 1 die Position
+als 50% für x und 50% für y. Wenn nun in einer nachfolgenden Szene 10% für x und
+90% für y angefordert wird, dann eräbe sich nach der „höchsten-Wert-Regel“ als
+Kombination der beiden Szenen ein x-Wert von 50% und ein y-Wert von 90%. Das
+entspricht dann keiner der beiden Szenen und ist als Ergebnis völlig
+unbrauchbar.</p>
+<p>Daher braucht es für solche Attribute wie Position eine andere Regel. Diese
+ist ebenso simpel wie die Regel „der höchste Wert gilt“, die Regel lautet:
+Der letzte Wert gilt.</p>
+<p>In der englischsprachigen Welt gibt es natürlich auch Überlegungen
+diesbezüglich, und als Resultat davon haben sich bei uns auch die
+englischen Abkürzungen für diese Regeln zur Beschreibung durchgesetzt:
+HTP und LTP.</p>
+<p>HTP bedeutet <strong>highest takes precedence</strong>, LTP steht für
+<strong>latest takes precedence</strong>.</p>
+<p>Als Zusammenfassung dieser beiden Regeln kann für die zeitgemäße Lichtsteuerung
+gesagt werden, dass die Intensität nach der HTP-Regel und alle anderen
+Attribute nach der LTP-Regel gesteuert werden.</p>
+<p>Die Ausnahme von dieser Aussage
+bilden die RGB-Farben eines LED-Scheinwerfers, bei dem die Farben rot, grün und
+blau entweder als eigenständige Intensitäten und somit gemäß HTP-Regel oder als
+kombinierter Farbwert und damit gemäß LTP-Regel behandelt werden. Wie RGB-Werte
+gesteuert werden, hängt von den Präferenzen des Lichttechnikers ab und die
+beste Methode ist von der jeweiligen Situation abhängig.</p>
+<p>Siehe: <a class="reference external" href="http://www.thedmxwiki.com/dmx_basics/ltp_and_htp">http://www.thedmxwiki.com/dmx_basics/ltp_and_htp</a></p>
+</div>
+<div class="section" id="topcue">
+<span id="topcuelabel"></span><h2>Topcue<a class="headerlink" href="#topcue" title="Link zu dieser Überschrift">¶</a></h2>
+<p>Hinter dem Begriff <strong>Topcue</strong> steht eine simple Idee: Das ist der Speicher
+der Werte, die neu programmiert oder verändert wurden. Diese Werte sollen
+aktuell gültig sein und es soll auch eine Speicherung in einem neuen Cue oder
+eine Änderung eines vorhandenen Cues ermöglichen.</p>
+<p>Der Topcue ist eine Lichtszene (<strong>Cue</strong>), die aber nicht gemäß HTP-Regel
+behandelt wird. Für diese Szene gilt, dass jeder hier enthaltene Wert
+Vorrang (= Top-Priorität) hat. Somit kann ein aus der Summe der aktiven
+Szenen errechneter Wert außer Kraft und durch einen anderen Wert ersetzt
+werden.</p>
+<p>Es gibt verschiedene Möglichkeiten, damit Werte in den Topcue gelangen:</p>
+<ul class="simple">
+<li><p>Attribute werden im Single-Modus verändert.</p></li>
+<li><p>In der Stage werden Geräte ausgewählt und es werden Attribute
+verändert.</p></li>
+<li><p>Ein Cue wird mit dem <em>Topcue-Button</em> in den Topcue aufgenommen.</p></li>
+</ul>
+<img alt="_images/topcue1.jpg" src="_images/topcue1.jpg" />
+<p>Sind Werte im Topcue enthalten, dann erscheint unterhalb der
+Standard-Navigationsleiste
+eine zweite Navigationsleiste mit den Optionen <strong>leeren, anzeigen und speichern</strong>.</p>
+<p>Mit <em>leeren</em> wird der Topcue gelöscht und es gelten wieder die errechneten Werte
+für alle Geräte.</p>
+<p>Mit <em>anzeigen</em> wird der Inhalt des Topcue in einer Liste dargestellt.</p>
+<p>Der Button <em>speichern</em> eröffnet weitere Möglichkeiten: Die Werte des Topcue
+können als neuer Cue, als Fader oder als Button abgespeichert werden.</p>
+<img alt="_images/topcue2.jpg" src="_images/topcue2.jpg" />
+</div>
+</div>
+
+
+          </div>
+              <div class="related bottom">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="patch.html" title="Previous document">Patch</a>
+        </li>
+        <li>
+          <a href="history.html" title="Next document">Entwicklungsschritte</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="inhalt.html">ClubDMX Doku</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Inhalt:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="readme.html">README</a></li>
+<li class="toctree-l1"><a class="reference internal" href="features.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="erste_schritte.html">Erste Schritte</a></li>
+<li class="toctree-l1"><a class="reference internal" href="einrichten.html">Einrichtung</a></li>
+<li class="toctree-l1"><a class="reference internal" href="navigation.html">Navigation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="benutzer.html">Benutzer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="patch.html">Patch</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Grundlagen</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#dmx">DMX</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#hardware">Hardware</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#raume-und-config">Räume und Config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bearbeitungsmodus">Bearbeitungsmodus</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#htp-und-ltp">HTP und LTP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#topcue">Topcue</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">Entwicklungsschritte</a></li>
+<li class="toctree-l1"><a class="reference internal" href="impressum.html">Impressum</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="inhalt.html">Documentation overview</a><ul>
+      <li>Previous: <a href="patch.html" title="vorheriges Kapitel">Patch</a></li>
+      <li>Next: <a href="history.html" title="nächstes Kapitel">Entwicklungsschritte</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Schnellsuche</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Los" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Gunther Seiser.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.4.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/grundlagen.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

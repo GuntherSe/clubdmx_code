@@ -1,0 +1,340 @@
+
+<!DOCTYPE html>
+
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Entwicklungsschritte &#8212; ClubDMX Doku 0.9 Dokumentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/translations.js"></script>
+    <link rel="index" title="Stichwortverzeichnis" href="genindex.html" />
+    <link rel="search" title="Suche" href="search.html" />
+    <link rel="next" title="Impressum" href="impressum.html" />
+    <link rel="prev" title="Raspberry einrichten" href="raspberry.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+              <div class="related top">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="raspberry.html" title="Previous document">Raspberry einrichten</a>
+        </li>
+        <li>
+          <a href="impressum.html" title="Next document">Impressum</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="entwicklungsschritte">
+<span id="history-label"></span><h1>Entwicklungsschritte<a class="headerlink" href="#entwicklungsschritte" title="Link zu dieser Überschrift">¶</a></h1>
+<p>Die Idee zur Programmierung einer Lichtsteuerung trage ich schon lange Zeit
+mit mir herum. Meine erste Software zur Lichtsteuerung stammt aus 1990-2000,
+sie habe ich für meine Projekte als Lichttechniker auch gleich im Einstz
+erproben können.</p>
+<p>Hier gab es eine Software in C, die für eine Einzel-Anfertigung eines
+Lichtpultes entwickelt wurde. Der Entwickler der Hardware Günter Humpel
+lebt leider nicht mehr, ich möchte ihm hier an dieser Stelle meine
+große Wertschätzung für seine Genialität ausdrücken.</p>
+<p>Die Idee zu einer neuen Sotware schlummert seit dem Umstieg auf
+kommerzielle Lichtpulte, diverse Versuche zur Realisierung verliefen
+ohne Erfolg.</p>
+<p>Als wesentlichen Zwischenschritt zur Entwicklung einer selbständigen
+Software kann das Projekt <strong>olaremote</strong> bezeichnet werden, für das ich
+erstmals Python und
+<a class="reference external" href="https://www.openlighting.org/">Open Lighting Architecture</a>
+zur Fernsteuerung von Beleuchtung eingesetzt habe.</p>
+<p>Der entscheidende Impuls zu <strong>ClubDMX</strong> kam von Paco Gonzalez-Rivero beim
+Gespräch während einer Weihnachtsfeier. Paco überzeugte mich, dass
+zeitgemäße Software ein Web-Interface zur Benutzerkontrolle haben muss.
+Damit ist die Unabhängigkeit von Betriebssystemen und eine
+breite Palette an Möglichkeiten für die Benutzer gegeben, ohne auf
+spezifische, für ein Betriebssystem zugeschnittene Einzellösungen
+gebunden zu sein.
+So entstand die Idee einer simplen Lichtsteuerung mit Web-Interface
+bei einem Smalltalk auf einer Weihnachtsfeier.</p>
+<div class="section" id="erste-idee">
+<h2>Erste Idee<a class="headerlink" href="#erste-idee" title="Link zu dieser Überschrift">¶</a></h2>
+<p>Die erste Idee war, Software-Fader für Lichtszenen zu programmieren.
+Das ist die Grundidee: Lichtszenen in Kombination mit einer
+Browser-Steuerung.</p>
+<p>Dazu braucht es einiges an Vorbereitung.</p>
+<ul>
+<li><p>Wie werden die Daten gespeichert, Datenbank?</p>
+<p>Ich habe mich für die Verwendung von CSV-Tabellen entschieden, um möglicht
+unabhängig von Betriebssystem-Vorgaben zu sein. Hier war das Thema zu
+lösen, wie gegebenenfalls Änderungen rückgängig gemacht werden können.</p>
+</li>
+<li><p>Klassische Lichttechnik arbeitet nach dem Prinzip der Kanal-Steuerung.
+Zeitgemäße Lichttechnik hat mehr zu bieten, hier gibt es
+unterschiedliche Möglichkeiten für unteschiedliche Geräte. Das
+bedeutet einen erhöhten Level beim Einstieg in die Programmierung,
+es braucht einen Patch, eine Unterscheidung zwischen HTP- und LTP-Attributen
+und einige andere Konzepte mehr.</p>
+<p>Ich wähle den spannenderen Weg und entscheide mich für die zeitgemäße
+Umsetzung der Steuerung.</p>
+</li>
+<li><p>Welche Programmiersprache(n), welche Tools?</p>
+<p>Hier sind einige Stichworte für meine Entscheidungen:
+Visual Studio Code als Programmieroberfläche.
+Python und Flask für die Grundlagen und die HTML-Seiten.
+Jinja2 für die HTML-Templates.
+Javascript und Jquery.
+Bootstrap für das Design.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="die-entwicklungsschritte">
+<h2>Die Entwicklungsschritte<a class="headerlink" href="#die-entwicklungsschritte" title="Link zu dieser Überschrift">¶</a></h2>
+<ul>
+<li><p>Version 0.1</p>
+<p>Der Grundstein ist gelegt: Es gibt eine Patch als Kernstück. Hier
+wird die Hardware in die Software eingebunden.
+Und es gibt eine fixe Anzahl von 10 Lichtstimmungen, die über
+Fader gesteuert werden können. Alle Daten zu Patch, Heads (= Geräte) und
+Cues (= Lichtstimmungen) werden in CSV-Dateien geschrieben, da dies ein
+Datenformat ist, das auf jedem Betriebssystem bearbeitbar ist.</p>
+<p>Das Konzept der virtuellen Dimmer existiert bereits jetzt: Für LED Geräte
+gibt es eine Trennung zwischen Intensität und Farbe.</p>
+</li>
+<li><p>Version 0.2</p>
+<p>Die Anpassung an verschiedene Bedürfnisse wird wesentliches Thema.
+Das heißt:</p>
+<ul class="simple">
+<li><p>eine erste Variante von Configurationsdatei entsteht.</p></li>
+<li><p>Die Anzeige der CSV-Tabellen und deren Editierbarkeit werden
+überarbeitet.</p></li>
+<li><p>Die Web-Funktionen befinden sich allesamt in einer immer länger
+werdenden Datei.</p></li>
+</ul>
+</li>
+<li><p>Version 0.3</p>
+<p>Die Datenbankstruktur wird einheitlich und damit universeller. Jede
+Kategorie an Daten erhät ein eigenes Verzeichnis. Die Anzahl der Cues ist
+konfigurierar und nicht mehr auf 10 beschränkt. Damit ist der Grundstein
+für eine modulare Struktur gelegt, allerdings wird die Datei mit den
+Web-Funktionen zu einem Monster, weil mir die Infos zur
+Strukturierung fehlen. In dieser Programmstruktur ist das Limit erreicht.</p>
+<p>Messages: Die Rückmeldungen der Software werden überarbeitet und
+einheitlicher.</p>
+</li>
+<li><p>Version 0.4</p>
+<p>Sehr wichtige Neuerungen:</p>
+<ul>
+<li><p>Die Stage</p>
+<p>Damit ist eine erste Geräte Einzelsteuerung geschaffen. Auf der
+Stage-Fläche können Symbole, die für Geräte (Heads) oder Text stehen,
+platziert werden.</p>
+</li>
+<li><p>Neue Programmstruktur: Die Webseiten werden in Module aufgeteilt.</p>
+<p>Für die Benutzer zwar nicht relevant, aber mit dieser Struktur werden
+viele Überschneidungen und Nebeneffekte vermieden.</p>
+</li>
+<li><p>Neues Datenkonzept: Alle Daten werden in einem <strong>Projekt</strong>
+zusammengefasst. Diese Zusammenfassung ermöglicht das Wechseln in
+verschiedene Einheiten von Datenbanken.</p></li>
+</ul>
+</li>
+<li><p>Version 0.5</p>
+<p>Aus dem <strong>Projekt</strong> wird der <strong>Raum</strong>. Dieser Begriff ist verständlicher
+und beschreibt besser, worauf die Datenstruktur abzielt. In einem Raum
+können mehrere <strong>Konfigurationen</strong> abgespeichert werden, die sich die
+Datenbanken teilen, wie Cues, Stage, Patch etc.</p>
+<p>Der <strong>Raum</strong> wird mit Environment-Vaiable vor Start der App bestimmt.
+Ein Wechsel des Raums ist noch nicht implementiert.</p>
+<p>Für die Tabellen gibt es erweiterte Editierfunktionen: Zelleneditor und
+Zeilenselektion. Mittels Selektion können Zeilen mit copy/paste
+ausgeschnitten und vervielfältigt werden.</p>
+</li>
+<li><p>Version 0.6</p>
+<p>Die in dieser Version wichtigste Neuerung ist das Login, damit sind die
+Webseiten und die Steuerung vor unbefugtem Zugriff geschützt.</p>
+<p>Eine weitere Neuerung ist die Midi-Steuerung. Die Cues können mit einem
+Midi-Faderboard (Korg nanoKontrol 1 oder 2) geregelt werden.</p>
+<p>Neben der Stage-Seite gibt es nun auch eine Stage-Kompakt Seite, die
+für die Verwendung von kleinen Touch-Bildschirmen konzipiert ist. Da
+Selektion und Verschieben nicht verträglich mit Seite-Verschieben ist,
+braucht es diese Möglichkeit.</p>
+<p>Neu hinzu kommen auch Buttons: Mit Buttons können Cues zeitabhängig
+ein- und ausgefadet werden.</p>
+</li>
+<li><p>Version 0.7</p>
+<p>Ab nun ist eine erweiterte Raum-Bedienung möglich: Das Wechseln des
+Raums, Backup und Restore auf USB-Stick. Diese USB-Funktionen arbeiten
+plattformübergreifend auf Windows und Linux.</p>
+<p>Das Editieren der Konfiguration wird wesentlich erleichtert: Es geht nun
+in einem Formular, wo für jedes Feld die entsprechenden Optionen
+ausgewählt werden können.</p>
+<p>Eine neue Stage-Ansicht kommt hinzu: Der Single-Modus. Hier können die
+Attribute aller Geräte einfach bedient werden, die geänderten
+Attribute sind im <a class="reference internal" href="grundlagen.html#topcuelabel"><span class="std std-ref">Topcue</span></a> und können so abgespeichert werden.</p>
+</li>
+<li><p>Version 0.8</p>
+<p>Hier kommen wieder einige neue Funktionen dazu.</p>
+<ul class="simple">
+<li><p>Es gibt eine Demo-Version auf &lt;<a class="reference external" href="https://guntherseiser.pythonanywhere.com">https://guntherseiser.pythonanywhere.com</a>&gt;</p></li>
+<li><p>Änderungen in Fadern, Buttons und der Stage werden auf allen
+offenen Browser-Fenstern aktualisiert.</p></li>
+<li><p>Es gibt eine neue Seite, die den DMX-Output anzeigt und regelmäßig
+aktualisiert</p></li>
+<li><p>Es gibt eine eigene Seite für die Dokumentation.</p></li>
+<li><p>Die Benutzer-Rollen werden detailliert unterschieden. Somit haben die
+Benutzer entsprechend ihrer Rolle unterschiedliche Möglichkeiten
+zur Interaktion und bekommen auch unterschiedliche Webseiten zur
+Ansicht. Siehe <a class="reference internal" href="benutzer.html#benutzer-label"><span class="std std-ref">Benutzer</span></a> .</p></li>
+<li><p>Die Seite zum Benutzer-Management wird überarbeitet.</p></li>
+<li><p>Das Speichern des Topcue wird vereinfacht. Nun kann der Topcue
+als Fader oder Button abgespeichert werden.</p></li>
+<li><p>Die Raum-Sicherung wird erweitert um upload/download.</p></li>
+</ul>
+</li>
+<li><p>Version 0.9</p>
+<p>Diverse Vereinfachungen beim Benutzen, zum Beispiel Auswahlfelder und
+Inhalts-Überprüfung beim Editieren der Felder in der
+Datenbank.</p>
+<p>Neue Funktionen:</p>
+<ul class="simple">
+<li><p>Buttons mit verschiedenen Aufgaben: Schalter, Taster, Auswahlschalter</p></li>
+<li><p>OSC Input</p></li>
+<li><p>In den Seiten Stage, Fader und Button: Einrichtungs-Symbol für
+Sprung zur jeweiligen Setup-Tabelle.</p></li>
+<li><p>Raum-Management: umbenennen, unter anderem Namen sichern, löschen.</p></li>
+<li><p>Die Exec-Seite beinhaltet Buttons und Fader. Ist die Startseite für den
+Basic-Benutzer.</p></li>
+<li><p>Fader und Buttons müssen nicht zwingend auf der Exec-Seite zu sehen sein,
+sie können auch auf zusätzlichen Seiten platziert werden.</p></li>
+<li><p>Start-Cue: Es kann ein Cue konfiguriert werden, der beim Start von
+ClubDMX ausgeführt wird.</p></li>
+<li><p>Patch-Formular zum Erzeugen mehrerer Heads in einem Schritt.
+siehe <a class="reference internal" href="patch.html#neupatchlabel"><span class="std std-ref">Neuen Patch erstellen</span></a> .</p></li>
+<li><p>Kommandozeilen-Skripte <code class="docutils literal notranslate"><span class="pre">sendosc.sh</span></code> und <code class="docutils literal notranslate"><span class="pre">sendosc.bat</span></code> zum Senden von
+OSC-Befehlen, siehe <a class="reference internal" href="einrichten.html#crontab-label"><span class="std std-ref">Einrichten von zeitabhängiger Steuerung mit Crontab (in Linux)</span></a>.</p></li>
+<li><p>Stage: Geräte-Fader werden in Modal angezeigt, Selektion kann gemeinsam
+verschoben werden.</p></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+              <div class="related bottom">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="raspberry.html" title="Previous document">Raspberry einrichten</a>
+        </li>
+        <li>
+          <a href="impressum.html" title="Next document">Impressum</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="inhalt.html">ClubDMX Doku</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Inhalt:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="readme.html">README</a></li>
+<li class="toctree-l1"><a class="reference internal" href="features.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="erste_schritte.html">Erste Schritte</a></li>
+<li class="toctree-l1"><a class="reference internal" href="einrichten.html">Einrichtung</a></li>
+<li class="toctree-l1"><a class="reference internal" href="navigation.html">Navigation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="benutzer.html">Benutzer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="patch.html">Patch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="grundlagen.html">Grundlagen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="raspberry.html">Raspberry einrichten</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Entwicklungsschritte</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#erste-idee">Erste Idee</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#die-entwicklungsschritte">Die Entwicklungsschritte</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="impressum.html">Impressum</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="inhalt.html">Documentation overview</a><ul>
+      <li>Previous: <a href="raspberry.html" title="vorheriges Kapitel">Raspberry einrichten</a></li>
+      <li>Next: <a href="impressum.html" title="nächstes Kapitel">Impressum</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Schnellsuche</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Los" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Gunther Seiser.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.4.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/history.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

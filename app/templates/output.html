@@ -1,0 +1,60 @@
+<!-- output.html -->
+{% extends 'base.html' %}
+
+{# % import "csvtable-macros.html" as tbl with context % #}
+
+{% block header %}
+  <h2>{% block title %}Output{% endblock %}</h2>
+{% endblock %}
+{% block subtitle %}
+{% endblock %}
+
+{% block css %}
+<style>
+  .mix-element {
+    position: relative; 
+    height: 60px;
+    width: 70px;
+    border: solid;
+    border-width: 1px;
+    border-color: grey;
+  }
+  .universum .mixval{
+    position: absolute;
+    text-align: center;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="center" class="container-fluid">
+  <h4>DMX-Werte:</h4>
+  <div class="shadow p-3 mb-5 rounded">
+    <div id="mixoutput" class="mix-output"></div>
+  </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+  function periodic_mixstatus () {
+    // siehe: https://stackoverflow.com/questions/5052543/how-to-fire-ajax-request-periodically
+    // aktuellen Mix vom Server holen:       
+    $.ajax ({
+      url: "/getinfo/mix", 
+      success: function(data){
+        var mix = $.parseJSON(data);
+        $("#mixoutput").html (mix);
+      },
+      complete: function () {
+        setTimeout (periodic_mixstatus, 1000);
+      }
+    }); // ende $.ajax
+  }
+
+  $("document").ready (function () {
+
+    periodic_mixstatus ();
+  });     // ende document ready
+</script>
+{% endblock %}

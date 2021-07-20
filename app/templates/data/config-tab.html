@@ -1,0 +1,117 @@
+{# Config-Tab #}
+
+{% macro _help_id() -%}
+config-overview
+{%- endmacro %}
+
+<div class="container-fluid">
+  <h4 class="mt-4">Konfiguration</h4>
+  <!-- <p class="mt-4"> Die aktuelle Konfiguration ist <strong>{{ confname }}.</strong> </p> -->
+  <p>
+    Eine <a href="#{{ _help_id() }}" data-toggle="collapse" class="px-2"> 
+      Übersicht zur Konfiguration</a>
+    findest du hier.
+  </p>
+  <!-- help -->
+  <div class="col mb-4 collapse" id="{{ _help_id() }}">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Übersicht zur Konfiguration</h5>
+        <p class="card-text">
+          Die Ausstattung eines Raumes, die verwendete Hardware und die
+          Einrichtung der Bedienelemente werden in einer Konfiguration zusammengefasst.
+        </p>
+        <p class="card-text">
+          Um die Übersicht zu erhöhen, werden die Hardware-Komponenten und die
+          Bedienelemente in verschiedene Registerkarten aufgeteilt. Hier findest du die 
+          Hardware-Komponenten.
+        </p>
+        <p class="card-text">Die Beleuchtungs- und sonstigen Geräte werden durch den
+          <strong>Patch</strong> mit der Software verbunden.
+        </p>
+        <h5 class="card-title">OSC Input</h5>
+        <p class="card-text">
+          Achtung: Änderungen am OSC Input Port werden erst beim nächsten Start
+          von ClubDMX wirksam!
+        </p>
+        <ul class="card-text">
+          <li>Faderlevel: /fader/&lt;Nummer&gt;&nbsp; &lt;Level&gt; </li>
+          <li>Exec-Faderlevel: /exefader/&lt;Nummer&gt;&nbsp; &lt;Level&gt; </li>
+          <li>Button: /button/&lt;Nummer&gt;</li>
+          <li>Exec-Button oben: /exebutton1/&lt;Nummer&gt;</li>
+          <li>Exec-Button unten: /exebutton2/&lt;Nummer&gt;</li>
+          <li>Heads: /head &lt;Attribut&gt;&nbsp; &lt;Head-Nr&gt; &nbsp; &lt;Level&gt; </li>
+          <li>Topcue leeren: /clear</li>  
+        </ul>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Tab-Inhalt -->
+  <div class="row row-cols-1 row-cols-md-2 "> 
+    <div class="col" id="links">
+      <!-- Form -->
+      <div id="configForm">
+        <form action="{{ url_for ('dataform.config') }}"  method="POST" > 
+          <!-- Header -->
+          {{ config_header () }}
+      
+          <!-- Body -->
+          <div id="formBody" class="form-body">
+            {{ render_bs_field (configform.patch )}} 
+    
+            <h5 class="card-title">Hardware:</h5>
+            {{ render_bs_field (configform.ola_ip )}} 
+            {{ render_bs_field (configform.universes )}} 
+
+            <h5 class="card-title">OSC</h5>
+            {% if config.PYTHONANYWHERE == "false" %}
+              {{ render_bs_field (configform.osc_input )}} 
+              {{ render_bs_field (configform.osc_inputport )}} 
+            {% else %}
+              <p class="card-text">
+                OSC Input ist in PythonAnywhere nicht verfügbar.
+              </p>
+            {% endif %}
+
+          </div>
+        </form> 
+      </div>
+    
+    </div>
+  
+    <div class="col" id="rechts">
+      <!-- Config Aktionen-->
+      <div class="card mb-4">
+        <h5 class="card-header">Config Aktionen</h5>
+        <div class="card-body">
+          <nav class="nav flex-column">
+            {{ idx.nav_vertical_js ("Config öffnen", "configOpenButton" )}}
+            {{ idx.nav_vertical_js ("Config umbenennen", "configRenameButton" )}}
+            {{ idx.nav_vertical_js ("Config sichern als...", "configSaveasButton" )}}
+            <h5 class="card-title mt-3">Patch</h5>
+            {{ idx.nav_vertical ("Patch bearbeiten", "data.patch") }}
+            <h5 class="card-title mt-3">DMX</h5>
+            <p class="card-text">
+              Die DMX-Ausgabe erfolgt über 
+              <a href="https://www.openlighting.org/" target='_blank'>
+                Open Lighting Architecture (OLA)</a>.
+            </p>
+
+            {% if config.PYTHONANYWHERE == "false" %}
+            <a class="nav-link" target="_blank" href="{{ url_for ('data.ola') }}">
+              OLA einrichten</a>
+            {% else %}
+              {{ idx.nav_vertical ("OLA einrichten", "common.notinpythonanywhere" )}}
+            {% endif %}
+          </nav>
+        </div>
+      </div> 
+  
+    </div>
+  </div>
+
+
+
+</div>
+

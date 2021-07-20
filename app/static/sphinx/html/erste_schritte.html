@@ -1,0 +1,200 @@
+
+<!DOCTYPE html>
+
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Erste Schritte &#8212; ClubDMX Doku 0.9 Dokumentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/translations.js"></script>
+    <link rel="index" title="Stichwortverzeichnis" href="genindex.html" />
+    <link rel="search" title="Suche" href="search.html" />
+    <link rel="next" title="Einrichtung" href="einrichten.html" />
+    <link rel="prev" title="Features" href="features.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+              <div class="related top">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="features.html" title="Previous document">Features</a>
+        </li>
+        <li>
+          <a href="einrichten.html" title="Next document">Einrichtung</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="erste-schritte">
+<span id="erste-schritte-label"></span><h1>Erste Schritte<a class="headerlink" href="#erste-schritte" title="Link zu dieser Überschrift">¶</a></h1>
+<p>Das ist eine kurze Zusammenfassung der Arbeitsschritte, um ein neu
+installiertes ClubDMX zum Leben zu erwecken.</p>
+<ul>
+<li><p>Anmelden</p></li>
+<li><dl class="simple">
+<dt>Leeren Raum oder bestehenden Raum laden</dt><dd><p><code class="docutils literal notranslate"><span class="pre">Einrichtung</span> <span class="pre">-&gt;</span> <span class="pre">Raum</span> <span class="pre">-&gt;</span> <span class="pre">neuen</span> <span class="pre">Raum</span> <span class="pre">anlegen</span></code></p>
+</dd>
+</dl>
+</li>
+<li><p>Patch nach vorhandener Hardware erstellen:</p>
+<blockquote>
+<div><p>Patch  <em>_neu</em> speichern als  &lt;neuer Patchname&gt;</p>
+<p><code class="docutils literal notranslate"><span class="pre">neue</span> <span class="pre">Zeile(n)</span></code> erstellt einen oder mehrere neue Heads.
+Im Formular die entsprechenden Daten eingeben.</p>
+<p>Für weitere Hinweise siehe <a class="reference internal" href="patch.html#neupatchlabel"><span class="std std-ref">Neuen Patch erstellen</span></a></p>
+</div></blockquote>
+</li>
+<li><p>Config:</p>
+<blockquote>
+<div><p>Config  <em>_neu</em> speichern als &lt;neuer Configname&gt;</p>
+<p>Falls ClubDMX und OLA am selben Rechner laufen, dann ist die OLA-Adresse die
+Default-Adresse <code class="docutils literal notranslate"><span class="pre">127.0.0.1</span></code>. Falls nicht, dann
+in <code class="docutils literal notranslate"><span class="pre">Einrichtung</span> <span class="pre">-&gt;</span> <span class="pre">Config</span> <span class="pre">-&gt;</span> <span class="pre">OLA-Adresse</span></code> die IP-Adresse
+eintragen. Entsprechend der vorhandenen Hardware die Anzahl der
+Universen eintragen.</p>
+</div></blockquote>
+</li>
+<li><p>OLA:</p>
+<blockquote>
+<div><p>Wenn die OLA IP-Adresse korrekt ist, dann kann über
+<code class="docutils literal notranslate"><span class="pre">Einrichtung</span> <span class="pre">-&gt;</span> <span class="pre">Config</span> <span class="pre">-&gt;</span> <span class="pre">OLA</span> <span class="pre">einrichten</span></code>
+zur OLA Administration gewechselt werden.</p>
+<p>TODO: Seite zur OLA Einrichtung…</p>
+<p>Die Verbindung zur Hardware kann in
+<code class="docutils literal notranslate"><span class="pre">ola.html</span> <span class="pre">-&gt;</span> <span class="pre">Universes</span> <span class="pre">-&gt;</span> <span class="pre">&lt;uniname&gt;</span> <span class="pre">-&gt;</span> <span class="pre">DMX</span> <span class="pre">Console</span></code> getestet werden.</p>
+</div></blockquote>
+</li>
+<li><p>Stage:</p>
+<blockquote>
+<div><p>Stage <em>_neu</em> speichern als &lt;neuer Stagename&gt;</p>
+<p><code class="docutils literal notranslate"><span class="pre">Import</span> <span class="pre">Patch</span></code> legt für jeden in der Stage noch nicht vorhandenen Head
+ein Symbol an, mit Headnummer, Name und Kommentar aus Patch.</p>
+</div></blockquote>
+</li>
+<li><p>Heads verwenden, um Cues, Fader und Buttons zu erzeugen.</p>
+<blockquote>
+<div><p>In <code class="docutils literal notranslate"><span class="pre">Stage</span> <span class="pre">-&gt;</span> <span class="pre">Single</span></code> können die Geräte einzeln getestet werden.</p>
+<p>In <code class="docutils literal notranslate"><span class="pre">Info</span> <span class="pre">-&gt;</span> <span class="pre">DMX</span> <span class="pre">Output</span></code> kann das errechnete DMX-Signal
+angesehen werden.</p>
+</div></blockquote>
+</li>
+</ul>
+</div>
+
+
+          </div>
+              <div class="related bottom">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="features.html" title="Previous document">Features</a>
+        </li>
+        <li>
+          <a href="einrichten.html" title="Next document">Einrichtung</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="inhalt.html">ClubDMX Doku</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Inhalt:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="readme.html">README</a></li>
+<li class="toctree-l1"><a class="reference internal" href="features.html">Features</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Erste Schritte</a></li>
+<li class="toctree-l1"><a class="reference internal" href="einrichten.html">Einrichtung</a></li>
+<li class="toctree-l1"><a class="reference internal" href="navigation.html">Navigation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="benutzer.html">Benutzer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="patch.html">Patch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="grundlagen.html">Grundlagen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">Entwicklungsschritte</a></li>
+<li class="toctree-l1"><a class="reference internal" href="impressum.html">Impressum</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="inhalt.html">Documentation overview</a><ul>
+      <li>Previous: <a href="features.html" title="vorheriges Kapitel">Features</a></li>
+      <li>Next: <a href="einrichten.html" title="nächstes Kapitel">Einrichtung</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Schnellsuche</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Los" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Gunther Seiser.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.4.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/erste_schritte.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

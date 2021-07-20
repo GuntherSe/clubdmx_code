@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% from "form-macros.html" import render_bs_field %}
+
+{% block header %}
+  <h3> {% block title %}Neue Zeilen in Patch {% endblock %} </h3>
+{% endblock %}
+
+{% block subtitle %}
+{% endblock %}
+
+{% block css %}
+<style>
+    
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-sm-6 form-content" id="links">
+    <!-- Header -->
+    <div class="form-header">
+      <h5>
+        Patch:  {{ shortname }}
+      </h5>
+    </div>
+
+    <form id="newlineForm" method="POST" > {# novalidate ?  #} 
+      <!-- Body -->
+      <div id="formBody" class="form-body"> 
+        {% for field in form %}
+        {{ render_bs_field (field ,
+              placeholder=field.description.placeholder) }}
+        {% endfor %}
+      </div>
+      <!-- Footer -->
+      <div>
+        <div class="form-footer btn-group " role="group"> <!-- modal-footer -->
+          <button type="submit" id="submitButton"
+              class="btn btn-primary" name="submit_button" value="true">
+              erzeugen
+          </button>
+          <button type="submit" id="closeButton"
+              class="btn btn-secondary" name="submit_button" formnovalidate >
+              schließen
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="col-sm-6" id="rechts"></div>
+</div>  
+{% endblock %}
+
+{% block javascript %}
+  <script>
+  </script>
+{% endblock %}

@@ -1,0 +1,25 @@
+<!-- contrib.html -->
+{% extends 'base.html' %}
+
+{% import "csvtable-macros.html" as tbl with context %}
+
+{% block header %}
+  <h2>{% block title %}Contrib{% endblock %}</h2>
+{% endblock %}
+{% block subtitle %}
+{% endblock %}
+
+{% block css %}
+{% endblock %}
+
+{% block content %}
+<div id="center">
+  <!-- Tabelle -->
+  {{ tbl.table() }}
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+</script>
+{% endblock %}

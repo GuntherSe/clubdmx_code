@@ -1,0 +1,100 @@
+{# Executer #}
+{% extends 'base.html' %}
+
+{% import "csvtable-macros.html" as tbl with context %}
+{% import "base-macros.html" as base with context %}
+
+{% block css %}
+<style>
+  .card {
+    border-width: 5px;
+    border-color: gray;
+  }
+  .active {
+    border-color: brown;
+  }
+  .pushbutton {
+    color: indianred;
+  }
+</style>
+{% endblock %}
+
+{% block header %} 
+  <h2> {% block title %}Exec{% endblock %} </h2>
+{% endblock %}
+
+{% block subtitle %}
+{% endblock %}
+
+{% block content %}
+<!-- Erster Button-Block -->
+{% if buttondata.exebuttons1["items"]|length > 0 %}
+<div>
+  {#% set b1title = "Buttons: " ~ buttondata.exebuttons1.shortname %#}
+  {{ base.buttontable ("", buttondata.exebuttons1,
+      filebuttons="false") }}
+</div>
+{% endif %}
+
+<!-- Fader-Block -->
+{% if faderdata.exefaders["items"]|length > 0 %}
+<div id="faders-1">
+  {#% set ftitle = "Fader: " ~ faderdata.exefaders.shortname %#}
+  {{ base.fadertable ("", faderdata.exefaders,
+      filebuttons="false") }}
+</div>
+{% endif %}
+
+<!-- Zweiter Button-Block -->
+{% if buttondata.exebuttons2["items"]|length > 0 %}
+<div>
+  {#% set b2title = "Buttons: " ~ buttondata.exebuttons2.shortname %#}
+  {{ base.buttontable ("", buttondata.exebuttons2,
+      filebuttons="false") }}
+</div>
+{% endif %}
+
+{% endblock %}
+
+
+{% block javascript %}
+<script>
+  
+  $("document").ready (function () {
+    
+    var sliderwidth;
+    // Sliderbreite mit Fenserbreite verändern:
+    $(window).on('resize', function(){
+      var sliderwidth = $(".col-8").width();
+      $(".slider").width (sliderwidth);
+    });
+
+//    $(".text").addClass ("edittext_data");
+//    prepEdit();
+    
+    sliderwidth = $(".col-8").width();
+
+    activateCuedetails ();
+    activateCuebuttons ();
+    //editableCsvFields (); // deaktiviert: hier kein Editieren
+
+    //setTimeout (periodic_faderstatus, 100);
+    // slider erzeugen:
+    var sliderlevels;
+    $.get ("/getinfo/sliderval", function (data) {
+      sliderlevels = $.parseJSON(data);
+      var i;
+      for (i = 0; i < sliderlevels.length; i++){
+        makeSlider(i, sliderlevels);
+      };
+      $(".slider").width (sliderwidth);
+    });
+
+    periodic_faderstatus ();
+    periodic_buttonstatus ();
+
+  });     // ende document ready
+
+</script>
+{% endblock %}
+

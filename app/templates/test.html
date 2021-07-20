@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+
+{# https://gist.github.com/adamboduch/6113356 
+
+und   http://jsfiddle.net/nosfan1019/yqeVM/
+
+#}
+
+{% block header %}
+  <h1> {% block title %} Test {% endblock %} </h1>
+{% endblock %}
+{% block subtitle %}
+{% endblock %}
+
+{% block css %}
+<style>
+body {
+  margin: 1.4em;
+}
+table {
+  min-width: 30%;
+}
+table > thead > tr > td {
+  padding: 0.3em;
+}
+table > tbody > tr {
+  cursor: pointer;
+}
+.total {
+  margin: 1.2em 0;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<table class="ui-widget">
+  <thead class="ui-widget-header">
+      <tr>
+          <td>ID</td>
+          <td>Name</td>
+          <td>Balance</td>
+      </tr>
+  </thead>
+  <tbody class="ui-widget-content ui-state-default">
+      <tr row_num="1">
+          <td>1</td>
+          <td>John</td>
+          <td>200</td>
+      </tr>
+      <tr row_num="2">
+          <td>2</td>
+          <td>Mary</td>
+          <td>186</td>
+      </tr>
+      <tr row_num="3">
+          <td>3</td>
+          <td>Bob</td>
+          <td>385</td>
+      </tr>
+  </tbody>
+</table>
+<div class="total ui-widget">
+  <strong>Total: </strong><span></span>
+</div>
+<div id="showselected"></div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+$(function() {
+
+  /*
+   * Updates the total span based on the selected table rows.
+   * Here, we're summing the balance column.  This behavior is defined
+   * as a function here because it's used in several selectable event 
+   * handlers below.
+   *
+   */
+  function updateTotal( $selectees ) {
+
+      selected = $.makeArray( $selectees.filter( ".ui-selected" ) );
+
+      var total = selected.reduce( function( a, b ) {
+          return a + parseInt( $( b ).children( "td:last" ).text() );
+      }, 0 );
+
+      $( ".total > span " ).text( total );
+  }
+
+  function updateRownums ($selectees) {
+
+    var rowlist = [];
+    selected = $selectees.filter( ".ui-selected" ).toArray();
+    var i, num;
+    for (i = 0; i< selected.length; i++) {
+      num = $(selected[i]).attr("row_num");
+      rowlist.push (num);
+      //      console.log ("forloop: " + num);
+    };
+    // rowlist = $(selected).attr ("row_num");
+    $("#showselected").text ("Ausgewählt: " + rowlist);
+
+  }
+
+  $( "table > tbody" ).selectable({
+
+      // Don't allow individual table cell selection.
+      filter: ":not(td)",
+
+      // Update the initial total to 0, since nothing is selected yet.
+      create: function( e, ui ) {
+          updateTotal( $() );
+          updateRownums ($());
+      },
+
+      // When a row is selected, add the highlight class to the row and
+      // update the total.
+      selected: function( e, ui ) {
+        if ($(ui.selected).hasClass('ui-state-highlight')) {
+          $(ui.selected).removeClass('ui-state-highlight').removeClass('ui-selected');
+          // do unselected stuff
+        } else {            
+            $(ui.selected).addClass('ui-state-highlight').addClass('ui-selected');
+            // do selected stuff
+        }  
+        var widget = $( this ).data( "uiSelectable" );
+        updateTotal( widget.selectees );
+        updateRownums ( widget.selectees );
+//            $( ui.selected ).addClass( "ui-state-highlight" );
+      },
+
+      // When a row is unselected, remove the highlight class from the row
+      // and update the total.
+      unselected: function( e, ui ) {
+          $( ui.unselected ).removeClass( "ui-state-highlight" );
+          var widget = $( this ).data( "uiSelectable" )
+          updateTotal( widget.selectees );
+          updateRownums ( widget.selectees );
+      }
+  });
+
+});
+</script>
+{% endblock %}
+

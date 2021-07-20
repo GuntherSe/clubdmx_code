@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+
+{% block header %}
+  <h2>{% block title %}Info{% endblock %}</h2>
+{% endblock %}
+
+{% block subtitle %}
+Readme
+{% endblock %}
+
+{% block content %}
+<div id="readme">
+  <h3>README</h3>
+  <p>ClubDMX ist eine Lichtsteuerung für kleine bis mittlere Anwendungsbereiche:
+  Bars, Probenräume, Ausstellungen, Wohnbereiche. Das Ziel der Entwicklung ist
+  eine auch für Laien einfach zu bedienende Software.</p>
+  <ul class="simple">
+  <li><p>Läuft auf einem Raspberry PI</p></li>
+  <li><p>Bedienung über Web-Interface und Midi</p></li>
+  <li><p>Verbindung zu den DMX-Geräten über diverse Hardware 
+    (USB-Dongles, Artnet, ...)</p></li>
+  <li><p>Geräte-Einzelsteuerung und Lichtszenen</p></li>
+  <li><p>Portable Datenstruktur, alle Daten in CSV-Tabellen</p></li>
+  <li><p>Angepasst an den Benutzer über Login</p></li>
+  </ul>
+
+  <div id="online-testen">
+  <h4>Online testen</h4>
+  <p>Das Web-Interface läuft zum Testen online. Hier im Testbetrieb kann die
+  Funktionalität getestet werden. Eine Hardware-Steuerung ist damit natürlich
+  nicht möglich. Es sind verschiedene <em>Räume</em> vorbereitet: Eine Bar,
+  ein Probenraum, ein Wohnzimmer und andere Beispiele. Hier gehts zu
+  <a class="reference external" href="https://guntherseiser.pythonanywhere.com/">ClubDMX online</a> .</p>
+  </div>
+  <div class="section" id="support">
+  <h4>Support</h4>
+  <p>Schick mir eine Mail: <a class="reference external" href="mailto:gunther&#46;seiser&#46;63&#37;&#52;&#48;gmail&#46;com">gunther<span>&#46;</span>seiser<span>&#46;</span>63<span>&#64;</span>gmail<span>&#46;</span>com</a></p>
+  </div>
+</div>
+  
+{% endblock %}

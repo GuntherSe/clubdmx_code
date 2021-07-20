@@ -1,0 +1,249 @@
+{# base-macros #}
+
+{# SVG-Icon #}
+{% macro svg_icon (svgid, size) -%}
+  <svg viewBox="0 0 20 20" height="{{ size }}" width="{{ size }}" 
+    style="fill: currentcolor;" >
+    <use xlink:href="{{ svgid }}"/>
+  </svg>
+{%- endmacro %}
+
+{# Button mit svg, ohne Text #}
+{% macro svg_button (svgid, endpoint, size="") -%}
+  <a href="{{ endpoint }}" class="text-body">
+    {% if size=="" %}
+      {{ svg_icon (svgid, size="1.2em") }}
+    {% else %}
+      {{ svg_icon (svgid, size) }}
+    {% endif %}
+  </a>
+{%- endmacro %}
+
+{# Subzeile im Header #}
+{% macro subtitle_with_button (titletext, svgid, endpoint) -%}
+<div class="d-flex flex-row">
+  <div class="mr-auto ">
+    <h5>{{ titletext }}</h5>
+    <div class="selectDiv"></div>
+  </div>
+  <div class="ml-2">
+    {{ svg_button ( svgid, endpoint, size="2em" ) }}
+  </div>
+</div>
+{%- endmacro %}
+
+{% macro subtitle_with_backbutton (titletext) -%}
+<div class="d-flex flex-row">
+  <div class="mr-auto ">
+    <h5>{{ titletext }}</h5>
+    <div class="selectDiv"></div>
+  </div>
+  <div class="ml-2">
+    <a href="#" class="text-body" onclick="historyBack()">
+      {{ svg_icon ("#svg-box-arrow-left", size="2em") }}
+    </a>
+  </div>
+</div>
+{%- endmacro %}
+
+{# ----------------------------------------------------------------------- #}
+{# viewbuttons werden den Tabellen hizugefügt, die Cues enthalten:
+  cuefader, cuebutton, cuefader_table, cuebutton_table
+  name = Filename des Cues ohne Pfad und Endung
+#}
+{% macro viewbuttons (name) %}
+  <div class="btn-group float-right" role="group">
+    <button type="button" 
+            class="btn btn-sm btn-outline-secondary fileview"
+            name="{{ name }}">
+      Liste
+    </button>
+    {% if current_user.role == "standard" or current_user.role == "admin" %}
+    <button type="button" 
+            class="btn btn-sm btn-outline-secondary cueedit"
+            name="{{ name }}">
+      >Topcue
+    </button>
+    {% endif %}
+  </div>
+{% endmacro %}
+
+{# ----------------------------------------------------------------------- #}
+{# cueslider: erzeugt einen Fader zum Bedienen eines Cues
+  verwendet in cuefader, executer
+  cuslider sind in Tabelle
+  Inputs:
+    text: Anzeigetext
+    filename: file im Cueverzeichnis, ohne Endung
+    row, col: für Texteditor
+#}
+
+{% macro slidertext (text,filename, row, col, filebuttons) -%}
+<div class="csvcell" id="cuetext-{{ row }}"
+    row_num="{{ row }}" col_num="{{ col }}">
+    {{ text }}
+</div>
+{%- endmacro %}
+
+{% macro cueslider (text, filename, row, col, index, filebuttons="true") -%}
+<tr class="row" >
+  {% if filebuttons == "true" %}
+  <td class="col-sm-12 col-md-8 border-0">
+    <div id="sl-{{ index }}" class="cuefader"></div>
+  </td>
+
+  {# kleiner als md #}
+  <div class="d-md-none col border-0">
+    <div class="row w-100">
+
+      <td class="col d-md-none border-0">
+        {{ slidertext (text, filename, row, col, filebuttons) }}
+      </td>
+      <td class="col d-md-none float-right border-0">
+        {{ viewbuttons (filename) }}
+      </td>
+    </div>
+  </div>
+
+  {# md und größer #}
+  <td class="d-none d-md-block col-md-2 border-0">
+    {{ slidertext (text, filename, row, col, filebuttons) }}
+  </td>
+  <td class="d-none d-md-block col-md-2 border-0">
+    {{ viewbuttons (filename) }}
+  </td>
+
+  {% else %}
+  <td class="col col-sm-12 col-md-9 border-0">
+    <div id="sl-{{ index }}" class="cuefader"></div>
+  </td>
+
+  {# kleiner als md #}
+  <td class="d-md-none col col-12 border-0">
+    {{ slidertext (text, filename, row, col, filebuttons) }}
+  </td>
+  {# md und größer #}
+  <td class="d-none d-md-block col-md-3 border-0">
+    {{ slidertext (text, filename, row, col, filebuttons) }}
+  </td>
+  {% endif %}
+</tr>
+{%- endmacro %}
+
+{# Macro fadertable erzeugt aus Daten d eine Tabelle mit Slidern, 
+   Beschriftung und Viewbuttons
+#}
+{% macro fadertable (header, d, filebuttons="true") %}
+<div class="container">
+  {% set items = d["items"] %}
+  {% if items|length > 0 %}
+  <div class="shadow p-3 mb-5 rounded"> {# shadow #}
+    <!-- <h5 class="alert alert-info">{{ header }}</h5> -->
+    <table table_id="{{ d['loc'] }}" class="table csvfile " 
+            file="{{ d['shortname'] }}" 
+            pluspath="{{ d['pluspath'] }}" 
+            option="{{ d['option'] }}">
+      <tbody>
+        {% for item in items %}
+          {{ cueslider (item.Text, item.Filename, 
+                loop.index, 1+d["textcolumn"], item.Index, filebuttons) }}
+        {% endfor %}
+      </tbody>  
+    </table>
+  
+  </div>
+  {# 
+  {% else %}
+  <div class="shadow p-3 mb-5 bg-white rounded">
+    <!-- <h5 class="alert alert-secondary">{{ header }}</h5> -->
+    <p>{{ header }} - Keine Daten vorhanden</p>
+  </div>
+  #}
+  {% endif %}
+</div>
+{% endmacro %}
+
+{# ----------------------------------------------------------------------- #}
+{# cuebutton: erzeugt einen Button zum Bedienen eines Cues
+  verwendet in cuebutton, executer
+  Inputs:
+    text:     Anzeigetext
+    filename: file im Cueverzeichnis, ohne Endung
+    type:     Standard, Auswahl, Taster
+    group:    Auswahl-Gruppe
+    footer:   Fußzeile ein/aus
+#}
+{% macro cuebutton (text, filename, type, group, index, footer="true") -%}
+
+<div class="card h-100">
+  <div class="card-body cuebutton px-2" id="but-{{ index }}"  index="{{ index }}">
+    <h5 class="card-title text" id="cuetext-{{ index }}" >{{ text }}</h5>
+  </div>
+  {% if footer == "true" %}
+  <div class="card-footer px-1">
+    <div class="row mx-n2">
+      {% if type == "Auswahl" %}
+        <div class="col-4 buttongroup pr-1">{{ group }}</div>
+        <div class="col-8 pl-1">
+          {{ viewbuttons (filename) }}
+        </div>
+      {% elif type == "Taster" %}
+      <div class="col-4 pushbutton pr-1">T</div>
+      <div class="col-8 pl-1">
+        {{ viewbuttons (filename) }}
+      </div>
+      {% else %}
+        <div class="col">
+          {{ viewbuttons (filename) }}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+  {% endif %}
+</div>
+{%- endmacro %}
+
+{#  Macro buttontable erzeugt aus Daten d eine Tabelle 
+    wenn filebuttons == 'true', dann footer in Macro cuebutton einschalten,
+    sonst footer aus. 
+    Davon abhängig ist die Buttongröße.
+#}
+{% macro buttontable (header, d, filebuttons="true") %}
+  {% if filebuttons == "true" %}
+    {% set buttonsize = "col-12 col-md-4 col-lg-3 " %}
+  {% else %}
+    {% set buttonsize = " col-6 col-md-3 col-lg-2" %}
+  {% endif %}
+
+
+  {% set items = d["items"] %}
+
+  <div class="container" >
+    {% if items|length > 0 %}
+    <!-- <h5 class="alert alert-info">{{ header }}</h5> -->
+    
+    <div class="shadow p-3 mb-5 rounded">
+      <div class="csvfile row " id="{{ d['loc'] }}"
+        file="{{ d['shortname'] }}" 
+        pluspath="{{ d['pluspath'] }}" 
+        option="{{ d['option'] }}">
+      
+      {% for item in items %}
+
+          <div class="col {{ buttonsize }} mb-3">
+          {{ cuebutton (item.Text, item.Filename, item.Type, item.Group,
+            item.Index, footer = filebuttons) }}
+          </div>
+          {% endfor %}
+      </div>
+    </div>
+    {# 
+    {% else %}
+    <h5 class="alert alert-secondary">{{ header }}</h5>
+    <p>Keine Daten vorhanden</p>
+    #}
+    {% endif %}
+  </div>
+{% endmacro %}
+
+

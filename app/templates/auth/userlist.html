@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% from "index-macros.html" import userlist with context %}
+
+{% block header %} 
+  <h2> {% block title %} Benutzer-Liste {% endblock %} </h2>
+{% endblock %}
+
+{% block subtitle %} 
+{% endblock %}
+
+{% block content %}
+{{ userlist () }}
+{% endblock %}
+

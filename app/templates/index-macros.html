@@ -1,0 +1,118 @@
+{# Index-Macros: HTML-Code Stücke #}
+
+{% macro themes () %}
+<nav class="nav flex-column">
+  <a class="nav-link" 
+    href="{{ url_for ('common.bootstraptheme', theme='default') }}" >
+    Standard</a>
+  <a class="nav-link" 
+    href="{{ url_for ('common.bootstraptheme', theme='darkly') }}" >
+    Darkly</a>
+  <a class="nav-link" 
+    href="{{ url_for ('common.bootstraptheme', theme='flatly') }}" >
+    Flatly</a>
+  <a class="nav-link" 
+    href="{{ url_for ('common.bootstraptheme', theme='cyborg') }}" >
+    Cyborg</a>
+  <a class="nav-link" 
+    href="{{ url_for ('common.bootstraptheme', theme='spacelab') }}" >
+    Spacelab</a>
+  <a class="nav-link" 
+    href="{{ url_for ('common.bootstraptheme', theme='superhero') }}" >
+    Superhero</a>
+</nav>
+{% endmacro %}
+
+{#  button_elem einfügen innerhalb von:
+  <div class="row btn-group w-100 ml-0">
+#}
+{% macro button_elem (text, endpoint="#", cols="6") -%}
+<a href="{{ endpoint }}" 
+  class="col-{{ cols }} btn btn-light text-primary" role="button" 
+  aria-pressed="true"><span class="text-nowrap">{{ text }}</span></a>
+{%- endmacro %}
+
+{% macro button_elem_js (text, idclass, cols="6") -%}
+<a href="#" 
+  class="{{ idclass }} col-{{ cols }} btn btn-light text-primary" role="button" 
+  aria-pressed="true"><span class="text-nowrap">{{ text }}</span></a>
+{%- endmacro %}
+{#  button_elem einfügen innerhalb von:
+  </div>
+#}
+
+{#  nav_vertical und nav_vertical_js einfügen innerhalb von:
+  <nav class="nav flex-column">
+#}
+{% macro nav_vertical (text, endpoint) -%}
+<a class="nav-link" href="{{ url_for (endpoint) }}" >
+  {{ text }}</a>
+{%- endmacro %}
+
+{% macro nav_vertical_js (text, idclass) -%}
+<a class="{{ idclass }} nav-link " href="#" >
+  {{ text }}</a>
+{%- endmacro %}
+{#  
+  </nav>
+#}
+
+
+{% macro userlist () %}
+<table class='table table-bordered table-hover'>
+  <thead>
+      <tr>
+          {# <th>ID</th> #}
+          <th>Name</th>
+          <th>Rolle</th>
+      </tr>
+  </thead>
+  <tbody>
+  {% for user in users %}
+      <tr>
+          {# <td>{{ user.id }}</td> #}
+          <td>{{ user.username }}</td>
+          <td>{{ user.role }}</td>
+      </tr>
+  {% endfor %}
+  </tbody>
+</table> 
+{% endmacro %}
+
+{# Bildergalerie #}
+{% macro carousel (pictures) %}
+<div id="carouselExampleControls" 
+    class="carousel slide " data-ride="carousel">
+  <div class="carousel-inner" >
+
+    {% for pic in pictures %}
+      {% if loop.first %} 
+        {% set classes = "carousel-item active" %} 
+      {% else %}
+        {% set classes = "carousel-item" %} 
+      {% endif %}
+
+      <div class="{{ classes }}">
+        <div class="container-fluid">
+          <img src="{{ url_for ('static', filename='' ~ pic.picture ~ '' ) }}" 
+          class="d-block  w-100" alt="...">
+          <div class="text-center d-none d-md-block">
+            <h5>{{ pic.text }}</h5>
+            <p>{{ pic.subtext }}</p>
+            <p>{{ pic.subtext2 }}</p>
+          </div>
+
+        </div>
+      </div>
+    {% endfor %}
+  <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+  </a>
+</div>
+
+{% endmacro %}

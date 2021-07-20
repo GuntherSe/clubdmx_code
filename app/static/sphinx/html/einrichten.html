@@ -1,0 +1,317 @@
+
+<!DOCTYPE html>
+
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Einrichtung &#8212; ClubDMX Doku 0.9 Dokumentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/translations.js"></script>
+    <link rel="index" title="Stichwortverzeichnis" href="genindex.html" />
+    <link rel="search" title="Suche" href="search.html" />
+    <link rel="next" title="Navigation" href="navigation.html" />
+    <link rel="prev" title="Erste Schritte" href="erste_schritte.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+              <div class="related top">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="erste_schritte.html" title="Previous document">Erste Schritte</a>
+        </li>
+        <li>
+          <a href="navigation.html" title="Next document">Navigation</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="einrichtung">
+<span id="einrichten-label"></span><h1>Einrichtung<a class="headerlink" href="#einrichtung" title="Link zu dieser Überschrift">¶</a></h1>
+<p>ClubDMX kommt mit sehr sparsamen Hardware-Komponenten aus. Als
+Basis-Hardware kann ein Raspberry PI eingesetzt werden, das ist aber
+nicht zwingend notwendig. ClubDMX läuft auf jeder Hardware, wo
+Python-3 mit einigen Erweiterungen (die zusätzlich zu Python
+installiert werden) einsatzbereit ist.</p>
+<div class="section" id="clubdmx-und-ola">
+<h2>ClubDMX und OLA<a class="headerlink" href="#clubdmx-und-ola" title="Link zu dieser Überschrift">¶</a></h2>
+<p>Open Lighting Architecture (OLA) ist die Schnittstelle zur Hardware,
+daher muss auch OLA installiert werden. Zur Einrichtung von OLA
+findest du
+<a class="reference external" href="https://www.openlighting.org/ola/getting-started/downloads/">hier weitere Informationen.</a>
+Zur Installation von OLA auf Mac kann ich leider
+nichts beitragen, ich habe OLA auf dem Raspberry und auf (Debian) Linux
+installiert und verwendet.</p>
+<p>Der große Vorteil von OLA besteht darin, dass damit eine ganze Palette
+von Ethernet Protokollen und USB/Serial/Netzwerk Geräten zur
+Anbindung zur Verfügung stehen.</p>
+<p>Ein einfacher Hardware-Aufbau mit einem Raspberry PI sieht so aus:</p>
+<img alt="_images/basic_setup.jpg" src="_images/basic_setup.jpg" />
+<p>ClubDMX und OLA lassen sich sehr einfach auf mehrere Universen erweitern.
+Falls ClubDMX in einem größeren Aufbau gedacht ist, können auch mehrere
+Raspberry PIs eingesetzt werden. Oder es können an einen Raspberry PI
+mehrere USB DMX Adapter angesteckt und für verschiedene Universen
+konfiguriert werden.</p>
+<p>Ein größerer Hardware-Aufbau mit mehreren Raspberry PIs könnte so aussehen:</p>
+<img alt="_images/ext_setup.jpg" src="_images/ext_setup.jpg" />
+</div>
+<div class="section" id="verzeichnisse">
+<h2>Verzeichnisse<a class="headerlink" href="#verzeichnisse" title="Link zu dieser Überschrift">¶</a></h2>
+<p>Die Verzeichnisstruktur besteht aus zwei Ordnern, einem Code-Ordner und
+einem Raum-Ordner. Für diese Ordner gibt es Vorgabe-Namen, nämlich
+<code class="docutils literal notranslate"><span class="pre">clubdmx_code</span></code> und <code class="docutils literal notranslate"><span class="pre">clubdmx_rooms</span></code> .</p>
+<p>Über die <em>Environment</em>-Variablen <code class="docutils literal notranslate"><span class="pre">CLUBDMX_CODEPATH</span></code> und <code class="docutils literal notranslate"><span class="pre">CLUBDMX_ROOMPATH</span></code>
+können auch andere Verzeichnisse festgelegt werden.</p>
+</div>
+<div class="section" id="raum-einrichten">
+<span id="roomsetup"></span><h2>Raum einrichten<a class="headerlink" href="#raum-einrichten" title="Link zu dieser Überschrift">¶</a></h2>
+<p>Die Einrichtung eines Raumes erzeugt im Raum-Verzeichnis (<code class="docutils literal notranslate"><span class="pre">clubdmx_rooms</span></code>)
+einen neuen Ordner. Hier werden alle projektspezifischen Daten gespeichert:
+Patch, Cues, Fader, Buttons, Stage.</p>
+<p>Es gibt einige Möglichkeiten zur Erzeugung eines neuen Raums.</p>
+<blockquote>
+<div><p>Einen neuen Raum anlegen,</p>
+<p>einen bestehenden Raum unter einem anderen Namen sichern,</p>
+<p>einen auf USB-Stick gepeicherten Raum laden (restore),</p>
+<p>einen gezippten Raum hochladen.</p>
+</div></blockquote>
+<img alt="_images/setup_room_page.jpg" src="_images/setup_room_page.jpg" />
+</div>
+<div class="section" id="config">
+<span id="configsetup"></span><h2>Config<a class="headerlink" href="#config" title="Link zu dieser Überschrift">¶</a></h2>
+<p>In einer Config sind die im Einsatz befindlichen Hardware-Komponenten, das
+Fader- und Button-Layout, das Stage-Layout und weitere Einstellungen
+gespeichert. In einem Raum können auch mehrere Configs vorhanden sein, zum
+Beispiel um unterschiedliche Theaterprojekte zu speichern. Der Zusammenhang
+von Raum und Config wird in
+<a class="reference internal" href="grundlagen.html#raum-config-label"><span class="std std-ref">Räume und Config</span></a> noch näher erläutert.</p>
+<p>Die Config ist in verschiedene Bereiche gegliedert. Diese Bereiche sind in
+Tabs zusammengefasst. Der erste Bereich definiert die Hardware-nahen
+Einstellungen: Auswahl eines
+<a class="reference internal" href="patch.html#patchlabel"><span class="std std-ref">Patch</span></a>, OLA und OSC.</p>
+<img alt="_images/setup_config_page.jpg" src="_images/setup_config_page.jpg" />
+<p>Der nächste Config-Berich behandelt die Bedienelemente. Hier werden die
+Tabellen ausgewählt, die <a class="reference internal" href="#stage">Stage</a>, <a class="reference internal" href="#fader">Fader</a> und <a class="reference internal" href="#buttons">Buttons</a> definieren.</p>
+<p>Das Aussehen der Webseite kann hier durch eine Auswahl eines Themas
+verändert werden.</p>
+<img alt="_images/setup_elements_page.jpg" src="_images/setup_elements_page.jpg" />
+<p>Der nächste Bereich beinhaltet die Midi-Einstellungen. Das ist zwar auch
+ein Hardware-nahes Thema, bekommt aber aus Gründen der Übersichtlichkeit
+einen eigenen Tab.</p>
+<img alt="_images/setup_midi_page.jpg" src="_images/setup_midi_page.jpg" />
+<p>Der nächste Bereich in der Config gibt einen Überblick über die
+verwendeten Datenbank-Tabellen. In ClubDMX sind ja alle Daten in
+CSV-Tabellen gespeichert. Diese Tabellen sind im Raum-Ordner gepeichert.
+Hier können sie angesehen und editiert werden. Dazu stehen Zeilen- und
+Zellen-Funktionen zur Verfügung.</p>
+<p>Mit Copy und Paste können einzelne oder mehrere Zeilen von einer Tabelle
+in eine andere übertragen werden, Zeilen können gelöscht oder neue Zeilen
+können über Eingabeformular angelegt werden.</p>
+<p>Beim Editieren von einzelnen Zellen wird geprüft, ob der eingegebene Wert
+in die Zelle „passt“, das heißt, ob die Regeln für diese Zelle erfüllt
+sind.</p>
+<p>Als weitere Hilfsmittel finden sich auf diesem Tab Funktionen zur
+Bereinigung der Datenbank: unbenutzet Cues löschen, alle Änderungen sichern
+oder alle Änderungen speichern.</p>
+<img alt="_images/setup_data_page.jpg" src="_images/setup_data_page.jpg" />
+<p>Für den User <em>Admin</em> gibt es einen weiteren Tab, auf dem einige Tools zu
+finden sind: Backup und Restore der User-Datenbank, einen Link zur
+OLA-einrichtung und diverse Debug-Tools.</p>
+</div>
+<div class="section" id="stage-einrichten">
+<span id="stage"></span><h2>Stage einrichten<a class="headerlink" href="#stage-einrichten" title="Link zu dieser Überschrift">¶</a></h2>
+<p>Sobald ein <a class="reference internal" href="patch.html#patchlabel"><span class="std std-ref">Patch</span></a> angelegt ist, kann dieser in die
+Stage importiert werden. Die Heads werden in einem Standard-Raster eingefügt.
+Im Modus <em>SELECT</em> können die Heads in Position und Größe verändert
+werden.</p>
+<img alt="_images/stage_page.jpg" src="_images/stage_page.jpg" />
+</div>
+<div class="section" id="fader-einrichten">
+<span id="fader"></span><h2>Fader einrichten<a class="headerlink" href="#fader-einrichten" title="Link zu dieser Überschrift">¶</a></h2>
+<p>Die Fader befinden sich in zwei Tabellen. Eine Tabelle beinhaltet die Fader, die
+auf der Exec-Seite sichtbar sind.
+Eine zweite Tabelle beinhaltet die Fader, die
+nur auf der Fader-Seite zu finden sind. Das hat den Zweck, für den
+Basic-Benutzer nur die für ihn relevanten Fader auf seiner Start-Seite
+platzieren zu können.</p>
+<img alt="_images/fader_page.jpg" src="_images/fader_page.jpg" />
+<p>Durch Drücken auf das Zahnrad-Symbol gelangst du zur Einrichtungs-Seite für die
+Fader. Hier kannst du mit den üblichen Tabellen-Funktionen (copy/paste,
+Feld editieren, sichern als, neue Zeile) die Fader einrichten. Die beiden oben
+genannten Tabellen (Exec-Fader, Zusatz-Fader) stehen hier zur Bearbeitung.
+Mit cut/paste können die Fader von einer Tabelle in die andere
+verschoben werden.</p>
+<img alt="_images/fader_setup_page.jpg" src="_images/fader_setup_page.jpg" />
+</div>
+<div class="section" id="buttons-einrichten">
+<span id="buttons"></span><h2>Buttons einrichten<a class="headerlink" href="#buttons-einrichten" title="Link zu dieser Überschrift">¶</a></h2>
+<p>Die Buttons befinden sich in drei Tabellen:  Exec-Buttons oben, Exec-Buttons
+unten und zusätzliche Buttons. Je nachdem, in welcher Tabelle die Buttons
+platziert werden, wird die Position der Buttons festgelegt.</p>
+<img alt="_images/button_page.jpg" src="_images/button_page.jpg" />
+<p>Über das Zahnrad-Symbol kann auch hier zur Einrichtungs-Seite
+gewechselt werden. Auch hier kann über die üblichen Tabellen-Funktionen
+die Anordnung, die Beschriftung und die Funktion der Buttons eingerichtet
+werden.</p>
+<p>Mit Copy/Paste können Fader zu Buttons gemacht werden und Buttons zu Fadern.
+Einfach Zeile(n) ausschneiden und in die gewünschte Tabelle einfügen.</p>
+<img alt="_images/button_setup_page.jpg" src="_images/button_setup_page.jpg" />
+</div>
+<div class="section" id="exec-seite-einrichten">
+<span id="execsetup"></span><h2>Exec-Seite einrichten<a class="headerlink" href="#exec-seite-einrichten" title="Link zu dieser Überschrift">¶</a></h2>
+<p>Die Einrichtung der Fader und Buttons bestimmt das Erscheinungsbild
+der Exec-Seite. Es gibt daher keine eigene Einrichtungs-Seite für die
+Exec-Seite, siehe also <a class="reference internal" href="#fader">Fader</a> und   <a class="reference internal" href="#buttons">Buttons</a> .</p>
+<img alt="_images/exec_page.jpg" src="_images/exec_page.jpg" />
+<p>Weitere Informationen zur Einrichtung findest du im Kapitel
+<a class="reference internal" href="navigation.html#navigation-label"><span class="std std-ref">Navigation</span></a>, da gibt es Details zu den einzelnen Tabs.</p>
+</div>
+<div class="section" id="einrichten-von-zeitabhangiger-steuerung-mit-crontab-in-linux">
+<span id="crontab-label"></span><h2>Einrichten von zeitabhängiger Steuerung mit Crontab (in Linux)<a class="headerlink" href="#einrichten-von-zeitabhangiger-steuerung-mit-crontab-in-linux" title="Link zu dieser Überschrift">¶</a></h2>
+<p>Zur Unterstützung von Fixinstallationen mit Tages- oder
+Wochen-abhängigen Anforderungen gibt es die Möglichkeit, über den
+Linux-Befehl <code class="docutils literal notranslate"><span class="pre">crontab</span></code> Lichtszenen zu steuern. Hier ist exemplarisch
+skizziert, wie das funktioniert.</p>
+<p>Über OSC können externe Programme auf ClubDMX zugreifen. Diese Eigenschaft
+nützt das Kommandozeilen-Tool <code class="docutils literal notranslate"><span class="pre">sendosc.sh</span></code>
+(im Programm-Verzeichnis zu finden).</p>
+<p>Beispiel für einen Crontab-Eintrag, der jede Minute aufgerufen wird und
+den dritten Button aus der oberen Exec-Zeile betätigt:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">pi</span><span class="o">/</span><span class="n">clubdmx_code</span><span class="o">/</span><span class="n">sendosc</span><span class="o">.</span><span class="n">sh</span> <span class="o">--</span><span class="n">address</span><span class="o">=/</span><span class="n">exebutton1</span><span class="o">/</span><span class="mi">3</span>
+</pre></div>
+</div>
+<p>Die unterstützten OSC-Befehle finden sich auf der ClubDMX Webseite und auch
+hier in der Doku im Kapitel <a class="reference internal" href="navigation.html#navigation-label"><span class="std std-ref">Navigation</span></a>.</p>
+<p>Mit dem Linux-Befehl <code class="docutils literal notranslate"><span class="pre">crontab</span> <span class="pre">-e</span></code> wird die Crontab editiert, mit dem
+Befehl <code class="docutils literal notranslate"><span class="pre">crontab</span> <span class="pre">-l</span></code> wird sie angezeigt und mit <code class="docutils literal notranslate"><span class="pre">crontab</span> <span class="pre">-r</span></code> wird sie
+gelöscht.</p>
+</div>
+</div>
+
+
+          </div>
+              <div class="related bottom">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="erste_schritte.html" title="Previous document">Erste Schritte</a>
+        </li>
+        <li>
+          <a href="navigation.html" title="Next document">Navigation</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="inhalt.html">ClubDMX Doku</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Inhalt:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="readme.html">README</a></li>
+<li class="toctree-l1"><a class="reference internal" href="features.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="erste_schritte.html">Erste Schritte</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Einrichtung</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#clubdmx-und-ola">ClubDMX und OLA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#verzeichnisse">Verzeichnisse</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#raum-einrichten">Raum einrichten</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#config">Config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#stage-einrichten">Stage einrichten</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fader-einrichten">Fader einrichten</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#buttons-einrichten">Buttons einrichten</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#exec-seite-einrichten">Exec-Seite einrichten</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#einrichten-von-zeitabhangiger-steuerung-mit-crontab-in-linux">Einrichten von zeitabhängiger Steuerung mit Crontab (in Linux)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="navigation.html">Navigation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="benutzer.html">Benutzer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="patch.html">Patch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="grundlagen.html">Grundlagen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">Entwicklungsschritte</a></li>
+<li class="toctree-l1"><a class="reference internal" href="impressum.html">Impressum</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="inhalt.html">Documentation overview</a><ul>
+      <li>Previous: <a href="erste_schritte.html" title="vorheriges Kapitel">Erste Schritte</a></li>
+      <li>Next: <a href="navigation.html" title="nächstes Kapitel">Navigation</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Schnellsuche</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Los" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Gunther Seiser.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.4.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/einrichten.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

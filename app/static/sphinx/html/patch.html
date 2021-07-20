@@ -1,0 +1,196 @@
+
+<!DOCTYPE html>
+
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Patch &#8212; ClubDMX Doku 0.9 Dokumentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/translations.js"></script>
+    <link rel="index" title="Stichwortverzeichnis" href="genindex.html" />
+    <link rel="search" title="Suche" href="search.html" />
+    <link rel="next" title="Grundlagen" href="grundlagen.html" />
+    <link rel="prev" title="Benutzer" href="benutzer.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+              <div class="related top">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="benutzer.html" title="Previous document">Benutzer</a>
+        </li>
+        <li>
+          <a href="grundlagen.html" title="Next document">Grundlagen</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="patch">
+<span id="patchlabel"></span><h1>Patch<a class="headerlink" href="#patch" title="Link zu dieser Überschrift">¶</a></h1>
+<p>Jedes physisch vorhandene Gerät wird im Patch eingetragen.
+Damit wird es für ClubDMX verfügbar.</p>
+<p>Aufruf über die Navigation: <code class="docutils literal notranslate"><span class="pre">Einrichtung</span> <span class="pre">-&gt;</span> <span class="pre">Config</span> <span class="pre">-&gt;</span> <span class="pre">Patch</span> <span class="pre">bearbeiten</span></code>.</p>
+<p>Zu den einzelnen Spalten:</p>
+<ul class="simple">
+<li><p>HeadNr: Jedes Gerät wird mit einer Zahl identifiziert.
+Es können auch mehrere Geräte dieselbe HeadNr haben.
+Sie werden dann von ClubDMX gleich behandelt.</p></li>
+<li><p>HeadType: Jedem Gerät wird eine Head-Datei zugeordnet.
+Das ist die eindeutige Beschreibung der einzelnen DMX-Kanäle
+für das zu patchende Gerät.</p></li>
+<li><p>Addr: Die DMX-Startadresse. Setzt sich aus zwei Komponenten zusammen,
+die mit Bindestrich getrennt sind: <em>&lt;Universum&gt;-&lt;Startadresse&gt;</em>.
+Von ClubDMX wird beim Erstellen von neuen Zeilen geprüft,
+ob die Adressen korrekt im Bereich von 1-512 liegen.
+Nicht geprüft wird, ob eventuell Überschneidungen mit anderen Heads
+auftreten.</p></li>
+<li><p>Name: Das ist ein Textfeld, das für den Benutzer zur
+Identifizierung des Hardware-Gerätes dient. Beim Import des Patch
+in die Stage wird der Name zur Identifikation des Stage-Elementes
+verwendet.</p></li>
+<li><p>Gel (Farbe): Das ist ein Textfeld, das für die Farbnummer eines
+konventionellen Scheinwerfers gedacht ist. Dient zur Dokumentation eines
+Projektes und ist zur Zeit nicht weiter ausgeführt.</p></li>
+<li><p>Comment: Wie schon der Name sagt, für Kommentar und Anmerkung</p></li>
+</ul>
+<div class="section" id="neuen-patch-erstellen">
+<span id="neupatchlabel"></span><h2>Neuen Patch erstellen<a class="headerlink" href="#neuen-patch-erstellen" title="Link zu dieser Überschrift">¶</a></h2>
+<p>In jeder Datenbank-Kategorie gibt es eine Tabelle mit Namen  <em>_neu</em>,
+die als Prototyp fungiert. So auch in der Kategorie Patch.
+Sichere diesen Prototyp unter einem neuen Namen und beginne
+nun mit der Erstellung der Zeilen.</p>
+<p>Mit dem Button <code class="docutils literal notranslate"><span class="pre">Neue</span> <span class="pre">Zeile(n)</span></code> wird ein Formular zum Erzeugen
+eines neuen Eintrags geöffnet. Fülle das Formular zur
+Erstellung eines neuen Eintrags aus.</p>
+<p>Mit dem Formular können mehrere Heads vom selben Head-Typ in einem Schritt
+erzeugt werden. Je nach Head-Typ werden die Adressen für die einzelnen Heads
+berechnet, mit dem Abstand, der sich aus der Head-Definition errechnet.</p>
+<p>Dabei wird auch der maximale DMX-Wert von 512 berücksichtigt.
+Unter Umständen können daher weniger als die gewünschten Heads erzeugt werden,
+wenn ein oder mehrere Attribute einen DMX-Wert über 512 hätten.</p>
+<p>Im Bearbeitungsmodus SELECT kannst du nun sehr schnell weitere
+Zeilen mit Copy/Paste erzeugen, die du im Modus EDIT entsprechend anpasst.</p>
+<img alt="_images/patch_new.jpg" src="_images/patch_new.jpg" />
+</div>
+</div>
+
+
+          </div>
+              <div class="related bottom">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="benutzer.html" title="Previous document">Benutzer</a>
+        </li>
+        <li>
+          <a href="grundlagen.html" title="Next document">Grundlagen</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="inhalt.html">ClubDMX Doku</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Inhalt:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="readme.html">README</a></li>
+<li class="toctree-l1"><a class="reference internal" href="features.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="erste_schritte.html">Erste Schritte</a></li>
+<li class="toctree-l1"><a class="reference internal" href="einrichten.html">Einrichtung</a></li>
+<li class="toctree-l1"><a class="reference internal" href="navigation.html">Navigation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="benutzer.html">Benutzer</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Patch</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#neuen-patch-erstellen">Neuen Patch erstellen</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="grundlagen.html">Grundlagen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">Entwicklungsschritte</a></li>
+<li class="toctree-l1"><a class="reference internal" href="impressum.html">Impressum</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="inhalt.html">Documentation overview</a><ul>
+      <li>Previous: <a href="benutzer.html" title="vorheriges Kapitel">Benutzer</a></li>
+      <li>Next: <a href="grundlagen.html" title="nächstes Kapitel">Grundlagen</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Schnellsuche</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Los" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Gunther Seiser.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.4.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/patch.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

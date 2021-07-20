@@ -1,0 +1,155 @@
+{# modal Template 
+Daten:
+  Titel: $("#modal-title").html("-Titel-");
+  Body:  $("#modal-body").html ("-Body-");
+Anzeigen:
+  $("#Modal").modal();
+#}
+
+{% from "form-macros.html" import render_bs_field %}
+
+{% macro textbody () %}
+<p>{{ text }}</p>
+{% endmacro %}
+
+{% macro stringbody () %}
+<p>{{ text }}</p>
+<div class="input-group mb-3">
+  <div class="input-group-prepend">
+    <span class="input-group-text" id="basic-addon1">Name</span>
+    <input type="text" class="form-control" id="input-text"
+    aria-label="input-text" aria-describedby="basic-addon1">
+  </div>
+</div>
+{% endmacro %}
+
+{% macro filedialogbody () %}
+<div class="modal-body" id="filetree">
+  <div class="alert alert-info" id="modalexploreDir">Dir Path</div>
+  <div id="modalexploreTable">Dir Table</div>
+</div>
+{% endmacro %}
+
+{% macro formbody () %}
+<div class="modal-body" >
+  {% for field in modalform %}
+  {{ render_bs_field (field ,
+        placeholder=field.description.placeholder) }}
+  {% endfor %}
+</div>
+{% endmacro %}
+
+<!-- Modal für Dialog -->
+<div class="modal" id="viewModal" tabindex="-1" role="dialog" 
+   aria-labelledby="modal-title" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable" role="document">
+    {# form oder div #}
+    {% if body == "formbody" %}
+    <form class="modal-content" action="{{ endpoint }}" method="POST">
+    {% else %}
+    <div class="modal-content">
+    {% endif %}
+
+      {# Header #}
+      <div class="modal-header"> 
+      <h5 class="modal-title" id="modal-title">
+        {% if body == "filedialog" %}
+          {% if title %}
+          {{ title }}
+          {% else %}
+          Datei wählen {% if ftype %} ({{ ftype }}) {% endif %}
+          {% endif %}
+        {% elif body == "faderbody" %}
+          <div class="selectDiv"></div>
+        {% else %}
+          {{ title }}
+        {% endif %}
+      </h5>
+      <button type="button" class="close close-modal" data-dismiss="modal" 
+          aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      </div>
+
+      {# Body#}
+      <div class="modal-body" id="modal-body" > 
+        {% if body == "textbody" %}
+        {{ textbody() }}
+        {% elif body == "stringbody" %}
+        {{ stringbody() }}
+        {% elif body == "filedialog" %}
+        {{ filedialogbody() }}
+        {% elif body == "csvbody" %}
+        {% include "csvtable.html" %}
+        {% elif body == "formbody" %}
+        {{ formbody() }}
+        {% elif body == "faderbody" %}
+        <div id="faderspace"></div>
+        {% else %}
+        {{ body }}
+        {% endif %}
+      </div>
+
+      {# Footer #}
+      {% if body == "filedialog" %} 
+      <div class="modal-footer">
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+          <span class="input-group-text" id="basic-addon1">Datei</span>
+          <input type="text" class="form-control" id="filename"
+          aria-label="filename" aria-describedby="basic-addon1">
+          </div>
+          <button type="button" class="btn btn-primary" id="selectButton"
+              data-dismiss="modal">wählen</button>
+          <button type="button" class="btn btn-secondary close-modal" 
+              data-dismiss="modal">schließen</button>
+        </div>
+       </div>
+      {% elif body == "csvbody" %}
+      <div class="modal-footer btn-group" id="modal-footer">
+        <button type="button btn-primary" class="btn btn-secondary" 
+                data-dismiss="modal">
+          schließen
+        </button>
+      </div>
+      {% elif body == "formbody" %}
+      <div class="modal-footer btn-group" id="modal-footer">
+        <button id="submitModal" type="submit" {# data-dismiss="modal" #}
+            class="btn btn-primary" value="true" name="submit_modal">
+          {{ submit_text }} 
+        </button>
+        <button type="button" class="btn btn-secondary close-modal" 
+            data-dismiss="modal" >
+          schließen
+        </button>
+      </div>
+      {% elif body == "textbody" %}
+      <div class="modal-footer btn-group" id="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          schließen</button>
+      </div>
+      {% elif body == "faderbody" %}
+      <div class="modal-footer btn-group" id="modal-footer">
+        {% if submit_text|length > 0 %}
+        <button id="saveCueButton" type="button" data-dismiss="modal"
+            class="btn btn-primary">{{ submit_text }}</button>
+        {% endif %}
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          schließen</button>
+      </div>
+      {% else %}
+      <div class="modal-footer btn-group" id="modal-footer">
+        <button id="selectButton" type="button" data-dismiss="modal"
+            class="btn btn-primary">{{ submit_text }}</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          schließen</button>
+      </div>
+      {% endif %}
+
+    {% if not body == "formbody" %}
+    </div>
+    {% else %}
+    </form>
+    {% endif %}
+  </div>
+</div>

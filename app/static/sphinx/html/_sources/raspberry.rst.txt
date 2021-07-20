@@ -1,0 +1,454 @@
+.. _raspberry_label:
+
+Raspberry einrichten
+====================
+
+Der Raspberry PI ist eine für ClubDMX getestete Hardware, hier ist 
+eine Anleitung zur Neu-Installation von Raspbian Buster als Betriebssystem, 
+Installation von OLA und Installation von ClubDMX.
+
+
+.. _Buster:
+
+Raspberry Buster neu installieren
+---------------------------------
+
+* Programm Imager von `<https://www.raspberrypi.org/downloads/>`_
+  
+* Image erzeugen
+
+* Raspi mit Bidschirm und Tatatur starten, anschließend Guide ausführen
+
+* Raspi-Config:
+
+::
+
+  sudo raspi-config
+  2 Network Options
+  # -> N1 Hostname: Pi-Name eintragen (optional)
+
+  3 Boot Options
+  # -> B2 Wait for Network on Boot 
+  # (sonst ist OLA nicht mit allen Plugins ausgestattet)
+
+  4 Localisation Options
+  # -> Ländercode + Utf-8, auch Ländercode für Wlan (wichtig) 
+
+  5 Interfacing Options
+  # -> P2 SSH enable (wichtig)
+
+  5 Interfacing Options
+  # -> P3 VNC enable (optional)
+
+  
+OLA installieren
+----------------
+
+Für die Installation von OLA gibt es zwei Möglichkeiten, eine einfache, die das
+nicht tagesaktuelle Repository installiert, und eine langwierigere, die das 
+aktuelle OLA von GIT installiert. Die zweite Version war für mich notwendig in 
+einem Fall, wo ich als DMX-Adapter den *Eurolite DMX512 Pro MK2* verwenden 
+wollte, der war im Repository noch nicht verfügbar. Hier sind beide 
+Varianten beschrieben, nur eine davon muss installiert werden.
+
+**Einfache OLA Installation**
+
+``sudo nano /etc/apt/sources.list``
+
+hier eintragen:
+
+::
+
+  #ola:
+  deb http://apt.openlighting.org/raspbian wheezy main
+
+anschließend Reboot.
+Nach dem Neustart:
+
+``sudo apt-get install ola``
+
+Damit ist OLA installiert und startet automatisch bei jedem Neustart.
+
+
+**OLA von GIT installieren**
+
+Wenn die *einfache OLA-Installation* gewählt wurde, kann der folgende Abschnitt 
+übersprungen werden. Es geht dann weiter im Abschnitt *OLA für ClubDMX vorbereiten*.
+
+Hier sind meine Notizen, die ich während der Installation gemacht habe. Diese 
+sind auch in 
+`Google Groups
+<https://groups.google.com/g/open-lighting/c/rDIbzhqnWxQ>`_ nachzulesen.
+
+::
+
+  sudo apt-get install git
+  git clone https://github.com/OpenLightingProject/ola.git ola
+  cd ola
+
+  # (Error: could not resolve host..., therfore:)
+  git config --global --unset http.proxy
+  git config --global --unset http.proxy
+
+  sudo apt-get install autoconf libtool bison flex uuid-dev libcppunit-dev
+  sudo apt-get install libmicrohttpd-dev protobuf-compiler libprotobuf-dev python-protobuf
+  sudo apt-get install libftdi-dev liblo-dev libavahi-client-dev libprotoc-dev
+  sudo apt-get install libusb-1.0.0-dev libcurses5-dev pkg-config liblo
+  autoreconf -i 
+  ./configure 
+  # optionally: ./configure --enable-rdm-tests --enable-python-libs
+  make
+  make check
+  sudo make install
+  sudo ldconfig
+
+Damit ist die neueste Version von OLA installiert. Nun muss noch Autostart 
+konfiguriert werden:
+
+``sudo nano /etc/rc.local``
+
+hier eintragen vor der letzten Zeile (*exit 0*):
+
+``su pi -c "olad -f"``
+
+
+**Eurolite  usb-dmx mk2**
+
+Dieser Abschnitt muss nur dann ausgeführt werden, wenn der Eurolite DMX-Adapter
+verwendet werden soll. Diese Anleitung funktioniert mit der neuesten Version
+von OLA, nicht aber mit der einfachen OLA-Installation.
+Ansonsten weiter im 
+Abschnitt *OLA für ClubDMX vorbereiten*.
+
+``sudo nano /etc/modprobe.d/eurolite-dmx.conf``
+
+hier eintragen:
+
+``blacklist cdc_acm``
+
+Eurolite Adapter anstecken und Vendor-ID und Product-ID prüfen:
+
+::
+
+  lsusb
+  sudo nano /etc/udev/rules.d/02-eurolite-dmx.rules:
+  # (this is one line:)
+  SUBSYSTEM=="usb|usb_device", ACTION=="add", ATTRS{idVendor}=="0403",
+   ATTRS{idProduct}=="6001", GROUP="plugdev" MODE="660"
+  
+Nun müssen noch einige conf-Dateien von OLA angepasst werden. Diese können sich
+an unterschiedlichen Orten befinden, im Raspberry PI mit der beschriebenen
+Installation aber wahrscheinlich in ``/home/pi/.ola/``. 
+Zur Sicherheit am Besten im Browser die 
+OLA-Admin Seite 127.0.0.1:9090 öffnen und im Abschnitt *Plugins* eine Seite
+öffnnen, dann findet sich hier die *Config Location*.
+
+In den drei Dateien 
+``/home/pi/.ola/ola-opendmx.conf , 
+/home/pi/.ola/ola-usbserial.conf und 
+/home/pi/.ola/ola-stageprofi.conf`` jeweils die Zeile 
+``enabled = true`` auf ``enabled = false`` ändern.
+
+In der Datei ``ola-usbdmx.conf`` die Zeile ``enable_eurolite_mk2 = true`` 
+einfügen.
+
+Damit ist nach einem Neustart der Eurolite Adapter verfügbar.
+
+
+OLA für ClubDMX vorbereiten
+---------------------------
+
+Weiter im Browser, auf Seite *127.0.0.1:9090*.
+
+ClubDMX kommuniziert mit OLA über OSC, daher muss in OLA in jedem Universum
+ein OSC-Input eingetragen werden. 
+
+Ein oder mehrere Universen anlegen:
+
+::
+
+  Universes -> Add Universe
+  Universe ID: 1
+  Universe Name: Uni1
+  Checkbox anhaken bei erster Zeile OSC Device Input /dmx/universe/%d 
+  Checkbox für gewünschten Output anhaken.
+
+Für weitere Universen wiederholen. 
+
+
+ClubDMX installieren
+--------------------
+
+Ich entwickle ClubDMX auf einem Windows-Rechner, daher kann es sein, dass 
+Shell-Skripte erst ins Unix-Format umgewandelt werden müssen. Dazu gibt es 
+ein Hilfsprogramm namens ``dos2unix``. Siehe auch 
+`hier 
+<https://www.digitalmasters.info/de/das-zeilenende-unter-linux-windows-und-os-x-im-griff/>`_
+
+``sudo apt-get install dos2unix``
+
+Und nun zur eigentlichen Installation von ClubDMX. Die aktuelle Version ist
+in meinem `Google Drive 
+<https://drive.google.com/drive/u/0/folders/1obYMWAk5R5nDciTfRPQ6BhFDnAgCs9Bd>`_ 
+zu finden.
+
+**Standard-Installation**
+
+In der Standard-Installation werden ein Code-Verzeichnis und ein Raum-Verzeichnis
+im /home Verzeichnis des Users pi angelegt. Diese Verzeichnisse können auch an
+andere orte verschoben werden. Falls das gewünscht wird, dann bitte weiter unten
+in den Anmerkungen nachlesen.
+
+Die ZIP-Datei wird mit Filezilla, WinSCP oder von einem USB-Stick
+ins /home Verzeichnis kopiert,  anschließend mit dem 
+Befehl
+
+``unzip clubdmx_code.zip``
+
+entpackt. Damit wird das code-Verzeichnis  ``clubdmx_code``
+angelegt und mit den aktuellen 
+Code-Daten befüllt. Das Raum-Verzeichnis wird mit dem Befehl
+
+``mkdir clubdmx_rooms``
+
+angelegt.
+
+Beispiele für Räume können von meiner Webseite
+`<guntherseiser.pythonanywhere.com>`_ heruntergeladen und in das Raumverzeichnis
+übertragen werden.
+
+
+**Alias anlegen**
+
+Diese Zeile am Ende von ``/home/pi/.bashrc`` anfügen:
+
+``alias clubdmx='/home/pi/clubdmx_code/app_start.sh'``
+
+
+**Python Module**
+
+Alle nötigen Module installieren:
+
+::
+
+  cd clubdmx_code
+  ./python_setup.sh
+
+
+**Secret Key**
+
+User-Datenbank und Cookies funktionieren nur, wenn für die Webseite ein 
+*SECRET KEY* angelegt wird. Nur um das einmal klarzustellen: Ich gehe davon aus,
+dass du mit Cookies einverstanden bist, wenn du mein Programm verwendest. Die
+Cookies dienen nur zur Funktion der Webseite und werden nicht für irgendwelche
+anderen Zwecke verwendet.
+
+
+::
+
+  cd clubdmx_code
+  nano .env
+  # hier eintragen:
+  SECRET_KEY = b'84nrf97vzih47vzkd98747'
+  # nicht genau diesen String, sondern eine zufällige Zeichenkette,
+  # beginnend mit b' und abgeschlossen mit '
+
+
+**ClubDMX starten**
+
+Die letzten Schritte sind schnell erledigt:
+
+::
+
+  cd /home/pi/clubdmx_code
+  dos2unix *.sh
+  chmod +x *.sh
+  ./app_start.sh start
+
+
+**Autostart einrichten**
+
+Damit ist die ClubDMX installiert. Nun muss noch Autostart 
+konfiguriert werden. Hier ist eine Unterscheidung zu treffen, je nachdem
+der Raspberry in der Konsole  (wird in der Regel für ClubDMX die richtige
+Wahl sein) oder mit grafischer Benutzeroberfläche startet (auch dafür wird es
+Gründe geben).
+
+*Konsolen-Start:*
+
+``sudo nano /etc/rc.local``
+
+hier eintragen vor der letzten Zeile (*exit 0*):
+
+::
+
+  # clubdmx app:
+  su pi -c "/home/pi/clubdmx_code/app_start.sh start" &
+
+*Desktop-Start*
+
+Wenn der Pi im Desktop-Modus laufen soll, dann muss ClubDMX anders gestartet 
+werden. Daher den Start von ClubDMX nicht in ``/etc/rc.local`` machen, sondern so:
+
+::
+
+  sudo nano /etc/xdg/lxsession/LXDE-pi/autostart
+  # hier eintragen vor der letzten Zeile (= @screensaver…):
+  @/home/pi/clubdmx_code/app_start.sh start
+
+
+````
+
+**Anmerkungen**
+
+Die Verzeichnisse für Code und Räume können beliebig positioniert werden. 
+ClubDMX findet die Verzeichnisse über Environment-Variablen.
+
+::
+
+  CLUBDMX_CODEPATH  
+  # (default, falls nicht gesetzt: /home/pi/clubdmx_code)
+  CLUBDMX_ROOMPATH 
+  # (default, falls nicht gesetzt: /home/pi/clubdmx_rooms)
+
+Anmerkung: Am Raspberry werden Environment-Variablen in der Datei
+``/etc/environment``  eingetragen, zum Beispiel
+
+``export CLUBDMX_ROOMPATH=”/home/pi/Documents/rooms”``
+
+
+Troubles schießen
+-----------------
+
+Die Installation ist - beginnend bei einer leeren SD-Karte - nun doch ein 
+wenig lang. Daher wird vielleicht der eine oder andere Fehler auftauchen. 
+In diesem Abschnitt der Doku werde ich versuchen, Hilfestellung zur 
+Fehlersuche zu liefern.
+
+Meine Methode zur Fehlersuche ist, einzelne Abschnitte zu testen, um nach
+Möglichkeit einen Fehler in einem bestimmten Bereich zu lokalisieren. 
+Die erste große Unterteilung ist zwischen Hardware und Software, 
+die nächste Trennung ist zwischen OLA und ClubDMX.
+
+**Hardware**
+
+* Netzwerk prüfen
+  
+  Wird der Raspberry mit Bildschirm und Tastatur verwendet oder über das 
+  Netzwerk (WinSCP, Filezilla, ssh)?
+
+  IP Adresse des PI. Am Terminal oder der Tastatur eingeben:
+
+  ``ip address``
+
+  Eine gültige IP Adresse kann so ermittelt werden. Diese ist wichtig, um
+  die OLA-Seite und die Seite von ClubDMX zu finden. Die IP Adresse des Raspberry PI
+  wird im folgenden immer mit <PI-IP> bezeichnet.
+
+**OLA prüfen**
+
+Ich gehe davon aus, dass du am Raspberry mit Bildschirm und Tastatur sitzt.
+Wenn nicht, dann bitte zuerst das Netzwerk prüfen.
+
+* Ist die OLA Webseite erreichbar? 
+  Im Browser die Seite <PI-IP>:9090 aufrufen.
+
+Auf der OLA Webseite prüfen:
+
+* Ist OLA richtig konfiguriert? 
+  Ist das DMX-Universum / sind die DMX-Universen richtig angelegt?
+
+* Ist ein OSC-Input in jedem Universum angelegt?
+  
+* Sind die Outputs angelegt?
+
+Um mithilfe der DMX Console Werte senden zu können, darf ClubDMX nicht laufen. 
+Sonst schicken sowohl DMX Console als auch ClubDMX Werte, das geht nicht. Sollte es
+also mit der DMX Console möglich sein, DMX-Werte zu senden, dann kann man 
+davon ausgehen, dass ClubDMX nicht gestartet ist.
+
+* ClubDMX stoppen.
+  Wenn der Alias *clubdmx* wie oben beschrieben angelegt ist, 
+  dann kann im Terminal mit
+  dem Befehl ``clubdmx stop`` ClubDMX angehalten werden. Wenn nicht, dann zuerst
+  ins clubdmx_code Verzeichnis wechseln:
+
+  ::
+
+    cd /home/pi/clubdmx_code
+    ./app_start.sh stop
+  
+  Nun kann mit 
+  Sicherheit festgestellt werden, ob OLA mit der Hardware kommunizieren kann.
+  In der DMX Console müssen nun alle DMX Kanäle bedienbar sein und die 
+  entsprechenden Geräte darauf reagieren.
+
+
+**ClubDMX prüfen**
+
+Wenn im vorigen Schritt ClubDMX gestoppt wurde, dann jetzt wieder starten mit 
+dem Befehl  ``clubdmx start``. Im Terminal werden nun nur wenige Meldungen
+ausgegeben, die Hinweise auf das korrekte Funktionieren geben.
+
+* Ist die Webseite erreichbar?
+
+  Im Browser die Seite <PI-IP>:5000 aufrufen.
+
+  Ist die Seite erreichbar? Erscheint im Browser eine Fehlermeldung?
+
+* Mehr Hinweise am Terminal erhalten
+  
+  Im Normalfall wird ClubDMX als Daemon ausgeführt, das bedeutet, dass nur der
+  Start im Terminal festgestellt werden kann. Ab nun wird das Programm im 
+  Hintergrund ausgeführt, Fehlermeldungen kommen also nicht aufs Terminal.
+
+  Gunicorn im Teminal und nicht als Daemon starten:
+
+  ::
+
+    clubdmx stop
+    export GUNICORNSTART="/home/pi/.local/bin/gunicorn"
+    clubdmx start
+
+  Nun sieht man die Meldungen von ClubDMX auf dem Terminal. Das kann sicher
+  hilfreich bei der Fehlersuche sein.
+  
+  Falls Gunicorn in einem anderen als dem oben genannten Verzeichnis 
+  installiert wurde, dann muss zuerst der Pfad zu Gunicorn ermittelt werden.
+  
+* Gunicorn finden
+  
+  Gunicorn ist ein Python Package, das als Webserver für ClubDMX in Verwendung ist. 
+  Packages können an unterschiedlichen Stellen installiert werden, was uns als User 
+  grundsätzlich nicht kümmern muss. Allerdings sieht es etwas anders aus, wenn ein
+  Start-Skript einen exakten Pfad benötigt, weil zum Zeitpunkt des Startens noch kein 
+  Suchpfad definiert ist. 
+
+  Genau das ist beim Autostart von ClubDMX der Fall. Daher ist es nötig, dem Skript
+  app_start.sh mitzuteilen, wo sich Gunicorn befindet. In der Regel wird sich 
+  Gunicorn im Verzeichnis */home/pi/.local/bin* befinden, aber das kann auch anders sein.
+
+  Mit dem Befehl 
+
+  ``find / -name "gunicorn*" 2>/dev/null``
+
+  erhält man die Auskunft über den Speicherort von Gunicorn. Für den Fall, dass
+  ein anderer als der oben angegebene Pfad ermittelt wird, dann muss
+  die Environment-Variable *GUNICORNSTART* gesetzt werden (siehe 
+  *Anmerkungen* weiter oben).
+
+::
+
+  sudo nano /etc/environment
+  # hier eintragen, Beispiel:
+  export GUNICORNSTART="/usr/bin/gunicorn3"
+  
+
+
+
+
+  
+
+  
+
+

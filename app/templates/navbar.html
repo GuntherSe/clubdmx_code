@@ -1,0 +1,211 @@
+{# navbar mit Jinja Templates: #}
+{# http://exploreflask.com/en/latest/templates.html #}
+
+{% from "base-macros.html" import svg_icon with context %}
+
+{% macro nav_link(endpoint, text) %}
+  {% if request.endpoint.endswith(endpoint) %}
+    <li class="nav-item">
+      <a class="nav-link active" href="{{ url_for(endpoint) }}">{{text}}</a>
+    </li>
+  {% else %}
+    <li class="nav-item">
+      <a class="nav-link" href="{{ url_for(endpoint) }}">{{text}}</a>
+    </li>
+  {% endif %}
+{% endmacro %}
+
+{% macro dropdown_link (endpoint,text) %}
+  <a class="dropdown-item" href="{{ url_for(endpoint) }}">{{text}}</a>
+{% endmacro %}
+
+{% macro edit_select_button () %}
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle" href="#" 
+    id="navbarEditDropdown" role="button" data-toggle="dropdown" 
+    aria-haspopup="true" aria-expanded="false">
+    {% if session["editmode"] == "edit" %}
+    EDIT
+    {% else %}
+    SELECT
+    {% endif %}
+  </a>
+  <div class="dropdown-menu" aria-labelledby="navbarEditDropdown">
+    <a class="dropdown-item" 
+       href="{{ url_for ('common.editmode', mode='edit') }}">
+       Edit: Zellen bearbeiten
+    </a>
+    <a class="dropdown-item" 
+       href="{{ url_for ('common.editmode', mode='select') }}">
+       Select: Objekte auswählen
+    </a>
+  </div>
+</li>
+{% endmacro %}
+
+{% macro reload_button () %}
+  <a class="nav-item nav-link navbar-dark" 
+     onclick="window.location.reload();" >
+    {{ svg_icon ("#svg-arrow-clockwise", "30px")}}
+  </a>
+{% endmacro %}
+
+{% macro stage_button () %}
+<li class="nav-item dropdown">
+  <a id="navbarStageDropdown" role="button" href="#"
+    class="nav-link dropdown-toggle dropdown-toggle-split" 
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Stage
+  </a>
+  <div class="dropdown-menu" aria-labelledby="navbarStageDropdown">
+    {{ dropdown_link ("stage.show", "Stage") }}
+    <a class="dropdown-item" href="{{ url_for('stage.show', mode='mobil') }}">
+      Stage kompakt</a>
+    {{ dropdown_link ("stage.single", "Single")}}
+  </div>
+</li>
+{% endmacro %}
+
+{% macro info_button () %}
+<li class="nav-item dropdown">
+  <a id="navbarInfoDropdown" role="button" href="#"
+    class="nav-link dropdown-toggle dropdown-toggle-split" 
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Info
+  </a>
+  <div class="dropdown-menu" aria-labelledby="navbarInfoDropdown">
+    {{ dropdown_link ("common.output", "DMX-Output")}}
+    {{ dropdown_link ("basic.doku", "Info") }}
+    {% if current_user.is_authenticated %}
+      {{ dropdown_link ("basic.galerie", "Galerie") }}
+    {% endif %}
+    <a class="dropdown-item" 
+        href="{{ url_for ('static', filename='sphinx/html/inhalt.html')}}" 
+        target='_blank'>
+        Doku
+    </a>
+    <a class="dropdown-item" 
+        href="{{ url_for ('static', filename='sphinx/latex/clubdmxdoku.pdf')}}" 
+        target='_blank'>
+        Doku (PDF)
+    </a>
+    {#{ dropdown_link ("basic.pdfdoku", "Doku (PDF)")}#}
+  </div>
+</li>
+{% endmacro %}
+
+{% macro topsave_button () %}
+{% if current_user.role == "standard" or current_user.role == "admin" %}
+  <li class="nav-item dropdown">
+    <a id="topnavSaveDropdown" role="button" href="#"
+      class="nav-link nav-topcue dropdown-toggle dropdown-toggle-split" 
+      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      speichern
+    </a>
+    <div class="dropdown-menu" aria-labelledby="topnavSaveDropdown">
+        <a class="dropdown-item topsavecue" href="#" >
+          als Cue
+        </a>  {# wird von jquery gemanaged #}
+        <a class="dropdown-item topsavefader" href="#" >
+          als Fader
+        </a>  {# wird von jquery gemanaged #}
+        <a class="dropdown-item topsavebutton" href="#" >
+          als Button
+        </a>  {# wird von jquery gemanaged #}
+    </div>
+  </li>
+{% endif %}
+{% endmacro %}
+
+{# Haupt-Navigation #}
+<div id="nav-container" class="fixed-top">
+  <div id="primaryNav" >
+    <nav class='navbar navbar-expand-sm navbar-dark bg-dark' >
+      <a class="navbar-brand" href="{{ url_for ('basic.index') }}">
+        <img src="{{ url_for ('static', filename='favicon_io/favicon.ico') }}" 
+            width="30" height="30" alt="">
+      </a>
+      <button class='navbar-toggler' type='button' data-toggle='collapse'
+        data-target='#collapsingNavbar'>
+        <span class='navbar-toggler-icon'></span>
+      </button>
+
+      <div class='navbar-collapse collapse' id='collapsingNavbar'>
+        <ul class='navbar-nav bd-navbar-nav mr-auto mt-2 mt-lg-0'>
+          {{ stage_button () }}
+          {{ nav_link ("basic.exec", "Exec") }}
+          {{ nav_link ("basic.cuefader", "Fader") }}
+          {{ nav_link ("basic.cuebutton", "Button") }}
+          {% if current_user.role == "standard" or current_user.role == "admin" %}
+            {{ nav_link ("dataform.config", "Einrichtung") }}
+          {% endif %}
+          {{ info_button () }}
+          {% if current_user.role == "standard" or current_user.role == "admin" %}
+            {{ edit_select_button () }}
+          {% endif %}
+          {{ reload_button () }}
+        </ul>
+
+        <ul class="navbar-nav my-2 my-lg-0">
+          {% if current_user.is_anonymous %}
+            {{ nav_link ("auth.login", "Login") }}
+          {% else %}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" 
+              id="navbarUserDropdown" role="button" data-toggle="dropdown" 
+              aria-haspopup="true" aria-expanded="false">
+              {{ current_user.username }}
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" 
+                aria-labelledby="navbarUserDropdown">
+              {{ dropdown_link ("auth.logout", "Logout")}}
+              <div class="dropdown-divider"></div>
+              {{ dropdown_link ("auth.password", "Passwort ändern") }} 
+              {% if current_user.role == "standard"  %}
+                {{ dropdown_link ("auth.userlist", "alle Benutzer anzeigen") }}              
+                {{ dropdown_link ("auth.register", "Neuen Benutzer anlegen") }}              
+              {% elif current_user.role == "admin"%}             
+                {{ dropdown_link ("auth.usermanager", "Benutzer-Manager") }} 
+              {% endif %}             
+            </div>
+          </li>
+          {% endif %}
+        </ul>
+      </div>
+    </nav>
+  </div>
+
+  {# navbar für Topcue: 
+    - anzeigen
+    - löschen
+    - speichern / zusammenführen  
+    div#secondNav wird mit 
+    showSecondNav() und hideSecondNav() angezeigt oder verborgen
+    class nav-topcue dient zum Formatieren mit CSS
+  #}
+  <div id="secondNav" class="nav-topcue" style="display:none;" >
+    <div class="container-fluid">
+      <ul class="nav nav-topcue text-white">
+        <li class="nav-item">
+          <!-- <a class="nav-link nav-topcue" href="#"> -->
+            <strong class="nav-link nav-topcue">Topcue:</strong>
+          <!-- </a> -->
+        </li>
+        <li class="nav-item " >
+          <a class="nav-link nav-topcue" href="{{ url_for('cuechild.topclear') }}">leeren</a>
+        </li>
+
+        <li class="nav-item " >
+          <a class="nav-link nav-topcue topview" href="#" >
+            anzeigen</a>  {# wird von jquery gemanaged #}
+        </li>  
+
+        {{ topsave_button () }}
+
+      </ul>
+    </div> <!-- container-fluid -->
+  </div> {# ende secondNav #}
+  
+</div>
+
+

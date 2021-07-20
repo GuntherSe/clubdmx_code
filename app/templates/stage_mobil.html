@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% import "csvtable-macros.html" as tbl with context %}
+{% import "base-macros.html" as base with context %}
+
+{% macro position (left, top, width, height) %}
+style="left:{{ left }}; top:{{ top }}; width:{{ width }}; height:{{ height }};"
+{% endmacro %}
+
+{% block header %}
+  <h2> {% block title %} Bühne {% endblock %} </h2>
+{% endblock %}
+
+{% block subtitle %}
+  {{ base.subtitle_with_button (shortname, 
+    svgid = "#svg-gear",
+    endpoint = url_for ('data.dataedit_stage') )
+  }}
+{% endblock %}
+
+{% block css %}
+<style>
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- neue Zeile: Formular -->
+<div class="row">
+  <div class="col" id="links"></div>
+  <div class="col" id="rechts"></div>
+</div>  
+
+<!-- Button für modaldialogToPython -->
+<div id="showModal"></div>
+
+<div id="stagewrapper" class="stage-wrapper">
+  {{ tbl.stage_buttons () }}
+
+  <div class="container-fluid">
+    <div id="csvtable" class="row mob-stage ui-widget-content"
+        file="{{ file }}" pluspath="{{ pluspath }}" changes="{{ changes }}">
+
+      {% for item in items %}
+      <div class="mobil-element {{ item.Type.lower() }}
+          col-4 col-md-3 col-lg-2"  
+          row_num="{{ loop.index }}" >
+        {# col-6 col-md-3 col-lg-2 #}
+        {% if item.Type == "Head" %}
+          <div class="intensity-container">
+            <div class="intensity-indicator head-{{ item.Name }}"></div>
+          </div>
+          <div class="color-indicator"></div>
+        {% endif %}
+        <div class="itemName edit_div">{{ item.Name }}</div>
+        <div class="itemText edit_div">{{ item.Text }}</div>
+        <div class="itemComment edit_div">{{ item.Comment }}</div>
+      </div>
+      {% endfor %}
+    </div> 
+  </div>
+
+</div>
+{% endblock %}
+
+{% block javascript %}
+  <script src="{{ url_for('static', filename='js/stage.js')}}"></script>
+  <script>
+    $(document).ready ( function () {  
+      selectableMobileElements ();
+      periodic_attribstatus ();
+      csvSavediscardButtons ();
+      // Fadermodal schließen:
+      $("#dialogModal").on ("hide.bs.modal", function () {
+        $(".mobil-element").removeClass("highlight ui-selected");
+        $(".selectDiv").empty();
+//        $("#workspace").empty ();
+        var content = $("#sessiondata").attr ("topcuecontent");
+        if (content == "false") {
+            hideSecondNav ();
+        };
+
+      });
+    });  
+  </script>
+{% endblock %}
+

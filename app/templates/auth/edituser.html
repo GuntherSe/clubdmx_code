@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{# % from "newline.html" import render_bs_field with context % #}
+{% from "form-macros.html" import render_bs_field %}
+
+{% block header %} 
+  <h2> {% block title %} Benutzer-Manager {% endblock %} </h2>
+{% endblock %}
+
+{% block subtitle %} 
+{% endblock %}
+
+{% block content %}
+{# <h2>User Editor</h2> #}
+<div class="row">
+    <div class="col-sm-8 col-md-6">
+      <form action="" method="POST" >
+        {{ form.hidden_tag() }}
+        <!-- Body -->
+        <div class="auth-body">
+          {{ render_bs_field (form.username) }} 
+          <div class="row btn-group w-100">
+            <button type="submit" id="deleteButton"
+              class="btn btn-danger col-6" name="submit_button" 
+              value="delete">
+              löschen
+            </button>
+            <button type="submit" id="ladenButton"
+              class="btn btn-info col-6" name="submit_button" 
+              value="laden">
+              laden
+            </button>
+          </div>
+          <p></p>
+          {{ render_bs_field (form.role) }}
+
+          <div class="row btn-group w-100 " role="group">
+            <button type="submit" id="closeButton"
+              class="btn btn-dark col-6" name="submit_button"
+              value="pwreset"  >
+              Passwort reset
+            </button>
+            <button type="submit" id="saveButton"
+              class="btn btn-primary col-6" name="submit_button"
+              value="save"  >
+              speichern
+            </button>
+          </div>
+            
+          <div class="row btn-group w-100 " role="group">
+            <button type="submit" id="newButton"
+              class="btn btn-secondary col-6 mt-3" name="submit_button"
+              value="new"  >
+              neuen Benutzer anlegen
+            </button>
+          </div>
+
+        </div>
+        <!-- Footer -->
+        <div class="form-footer btn-group" role="group">
+            <button type="submit" id="closeButton"
+                class="btn btn-secondary col" name="submit_button"
+                value="schliessen" formnovalidate >
+                schließen
+            </button>
+        </div>
+
+      </form>
+    </div>
+    <div class="col-sm-6"></div>
+</div>
+{% endblock %}
+

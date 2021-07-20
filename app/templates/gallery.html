@@ -1,0 +1,22 @@
+<!-- gallery.html -->
+{% extends 'base.html' %}
+
+{% import "index-macros.html" as idx %}
+
+{% block header %}
+  <h2>{% block title %}Galerie{% endblock %}</h2>
+{% endblock %}
+{% block subtitle %}
+{% endblock %}
+
+{% block css %}
+{% endblock %}
+
+{% block content %}
+<div id="center" class="w-100">
+  {{ idx.carousel(pictures) }}
+</div>
+{% endblock %}
+
+{% block javascript %}
+{% endblock %}

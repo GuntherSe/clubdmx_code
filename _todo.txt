@@ -1,0 +1,73 @@
+-- neu: Startcue  ok 0.95
+
+-- neu: Executer-Seite ok 0.95
+
+-- neu: Tabellen-Layout beim Feld editieren berücksichtigen ok 0.96
+
+-- neu: Close-Button in Message ok 0.96
+
+-- neu: speichern/verwerfen Buttons mit JS ein/aus 0.96
+
+-- neu: sendosc.sh und sendosc.bat zum Senden eines OSC-Befehls
+   damit kann crontab zeitabhängig ClubDMX steuern 0.96
+
+-- edit/select Umschalten ohne reload, dh. mit Javascript
+
+-- Login: Basic-User startet mit Executer ok 0.95
+
+-- Bug:
+   - Stage: px in Koordinaten berücksichtigen ok 0.96
+   - Beim Löschen von Fader: Contrib Löschen
+   - Stage -> Import Patch: Koordinaten falsch berechnet ok 0.97
+   - neuer Raum/neuer Patch, "speichern als" fehlerhaft
+   - Stage resizeable: Koordinaten werden nicht gespeichert
+
+-- individuelle Stages, auch unterscheiden nach Gerät
+
+-- resizeable: Größe aller selektierten Elemente ändern ok 0.97
+
+
+-- _neu.db: Admin-Account anlegen
+   ok: 'Administrator' mit Passwort 'ClubAdmin2021'
+   'Standard' mit Passwort 'Standard2021'
+
+-- Github
+
+-- Patch: neue Zeile durch anderes Formular ersetzen: 
+   hier soll auch Anzahl der Heads einzugeben sein ok 0.96
+
+-- Room: env-Variable CLUBDMX_ROOMPATH berücksichtigen ok 0.96
+
+-- Gruppen (Geräte)
+
+-- selectables in File-explorer
+-- Selektion von Dateien im Datenbank-Editor (dataedit)
+
+-- kleine/große Geräte-Symbole in der Stage
+
+-- html-Tabelle in CSV-Tabelle speichern
+
+- Startup-Log Datei (txt)
+
+-- Feldnamen in Kleinbuchstaben, Anzeige in Tabelle 
+mit Anfangs-Großbuchstaben: 
+   - Python: capitalize()
+   - Javascript: 
+   function capitalizeFirstLetter(string) {
+      return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+
+-- newline_form mit Helper-Funktion ok
+   fehlt: Attributliste zu Head ok 0.96
+
+-- app_start.sh update
+   Prüfen, ob %2 angegeben, sonst existenz von clubdmx_code.zip prüfen.
+   Wenn vorhanden, dann unzip etc.
+   wenn nicht: Fehlermeldung -> noch testen
+   
+-- Stage: Fader für selektierte Heads in Modal anzeigen - nicht in $('#workspace')
+   ok 0.97
+
+-- draggable: Selektion verschieben, nicht nur einzelnes Element ok 0.97
+
+-- Für nicht angemeldete User: Startpage mit Bildergalerie ok 0.97

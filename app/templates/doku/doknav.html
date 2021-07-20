@@ -1,0 +1,27 @@
+{# % import "doku/dok-macros.html" as dok % #}
+
+{% macro heading (text) -%} {# Header #}
+<h5 class="card-title">{{ text }}</h5>
+{%- endmacro %}
+
+
+{% macro doknav_link(page, text) %}
+  {% if session.docpage == page %}
+    <li class="nav-item">
+      <a class="nav-link active font-weight-bold" 
+        href="{{ url_for('basic.doku', page=page) }}">{{text}}</a>
+    </li>
+  {% else %}
+    <li class="nav-item">
+      <a class="nav-link font-weight-normal" 
+        href="{{ url_for('basic.doku', page=page) }}">{{text}}</a>
+    </li>
+  {% endif %}
+{% endmacro %}
+
+{# Doku-Navigation #}
+<ul class="nav flex-column mb-3">
+  {{ heading ("Info") }}
+  {{ doknav_link ("readme", "Readme")}}
+  {{ doknav_link ("impressum", "Impressum")}}
+</ul>

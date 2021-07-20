@@ -1,0 +1,166 @@
+<!-- index.html -->
+{% extends 'base.html' %}
+
+{% import "index-macros.html" as idx %}
+
+{% block header %} 
+  <h2> {% block title %} Start {% endblock %} </h2>
+{% endblock %}
+
+{% block subtitle %} <h5>Version 0.97</h5>{% endblock %}
+{# zu Beginn eines neuen Zyklus wird die Versionsnummer erhöht,
+   am Ende mit einer Kopie finalisiert #}
+
+{% block content %}
+<div class="container-fluid">
+
+  <h1 class="text-primary mb-3">Club-DMX: Lichtsteuerung mit Web-Interface</h1>
+  {% if config.PYTHONANYWHERE == "true" %}
+   <h4 class="text-primary mb-3">Online zum Test</h4>
+  {% endif %}
+
+  {% if current_user.is_anonymous %}
+  <div class="w-100 h-50">
+    {{ idx.carousel (pictures) }}
+  </div>
+  
+  {% else %}
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 mb-4">
+    <!-- Bedienung -->
+    <div class="col">
+      <div class="card mb-4">
+        <h5 class="card-header">Einfache Bedienung</h5>
+        <div class="card-body">
+
+          <h5 class="card-title">Bühne</h5>
+          <p class="card-text">
+            Alle Geräte findest du hier:
+            <div class="row btn-group w-100 ml-0">
+              {{ idx.button_elem ("Stage", url_for ("stage.show"), "4") }}
+              {{ idx.button_elem ("Kompakt", url_for ("stage.show", mode="mobil"), "4") }}
+              {{ idx.button_elem ("Single", url_for ("stage.single"), "4") }}
+            </div>
+          </p>
+
+          <h5 class="card-title">Szenen</h5>
+          <p class="card-text">
+            Bedienung von Szenen mit Fadern oder Buttons:
+            <div class="row btn-group w-100 ml-0">
+              {{ idx.button_elem ("Exec", url_for ("basic.exec"),"4" )}}
+              {{ idx.button_elem ("Fader", url_for ("basic.cuefader"),"4") }}
+              {{ idx.button_elem ("Button", url_for ("basic.cuebutton"),"4") }}
+            </div>
+          </p>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Daten bearbeiten -->
+    {% if current_user.role == "standard" or current_user.role == "admin" %}
+    <div class="col" id="zwei">
+      <div class="card mb-4">
+        <h5 class="card-header">Daten bearbeiten</h5>
+        <div class="card-body">
+          <h5 class="card-title">Bearbeitungsmodus</h5>
+          <div class="card-text">
+            <p>
+              Der Bearbeitungsmodus bestimmt, welche Aktion das Auswählen eines Objektes auslöst.
+              {#
+              <br><i class="px-1">AUS</i> schaltet die Bearbeitungs-Funktionen ab. 
+              #}
+              <br><i class="px-1">EDIT</i> ermöglicht das Ändern von Text in Objekten.
+              <br><i class="px-1">SELECT</i> ermöglicht die Objektauswahl.
+          </p>
+            <div class="row btn-group w-100 ml-0">
+              {#
+              {{ idx.button_elem ("aus", url_for ("common.editmode", mode="view"), "4") }}
+              #}
+              {{ idx.button_elem ("edit", url_for ("common.editmode", mode="edit")) }}
+              {{ idx.button_elem ("select", url_for ("common.editmode", mode="select")) }}
+            </div>
+          </div>
+          <h5 class="card-title mt-4">Einrichtung</h5>
+          <div class="card-text">
+            <p>
+              Hier sind alle Benutzerkomponenten zu finden, die das Verhalten der 
+              Lichtsteuerung bestimmen:
+            </p>
+            <div class="row btn-group w-100 ml-0">
+              {{ idx.button_elem ("Einrichtung", url_for ("dataform.config"), "12") }}
+            </div>
+          </div>
+        </div>
+      </div> 
+    </div>
+    {% endif %}
+    {% if current_user.role == "basic" %}
+    <!-- Theme -->
+    <div class="col">
+      <div class="card mb-4">
+        <h5 class="card-header">Themen</h5>
+        <div class="card-body">
+          <div class="card-text">
+            Du kannst das Aussehen der Webseite einstellen:
+          </div>
+          {{ idx.themes () }}
+        </div>
+      </div> 
+    </div>
+    {% endif %}
+    
+
+    <!-- info -->
+    <div class="col" id="info">
+      <div class="card mb-4">
+        <h5 class="card-header">Info</h5>
+        <div class="card-body">
+          <div class="card-text">
+            <p>
+              Du befindest dich im Raum <b class="px-1">{{ room }}</b>
+            </p>
+            <p>
+              Die aktuelle Konfiguration ist <b class="px-1">{{ confname }}</b>, 
+              der Patch ist <b class="px-1">{{ patchname }}</b>.
+            </p>
+            <p>
+              Meine aktuelle IP ist <b class="px-1">{{ local_ip }}</b>
+            </p>
+            <p>
+              Die DMX-Daten werden an OLA mit Adresse <b class="px-1">{{ ola_ip }}</b>
+              gesendet.
+            </p>
+            <p>Die <a href="{{ url_for ('basic.doku') }}" class="px-1"> 
+              Basis-Info </a> findest du hier.
+            </p>
+            <p>
+              Zur <a href="{{ url_for ('static', filename='sphinx/html/inhalt.html')}}" 
+              target='_blank'>
+              Doku </a> 
+              gehts hier.
+            </p>
+            <!-- {{ idx.button_elem_js ("Fullscreen ein/aus", "fullscreenOnOff")}} -->
+          </div>
+        </div>
+      </div> 
+    </div>
+
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}
+
+ 
+{% block javascript %}
+<script>
+//  $("document").ready(function () {
+
+//    $(".fullscreenOnOff").click (function () {
+//       toggleFullScreen ();
+//    });
+//  });
+</script>
+{% endblock %}
+
+

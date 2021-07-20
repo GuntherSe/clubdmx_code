@@ -1,0 +1,54 @@
+{# default-Tab #}
+
+{% macro _help_id() -%}
+elements-overview
+{%- endmacro %}
+
+
+<div class="container-fluid">
+  <h4 class="mt-4">Titel</h4>
+  <p>
+    Eine <a href="#{{ _help_id() }}" data-toggle="collapse" >
+      Übersicht zu Titel</a> findest du hier.
+  </p>
+  <!-- help -->
+  <div class="col mb-4 collapse" id="{{ _help_id() }}">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Help Text Titel</h5>
+        <p class="card-text">
+          Help Text
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab-Inhalt -->
+  <div class="row row-cols-1 row-cols-md-2 "> 
+    
+    <div class="col" id="eins">
+      <div class="card mb-4">
+        <h5 class="card-header">Card eins</h5>
+        <div class="card-body">
+          <div class="card-text">
+            Text links
+          </div>
+        </div>
+      </div> 
+    </div>
+
+    <div class="col" id="zwei">
+      <div class="card mb-4">
+        <h5 class="card-header">Card zwei</h5>
+        <div class="card-body">
+          <div class="card-text">
+            Text rechts
+          </div>
+        </div>
+      </div> 
+    </div>
+
+  </div>  <!-- Ende Tab Inhalt -->
+</div>	
+
+

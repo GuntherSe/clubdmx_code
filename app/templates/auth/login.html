@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% from "form-macros.html" import render_bs_field %}
+
+{% block css %}
+<style>
+</style>
+{% endblock %}
+
+{% block header %} 
+  <h2> {% block title %} Login {% endblock %} </h2>
+{% endblock %}
+
+{% block subtitle %} 
+{% endblock %}
+
+{% block content %}
+<div class="row"> <!-- class="form-control" -->
+  <div class="col-sm-10 col-md-8 col-lg-6">
+    <form action="" method="POST" >
+      {{ form.hidden_tag() }}
+      <!-- Body -->
+      <div class="auth-body">
+        <h2>Anmeldung</h2>
+        {{ render_bs_field (form.username) }}
+        {{ render_bs_field (form.password) }}
+        <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
+      </div>
+
+      <!-- Footer -->
+      <div>
+        <div class="form-footer btn-group" role="group"> <!-- modal-footer -->
+            <button type="submit" id="submitButton"
+                class="btn btn-primary w-50" name="submit_button" value="true">
+                Login
+            </button>
+        </div>
+      </div>
+
+    </form>
+  </div>
+  <div class="col-sm-6"></div>
+</div>
+{% endblock %}
+

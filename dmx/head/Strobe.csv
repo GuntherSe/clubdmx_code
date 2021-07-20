@@ -1,0 +1,3 @@
+Attrib,Addr,Type,Default,Size
+Intensity,0,HTP,0,8
+Strobe,1,LTP,0,8

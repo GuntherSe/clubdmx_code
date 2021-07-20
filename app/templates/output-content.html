@@ -1,0 +1,16 @@
+{# output-content:
+#}
+
+{% macro mixelement (item) %}
+{% set val = item.split (':') %}
+<div class="mix-element col-2 col-md-1">
+  <div class="universum">{{ val[0] }}</div>
+  <div class="mixval">{{ val[1] }}</div>
+</div>
+{% endmacro %}
+
+<div class="row">
+  {% for item in items %}
+  {{ mixelement (item) }}
+  {% endfor %}
+</div>

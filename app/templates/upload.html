@@ -1,0 +1,25 @@
+
+<div class="card mb-2">
+  <h5 class="card-header">File Upload</h5>
+  <div class="card-body">
+    <form id='uploadForm' method='post' enctype='multipart/form-data'
+          action="{{ action }}">
+      <div class='input-group mb-3'>
+        <div class='custom-file'>
+          <input type='file' class='custom-file-input' id='inputGroupFile02'
+                  name='uploadfile' accept="{{ filetype }}">
+          <label class='custom-file-label' for='inputGroupFile02'
+                  aria-describedby='submitButton'>Datei wählen</label>
+        </div>
+      </div>
+
+      <button class='btn btn-primary' id='submitButton'>Upload</button>
+      <button class='btn btn-secondary' id='closeButton'>
+        Schließen
+      </button>
+    </form>
+
+  </div>
+</div> 
+<!-- <div style="height: 10px;"></div> -->
+

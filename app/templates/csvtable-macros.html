@@ -1,0 +1,202 @@
+{# CSV-Tabelle
+
+    Parameter:
+    shortname:   "xy", ohne Pfadangaben, ohne Endung
+    pluspath:   "C+Pfad+zum+Verzeichnis"
+    fieldnames: [field-1,...,field-n]
+    items: [{field-1:val-1-1, ... , field-n:val-1-n},
+            ...
+            {field-1:val-m-1, ... , field-n:val-m-n}
+           ]
+    siehe csv_to_html() in csvutil.py
+#}
+{# Style Typen: table-striped table-dark table-sm table-responsive #}
+{% from "base-macros.html" import svg_icon with context %}
+{% from "base-macros.html" import viewbuttons with context %}
+
+{% macro table () %}
+<!-- csvtable -->
+<div class="table-responsive-sm">
+<table id="csvtable" class="table table-bordered {{ style }}"
+       file="{{ shortname }}" pluspath="{{ pluspath }}" option="{{ option }}"
+       loc="{{ loc }}" changes="{{ changes }}">
+      {# file: ohnen Pfad und Endung, option: Raum-Subdir, 
+         loc: Tabelle in Subdir #}
+    <thead>
+    {% for field in fieldnames %}
+    <th col_num="{{ loop.index }}"> {{ field }} </th>
+    {% endfor %}
+    </thead>
+
+    <tbody>
+    {% for item in items %}
+      {% set rowloop = loop %}  
+      <tr class="csvrow" row_num="{{ rowloop.index }}">
+        {% for field in fieldnames %}
+        {# 
+        <td id="cell_{{ rowloop.index }}_{{ loop.index }}"
+          class="{{ field.lower() }} "
+          row_num="{{ rowloop.index }}" 
+          col_num="{{ loop.index }}"> 
+          {{ item[field] }} 
+          {% if field.lower() == "filename" and buttons == "true" %}
+            {{ viewbuttons (item[field]) }}
+          {% endif %}
+        </td>
+        #}
+        <td class="csvcell "
+          row_num="{{ rowloop.index }}" 
+          col_num="{{ loop.index }}"> 
+          {{ item[field] }} 
+          {% if field.lower() == "filename" and buttons == "true" %}
+            {{ viewbuttons (item[field]) }}
+          {% endif %}
+        </td>
+        {% endfor %}
+      </tr>
+    {% endfor %}
+    </tbody>    
+</table>
+</div>
+{% endmacro %}
+
+
+{% macro button_elem (id, text, svgid="", endpoint="#", addclass="") -%}
+{% if id  not in excludebuttons %}
+  {% set aclass  = "nav-link bg-secondary text-white " ~  id %}
+  {% set liclass = "nav-item " ~ addclass  %}
+  {% set svgcolclass = "csv-icon " ~ svgclass  %}
+  <li class="{{ liclass }}"  >
+      <a  href="{{ endpoint }}"
+          class="{{ aclass }} " >
+          
+          {% if svgid != "" %}
+            <span>
+              {{ svg_icon (svgid, size="1.1em") }}
+              <span class="ml-3">{{ text }}</span>
+            </span>
+          {% else %}
+            {{ text }}
+          {% endif %}
+      </a>
+  </li>
+{% endif %}
+{%- endmacro %}
+
+{% macro fullname () -%}
+{{ pluspath }}+{{ shortname }}
+{%- endmacro %}
+
+{# Sichern/Verwerfen Buttons #}
+{% macro csvchanges_buttons () -%}
+  {{ button_elem (id="saveChanges", text="speichern", 
+    svgid = "#svg-check" , addclass="csvchanges",
+    endpoint= url_for ("csvview.save_changes", 
+                      name=fullname(), option=option)) }}
+
+  {{ button_elem (id="discardChanges", text="verwerfen", 
+      svgid = "#svg-x-circle" , addclass="csvchanges",
+      endpoint= url_for ("csvview.discard_changes", 
+                      name=fullname(), option=option)) }} 
+{%- endmacro %}
+
+
+{# Clipboard Buttons #}
+{% macro csvclipboard_buttons () -%}
+{{ button_elem (id="selectRowCut", text="ausschneiden", addclass="navSelect",
+    endpoint= url_for ("csvcutpaste.remove_rows",
+    name=fullname(), option=option)) }}
+
+{{ button_elem (id="selectCopy", text="kopieren", addclass="navSelect",
+    endpoint= url_for ("csvcutpaste.copy_to_clipboard",
+    name=fullname(), option=option)) }}
+
+{{ button_elem (id="selectPaste", text="einfügen", addclass="csvClipboard",
+  endpoint= url_for ("csvcutpaste.paste_clipboard",
+  name=fullname(), option=option)) }}
+
+{{ button_elem (id="clearClipboard", text="leeren", addclass="csvClipboard",
+  endpoint= url_for ("csvcutpaste.clear_clipboard",
+  name=fullname(), option=option)) }}
+{%- endmacro %}
+
+
+{# Buttons zur CSV-Tabelle: 
+  - openButton
+  - saveasButton
+  - newlineButton
+  - uploadButton
+  - saveChanges
+  - discardChanges
+  - selectRowCut
+  - selectCopy
+  - selectPaste  
+#}
+{% macro csv_buttons () %}
+<ul class="nav nav-fill">
+    {{ button_elem (id="openButton", text="öffnen", 
+      svgid="#svg-folder")  }}
+
+    {{ button_elem ("saveasButton", "sichern als", 
+        svgid = "#svg-option" ) }}
+
+    {% if option == "patch" %}
+      {{ button_elem ("newpatchButton", "neue Zeile(n)", 
+          svgid = "#svg-plus" ,
+          endpoint= url_for ("patchform.patchnew", 
+                              next=request.referrer) ) }}
+    {% else %}
+      {{ button_elem ("newlineButton", "neue Zeile", 
+          svgid = "#svg-plus" ,
+          endpoint= url_for ("forms.csvline", 
+                              name=fullname(), 
+                              option=option,
+                              next=request.referrer) ) }}
+    {% endif %}
+
+    {{ button_elem ("uploadButton", "upload",
+        svgid = "#svg-upload" ) }}
+
+    {{ csvchanges_buttons () }}
+    {{ csvclipboard_buttons () }}
+</ul>
+{% endmacro %}
+
+{# Stage-Buttons 
+  - saveStage
+  - discardChanges
+  - saveStageAs
+  - openButton
+  - newStage
+  - newElement
+  - importPatch  
+#}
+{% macro stage_buttons () %}
+  {% if current_user.role == "standard" or current_user.role == "admin" %}
+  <ul class="nav nav-fill stage-buttons">
+    {{ button_elem ("openButton", "öffnen", 
+        svgid="#svg-folder" ) }}
+    
+    {{ button_elem ("saveasButton", "sichern als", 
+        svgid = "#svg-option" ) }}
+
+    {{ button_elem ("newElement", "neues Element", 
+        svgid = "#svg-plus" ,
+        endpoint= url_for ("forms.csvline", 
+        name=fullname(), 
+        option=option,
+        next=url_for ("stage.show")) ) }}
+
+    {{ button_elem ("importPatch", "Import Patch", 
+        svgid = "#svg-grid" ,
+        endpoint= url_for ("stage.import_patch") ) }}
+
+    {{ csvchanges_buttons () }}
+    {{ csvclipboard_buttons () }}
+
+  </ul>
+  {% else %}
+  <div class="stage-buttons"></div>
+  {% endif %}
+{% endmacro %}
+

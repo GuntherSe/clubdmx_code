@@ -1,0 +1,71 @@
+{# Cuebutton #}
+{% extends 'base.html' %}
+
+{% import "csvtable-macros.html" as tbl with context %}
+{% import "base-macros.html" as base with context %}
+
+{% block css %}
+<style>
+  .card {
+    border-width: 5px;
+    border-color: gray;
+  }
+  .active {
+    border-color: brown;
+  }
+  .pushbutton {
+    color: indianred;
+  }
+</style>
+{% endblock %}
+
+{% block header %} 
+  <h2> {% block title %}Buttons{% endblock %} </h2>
+{% endblock %}
+
+{% block subtitle %}
+  {{ base.subtitle_with_button (shortname, 
+    svgid = "#svg-gear",
+    endpoint = url_for ('basic.buttontable') )
+  }}
+{% endblock %}
+
+{% block content %}
+<!-- Button für modaldialogToPython -->
+<div id="showCueModal"></div>
+
+<!-- erster Executerbutton Block -->
+<div>
+  {% set b1title = "Executer-Buttons oben: " ~ data.exebuttons1.shortname %}
+  {{ base.buttontable (b1title, data.exebuttons1,
+      filebuttons="true") }}
+</div>
+<!-- Zweiter Executerbutton-Block -->
+<div>
+  {% set b2title = "Executer-Buttons unten: " ~ data.exebuttons2.shortname %}
+  {{ base.buttontable (b2title, data.exebuttons2,
+      filebuttons="true") }}
+</div>
+<!-- Extra-Bbutton-Block -->
+<div>
+  {% set b3title = "Zusätzliche Buttons: " ~ data.cuebuttons.shortname %}
+  {{ base.buttontable (b3title, data.cuebuttons,
+      filebuttons="true") }}
+</div>
+
+{% endblock %}
+
+
+{% block javascript %}
+  <script>
+    
+    $("document").ready (function () {
+
+      activateCuedetails ();
+      activateCuebuttons ();
+      periodic_buttonstatus ();
+
+    });     // ende document ready
+  </script>
+{% endblock %}
+

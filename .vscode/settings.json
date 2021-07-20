@@ -1,0 +1,11 @@
+{
+    // "editor.renameOnType": true,
+    "editor.linkedEditing": true,
+    "python.linting.enabled": false,
+    "restructuredtext.confPath": "c:\\Users\\Gunther\\OneDrive\\Programmierung\\doku",
+    "python.analysis.extraPaths": ["c:\\Users\\Gunther\\OneDrive\\Programmierung\\clubdmx_code\\dmx",
+        "c:\\Users\\Gunther\\OneDrive\\Programmierung\\clubdmx_code\\app"
+    ],
+    "restructuredtext.languageServer.disabled": true,
+    "restructuredtext.linter.disabled": true
+}

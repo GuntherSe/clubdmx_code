@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% import "csvtable-macros.html" as tbl with context %}
+{#% import "base-macros.html" as base with context %#}
+
+
+{% block header %}
+  <h2> {% block title %} Test Table {% endblock %} </h2>
+{% endblock %}
+
+{% block subtitle %}
+{% endblock %}
+
+{% block content %}
+
+<div id="center">
+  <!-- Tabelle mit Buttons -->
+  {#{ tbl.csv_buttons() }#}
+  {{ tbl.table() }}
+</div>
+<div class="row">
+  <div class="col" id="links">
+  </div>
+  <div class="col" id="rechts"></div>
+</div>  
+  {# {% include "modal.html" %} #}
+{% endblock %}
+
+{% block javascript %}
+<script>
+  $("document").ready( function() {
+    // editierbare Spalten:
+//    $(".text").addClass ("edittext_data");
+//    //$(".type").addClass ("edittext_data");
+//    $(".group").addClass ("edittext_data");
+//    $(".fadein").addClass ("edittext_data");
+//    $(".fadeout").addClass ("edittext_data");
+//    $(".midiinput").addClass ("edittext_data");
+//    $(".midibutton").addClass ("edittext_data");
+//    $(".filename").addClass ("editfile_data").attr ("option","cue");
+
+//    prepEdit();
+
+    //selectableCsvLines ();
+    editableCsvFields ();
+
+    var editfield = undefined;
+
+//    $(".type").click (function () {
+//      
+//      if (editfield == undefined) {
+//
+//        editfield = $(this);
+//        let celldata = get_celldata (editfield);
+//  
+//        let args = {subdir:celldata.option }; //, field:"type"};
+//        args.row_num = $(this).attr ("row_num");
+//        args.col_num = $(this).attr ("col_num");
+//        // fieldname steht in Table-Header Zeile an gleicher Position:
+//        let fieldname = $("th").filter ( $("*[col_num='" + args.col_num + "']"))
+//         .text().trim().toLowerCase();
+//        args.field = fieldname;
+//
+//        let current = editfield.text ().trim ();
+//        $("#rechts").html ("Current: " + current);
+//        
+//        $.get ("/getinfo/layout", args, function(data) {
+//          var jdata = $.parseJSON (data);
+//          let optionHTML = "<select id='cell_selector'>";
+//          //console.log ("Attribs: " + attribs);
+//          for (let att of jdata.values) {
+//            if (att == current) {
+//              optionHTML += "<option selected='selected' value='" 
+//                            + att + "'>" + att + "</option>"
+//            } else {
+//              optionHTML += "<option value='" + att + "'>" 
+//                            + att + "</option>"
+//            };
+//          };
+//          optionHTML += "</select>";
+//  
+//          editfield.html (optionHTML);
+//          $("#cell_selector").focus ();
+//          $("#cell_selector").focusout ( function () {
+//  
+//            let result = $("#cell_selector").val ();
+//            celldata.text = result;
+//            editfield.html (result);
+//            editfield = undefined;
+//            $.post ('/csv/savecell', celldata);
+//            $("#rechts").html ("Type: " + result + 
+//              ", Row: " + args.row_num + 
+//              ", Col: " + args.col_num);
+//          });
+//        });
+//
+//      };  
+//    });
+//
+  }); 
+</script>
+{% endblock %}
+
+
+

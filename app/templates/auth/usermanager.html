@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% import "index-macros.html" as idx with context %}
+{% from "form-macros.html" import render_bs_field %}
+
+{% macro submit_button_elem (text, value) -%}
+<button type="submit"
+  class="btn btn-light text-primary col-6" name="submit_button"
+  value="{{ value }}" 
+  aria-pressed="true"><span class="text-nowrap">{{ text }}</span>
+</button>
+{%- endmacro %}
+
+{% block css %}
+<style>
+  .userlist {
+    height: 50vh;
+    overflow: auto;
+  }
+</style>
+{% endblock %}
+
+{% block header %} 
+  <h2> {% block title %} Benutzer-Manager {% endblock %} </h2>
+{% endblock %}
+
+{% block subtitle %} 
+{% endblock %}
+
+{% block content %}
+<div class="row row-cols-1 row-cols-md-2 "> 
+  <div class="col" id="links">
+    <div class="card mb-4">
+      <h5 class="card-header">Bernutzer-Liste</h5>
+      <div class="card-body userlist">
+        {{ idx.userlist () }}
+      </div>
+    </div>
+  </div>
+
+  <div class="col" id="rechts">
+      <!-- Config Aktionen-->
+      <div class="card mb-4">
+        <h5 class="card-header">Aktionen</h5>
+        <div class="card-body">
+          <form id="useredit" action="" method="POST" >
+            {{ form.hidden_tag() }}
+            {{ submit_button_elem ("neuen Benutzer anlegen", "new") }}
+            <hr>
+            <h5 class="card-title">Benutzer editieren:</h5>
+            {{ render_bs_field (form.username) }} 
+            {{ render_bs_field (form.role) }}
+            {{ submit_button_elem ("Änderungen speichern", "save") }}
+            {{ submit_button_elem ("Benutzer löschen", "delete") }}
+            {{ submit_button_elem ("Passwort ändern", "pwreset") }}
+          </form>
+        </div>
+      </div> 
+  </div>
+</div>
+{% endblock %}
+

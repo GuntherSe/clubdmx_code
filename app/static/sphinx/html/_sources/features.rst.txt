@@ -1,0 +1,72 @@
+
+Features
+========
+
+Web-Interface
+-------------
+
+ClubDMX läuft auf einem Raspberry PI (oder auf einem anderen Computer) und 
+wird durch eine Webseite bedient. Auf dem Raspberry läuft also die Software 
+von ClubDMX und ein Webserver. ClubDMX wird von einem im selben
+(lokalen) Netzwerk befindlichen Gerät bedient. Das kann ein Tablet, Samrtphone 
+oder ein Rechner sein. Es wird dazu keine App benötigt, der Browser genügt.
+
+Die Webseite ist im Responsive Design gestaltet und passt sich an die
+Größe des jeweiligen Bildschirms an.
+
+Open Lighting Architecture
+--------------------------
+
+Die DMX Verbindung erfolgt über `OLA <https://www.openlighting.org/>`_. 
+Damit stehen eine Reihe von Hardware-Optionen zur Verfügung, wie zum Beispiel
+Enttec DMX USB Pro, DMXking. OLA ermöglicht auch diverse Ethernet Protokolle 
+wie ArtNet, sACN und andere. Eine Übersicht über die Möglichkeiten zur
+DMX-Ausgabe findest du `hier <https://www.openlighting.org/ola/>`_.
+
+
+Szenen
+------
+
+Bei der Entwicklung stand als erstes und grundlegendes Ziel: 
+**Lichtszenen (=Cues)** einfach zu erzeugen und zu bedienen. Genau diese 
+Eigenschaft ist es, die vielen kostengünstigen Lichtsteuerungen 
+aus meiner Sicht fehlt.
+
+Wie sind also hier in ClubDMX die Möglichkeiten für Lichtszenen? 
+  * Cues mit Fader.
+  * Cues mit Button.
+  * Cue mit Top-Priorität zur Bedienung der einzelnen Geräte und
+    Erzeugung von weiteren Cues. Siehe :ref:`topcuelabel`
+
+
+Daten in CSV-Dateien
+--------------------
+
+Die Programmdaten werden in CSV-Dateien gespeichert. Das sind Textdateien,
+die mit jedem Editor (Notepad, Excel, Libre Office, ...) bearbeitet werden 
+können. Natürlich ist auch eine Bearbeitung in ClubDMX möglich. 
+Es stehen Zeilen- und Zellen-Bearbeitungsoptionen zur Verfügung.
+
+
+Angepasst an Benutzer 
+---------------------
+
+Indem man sich auf der Webseite anmeldet, werden die benutzerspezifischen
+Möglichkeiten und Daten aktiv. Ohne Anmeldung ist keine Bedienung der
+DMX-Geäte möglich. 
+
+MIDI
+----
+
+Außer der Webseite kann ClubDMX auch über MIDI bedient werden. Vorzugsweise über 
+ein Korg NanoKontrol-2. Die Buttons und Fader des NanoKontrol2 können mit den 
+Buttons und Fadern verbunden werden. 
+
+OSC Input
+---------
+
+Über `OSC <https://de.wikipedia.org/wiki/Open_Sound_Control>`_ 
+kann eine Verbindung von einer externen Software zu ClubDMX hergestellt 
+werden. Damit können alle Geräte mit allen Attributen, die Szenen-Fader und 
+Szenen-Buttons bedient werden. Getestet mit 
+`Isadora <https://troikatronix.com/>`_ .

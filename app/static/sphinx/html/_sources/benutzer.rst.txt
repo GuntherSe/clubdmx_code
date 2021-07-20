@@ -1,0 +1,48 @@
+.. _benutzer_label:
+
+Benutzer
+========
+
+ClubDMX ist mit einer Benutzerstruktur ausgestattet. Je nach Rolle des 
+Benutzers sind Funktionen und Seiteninhalte verfügbar.
+
+Es gibt drei Rollen: Basic, Standard und Admin.
+
+Basic
+-----
+
+Benutzer mit dieser Rolle können Stage, Fader und Buttons bedienen. Damit
+kann ein Basic-Benutzer alle voreingestellten Szenen aufrufen und auf
+alle Geräte zugreifen. Eine Veränderung von Szenen ist nicht möglich.
+
+Standard
+--------
+
+Benutzer mit Standard-Berechtigung haben vollen Zugriff auf die Programmierung, 
+sie können Veränderungen nach ihren Vorstellungen vornehmen. Alle 
+Änderungen werden so gespeichert, dass sie auch rückgängig gemacht 
+werden können. Das Rückgängig-Machen kann vom Standard-Benutzer oder vom
+Admin gemacht werden.
+
+Ein Standard-Benutzer kann auch neue Benutzer anlegen, denen er die Rolle
+Standard oder Basic zuordnen kann.
+
+Admin
+-----
+
+Gegenüber dem Standard-Benutzer hat der Admin Rechte in der 
+Form, dass er einen aktuellen Programmstatus in Teilen oder zur Gänze
+permanent speichern kann. Permanent gespeicherte Daten können dann nicht
+mehr rückgängig gemacht werden.
+
+Der Admin kann auch weitere Benutzer mit Admin-Rechten anlegen, Benutzer
+löschen und die Passwörter von Benutzern zurücksetzen.
+
+Funktionen
+----------
+
+Die verschiedenen Seiten zur Benutzerverwaltung sind entsprechend der Rolle des
+jeweiligen Benutzers verfügbar. Die komplette Benutzerverwaltung ist nur 
+Admins zugänglich, ein Standard-Benutzer sieht die Liste der Benutzer und
+kann neue Benutzer anlegen. Ein Basic-Benutzer kann sich nur an- und abmelden 
+und das Passwort ändern.

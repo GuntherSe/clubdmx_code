@@ -1,0 +1,122 @@
+<!-- single.html -->
+{% extends 'base.html' %}
+{% import "csvtable-macros.html" as tbl with context %}
+
+{% block header %}
+<div class="container-fluid">
+  <h2 class="row">
+    <div class="col">{% block title %}Single: {% endblock %}
+    </div>
+    <div class="col currenthead"></div>      
+  </h2>
+</div>
+ {# <h2>{% block title %}Single: {{ singleheadindex () }} {% endblock %}</h2> #}
+{% endblock %}
+
+{% block subtitle %}
+  <ul class="nav nav-fill">
+    {{ tbl.button_elem (id="minusTen", text="", 
+      svgid = "#svg-chevron-left-double") }}
+
+    {{ tbl.button_elem (id="minusOne", text="", 
+      svgid = "#svg-chevron-left") }}
+
+    {{ tbl.button_elem (id="plusOne", text="", 
+      svgid = "#svg-chevron-right") }}
+
+    {{ tbl.button_elem (id="plusTen", text="", 
+      svgid = "#svg-chevron-right-double") }}
+  </ul>
+{% endblock %}
+
+{% block css %}
+{% endblock %}
+
+{% block content %}
+<div id="center">
+  <h4>Head Details:</h4>
+  <div id="headlist" 
+       items="  {% for item in headlist %}{{ item|e }} {% endfor %}"
+       index="{{ headindex }}">
+  </div>
+  <div id="headdetails"></div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+  var headlist, headindex;
+
+  // Slider für den aktuellen Head erzeugen:
+  function make_headslider () {
+    var headnr = headlist[headindex];
+    //console.log ("headindex:" + headindex);
+    showSecondNav ();
+    // $("#secondNav").show ();
+    $(".currenthead").html (headnr);
+    //$("#sessiondata").attr ("singleheadindex", headindex);
+
+    // Headfader vom Server holen:
+    var args = {heads:headnr, single:headindex};
+    $.get ("/stage/headfader", args, function (data) {
+        var jdata = JSON.parse (data);
+        if (jdata != "false") {
+            $(".selectDiv").html ("Selektion: " + headnr);
+            $("#workspace").html (jdata["table"]);
+            var attribs = jdata["attribs"];
+            var levels  = jdata["levels"];
+            for (var i=0; i < attribs.length; i++){
+                makeCueAttribSlider (headnr+'-', attribs[i], 
+                    levels[attribs[i]], '/stage/headfader' );
+            };
+        };
+    });
+    // Head-Details anzeigen:
+    $.get ("/stage/headdetails", args, function (data) {
+      var jdata = JSON.parse (data);
+      $("#headdetails").html (jdata["details"]);
+    });
+  }
+
+
+  $(document).ready ( function () {  
+    // Liste der Heads:
+    headlist = $("#headlist").attr ("items").trim().split (" ");
+    headindex = parseInt ($("#headlist").attr ("index"));
+    make_headslider ();
+
+    $(".plusOne").click (function () {
+      if (headindex < headlist.length -1 ) {
+        headindex = headindex + 1;
+        make_headslider ();
+      };
+    });
+
+    $(".plusTen").click (function () {
+      if (headindex < headlist.length -11 ) {
+        headindex = headindex + 10;
+      } else {
+        headindex = headlist.length - 1;
+      };
+      make_headslider ();
+    });
+
+    $(".minusOne").click (function () {
+      if (headindex > 0 ) {
+        headindex = headindex - 1;
+        make_headslider ();
+      };
+    });
+
+    $(".minusTen").click (function () {
+      if (headindex > 10 ) {
+        headindex = headindex - 10;
+      } else {
+        headindex = 0;
+      };
+      make_headslider ();
+    });
+
+  });
+</script>
+{% endblock %}

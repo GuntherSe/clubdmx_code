@@ -1,0 +1,218 @@
+
+<!DOCTYPE html>
+
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Features &#8212; ClubDMX Doku 0.9 Dokumentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/translations.js"></script>
+    <link rel="index" title="Stichwortverzeichnis" href="genindex.html" />
+    <link rel="search" title="Suche" href="search.html" />
+    <link rel="next" title="Erste Schritte" href="erste_schritte.html" />
+    <link rel="prev" title="README" href="readme.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+              <div class="related top">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="readme.html" title="Previous document">README</a>
+        </li>
+        <li>
+          <a href="erste_schritte.html" title="Next document">Erste Schritte</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="features">
+<h1>Features<a class="headerlink" href="#features" title="Link zu dieser Überschrift">¶</a></h1>
+<div class="section" id="web-interface">
+<h2>Web-Interface<a class="headerlink" href="#web-interface" title="Link zu dieser Überschrift">¶</a></h2>
+<p>ClubDMX läuft auf einem Raspberry PI (oder auf einem anderen Computer) und
+wird durch eine Webseite bedient. Auf dem Raspberry läuft also die Software
+von ClubDMX und ein Webserver. ClubDMX wird von einem im selben
+(lokalen) Netzwerk befindlichen Gerät bedient. Das kann ein Tablet, Samrtphone
+oder ein Rechner sein. Es wird dazu keine App benötigt, der Browser genügt.</p>
+<p>Die Webseite ist im Responsive Design gestaltet und passt sich an die
+Größe des jeweiligen Bildschirms an.</p>
+</div>
+<div class="section" id="open-lighting-architecture">
+<h2>Open Lighting Architecture<a class="headerlink" href="#open-lighting-architecture" title="Link zu dieser Überschrift">¶</a></h2>
+<p>Die DMX Verbindung erfolgt über <a class="reference external" href="https://www.openlighting.org/">OLA</a>.
+Damit stehen eine Reihe von Hardware-Optionen zur Verfügung, wie zum Beispiel
+Enttec DMX USB Pro, DMXking. OLA ermöglicht auch diverse Ethernet Protokolle
+wie ArtNet, sACN und andere. Eine Übersicht über die Möglichkeiten zur
+DMX-Ausgabe findest du <a class="reference external" href="https://www.openlighting.org/ola/">hier</a>.</p>
+</div>
+<div class="section" id="szenen">
+<h2>Szenen<a class="headerlink" href="#szenen" title="Link zu dieser Überschrift">¶</a></h2>
+<p>Bei der Entwicklung stand als erstes und grundlegendes Ziel:
+<strong>Lichtszenen (=Cues)</strong> einfach zu erzeugen und zu bedienen. Genau diese
+Eigenschaft ist es, die vielen kostengünstigen Lichtsteuerungen
+aus meiner Sicht fehlt.</p>
+<dl class="simple">
+<dt>Wie sind also hier in ClubDMX die Möglichkeiten für Lichtszenen?</dt><dd><ul class="simple">
+<li><p>Cues mit Fader.</p></li>
+<li><p>Cues mit Button.</p></li>
+<li><p>Cue mit Top-Priorität zur Bedienung der einzelnen Geräte und
+Erzeugung von weiteren Cues. Siehe <a class="reference internal" href="grundlagen.html#topcuelabel"><span class="std std-ref">Topcue</span></a></p></li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="section" id="daten-in-csv-dateien">
+<h2>Daten in CSV-Dateien<a class="headerlink" href="#daten-in-csv-dateien" title="Link zu dieser Überschrift">¶</a></h2>
+<p>Die Programmdaten werden in CSV-Dateien gespeichert. Das sind Textdateien,
+die mit jedem Editor (Notepad, Excel, Libre Office, …) bearbeitet werden
+können. Natürlich ist auch eine Bearbeitung in ClubDMX möglich.
+Es stehen Zeilen- und Zellen-Bearbeitungsoptionen zur Verfügung.</p>
+</div>
+<div class="section" id="angepasst-an-benutzer">
+<h2>Angepasst an Benutzer<a class="headerlink" href="#angepasst-an-benutzer" title="Link zu dieser Überschrift">¶</a></h2>
+<p>Indem man sich auf der Webseite anmeldet, werden die benutzerspezifischen
+Möglichkeiten und Daten aktiv. Ohne Anmeldung ist keine Bedienung der
+DMX-Geäte möglich.</p>
+</div>
+<div class="section" id="midi">
+<h2>MIDI<a class="headerlink" href="#midi" title="Link zu dieser Überschrift">¶</a></h2>
+<p>Außer der Webseite kann ClubDMX auch über MIDI bedient werden. Vorzugsweise über
+ein Korg NanoKontrol-2. Die Buttons und Fader des NanoKontrol2 können mit den
+Buttons und Fadern verbunden werden.</p>
+</div>
+<div class="section" id="osc-input">
+<h2>OSC Input<a class="headerlink" href="#osc-input" title="Link zu dieser Überschrift">¶</a></h2>
+<p>Über <a class="reference external" href="https://de.wikipedia.org/wiki/Open_Sound_Control">OSC</a>
+kann eine Verbindung von einer externen Software zu ClubDMX hergestellt
+werden. Damit können alle Geräte mit allen Attributen, die Szenen-Fader und
+Szenen-Buttons bedient werden. Getestet mit
+<a class="reference external" href="https://troikatronix.com/">Isadora</a> .</p>
+</div>
+</div>
+
+
+          </div>
+              <div class="related bottom">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="readme.html" title="Previous document">README</a>
+        </li>
+        <li>
+          <a href="erste_schritte.html" title="Next document">Erste Schritte</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="inhalt.html">ClubDMX Doku</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Inhalt:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="readme.html">README</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Features</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#web-interface">Web-Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#open-lighting-architecture">Open Lighting Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#szenen">Szenen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#daten-in-csv-dateien">Daten in CSV-Dateien</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#angepasst-an-benutzer">Angepasst an Benutzer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#midi">MIDI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#osc-input">OSC Input</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="erste_schritte.html">Erste Schritte</a></li>
+<li class="toctree-l1"><a class="reference internal" href="einrichten.html">Einrichtung</a></li>
+<li class="toctree-l1"><a class="reference internal" href="navigation.html">Navigation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="benutzer.html">Benutzer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="patch.html">Patch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="grundlagen.html">Grundlagen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">Entwicklungsschritte</a></li>
+<li class="toctree-l1"><a class="reference internal" href="impressum.html">Impressum</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="inhalt.html">Documentation overview</a><ul>
+      <li>Previous: <a href="readme.html" title="vorheriges Kapitel">README</a></li>
+      <li>Next: <a href="erste_schritte.html" title="nächstes Kapitel">Erste Schritte</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Schnellsuche</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Los" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Gunther Seiser.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.4.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/features.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

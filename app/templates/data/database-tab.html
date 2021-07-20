@@ -1,0 +1,84 @@
+{# Datenbank-Tab #}
+{% import "index-macros.html" as idx %}
+
+{% macro _help_id() -%}
+database-overview
+{%- endmacro %}
+
+
+<div class="container-fluid">
+  <h4 class="mt-4">Datenbank</h4>
+  <!-- <p class="mt-4"> Die aktuelle Konfiguration ist <strong>{{ confname }}.</strong> </p> -->
+  <p>
+    Eine <a href="#{{ _help_id() }}" data-toggle="collapse" class="px-2"> 
+      Übersicht zur Datenbank</a>
+    findest du hier.
+  </p>
+  <!-- help -->
+  <div class="col mb-4 collapse" id="{{ _help_id() }}">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Übersicht zur Datenbank</h5>
+        <p class="card-text">
+          Die Datenbank ist in CSV-Tabellen organisiert. Beim Anlegen eines Raums
+          wird die Datenbankstruktur (Default-Tabellen in entsprechenden Ordnern)
+          erzeugt.
+        </p>
+        <p class="card-text">
+          In den einzelnen Ordnern befindet sich zu Beginn jeweils eine Tabelle mit 
+          Namen <i>_neu.</i> Diese Tabelle enthält die nötigen Spalten und wird zum
+          Anlegen von neuen Tabellen als Ausgangspunkt verwendet.
+        </p>
+        <p class="card-text">
+          Mit <i>sichern als</i> wird so eine weitere Tabelle mit den nötigen
+          Spalten erzeugt.
+        </p>
+        <p class="card-text">
+          Der Head-Ordner ist insofern anders, als hier beim Anlegen eines neuen
+          Raums die Default-Heads kopiert werden. Die kopierten Heads können
+          nun auch verändert werden, ohne dass die Default-Heads davon betroffen 
+          sind.
+        </p>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Tab-Inhalt -->
+  <div class="row row-cols-1 row-cols-md-2 "> 
+    <div class="col" id="links">
+      <!-- Basis-Tabellen-->
+      <div class="card mb-4">
+        <h5 class="card-header">Basis-Tabellen</h5>
+        <div class="card-body">
+          <nav class="nav flex-column">
+            {{ idx.nav_vertical ("Config", "data.dataedit_config") }}
+            {{ idx.nav_vertical ("Patch", "data.dataedit_patch" ) }}
+            {{ idx.nav_vertical ("Cue", "data.dataedit_cue") }}
+            {{ idx.nav_vertical ("Fader", "data.dataedit_cuefader") }}
+            {{ idx.nav_vertical ("Button", "data.dataedit_cuebutton") }}
+            {{ idx.nav_vertical ("Stage", "data.dataedit_stage" ) }}
+          </nav>
+        </div>
+            </div> 
+        </div>
+
+    <div class="col" id="rechts">
+      <!-- Erweitert -->
+      <div class="card mb-4">
+        <h5 class="card-header">Erweitert</h5>
+        <div class="card-body">
+          <nav class="nav flex-column">
+            {{ idx.nav_vertical ("Head", "data.dataedit_head") }}
+            {{ idx.nav_vertical ("Layout", "data.dblayout" ) }}
+            {{ idx.nav_vertical ("Unbenutzte Cues löschen", "room.del_unusedcues" ) }}
+            {{ idx.nav_vertical ("Alle Änderungen sichern", "room.save_changes" ) }}
+            {{ idx.nav_vertical ("Alle Änderungen verwerfen", "room.discard_changes" ) }}
+          </nav>
+        </div>
+      </div> 
+    </div>
+
+  </div>
+</div>	
+
+

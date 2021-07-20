@@ -1,0 +1,89 @@
+{# Raum-Management #}
+
+{% macro _help_id() -%}
+room-overview
+{%- endmacro %}
+
+<div class="container-fluid">
+	<h4 class="mt-4">Raum Management</h4>
+	<p>
+		Eine <a href="#{{ _help_id() }}" data-toggle="collapse" class="px-2" > 
+    Übersicht zur Raum-Organisation </a>
+		findest du hier.
+	</p>
+	<!-- help -->
+	<div class="col mb-4 collapse" id="{{ _help_id() }}">
+		<div class="card">
+			<div class="card-body">
+				<h5 class="card-title">Übersicht zur Raum-Organisation</h5>
+				<p class="card-text">
+					Ein <strong>Raum</strong> ist in dieser Lichtsteuerung ein wichtiger Begriff, 
+					den man sich am Besten als einen Ort vorstellt, an dem die diversen Beleuchtungsgeräte 
+					bereits verkabelt und betriebsbereit auf den Einsatz warten. 
+				</p>
+			</div>
+		</div>
+	</div>
+	
+  <!-- Tab-Inhalt -->
+  <div class="row row-cols-1 row-cols-md-2 "> 
+    <div class="col" id="links">
+      <div class="card mb-4">
+        <h5 class="card-header">Aktueller Raum</h5>
+        <div class="card-body">
+          <div class="card-text">
+            <p class="mt-4"> Du bist im Raum <strong>{{ room }}.</strong> </p>
+            <div class="row btn-group w-100 ml-0">
+              {{ idx.button_elem_js ("Raum wechseln", "roomChange")}}
+            </div>
+            <div class="card-text mt-4">
+              Nach dem Wechsel des Raums muss noch eine Konfiguration geladen 
+              werden.
+            </div>
+            <div class="card-text">
+              Aktuelle Config: <strong> {{ confname }}</strong>
+            </div>
+            <div class="row btn-group w-100 ml-0 mt-4">
+              {{ idx.button_elem_js ("Config öffnen", "configOpenButton")}}
+            </div>
+
+          </div>
+        </div>
+      </div> 
+    </div>
+
+    <div class="col" id="rechts">
+      <div class="card mb-4">
+        <h5 class="card-header">Raum Aktionen</h5>
+        <div class="card-body">
+          <div class="card-text">
+            {{ idx.nav_vertical_js ("Raum umbenennen", "roomRename" )}}
+            {{ idx.nav_vertical_js ("Raum sichern als...", "roomSaveas" )}}
+            {{ idx.nav_vertical_js ("neuen Raum anlegen", "roomNew" )}}
+            {% if current_user.role == "admin" %}
+              {{ idx.nav_vertical_js ("Raum löschen", "roomRemove" )}}
+            {% endif %}
+            <hr>
+            {% if config.PYTHONANYWHERE == "false" %}
+              {{ idx.nav_vertical_js ("Backup auf USB", "roomBackup" )}}
+              {{ idx.nav_vertical_js ("Restore von USB", "roomRestore" )}}
+              {{ idx.nav_vertical_js ("neuen Raum auf USB anlegen", 
+                                      "roomBackupNew" )}}
+            {% else %}
+              {{ idx.nav_vertical ("Backup auf USB", "common.notinpythonanywhere" )}}
+              {{ idx.nav_vertical ("Restore von USB", "common.notinpythonanywhere" )}}
+              {{ idx.nav_vertical ("neuen Raum auf USB anlegen", 
+                                   "common.notinpythonanywhere" )}}
+            {% endif %}
+            <hr>
+            <div id="uploadroom_point"></div>
+            {{ idx.nav_vertical ("Raum herunterladen", "room.make_archive" )}}
+            {{ idx.nav_vertical_js ("Raum hochladen", "roomUpload" )}}
+          </div>
+        </div>
+      </div> 
+    </div>
+  </div>  <!-- Ende Tab Inhalt -->
+
+
+</div>

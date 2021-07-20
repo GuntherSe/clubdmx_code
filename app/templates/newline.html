@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% from "form-macros.html" import render_bs_field %}
+
+{% block header %}
+  <h3> {% block title %}Neue Zeile in {{ subdir }}-Datenbank  {% endblock %} </h3>
+{% endblock %}
+
+{% block subtitle %}
+{# <h5>Datei: {{ shortname }}</h5> #}
+{% endblock %}
+
+{% block css %}
+<style>
+    
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-sm-6 form-content" id="links">
+    <!-- Header -->
+    <div class="form-header">
+      <h5>
+      Datei:  {{ shortname }}
+      </h5>
+    </div>
+
+    <form id="newlineForm" method="POST" > {# novalidate ?  #} 
+      <!-- Body -->
+      <div id="formBody" class="form-body"> 
+        {% for field in form %}
+        {{ render_bs_field (field ,
+              placeholder=field.description.placeholder) }}
+        {% endfor %}
+      </div>
+      <!-- Footer -->
+      <div>
+        <div class="form-footer btn-group " role="group"> <!-- modal-footer -->
+          <button type="submit" id="submitButton"
+              class="btn btn-primary" name="submit_button" value="true">
+              {{ submit_text }}
+          </button>
+          <button type="submit" id="closeButton"
+              class="btn btn-secondary" name="submit_button" formnovalidate >
+              schließen
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="col-sm-6" id="rechts"></div>
+</div>  
+{% endblock %}
+
+{% block javascript %}
+  <script>
+    // Finde die Attribute zu Head, wenn neue Cue-Zeile:
+    let headSelect = $("#HeadNr");
+    let attrSelect = $("#Attr");
+
+    function attribChoices () {
+      let optionHTML = "";
+      $.get ("/getattribs/"+headSelect.val(), function (data) {
+        var attribs = $.parseJSON (data);
+        //console.log ("Attribs: " + attribs);
+        for (let att of attribs) {
+          //console.log (att);
+          optionHTML += "<option value='" + att + "'>" + att + "</option>"
+        };
+        attrSelect.html (optionHTML);
+      });
+
+    }
+    
+    headSelect.change (function () {
+      attribChoices ();
+    });
+
+    $("document").ready (function () {
+      attribChoices ();
+    });     // ende document ready
+    
+  </script>
+{% endblock %}

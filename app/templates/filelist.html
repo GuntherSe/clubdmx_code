@@ -1,0 +1,30 @@
+{# filelist.html 
+Generiert eine Liste mit Dir-Informationen
+Parameter: 
+   directory:dict mit 2 Listen:
+      {"dir":  Dir-Einträge},
+      {"file": Datei-Einträge}
+   updir:bool -> True oder False
+#}
+<table class='table table-bordered table-hover'>
+    <tbody>
+{% if updir %}   
+{# updir erlaubt: #}
+        <tr>
+            <td class='dir'><b>..</b></td>
+        </tr>
+{% endif %}
+{# zuerst directories: #}
+{% for item in directory.dir %}
+        <tr>
+            <td class='dir'>{{ item }}</td>
+        </tr>
+{% endfor %}
+{#  jetzt Files: #}      
+{% for item in directory.file %}    
+        <tr>
+            <td class='file selectable'>{{ item }}</td>
+        </tr>
+{% endfor %}
+    </tbody>
+</table>

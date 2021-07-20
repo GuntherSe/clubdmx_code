@@ -1,0 +1,8 @@
+User: Administrator
+Passwort: ClubAdmin2021
+
+User: basic
+Passwort: basic
+
+User: Standard
+Passwort: Standard2021

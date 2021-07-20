@@ -1,0 +1,101 @@
+<!-- heads.html -->
+{% extends 'base.html' %}
+
+{% import "base-macros.html" as base with context %}
+
+{% block header %}
+  <h2> {% block title %} Datenbank {% endblock %} </h2>
+{% endblock %}
+
+{% block subtitle %}
+  <!-- <h4>{{ spath }}</h4> -->
+  {{ base.subtitle_with_backbutton (spath) }}
+{% endblock %}
+
+{% block css %}
+<style>
+
+  /*
+  .ui-selected {
+     background: #999;
+    border-color: crimson;
+    border-width: 2px;
+  }
+  */
+  /*
+  .ui-selectable-helper {
+    position: absolute;
+    z-index: 100;
+    border: 1px solid #CCC;
+    background: rgba(200, 200, 200, .5);
+  }
+  */
+</style>
+{% endblock %}
+
+{% block content %}
+  <div id="dataPath" spath="{{ spath }}"></div>
+  <!-- <div class="post_msg" id="message"></div> -->
+  <!-- <div id="center" class="row container"></div> -->
+  <div class="row">
+    <div class="col" id="explore"></div>
+    <div class="col" id="rechts"></div>
+  </div>  
+{% endblock %}
+
+{% block javascript %}
+  <script>
+    var visibleTable = "";
+    var dataPath, dataName;
+
+
+    function  loadTable (insert_id) {
+      var args = {name:visibleTable, option:dataPath};
+      $.get({
+          url: "/gettable",
+          data: args,
+          cache: false
+      }).then(function(data){
+        //var pdata = $.parseJSON(data);
+        var pdata = JSON.parse (data);
+        $(insert_id).html (pdata);
+        
+        filedialogToPython (".saveasButton", "/csv/saveas", 
+                            {spath:dataPath});
+        activateUploadCsv ("#upload_point");
+
+        editableCsvFields ();
+        selectableCsvLines ();
+        csvSavediscardButtons ();
+
+      }); // ende then
+    }; // ende loadTable           
+
+    function showDir (insert_id) {
+      fileDialogParams.insert_str = insert_id;
+      fileDialogParams.basedir = undefined;
+      fileDialogParams.spath   = dataPath;
+      fileDialogParams.ftype   = ".csv";
+      fileExplore (fileDialogParams);
+    };
+      
+    // Neudefinition für explore:
+    function activateFileSelector () {
+      visibleTable = fileDialogParams.filepath + '+' 
+                     + fileDialogParams.result;
+      loadTable (insert_id="#rechts");
+    };        
+      
+
+    $('document').ready (function () {
+
+      dataPath = $("#dataPath").attr ("spath");
+      // console.log ("dataPath: "+ dataPath);
+      
+      showDir ("explore");
+      loadTable (insert_id="#rechts");
+      $("#sessiondata").attr ("history", "/dataform/config");
+    });
+  </script>
+
+{% endblock %}

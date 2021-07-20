@@ -1,0 +1,103 @@
+{# Elements-Tab #}
+
+{% import "index-macros.html" as idx %}
+
+{% macro _help_id() -%}
+elements-overview
+{%- endmacro %}
+
+<div class="container-fluid">
+  <h4 class="mt-4">Bedienelemente</h4>
+  <!-- <p class="mt-4"> Die aktuelle Konfiguration ist <strong>{{ confname }}.</strong> </p> -->
+  <p>
+      Eine <a href="#{{ _help_id() }}" data-toggle="collapse" class="px-2" > 
+        Übersicht zu Bedienelementen</a>
+      findest du hier.
+  </p>
+  <!-- help -->
+  <div class="col mb-4 collapse" id="{{ _help_id() }}">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Übersicht zu Bedienelementen</h5>
+        <p class="card-text">
+          Bedienelemente sind die Stage, die Fader und die Buttons. 
+          Auf der Stage sind die einzelnen Geräte zu bedienen. 
+          Fader und Buttons bedienen Szenen (=Cues).
+        </p>
+        <p class="card-text">
+          Die Parametrierung der Fader und Buttons ist in einzelnen Dateien
+          gespeichert. Durch die Auswahl der Dateien wird festgelegt, welche
+          Cues zur Bedienung zur Verfügung gestellt werden.
+        </p>
+        <h5 class="card-title">Start-Optionen</h5>
+        <p class="card-text">
+          Es gibt drei Möglichkeiten, wie der Start von ClubDMX erfolgen kann.
+          Die Basisvariante ist, dass alle Fader und Buttons auf Level 0
+          gesetzt werden. Es sind also keine Cues aktiv.
+        </p>
+        <p class="card-text">
+          In Variante 2 werden die Levels und der Status der Buttons vom
+          letzten Verwenden von ClubDMX wiederhergestellt. Dazu muss das
+          Speichern der Levels aktiviert werden: Levels speichern auf 
+          <i>ein</i>
+        </p>
+        <p class="card-text">
+          In Variante 3 wird ein Startcue festgelegt, der zum Programmstart
+          aktiviert wird. Dieser Startcue muss entweder als Button oder als
+          Fader angelegt sein, damit er auch beim Start gefunden wird.
+          Starte mit Startcue auf <i>ein</i>, einen Startcue auswählen.
+        </p>
+      </div>
+    </div>
+  </div>
+  <!-- Tab-Inhalt -->
+  <div class="row row-cols-1 row-cols-md-2 "> 
+      <div class="col" id="links">
+          <form action="{{ url_for ('dataform.config') }}" method="POST" > 
+            <!-- Header -->
+            {{ config_header () }}
+
+            <!-- Body -->
+            <div class="form-body">
+              <h5>Verwendete Dateien:</h5>
+              {{ render_bs_field (configform.stage )}} 
+              {{ render_bs_field (configform.exebuttons1 )}} 
+              {{ render_bs_field (configform.exebuttons2 )}} 
+              {{ render_bs_field (configform.cuebuttons )}} 
+              {{ render_bs_field (configform.exefaders )}} 
+              {{ render_bs_field (configform.cuefaders )}} 
+              <h5 class="mt-3">Start-Optionen:</h5>
+              {{ render_bs_field (configform.savecuelevels )}} 
+              {{ render_bs_field (configform.start_with_cue )}} 
+              {{ render_bs_field (configform.startcue )}} 
+            </div>
+          </form> 
+      </div>
+      <!-- </div> -->
+  <!-- </div> -->
+
+    <div class="col" id="rechts">
+      <!-- Elements Aktionen -->
+      <div class="card mb-4">
+        <h5 class="card-header">Bedienelemente Aktionen</h5>
+        <div class="card-body">
+          <nav class="nav flex-column">
+            {{ idx.nav_vertical ( "Fader-Tabellen bearbeiten", "basic.fadertable") }}
+            {{ idx.nav_vertical ("Button-Tabellen bearbeiten", "basic.buttontable") }}
+          </nav>
+        </div>
+      </div> 
+      <!-- Theme -->
+      <div class="card mb-4">
+        <h5 class="card-header">Themen</h5>
+        <div class="card-body">
+          {{ idx.themes () }}
+        </div>
+      </div> 
+
+    </div>
+
+  </div>	
+
+</div> <!-- container -->
+

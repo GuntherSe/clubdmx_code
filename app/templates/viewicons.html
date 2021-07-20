@@ -1,0 +1,63 @@
+<!-- viewicons.html -->
+{% extends 'base.html' %}
+
+{# Utility Seite zur Anzeige aller Icons #}
+
+{#% macro icon_elem (item) %}
+<div class="media">
+  {% set iconname='icons/'~item %}
+  <img src="{{ url_for ('static', filename=iconname) }}" 
+    class="image-button mr-3">
+  <div class="media-body">{{ item }}</div> 
+</div>
+{% endmacro %#}
+
+{% macro icon_elem (item) %}
+<div class="media">
+  {% set iconname='icons/'~item %}
+  <object data="{{ url_for ('static', filename=iconname) }}" 
+          type="image/svg+xml" class="svg-icon mr-3"></object>
+  <div class="media-body">{{ item }}</div> 
+</div>
+{% endmacro %}
+
+{% block header %}
+  <h2>{% block title %}Icons{% endblock %}</h2>
+{% endblock %}
+{% block subtitle %}
+{% endblock %}
+
+{% block css %}
+<style>
+  .svg-icon {
+    fill: currentColor;
+    width: 30px;
+    height: 30px;
+  }
+  
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="center" class="container-fluid">
+  <table id="csvtable" class="table table-bordered">
+    <tbody>
+      {% for row in itemtable %} 
+      {# item: Liste mit 4 Elementen#}
+        <tr>
+          {% for elem in row %}
+            <td>{{ icon_elem (elem) }}</td>
+          {% endfor %}
+        </tr>
+        
+      {% endfor %}
+
+    </tbody>
+
+  </table>
+</div>
+{% endblock %}
+
+{% block javascript %}
+
+{% endblock %}

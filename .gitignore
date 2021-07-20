@@ -1,0 +1,6 @@
+__pycache__/
+
+.env
+.app.csv
+.app.db
+.require_pyanywhere(installed).txt

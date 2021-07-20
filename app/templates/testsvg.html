@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% import "base-macros.html" as base with context %}
+{% import "csvtable-macros.html" as tbl with context %}
+
+{% block header %}
+  <h1> {% block title %} Test SVG {% endblock %} </h1>
+{% endblock %}
+{% block subtitle %}
+{% endblock %}
+
+{% block css %}
+<style>
+/*    svg {
+        height: 2em;
+        width: 2em;
+        fill: currentColor;
+    }
+*/
+    div > svg:hover , h1 > svg:hover {
+        fill:red;
+    }
+    span > svg:hover {
+        fill:hotpink;
+    }
+    .test {
+        height: 30px;
+        width: 30px;;
+    }
+    .h1:hover {
+        fill: red;
+    }
+/*    .csv-icon {
+        height: 40px;
+        width: 40px;
+        fill: greenyellow;
+    }
+    .asd {
+        color: blue;
+    }
+*/
+</style>
+{% endblock %}
+
+{% block content %}
+{#% include "_svgcollection.html" %#}
+<h1 class="text-primary bg-light">
+    {{ base.svg_icon ("#svg-gear", size="30px") }}
+    Einstellungen
+</h1>
+<div class="text-primary">
+    {{ base.svg_icon ("#svg-reply", size="50px") }}
+    Return
+</div>
+<div class="text-success ">
+    {{ base.svg_icon ("#svg-grid", size="2em") }}
+</div>
+<div class="test">
+    {{ base.svg_icon ("#svg-grid", size="3em") }}
+</div>
+
+<ul class="nav nav-fill mt-5">
+    
+    {{ tbl.button_elem (id="minusTen", text="-10", 
+      svgid = "#svg-chevron-left-double") }}
+    {{ tbl.button_elem (id="minusOne", text="", 
+      svgid = "#svg-chevron-left") }}
+
+    {{ tbl.button_elem (id="plusOne", text="", 
+      svgid = "#svg-chevron-right") }}
+
+    {{ tbl.button_elem (id="plusTen", text="", 
+      svgid = "#svg-chevron-right-double") }}
+</ul>
+{% endblock %}
+
+{% block javascript %}
+{% endblock %}
+

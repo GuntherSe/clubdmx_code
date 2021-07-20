@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{# % import "doku/dok-macros.html" as dok % #}
+
+{% block header %}
+  <h2>{% block title %}Info{% endblock %}</h2>
+{% endblock %}
+{% block subtitle %}
+Impressum
+{% endblock %}
+
+{% block content %}
+<p>
+  Gunther Seiser <br>
+  Mascagnigasse 27 <br>
+  5020 Salzburg <br>
+</p>
+<p>
+  Telefon: +43 699 8188 1989
+</p>
+<p>
+  <a href="mailto:gunther&#46;seiser&#46;63&#37;&#52;&#48;gmail&#46;com">
+    gunther<span>&#46;</span>
+    seiser<span>&#46;</span>
+    63<span>&#64;</span>
+    gmail<span>&#46;</span>
+    com
+  </a>
+</p>
+
+{% endblock %}

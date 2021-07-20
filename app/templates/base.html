@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+{# Basis Template #}
+
+{# Makros #}
+{% macro get_editmode () -%}
+  {% if session["editmode"] -%}{{ session["editmode"] }}
+  {%- else -%}
+  {%- endif %}
+{%- endmacro %}
+
+{# % macro get_topcuecontent () -%}
+  {% if session["topcuecontent"] -%}{{ session["topcuecontent"] }}
+  {%- else -%}
+  {%- endif %}
+{%- endmacro % #}
+
+{% macro get_modalactive () -%}
+  {% if session["modalactive"] -%}{{ session["modalactive"] }}
+  {%- else -%}
+  {%- endif %}
+{%- endmacro %}
+
+{% macro get_csv_clipboard () -%}
+  {% if session["csvclipboard"] -%}{{ session["csvclipboard"] }}
+  {%- else -%}
+  {%- endif %}
+{%- endmacro %}
+
+
+{% macro pagetitle () -%}
+<div class="text-primary">
+  {% block header %}{% endblock %} 
+</div>
+<div class="text-body">
+    {% block subtitle %}{% endblock %}
+</div>
+{%- endmacro %}
+
+{% macro contentblock () -%}
+  {% block content %}{% endblock %}  
+{%- endmacro %}
+
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="GS">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <title>{% block title %}{% endblock %} - ClubDMX</title>
+  <!-- hier theme -->
+  {% if session["bootstraptheme"] %}
+      {% set bootstraptheme = 'css/' + session["bootstraptheme"] + '/bootstrap.min.css' %}
+      <link rel="stylesheet" href="/static/{{ bootstraptheme }}">
+  {% else %}
+      <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+  {% endif %}
+  <link rel="stylesheet" href="/static/css/jquery-ui.css">
+  <link rel="stylesheet" href="/static/css/clubdmx.css">
+
+  {% block css %}{% endblock %}
+  
+  <link rel="shortcut icon" href="/static/favicon_io/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/static/favicon_io/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon_io/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon_io/favicon-16x16.png">
+  <link rel="manifest" href="/static/favicon_io/site.webmanifest">
+</head>
+
+<body>
+  {% include "_svgcollection.html" %}
+  <div id="menu" > 
+    {% include "navbar.html" %}
+  </div>
+  <!-- Session-Daten: -->
+  <div id="sessiondata" 
+    editmode="{{ get_editmode() }}"
+    topcuecontent="{{ topcue_content }}"
+    modalactive="{{ get_modalactive() }}"
+    csvclipboard="{{ get_csv_clipboard() }}">
+    {# csvchanges = "{{ changes }}" #}
+  </div>
+
+  <div id="headercontainer" class="container-fluid header-container">
+  <!-- header -->
+    <div class="row ">
+      <div id="workspace" class="col-sm-12 col-md-8 mb-2" ></div>
+  
+      {# kleiner als md: #}
+      <div class="d-md-none col text-dark bg-light px-3 py-2 mb-1"> 
+         {{ pagetitle () }}
+      </div>
+      {# md und größer: #}
+      <div class="d-none d-md-block col-md-4 text-dark bg-light py-2 mb-2">
+         {{ pagetitle () }}
+      </div>
+    </div>
+
+  <!-- message -->
+    {# primary, secondary, success, danger, warning, info, dark, body, muted #}
+    {% with messages = get_flashed_messages (with_categories=True) %}
+        {% if messages %}
+          <ul class="flash list-unstyled" id="flashmessage">
+          {% for message in messages %}
+            {% if message[0] == "message" %}
+                {% set alertclass = "alert-info" %}      
+            {% else %}
+                {% set alertclass = "alert-" + message[0] %}      
+            {% endif %}
+            <p class="alert {{ alertclass }} alert-dismissible fade show ">
+              {{ message[1] }}
+              <button type="button" class="close" data-dismiss="alert" 
+                  aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </p>
+          {% endfor %}
+          </ul>
+        {% endif %}
+    {% endwith %}
+    <div id="jsmessage"></div> {# Platz für Javascript Message #}
+  </div> 
+
+  <!-- content -->
+  <div id="maincontainer" class="container-fluid main-container">
+    {% if request.endpoint == "basic.doku" %}
+    <div class="row">
+      <div class="col-md-3 col-xl-2">
+        {% include "doku/doknav.html" %}
+      </div>
+      <div class="col-md-9 col-xl-8"  id="doctext">
+        {{ contentblock () }}
+      </div>
+    </div>
+    {% else %}
+      {{ contentblock () }}  
+    {% endif %}
+  </div> 
+
+  <!-- Modal -->
+  <div id="dialogModal"></div>    
+  
+  <script src="/static/js/jquery-3.5.1.min.js"></script> 
+  <script src="/static/js/jquery-ui.js"></script>
+  <script src="/static/js/jquery.ui.touch-punch.js"></script>
+
+  <script src="/static/js/popper.js"></script>
+  <script src="/static/js/bootstrap.min.js"></script>
+  <script src="/static/js/clubdmx.js"></script>
+  <script src="/static/js/filedialog.js"></script>
+
+  <!-- javascript -->
+  {% block javascript %}{% endblock %}
+
+</body>
+
+</html>

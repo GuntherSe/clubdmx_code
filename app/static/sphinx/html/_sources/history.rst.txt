@@ -1,0 +1,243 @@
+.. _history-label:
+
+Entwicklungsschritte
+====================
+
+Die Idee zur Programmierung einer Lichtsteuerung trage ich schon lange Zeit 
+mit mir herum. Meine erste Software zur Lichtsteuerung stammt aus 1990-2000,
+sie habe ich für meine Projekte als Lichttechniker auch gleich im Einstz 
+erproben können. 
+
+Hier gab es eine Software in C, die für eine Einzel-Anfertigung eines 
+Lichtpultes entwickelt wurde. Der Entwickler der Hardware Günter Humpel
+lebt leider nicht mehr, ich möchte ihm hier an dieser Stelle meine 
+große Wertschätzung für seine Genialität ausdrücken.
+
+Die Idee zu einer neuen Sotware schlummert seit dem Umstieg auf 
+kommerzielle Lichtpulte, diverse Versuche zur Realisierung verliefen 
+ohne Erfolg. 
+
+Als wesentlichen Zwischenschritt zur Entwicklung einer selbständigen
+Software kann das Projekt **olaremote** bezeichnet werden, für das ich
+erstmals Python und 
+`Open Lighting Architecture <https://www.openlighting.org/>`_ 
+zur Fernsteuerung von Beleuchtung eingesetzt habe.
+
+Der entscheidende Impuls zu **ClubDMX** kam von Paco Gonzalez-Rivero beim 
+Gespräch während einer Weihnachtsfeier. Paco überzeugte mich, dass 
+zeitgemäße Software ein Web-Interface zur Benutzerkontrolle haben muss.
+Damit ist die Unabhängigkeit von Betriebssystemen und eine 
+breite Palette an Möglichkeiten für die Benutzer gegeben, ohne auf 
+spezifische, für ein Betriebssystem zugeschnittene Einzellösungen 
+gebunden zu sein.
+So entstand die Idee einer simplen Lichtsteuerung mit Web-Interface
+bei einem Smalltalk auf einer Weihnachtsfeier. 
+
+Erste Idee
+-----------
+
+Die erste Idee war, Software-Fader für Lichtszenen zu programmieren. 
+Das ist die Grundidee: Lichtszenen in Kombination mit einer 
+Browser-Steuerung.
+
+Dazu braucht es einiges an Vorbereitung. 
+
+* Wie werden die Daten gespeichert, Datenbank?
+
+  Ich habe mich für die Verwendung von CSV-Tabellen entschieden, um möglicht 
+  unabhängig von Betriebssystem-Vorgaben zu sein. Hier war das Thema zu
+  lösen, wie gegebenenfalls Änderungen rückgängig gemacht werden können.
+
+* Klassische Lichttechnik arbeitet nach dem Prinzip der Kanal-Steuerung. 
+  Zeitgemäße Lichttechnik hat mehr zu bieten, hier gibt es 
+  unterschiedliche Möglichkeiten für unteschiedliche Geräte. Das 
+  bedeutet einen erhöhten Level beim Einstieg in die Programmierung, 
+  es braucht einen Patch, eine Unterscheidung zwischen HTP- und LTP-Attributen
+  und einige andere Konzepte mehr.
+
+  Ich wähle den spannenderen Weg und entscheide mich für die zeitgemäße
+  Umsetzung der Steuerung.
+
+* Welche Programmiersprache(n), welche Tools?
+
+  Hier sind einige Stichworte für meine Entscheidungen:
+  Visual Studio Code als Programmieroberfläche.
+  Python und Flask für die Grundlagen und die HTML-Seiten.
+  Jinja2 für die HTML-Templates.
+  Javascript und Jquery.
+  Bootstrap für das Design.
+
+
+Die Entwicklungsschritte
+------------------------
+
+* Version 0.1
+
+  Der Grundstein ist gelegt: Es gibt eine Patch als Kernstück. Hier 
+  wird die Hardware in die Software eingebunden.
+  Und es gibt eine fixe Anzahl von 10 Lichtstimmungen, die über
+  Fader gesteuert werden können. Alle Daten zu Patch, Heads (= Geräte) und 
+  Cues (= Lichtstimmungen) werden in CSV-Dateien geschrieben, da dies ein 
+  Datenformat ist, das auf jedem Betriebssystem bearbeitbar ist.
+
+  Das Konzept der virtuellen Dimmer existiert bereits jetzt: Für LED Geräte
+  gibt es eine Trennung zwischen Intensität und Farbe. 
+
+* Version 0.2
+
+  Die Anpassung an verschiedene Bedürfnisse wird wesentliches Thema. 
+  Das heißt: 
+
+  - eine erste Variante von Configurationsdatei entsteht.
+
+  - Die Anzeige der CSV-Tabellen und deren Editierbarkeit werden
+    überarbeitet.
+
+  - Die Web-Funktionen befinden sich allesamt in einer immer länger 
+    werdenden Datei.
+
+* Version 0.3
+
+  Die Datenbankstruktur wird einheitlich und damit universeller. Jede 
+  Kategorie an Daten erhät ein eigenes Verzeichnis. Die Anzahl der Cues ist
+  konfigurierar und nicht mehr auf 10 beschränkt. Damit ist der Grundstein 
+  für eine modulare Struktur gelegt, allerdings wird die Datei mit den 
+  Web-Funktionen zu einem Monster, weil mir die Infos zur 
+  Strukturierung fehlen. In dieser Programmstruktur ist das Limit erreicht.
+
+  Messages: Die Rückmeldungen der Software werden überarbeitet und 
+  einheitlicher. 
+
+* Version 0.4
+
+  Sehr wichtige Neuerungen:
+
+  - Die Stage
+
+    Damit ist eine erste Geräte Einzelsteuerung geschaffen. Auf der 
+    Stage-Fläche können Symbole, die für Geräte (Heads) oder Text stehen,
+    platziert werden.
+
+  - Neue Programmstruktur: Die Webseiten werden in Module aufgeteilt.
+
+    Für die Benutzer zwar nicht relevant, aber mit dieser Struktur werden
+    viele Überschneidungen und Nebeneffekte vermieden.
+
+  - Neues Datenkonzept: Alle Daten werden in einem **Projekt**   
+    zusammengefasst. Diese Zusammenfassung ermöglicht das Wechseln in 
+    verschiedene Einheiten von Datenbanken. 
+
+* Version 0.5
+
+  Aus dem **Projekt** wird der **Raum**. Dieser Begriff ist verständlicher
+  und beschreibt besser, worauf die Datenstruktur abzielt. In einem Raum
+  können mehrere **Konfigurationen** abgespeichert werden, die sich die
+  Datenbanken teilen, wie Cues, Stage, Patch etc.
+
+  Der **Raum** wird mit Environment-Vaiable vor Start der App bestimmt.
+  Ein Wechsel des Raums ist noch nicht implementiert.
+
+  Für die Tabellen gibt es erweiterte Editierfunktionen: Zelleneditor und
+  Zeilenselektion. Mittels Selektion können Zeilen mit copy/paste 
+  ausgeschnitten und vervielfältigt werden. 
+
+* Version 0.6
+
+  Die in dieser Version wichtigste Neuerung ist das Login, damit sind die
+  Webseiten und die Steuerung vor unbefugtem Zugriff geschützt.
+
+  Eine weitere Neuerung ist die Midi-Steuerung. Die Cues können mit einem
+  Midi-Faderboard (Korg nanoKontrol 1 oder 2) geregelt werden.
+
+  Neben der Stage-Seite gibt es nun auch eine Stage-Kompakt Seite, die 
+  für die Verwendung von kleinen Touch-Bildschirmen konzipiert ist. Da 
+  Selektion und Verschieben nicht verträglich mit Seite-Verschieben ist,
+  braucht es diese Möglichkeit.
+
+  Neu hinzu kommen auch Buttons: Mit Buttons können Cues zeitabhängig
+  ein- und ausgefadet werden.
+
+* Version 0.7
+
+  Ab nun ist eine erweiterte Raum-Bedienung möglich: Das Wechseln des 
+  Raums, Backup und Restore auf USB-Stick. Diese USB-Funktionen arbeiten
+  plattformübergreifend auf Windows und Linux.
+
+  Das Editieren der Konfiguration wird wesentlich erleichtert: Es geht nun
+  in einem Formular, wo für jedes Feld die entsprechenden Optionen 
+  ausgewählt werden können. 
+
+  Eine neue Stage-Ansicht kommt hinzu: Der Single-Modus. Hier können die 
+  Attribute aller Geräte einfach bedient werden, die geänderten 
+  Attribute sind im :ref:`topcuelabel` und können so abgespeichert werden.
+    
+* Version 0.8
+
+  Hier kommen wieder einige neue Funktionen dazu. 
+
+  - Es gibt eine Demo-Version auf <https://guntherseiser.pythonanywhere.com>
+
+  - Änderungen in Fadern, Buttons und der Stage werden auf allen
+    offenen Browser-Fenstern aktualisiert. 
+
+  - Es gibt eine neue Seite, die den DMX-Output anzeigt und regelmäßig
+    aktualisiert
+
+  - Es gibt eine eigene Seite für die Dokumentation.
+
+  - Die Benutzer-Rollen werden detailliert unterschieden. Somit haben die
+    Benutzer entsprechend ihrer Rolle unterschiedliche Möglichkeiten
+    zur Interaktion und bekommen auch unterschiedliche Webseiten zur
+    Ansicht. Siehe :ref:`benutzer_label` .
+
+  - Die Seite zum Benutzer-Management wird überarbeitet.
+  
+  - Das Speichern des Topcue wird vereinfacht. Nun kann der Topcue 
+    als Fader oder Button abgespeichert werden.
+
+  - Die Raum-Sicherung wird erweitert um upload/download.
+
+* Version 0.9
+
+  Diverse Vereinfachungen beim Benutzen, zum Beispiel Auswahlfelder und 
+  Inhalts-Überprüfung beim Editieren der Felder in der
+  Datenbank.  
+
+  Neue Funktionen:
+
+  - Buttons mit verschiedenen Aufgaben: Schalter, Taster, Auswahlschalter
+
+  - OSC Input
+
+  - In den Seiten Stage, Fader und Button: Einrichtungs-Symbol für 
+    Sprung zur jeweiligen Setup-Tabelle.
+ 
+  - Raum-Management: umbenennen, unter anderem Namen sichern, löschen.
+
+  - Die Exec-Seite beinhaltet Buttons und Fader. Ist die Startseite für den 
+    Basic-Benutzer.
+   
+  - Fader und Buttons müssen nicht zwingend auf der Exec-Seite zu sehen sein,
+    sie können auch auf zusätzlichen Seiten platziert werden.
+
+  - Start-Cue: Es kann ein Cue konfiguriert werden, der beim Start von 
+    ClubDMX ausgeführt wird.
+
+  - Patch-Formular zum Erzeugen mehrerer Heads in einem Schritt.
+    siehe :ref:`neupatchlabel` .
+
+  - Kommandozeilen-Skripte ``sendosc.sh`` und ``sendosc.bat`` zum Senden von
+    OSC-Befehlen, siehe :ref:`crontab_label`.
+
+  - Stage: Geräte-Fader werden in Modal angezeigt, Selektion kann gemeinsam
+    verschoben werden.
+ 
+  
+ 
+ 
+
+  
+
+
+
+

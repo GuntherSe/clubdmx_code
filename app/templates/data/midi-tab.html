@@ -1,0 +1,87 @@
+{# Config-Tab #}
+
+{% macro _help_id() -%}
+config-overview
+{%- endmacro %}
+
+<div class="container-fluid">
+  <h4 class="mt-4">Midi-Konfiguration</h4>
+  <!-- <p class="mt-4"> Die aktuelle Konfiguration ist <strong>{{ confname }}.</strong> </p> -->
+  <p>
+    Eine <a href="#{{ _help_id() }}" data-toggle="collapse" class="px-2"> 
+      Übersicht der getesteten Midi-Geräte</a>
+    findest du hier.
+  </p>
+  <!-- help -->
+  <div class="col mb-4 collapse" id="{{ _help_id() }}">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Übersicht zur MIDI Konfiguration</h5>
+        <p class="card-text">
+          <strong>MIDI Input</strong> wurde mit Korg nanoKONTROL und nanoKONTROL2 
+          getestet.
+          Für andere MIDI Gräte wird nanoKONTROL2-Übertragung angenommen. 
+        </p>
+        <p class="card-text mt-3">
+          Die Fader- und Tastenzuordnungen des nanoKONTROL2 sieht so aus:
+        </p>
+        <img src="{{ url_for ('static', filename='picture/nanokontrol2.jpg') }}">
+        <p class="card-text mt-4">
+          Die Fader- und Tastenzuordnungen des nanoKONTROL sieht so aus:
+        </p>
+        <img src="{{ url_for ('static', filename='picture/nanokontrol.jpg') }}">
+
+        <p class="card-text mt-3">
+          <strong>MIDI Output</strong> wurde mit Korg nanoKONTROL2 
+          getestet. Damit MIDI output funktioniert, muss mit dem 
+          KORG KONTROL EDITOR der LED-Mode auf 'extern' umgestellt werden.
+        </p>
+        <p class="card-text">
+          Für die Tasten 1-30 zeigt eine LED den Button-Status, für die Tasten 
+          31-35 funktioniert das leider nicht.
+        </p>
+        <p class="card-text">
+          Beim nanoKONTROL kann der Led-Mode leider nicht auf 'extern' umgestellt
+          werden, daher funktioniert hier die LED-Anzeige nicht. Dieser Kontroller ist
+          also nicht für MIDI-Output geeignet.
+        </p>
+
+      </div>
+    </div>
+  </div>
+  <!-- Tab-Inhalt -->
+  <div class="row row-cols-1 row-cols-md-2 "> 
+    <div class="col" id="links">
+      <!-- Form -->
+      <div id="configForm">
+        <form action="{{ url_for ('dataform.config') }}"  method="POST" > 
+          <!-- Header -->
+          {{ config_header () }}
+      
+          <!-- Body -->
+          {% if config.PYTHONANYWHERE == "false" %}
+          <div id="formBody" class="form-body">
+            {{ render_bs_field (configform.midi_on )}} 
+            {{ render_bs_field (configform.midi_input_1 )}} 
+            {{ render_bs_field (configform.midi_input_2 )}} 
+            {{ render_bs_field (configform.midi_input_3 )}} 
+            {{ render_bs_field (configform.midi_input_4 )}} 
+            {{ render_bs_field (configform.midi_output )}} 
+          </div>
+          {% else %}
+          <div id="formBody" class="form-body">
+            Midi ist in Pythonanywhere nicht verfügbar - aus offensichtlichen Gründen.
+          </div>
+          {% endif %}
+
+        </form> 
+      </div>
+    
+    </div>
+
+  </div>
+
+
+
+</div>
+

@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% import "csvtable-macros.html" as tbl with context %}
+{% import "base-macros.html" as base with context %}
+
+{% block header %}
+<h2> {% block title %} Datenbank {% endblock %} </h2>
+{% endblock %}
+
+{% block subtitle %}
+{{ base.subtitle_with_backbutton (shortname) }}
+{% endblock %}
+
+{% block css%}
+{% endblock %}
+
+{% block content %}
+<div id="center">
+  <!-- Tabelle mit Buttons -->
+  {{ tbl.csv_buttons() }}
+  {{ tbl.table() }}
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+
+  $('document').ready (function () {
+    // editierbare Spalten:
+//    $("td").addClass ("edittext_data");
+//    prepEdit();
+    editableCsvFields ();
+    selectableCsvLines ();
+    $("#sessiondata").attr ("history", "/dataform/config");
+  });
+</script>
+{% endblock %}

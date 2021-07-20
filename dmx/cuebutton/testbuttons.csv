@@ -1,0 +1,3 @@
+Text,Filename,Type,Group,Fadein,Fadeout,Midiinput,Midibutton,Level
+test weiß,weiß_fader,Schalter,1,3.00,3.00,0,,0
+türkis test,türkis test_fader,Schalter,0,3,3,0,,0

@@ -1,0 +1,68 @@
+<!-- CueSlider (Jquery UI) -->
+{% extends 'base.html' %}
+
+{% import "csvtable-macros.html" as tbl with context %}
+{% import "base-macros.html" as base with context %}
+
+{% block header %} 
+  <h2> {% block title %}Fader{% endblock %} </h2>
+{% endblock %}
+
+{#% set subtext = data.exefaders.shortname ~ ", " ~ data.cuefaders.shortname %#}
+{% block subtitle %}
+  {{ base.subtitle_with_button ("",
+    svgid = "#svg-gear",
+    endpoint = url_for ('basic.fadertable') )
+  }}
+{% endblock %}
+
+{% block css %}
+{% endblock %}
+
+{% block content %}
+<!-- Button für modaldialogToPython -->
+<div id="showCueModal"></div>
+
+<div>
+  <!-- Exefaders -->
+  {% set title1 = "Fader im Executer: " ~ data.exefaders.shortname %}
+  {{ base.fadertable (title1, data.exefaders) }}
+  <!-- Cuefaders -->
+  {% set title2 = "Zusätzliche Fader: " ~ data.cuefaders.shortname %}
+  {{ base.fadertable (title2, data.cuefaders)}}
+</div>
+{% endblock %}
+
+
+{% block javascript %}
+<script>
+
+  $("document").ready (function () {
+    
+    var sliderwidth;
+    // Sliderbreite mit Fenserbreite verändern:
+    $(window).on('resize', function(){
+      sliderwidth = $(".col-8").width();
+      $(".slider").width (sliderwidth);
+    });
+
+    sliderwidth = $(".col-8").width();
+    activateCuedetails ();
+    editableCsvFields ();
+
+    // slider erzeugen:
+    var sliderlevels;
+    $.get ("/getinfo/sliderval", function (data) {
+      sliderlevels = $.parseJSON(data);
+      var i;
+      for (i = 0; i < sliderlevels.length; i++){
+        makeSlider(i, sliderlevels);
+      };
+      $(".slider").width (sliderwidth);
+    });
+    periodic_faderstatus ();
+
+  });     // ende document ready
+</script>
+{% endblock %}
+
