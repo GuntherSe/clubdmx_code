@@ -4,3 +4,4 @@ __pycache__/
 .app.csv
 .app.db
 .require_pyanywhere(installed).txt
+.pass-pythonanywhere.txt
