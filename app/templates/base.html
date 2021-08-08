@@ -5,7 +5,7 @@
 {# Makros #}
 {% macro get_editmode () -%}
   {% if session["editmode"] -%}{{ session["editmode"] }}
-  {%- else -%}
+  {%- else -%}"select"
   {%- endif %}
 {%- endmacro %}
 
