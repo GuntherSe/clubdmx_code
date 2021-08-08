@@ -180,23 +180,8 @@ class Cuebutton (Cue):
                 self.direction = "up"
                 self.status = 1
                 self.start_tm = time.time () - self.fade_in * self.level
-        # self.link ()
         return self.status
 
-
-    # def link (self):
-    #     """ alle Buttons mit Link-Kriterien synchronisieren
-    #     Kriterien: text, _file
-    #     synchronisiert wird: is_fading, start_tm, direction, status
-    #     anderes wird nicht synchronisiert.
-    #     """
-    #     for but in Cuebutton.instances:
-    #         if self != but and self.text and self.text == but.text \
-    #                     and self.file._file == but.file._file:
-    #             but.is_fading = self.is_fading
-    #             but.start_tm  = self.start_tm
-    #             but.direction = self.direction
-    #             but.status    = self.status
 
 
 
