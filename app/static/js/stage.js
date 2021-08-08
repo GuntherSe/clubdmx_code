@@ -68,16 +68,20 @@ function editableTextBlurred() {
   // Daten in csv-Tabelle schreiben:
   var data = {};
   var row_num = viewableText.parent().attr ("row_num");
-  console.log ("row_num: " + row_num);
-  data["row_num"] = row_num;
+  //console.log ("row_num: " + row_num);
+  // data ist verschachteltes array, um kompatibel mit selectables zu sein
+  var item = {};
+  item["row_num"] = row_num;
+  // welches Feld wurde editiert?
   if (classlist.includes ("itemText")) {
-      data["Text"] = html;
+      item["Text"] = html;
   } else if (classlist.includes ("itemName")) {
-      data["Name"] = html;
+      item["Name"] = html;
   } else if (classlist.includes ("itemComment")) {
-      data["Comment"] = html;
+      item["Comment"] = html;
   };
-  $.get ("/stage/update_item", data);
+  data["1"] = item;
+  $.get ("/stage/update_item", {"data":JSON.stringify (data)});
   // setup the click event for this new div
   viewableText.click(divClicked);
   $(".csvchanges").removeClass ("d-none"); // Buttons anzeigen
