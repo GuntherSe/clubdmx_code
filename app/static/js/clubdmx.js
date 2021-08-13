@@ -14,8 +14,8 @@ function int_to_str(num, size) {
 https://stackoverflow.com/questions/10003683/how-can-i-extract-a-number-from-a-string-in-javascript
 */
 function extract_int (str)  {
-  var num = str.replace(/[^0-9]/g,'');
-  return num;
+  var num = str.replace(/[^0-9\.]/g,'');
+  return Math.round (num);
   // var part = str.match(/([A-Za-z\-_]+)([0-9]+)/);
   // return part[2];
 };

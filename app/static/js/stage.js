@@ -125,14 +125,14 @@ function selectableStageElements () {
           start: function () {
             delta_w = 0;
             delta_h = 0;
-            start_w = Math.floor (extract_int (this.style.width));
-            start_h = Math.floor (extract_int (this.style.height));
+            start_w = extract_int (this.style.width);
+            start_h = extract_int (this.style.height);
           },
           resize: function () {
             // Größe berechnen:
             var newwidth, newheight, tmpw, tmph;
-            newwidth  = Math.floor (extract_int (this.style.width));
-            newheight = Math.floor (extract_int (this.style.height));
+            newwidth  = extract_int (this.style.width);
+            newheight = extract_int (this.style.height);
             delta_w = newwidth - start_w;
             delta_h = newheight - start_h;
             start_w = newwidth;
@@ -140,8 +140,8 @@ function selectableStageElements () {
             // console.log ("delta: "+delta_w+", "+delta_h);
             // Größe ändern:
             $(".highlight").each ( function () {
-              tmpw = Math.max (30, Math.floor (extract_int (this.style.width)) + delta_w) ;
-              tmph = Math.max (30, Math.floor (extract_int (this.style.height)) + delta_h) ;
+              tmpw = Math.max (30, extract_int (this.style.width) + delta_w) ;
+              tmph = Math.max (30, extract_int (this.style.height) + delta_h) ;
               // console.log ("width: "+tmpw+" height: "+tmph);
               $(this).css ({"width": tmpw, "height": tmph});
             }) ;
@@ -188,8 +188,8 @@ function selectableStageElements () {
             // verschieben:
             $(".highlight").each ( function () {
               tmppos = $(this).position ();
-              newleft = Math.floor (tmppos.left);
-              newtop  = Math.floor (tmppos.top);
+              newleft = Math.round (tmppos.left);
+              newtop  = Math.round (tmppos.top);
 
               // newstagew = newleft + this.style.width + delta_y;
               // newstageh = newtop  + this.style.height + delta_x;
@@ -211,8 +211,8 @@ function selectableStageElements () {
             $(".highlight").each (function (index) {
               tmppos = $(this).position ();
               item = {};
-              item ["Left"] = Math.floor (tmppos.left);
-              item ["Top"] = Math.floor (tmppos.top);
+              item ["Left"] = Math.round (tmppos.left);
+              item ["Top"]  = Math.round (tmppos.top);
               item ["row_num"] = $(this).attr ("row_num");
               data[index.toString()] = item;
 
