@@ -3,10 +3,10 @@
 
 """ class Cue
 Ein Cue ist eine Sammlung von Attributwerten diverser Heads.
-Wird ein Cue ausgeführt (cuelist_to_contrib), werden die Werte an
+Wird ein Cue ausgeführt (cuecontent_to_contrib), werden die Werte an
 den Mixer geschickt.
 
-Für alle Attribute wird ein dict geführt: _cuelist
+Für alle Attribute wird ein dict geführt: _cuecontent
 
       
 """
@@ -45,12 +45,12 @@ class Cue ():
 
         self.count = id (self) # eindeutige id für contrib-mix
         self.patch      = patch
-        self._cuelist   = [] # Struktur: [[Head1,Att1,Lev1], [Head2,Att2,Lev2], ...]
+        self._cuecontent   = [] # Struktur: [[Head1,Att1,Lev1], [Head2,Att2,Lev2], ...]
         self._cuefields = [] # Struktur: ['HeadNr', 'Attr', 'Level']
         self._autoupdate = False # Auto-Update wenn _level == 0
         fname = os.path.join (Cue.CUEPATH, "_neu")
         self.file     = Csvfile (fname)   # Default Cue File Name
-        self.filetime = 0.0  # bei get_cuelist aktualisieren (os.path.getmtime)
+        self.filetime = 0.0  # bei get_cuecontent aktualisieren (os.path.getmtime)
         self._active  = False  # cue in Contrib eingetragen -> self._active = True
         self._level   = 1.0  # Wert in [0..1]
         self.level    = 0.0  # Zuweisung mit Properties und Eintrag in Contrib
@@ -92,10 +92,10 @@ class Cue ():
             openname = os.path.join(Cue.CUEPATH, fname)
             self.file.name (openname)
         # else: filename = "_neu"
-        self.get_cuelist()
+        self.get_cuecontent()
 
 
-    def get_cuelist (self):
+    def get_cuecontent (self):
         """ File einlesen
 
         siehe Patch._get_pdict()
@@ -106,7 +106,7 @@ class Cue ():
         if os.path.isfile (filename) and \
             os.path.getmtime(filename) > self.filetime:
             self.rem_cuemix() # evtl aktiven Mix entfernen
-            self._cuelist = []
+            self._cuecontent = []
             with open (filename, 'r',encoding='utf-8') as pf: # zum Lesen öffnen und einlesen
                 reader = csv.DictReader (pf, restval= '')
                 self._cuefields = reader.fieldnames
@@ -114,7 +114,7 @@ class Cue ():
                     attribs = [] # zugehörige Attribute
                     for item in reader.fieldnames:
                         attribs.append (row[item])
-                    self._cuelist.append (attribs)
+                    self._cuecontent.append (attribs)
             self.verify()
             self.filetime = os.path.getmtime (filename)
         else:
@@ -123,18 +123,18 @@ class Cue ():
 
 
     def cuelist (self):
-        return self._cuelist
+        return self._cuecontent
 
 
     def to_dictlist (self):
-        """ _cuelist in dict-Notation
+        """ _cuecontent in dict-Notation
 
         Struktur: [{'HeadNr'='head-1','Attr'='att-1','Level'='level-1'},
                    {'HeadNr'='head-2','Attr'='att-2','Level'='level-2'},
                     ... ]
         """
         ret = []
-        for line in self._cuelist:
+        for line in self._cuecontent:
             retline = {}
             for i in range (len (line)):
                 retline[self._cuefields[i]] = line[i] 
@@ -142,18 +142,18 @@ class Cue ():
         return ret
 
 
-    def line_to_cuelist (self, newline:list):
-        """ line in _cuelist integrieren 
+    def line_to_cuecontent (self, newline:list):
+        """ line in _cuecontent integrieren 
 
         entweder update oder append
         """
         found = 0
-        for line in self._cuelist:
+        for line in self._cuecontent:
             if line[0] == newline [0] and line[1] == newline [1]:
                 found = 1
                 line[2] = newline[2]
         if not found:
-            self._cuelist.append (newline)
+            self._cuecontent.append (newline)
         # in Contrib eintragen:
         self.add_item (newline[0], newline[1], newline[2])
 
@@ -173,12 +173,12 @@ class Cue ():
             # Header schreiben:
             writer.writerow (self._cuefields)
             # cuelist schreiben:
-            rows = len (self._cuelist)
+            rows = len (self._cuecontent)
             fields = len (self._cuefields)
             for z in range(rows): # Zeile
                 row = []
                 for k in range (fields): #Feld
-                    row.append (self._cuelist[z][k])
+                    row.append (self._cuecontent[z][k])
                 # print (row)
                 writer.writerow (row)
 
@@ -186,12 +186,12 @@ class Cue ():
     def verify (self) -> bool:
         """ Cue File prüfen
 
-        Fehler mit print dokumentieren, level in _cuelist korrigieren
+        Fehler mit print dokumentieren, level in _cuecontent korrigieren
         ok: True, Fehler: False
         """
         ret = True
         headlist = self.patch.headlist()
-        for row in self._cuelist:
+        for row in self._cuecontent:
             # HeadNr:
             if row[0] not in headlist:
                 print ("Head {}: nicht im Patch".format (row[0]))
@@ -236,10 +236,10 @@ class Cue ():
         self._active = True
 
 
-    def cuelist_to_contrib (self):
+    def cuecontent_to_contrib (self):
         """ cuelist an contrib schicken
         """
-        for row in self._cuelist:
+        for row in self._cuecontent:
             self.add_item (row[0], row[1], row[2])
 
 
@@ -266,40 +266,40 @@ class Cue ():
 # --- Attribut Methoden: -----------------------------------------------------
 # nicht in Verwendung!!
     def set_attribute (self, head:str, attr:str, level:str):
-        """ ["head","attr","level"] in _cuelist anhängen oder level ändern
+        """ ["head","attr","level"] in _cuecontent anhängen oder level ändern
         """
-        # prüfen, ob head,attrib bereits in _cuelist:
+        # prüfen, ob head,attrib bereits in _cuecontent:
         hindex = self._cuefields.index("HeadNr") # 0
         aindex = self._cuefields.index("Attr")   # 1
         lindex = self._cuefields.index("Level")  # 2
-        rows = len (self._cuelist)
+        rows = len (self._cuecontent)
         found = 0
         for z in range(rows):   # Zeile
-            if (head == self._cuelist[z][hindex]) and \
-                (attr == self._cuelist[z][aindex]):
+            if (head == self._cuecontent[z][hindex]) and \
+                (attr == self._cuecontent[z][aindex]):
                 found = 1
-                self._cuelist[z][lindex] = level # level geändert
+                self._cuecontent[z][lindex] = level # level geändert
         if not found:
-            self._cuelist.append ([head,attr,level])
-        # print (self._cuelist)
+            self._cuecontent.append ([head,attr,level])
+        # print (self._cuecontent)
 
 
     def remove_attribute (self, head, attr):
-        """ ["head","attr", ...] aus _cuelist entfernen
+        """ ["head","attr", ...] aus _cuecontent entfernen
         """
-        # head,attrib in _cuelist suchen:
+        # head,attrib in _cuecontent suchen:
         hindex = self._cuefields.index("HeadNr") # 0
         aindex = self._cuefields.index("Attr")   # 1
-        rows = len (self._cuelist)
+        rows = len (self._cuecontent)
         found = -1
         for z in range(rows):   # Zeile
-            if (head == self._cuelist[z][hindex]) and \
-                (attr == self._cuelist[z][aindex]):
+            if (head == self._cuecontent[z][hindex]) and \
+                (attr == self._cuecontent[z][aindex]):
                 found = z
         if found != -1:
-            rem = self._cuelist.pop (found)
+            rem = self._cuecontent.pop (found)
             print (rem)
-        # print (self._cuelist)
+        # print (self._cuecontent)
 
 
 # ------------------------------------------------------------------------------
@@ -309,7 +309,7 @@ class Cue ():
         self._level = newlevel
         if newlevel == 0: # automatisches Update und self.rem_cuemix
             if self._autoupdate:
-                self.get_cuelist()
+                self.get_cuecontent()
                 self._autoupdate = False
             if self._active:
                 self.rem_cuemix ()
@@ -319,7 +319,7 @@ class Cue ():
             if not self._autoupdate:
                 self._autoupdate = True
             if not self._active:
-                self.cuelist_to_contrib ()
+                self.cuecontent_to_contrib ()
 
 
     def __get_level (self):

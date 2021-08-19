@@ -31,8 +31,8 @@ class Topcue (Cue):
         pass
 
 
-    def get_cuelist (self):
-        """ _cuelist aus contrib erzeugen? """
+    def get_cuecontent (self):
+        """ _cuecontent aus contrib erzeugen? """
         pass
 
 
@@ -49,38 +49,38 @@ class Topcue (Cue):
         """ Ändern von Basismethode: 
         
         attype = 'TOP'
-        Eintragung in _cuelist passiert hier
+        Eintragung in _cuecontent passiert hier
         """
         key = head + '-' + attrib
         attype = "TOP"
         Cue.contrib.add (self.count, key, level, attype)
         self._active = 1
-        # in _cuelist eintragen:
+        # in _cuecontent eintragen:
         found = 0
-        for row in self._cuelist:
+        for row in self._cuecontent:
             if row[0] == head and row[1] == attrib:
                 # level geändert
                 found = 1
                 row[2] = level
         if not found:
-            self._cuelist.append ([head, attrib, level])
+            self._cuecontent.append ([head, attrib, level])
 
     def clear (self):
-        """ _cuelist und Einträge in contrib löschen """
+        """ _cuecontent und Einträge in contrib löschen """
         
         self.rem_cuemix ()
-        del self._cuelist[:]
+        del self._cuecontent[:]
         self.level = 1.0
-        # print ("clear: ", self._cuelist)
+        # print ("clear: ", self._cuecontent)
 
     # def to_dictlist (self) ->list:
-    #     """ _cuelist in csvfile.to_dictlist() Format 
+    #     """ _cuecontent in csvfile.to_dictlist() Format 
 
     #     Format: [{'HeadNr':'x','Attr':'y','Intensity':'z'}, {...}, {...}]
     #     für die Anzeige in Modaldialog """
         
     #     ret = []
-    #     for row in self._cuelist:
+    #     for row in self._cuecontent:
     #         line = {}
     #         for i in range (len (self._cuefields)):
     #             line[self._cuefields[i]] = row[i] 
@@ -88,7 +88,7 @@ class Topcue (Cue):
     #     return ret
 
     def to_csv (self, csvfile:Csvfile) ->dict:
-        """ Inhalt von _cuelist in csvfile schreiben 
+        """ Inhalt von _cuecontent in csvfile schreiben 
         return: Message
         """
 
@@ -98,7 +98,7 @@ class Topcue (Cue):
         with open (fname, 'w',encoding='utf-8', newline='') as pf:
             writer = csv.writer (pf)
             writer.writerow (self._cuefields)
-            writer.writerows (self._cuelist)
+            writer.writerows (self._cuecontent)
 
         # evaluate_option ("cue")
         
@@ -110,26 +110,26 @@ class Topcue (Cue):
 
 
     def merge_to_csv (self, csvfile:Csvfile) ->dict:
-        """ Inhalt von _cuelist in csvfile mischen 
+        """ Inhalt von _cuecontent in csvfile mischen 
         
-        in self._cuelist mix erzeugen, dann nach csvfile speichern
+        in self._cuecontent mix erzeugen, dann nach csvfile speichern
         return: Message
         """
 
-        # csvfile in _cuelist importieren:
+        # csvfile in _cuecontent importieren:
         csvlist = csvfile.to_dictlist ()
         hindex = self._cuefields[0] #  = "Head"
         aindex = self._cuefields[1] #  = "Attr"
         lindex = self._cuefields[2] #  = "Level"
 
         for elem in csvlist:
-        # Suche nach line in _cuelist
+        # Suche nach line in _cuecontent
             found = 0
-            for line in self._cuelist:
+            for line in self._cuecontent:
                 if elem[hindex] == line[0] and elem[aindex] == line[1]:
                     found = 1
             if not found:
-                self._cuelist.append ([elem[hindex], elem[aindex], elem[lindex]])
+                self._cuecontent.append ([elem[hindex], elem[aindex], elem[lindex]])
 
         self.to_csv (csvfile)
 
@@ -141,11 +141,11 @@ class Topcue (Cue):
 
 
     def merge_to_cue (self, secondcue:Cue):
-        """ Inhalt von _cuelist in secondcue schreiben 
+        """ Inhalt von _cuecontent in secondcue schreiben 
         und Contrib updaten
         """
 
-        for line in self._cuelist:
-            secondcue.line_to_cuelist (line)
+        for line in self._cuecontent:
+            secondcue.line_to_cuecontent (line)
 
 
