@@ -34,6 +34,7 @@ basic = Blueprint ("basic", __name__, url_prefix="",
 def get_buttondata () ->dict:
     """ Daten aus globs.buttontable, die für cuebuttons und exebuttons
     benötigt werden
+    
     data:   {"cuebuttons"  : {"fieldname1":"val1", "fieldname2":"val2", ... },
              "exebuttons1" : {"fieldname1":"val1", "fieldname2":"val2", ... },
              "exebuttons2" : {"fieldname1":"val1", "fieldname2":"val2", ... },

@@ -1,7 +1,7 @@
 .. _navigation_label:
 
-Navigation
-==========
+ClubDMX benützen
+================
 
 Über die Startseite (erreichbar über das Symbol |clublogo|) können die 
 wichtigsten Module aufgerufen werden, über die Navigationsleiste 

@@ -21,7 +21,7 @@
 \contentsline {section}{\numberline {4.7}Buttons einrichten}{18}{section.4.7}%
 \contentsline {section}{\numberline {4.8}Exec\sphinxhyphen {}Seite einrichten}{20}{section.4.8}%
 \contentsline {section}{\numberline {4.9}Einrichten von zeitabhängiger Steuerung mit Crontab (in Linux)}{21}{section.4.9}%
-\contentsline {chapter}{\numberline {5}Navigation}{23}{chapter.5}%
+\contentsline {chapter}{\numberline {5}ClubDMX benützen}{23}{chapter.5}%
 \contentsline {section}{\numberline {5.1}Stage}{23}{section.5.1}%
 \contentsline {section}{\numberline {5.2}Exec}{27}{section.5.2}%
 \contentsline {section}{\numberline {5.3}Fader}{27}{section.5.3}%

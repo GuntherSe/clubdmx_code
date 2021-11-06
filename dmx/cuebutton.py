@@ -90,6 +90,9 @@ class Cuebutton (Cue):
     @classmethod
     def items (cls, location:str) ->list:
         """ alle buttons mit location==location in dictlist
+        
+        location: Ort, an dem sich der Button befindet: 
+        "cuebuttons", "exebuttons1", "exebuttons2"
         """
         ret = []
         for inst in cls.instances:
@@ -237,7 +240,7 @@ if __name__ == "__main__":
             if i == '#':
                 print (infotxt)
             elif i == 'c':
-                pp.pprint (cue1.cuelist())
+                pp.pprint (cue1.cuecontent ())
             elif i == 'm':
                 uni = 1 # input ("Universum: ")
                 print (patch.show_mix(uni))

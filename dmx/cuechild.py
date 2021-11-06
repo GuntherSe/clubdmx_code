@@ -32,7 +32,7 @@ class Topcue (Cue):
 
 
     def get_cuecontent (self):
-        """ _cuecontent aus contrib erzeugen? """
+        """ content aus contrib erzeugen? """
         pass
 
 
@@ -49,7 +49,7 @@ class Topcue (Cue):
         """ Ändern von Basismethode: 
         
         attype = 'TOP'
-        Eintragung in _cuecontent passiert hier
+        Eintragung in self.content passiert hier
         """
         key = head + '-' + attrib
         attype = "TOP"
@@ -57,21 +57,21 @@ class Topcue (Cue):
         self._active = 1
         # in _cuecontent eintragen:
         found = 0
-        for row in self._cuecontent:
+        for row in self.content:
             if row[0] == head and row[1] == attrib:
                 # level geändert
                 found = 1
                 row[2] = level
         if not found:
-            self._cuecontent.append ([head, attrib, level])
+            self.content.append ([head, attrib, level])
 
     def clear (self):
-        """ _cuecontent und Einträge in contrib löschen """
+        """ self.content und Einträge in contrib löschen """
         
         self.rem_cuemix ()
-        del self._cuecontent[:]
+        del self.content[:]
         self.level = 1.0
-        # print ("clear: ", self._cuecontent)
+        # print ("clear: ", self.content)
 
     # def to_dictlist (self) ->list:
     #     """ _cuecontent in csvfile.to_dictlist() Format 
@@ -80,7 +80,7 @@ class Topcue (Cue):
     #     für die Anzeige in Modaldialog """
         
     #     ret = []
-    #     for row in self._cuecontent:
+    #     for row in self.content:
     #         line = {}
     #         for i in range (len (self._cuefields)):
     #             line[self._cuefields[i]] = row[i] 
@@ -88,7 +88,7 @@ class Topcue (Cue):
     #     return ret
 
     def to_csv (self, csvfile:Csvfile) ->dict:
-        """ Inhalt von _cuecontent in csvfile schreiben 
+        """ Inhalt von self.content in csvfile schreiben 
         return: Message
         """
 
@@ -98,7 +98,7 @@ class Topcue (Cue):
         with open (fname, 'w',encoding='utf-8', newline='') as pf:
             writer = csv.writer (pf)
             writer.writerow (self._cuefields)
-            writer.writerows (self._cuecontent)
+            writer.writerows (self.content)
 
         # evaluate_option ("cue")
         
@@ -110,9 +110,9 @@ class Topcue (Cue):
 
 
     def merge_to_csv (self, csvfile:Csvfile) ->dict:
-        """ Inhalt von _cuecontent in csvfile mischen 
+        """ Inhalt von self.content in csvfile mischen 
         
-        in self._cuecontent mix erzeugen, dann nach csvfile speichern
+        in self.content mix erzeugen, dann nach csvfile speichern
         return: Message
         """
 
@@ -125,11 +125,11 @@ class Topcue (Cue):
         for elem in csvlist:
         # Suche nach line in _cuecontent
             found = 0
-            for line in self._cuecontent:
+            for line in self.content:
                 if elem[hindex] == line[0] and elem[aindex] == line[1]:
                     found = 1
             if not found:
-                self._cuecontent.append ([elem[hindex], elem[aindex], elem[lindex]])
+                self.content.append ([elem[hindex], elem[aindex], elem[lindex]])
 
         self.to_csv (csvfile)
 
@@ -141,11 +141,11 @@ class Topcue (Cue):
 
 
     def merge_to_cue (self, secondcue:Cue):
-        """ Inhalt von _cuecontent in secondcue schreiben 
+        """ Inhalt von self.content in secondcue schreiben 
         und Contrib updaten
         """
 
-        for line in self._cuecontent:
+        for line in self.content:
             secondcue.line_to_cuecontent (line)
 
 

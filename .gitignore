@@ -6,3 +6,6 @@ __pycache__/
 .app.db
 .require_pyanywhere(installed).txt
 .pass-pythonanywhere.txt
+
+dmx/.vscode/
+app/static/sphinx/

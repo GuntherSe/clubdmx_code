@@ -35,6 +35,7 @@ def config ():
     cuebutton_choices = dir_choices ("cuebutton")
     cue_choices = dir_choices ("cue")
     stage_choices = dir_choices ("stage")
+    pages_choices = dir_choices ("pages")
 
     if globs.PYTHONANYWHERE == "false":
         mididevices = globs.midiin[0].list_devices ("input")
@@ -52,6 +53,8 @@ def config ():
                         default=cur["patch"])
         ola_ip       = StringField  ("OLA-Adresse", default=cur["ola_ip"])
         universes    = IntegerField ("Universes", default=cur["universes"])
+        pages        = SelectField ("Cuelist-Pages", choices=pages_choices,
+                        default=cur["pages"])
     
         if globs.PYTHONANYWHERE == "false":
             midi_on      = SelectField ("Midi ein/aus", choices=onoff_choices,

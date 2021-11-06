@@ -359,14 +359,22 @@ function selectableCsvLines () {
 // ---------------------------------------------------------------------
 // Slider in cuefader und executer:
 // Funktion zum Slider erzeugen:
-function makeSlider (num, sliderlevel) {
+function makeSlider (num, sliderlevel, fadertype) {
   var numstring = num.toString();
-  $('#sl-'+numstring)
+  var cmdstring;
+  if (fadertype == "cuefader") {
+    // cuefader
+    cmdstring = "/sliderlevel/" + numstring;
+  } else {
+    // cuelist level fader
+    cmdstring = "/cuelistlevel/" + numstring;
+  }
+  $("#sl-"+numstring)
     .slider({value:sliderlevel[num],
               max:255,
               slide: function (event, ui){
                   var sliderval = {level:ui.value};
-                  $.post ('/sliderlevel/'+numstring, sliderval);
+                  $.post (cmdstring, sliderval);
               }
     });
 }
@@ -380,7 +388,7 @@ function faderStatus (num, statusarray) {
 
 function periodic_faderstatus () {
   // siehe: https://stackoverflow.com/questions/5052543/how-to-fire-ajax-request-periodically
-  // aktuelle Sliderwerte vom Server holen und Slider erzeugen:       
+  // aktuelle Faderwerte der Cuefader am Schieberegler zeigen:       
   var sliderlevels;
   // var sliderwidth = $(".col-8").width();
   $.ajax ({
@@ -543,7 +551,7 @@ function saveEditButton (filename) {
 function makeCueAttribSlider (head, attrib, level, url) {
   // Slider fürs Cue-Edit erzeugen
   // siehe: cuefader.html, stage.html
-  // console.log ("makeSlider:" + head +" "+ attrib +" "+ level);
+  // console.log ("makeCueAttribSlider:" + head +" "+ attrib +" "+ level);
   $('#attrib-'+head+attrib)
       .slider({
           orientation:"vertical",

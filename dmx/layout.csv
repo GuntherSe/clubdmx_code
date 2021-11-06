@@ -38,3 +38,19 @@ stage,Height,int,px,,85,,Höhe in px,
 stage,Comment,text,,,,,,
 config,key,disabled,,,,,,true
 config,value,text,,,,,,true
+cuelist,Id,decimal,,,,,,true
+cuelist,Cue,file,cue,,,,,
+cuelist,Fadein,decimal,,,0,,,true
+cuelist,Stay,decimal,,," ",leer = warten auf GO,,
+cuelist,Fadeout,decimal,,,,"wenn leer, dann Crossfade",,
+cuelist,Waitin,decimal,,,,,,
+cuelist,Waitout,decimal,,,,,,
+cuelist,Text,text,,,,Beschreibung,,
+cuelist,Comment,text,,,,nächste Cue Info,,
+pages,Page,int,,,1,,,true
+pages,Position,int,,,1,,,true
+pages,Text,text,,,,,,
+pages,Filename,file,cuelist,,,,,true
+pages,Midiinput,int,,0 4,0,0: kein Midi-Input,,
+pages,Midifader,int,,,0,Fadernummer,,
+pages,Level,disabled,,,0,,,

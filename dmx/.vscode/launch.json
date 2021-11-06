@@ -26,6 +26,7 @@
             "type": "python",
             "request": "launch",
             "program": "${file}",
+            // "console": "externalTerminal",
             "console": "integratedTerminal",
             "args": ["--port=1234"]
             // Kommandozeilen-Argumente

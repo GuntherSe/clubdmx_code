@@ -149,6 +149,11 @@ def get_info (item:str) -> json:
         buttonstat = [globs.buttontable[i].status for i in range (buttons)]
         return json.dumps (buttonstat)
     
+    if item == "cl_sliderval": # sliderwerte der cuelist-Fader
+        sliders = len (globs.cltable)
+        bytevals = [int (globs.cltable[i].level *255) for i in range (sliders)]
+        return json.dumps (bytevals)
+
     elif item == "mix": # Mix output 
         unis = globs.cfg.get ("universes")
         items = []
@@ -231,6 +236,22 @@ def sliderlevel(index:int) -> str:
         level = request.form["level"]
         globs.fadertable[index].level = float(level) / 255
     return "ok"
+
+
+# --- Cuelist Level Slider -----------------------------------------------
+@common.route("/cuelistlevel/<int:index>", methods = ["POST"])
+def cuelistlevel(index:int) -> str:
+    """ Sliderlevel von Javascript empfangen
+    index ab 0
+    """
+    level = 0
+    # index = slider-1
+    sliders = len (globs.cltable)
+    if index in range (sliders):
+        level = request.form["level"]
+        globs.cltable[index].level = float(level) / 255
+    return "ok"
+
 
 # --- Button -------------------------------------------------------------
 @common.route("/buttonpress")

@@ -19,9 +19,10 @@ from roomclass import Room
 #from csvnameclass import Csvname
 from csvfileclass import Csvfile
 from cue import Cue
-from startup_func import del_cuetables, make_cuebuttons, make_fadertable
+from cuelist import Cuelist
+from startup_func import del_cuetables, del_midilists
+from startup_func import make_cuebuttons, make_fadertable, make_cuelistpages
 from startup_levels import activate_startcue
-
 
 if os.environ.get ("PYTHONANYWHERE")  != "true":
     from midiinput import MidiInput
@@ -129,6 +130,8 @@ def check_config (fullname:str) -> dict:
         checkconf.set ("cuefaders", "_neu")
     if not check_csvfile (checkconf.get ("cuebuttons"), "cuebutton"):
         checkconf.set ("cuebuttons", "_neu")
+    if not check_csvfile (checkconf.get ("pages"), "pages"):
+        checkconf.set ("pages", "_neu")
     if not check_csvfile (checkconf.get ("stage"), "stage"):
         checkconf.set ("stage", "_neu")
     if not check_csvfile (checkconf.get ("startcue"), "cue"):
@@ -161,6 +164,7 @@ def load_config (with_savedlevels=False):
     globs.room.set_path (current_room)
     globs.patch.set_path   (current_room)
     Cue.set_path  (current_room)
+    Cuelist.set_path (current_room)
 
     # zur Absturzvermeidung: fadertable und buttontable löschen:
     # damit gibt es auch keine aktuellen Levels
@@ -233,11 +237,10 @@ def load_config (with_savedlevels=False):
         # suchen und Auswerten des Startcues erst nachdem
         # die Fadertabelle erzeugt ist.
 
-    # cfgdata = globs.cfg.get("cuefaders")
+    del_midilists ()
     make_fadertable (with_savedlevels=with_savedlevels)
-
-    # cfgdata = globs.cfg.get ("cuebuttons")
     make_cuebuttons (with_savedlevels=with_savedlevels)
+    make_cuelistpages (with_savedlevels=with_savedlevels)
 
     if start_with_cue == "1":
         activate_startcue ()

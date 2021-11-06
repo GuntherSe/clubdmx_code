@@ -229,8 +229,12 @@ Die Entwicklungsschritte
   - Kommandozeilen-Skripte ``sendosc.sh`` und ``sendosc.bat`` zum Senden von
     OSC-Befehlen, siehe :ref:`crontab_label`.
 
-  - Stage: Geräte-Fader werden in Modal angezeigt, Selektion kann gemeinsam
+  - Stage: Geräte-Fader werden in einem Fenster angezeigt, Selektion kann gemeinsam
     verschoben werden.
+
+  - Stage: In der Config (Bedienelemente) wird eine Default-Stage angegeben. Die 
+    angezeigte Stage kann davon abweichen: Die angezeigte Stage wird in einer
+    Session-Variablen gespeichert.
  
   
  

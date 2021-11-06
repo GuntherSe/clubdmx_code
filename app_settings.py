@@ -6,6 +6,7 @@
 import shutil
 from os import environ, path, pathsep
 from dotenv import load_dotenv
+from datetime import timedelta
 
 basedir = path.abspath(path.dirname(__file__))
 load_dotenv(path.join(basedir, '.env'))
@@ -33,6 +34,7 @@ class AppConfig:
     FLASK_ENV = environ.get("FLASK_ENV")
     if not FLASK_ENV:
         FLASK_ENV = "production"
+    PERMANENT_SESSION_LIFETIME = timedelta (days=365)
 
     # Datenbank:
     if not path.isfile (".app.db"):

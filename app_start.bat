@@ -16,7 +16,7 @@ set PYTHONPATH=%cd%\app;%cd%\dmx
 set CLUBDMX_ROOMPATH=c:\Users\Gunther\OneDrive\Programmierung\clubdmx_rooms
 
 REM python3 app.py
-flask run --host=0.0.0.0
+flask run --host=0.0.0.0 --port=5000
 
 pause
 

@@ -1,0 +1,106 @@
+<!-- Cuelist - Faderpage -->
+{% extends 'base.html' %}
+
+{% import "csvtable-macros.html" as tbl with context %}
+{% import "base-macros.html" as base with context %}
+
+{% macro cl_fadertable (header, d, filebuttons="false") %}
+<div class="container">
+  {% set items = d["items"] %}
+  {% if items|length > 0 %}
+  <div class="shadow p-3 mb-5 rounded"> {# shadow #}
+    <h5 class="alert alert-info">{{ header }}</h5>
+    <table table_id="{{ d['loc'] }}" class="table csvfile " 
+            file="{{ d['shortname'] }}" 
+            pluspath="{{ d['pluspath'] }}" 
+            option="{{ d['option'] }}">
+      <tbody>
+        {% for item in items %}
+          {{ base.cueslider (item.Text, item.Filename, 
+                loop.index, 1+d["textcolumn"], item.Index, filebuttons) }}
+          {{ cl_buttons (item.Index) }}
+        {% endfor %}
+      </tbody>  
+    </table>
+  
+  </div>
+  {% endif %}
+</div>
+{% endmacro %}
+
+{# cuelist Buttons: Go, Pause, next+1, next-1 #}
+{% macro cl_buttons (index) %}
+  <tr class="row">
+    <td class="col border-0">
+      <button type="button" id="cuelistgo-{{ index }}" index="{{ index }}" 
+        class="btn btn-primary gobutton">Go</button>
+    </td>
+    <td class="col border-0">
+      <button type="button" id="cuelistgo-{{ index }}" index="{{ index }}" 
+        class="btn btn-secondary pausebutton">||</button>
+    </td>
+  </tr>
+{% endmacro %}
+
+{% block header %} 
+  <h2> {% block title %}Cuelist{% endblock %} </h2>
+{% endblock %}
+
+{#% set subtext = data.exefaders.shortname ~ ", " ~ data.cuefaders.shortname %#}
+{#% block subtitle %}
+  {{ base.subtitle_with_button ("",
+    svgid = "#svg-gear",
+    endpoint = url_for ('basic.fadertable') )
+  }}
+{% endblock %#}
+
+{% block css %}
+{% endblock %}
+
+{% block content %}
+<!-- Button für modaldialogToPython -->
+<div id="showCueModal"></div>
+
+<div>
+  <!-- Cuelist -->
+  {{ cl_fadertable ("Page 1", data) }}
+</div>
+{% endblock %}
+
+
+{% block javascript %}
+<script src="/static/js/cuelist.js"></script>
+
+<script>
+
+  $("document").ready (function () {
+    
+    var sliderwidth;
+    // Sliderbreite mit Fenserbreite verändern:
+    $(window).on('resize', function(){
+      sliderwidth = $(".col-8").width();
+      $(".slider").width (sliderwidth);
+    });
+
+    sliderwidth = $(".col-8").width();
+    editableCsvFields ();
+
+    // slider erzeugen:
+    var sliderlevels;
+    $.get ("/getinfo/cl_sliderval", function (data) {
+      sliderlevels = $.parseJSON(data);
+      var i;
+      for (i = 0; i < sliderlevels.length; i++){
+        makeSlider(i, sliderlevels, "cuelistlevel");
+      };
+      $(".slider").width (sliderwidth);
+    });
+    periodic_cueliststatus ();
+
+    // Buttons aktivieren:
+    activateCuelistbuttons ();
+
+  });     // ende document ready
+</script>
+{% endblock %}
+

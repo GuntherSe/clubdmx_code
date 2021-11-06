@@ -94,7 +94,7 @@ Backup, Sichern
         else:
             return False
         
-    def backup (self, newname:str=None) -> dict:
+    def backup (self, newname:str="") -> dict:
         """ csv-Datei sichern
 
         newname vorhanden: self.ccsvname suchen.
@@ -111,7 +111,12 @@ Backup, Sichern
         if not self._file:
             ret ["message"] = "Kein Filename vorhanden"
             return ret
-        
+
+        # newname == self.name?
+        origname = os.path.splitext ( self.name() )[0]
+        if newname and (os.path.splitext (newname)[0] == origname):
+            newname = ""
+
         if newname:
             newfile, ext = os.path.splitext (newname)
             # newname.ccsv löschen (falls vorhanden):
@@ -142,10 +147,10 @@ Backup, Sichern
                     ret ["message"]= "Unerwarteter Fehler:"+ sys.exc_info()
                     return ret
 
-        else: # newname == None:
+        else: # newname == "":
             if os.path.isfile (self.ccsvname): # backup existiert bereits
                 ret ["category"] = "success"
-                ret ["message"]  = "Backup existiert bereits"
+                ret ["message"]  = "Sicherung existiert bereits"
                 return ret
             else: # backup nicht vorhanden -> csv nach ccsv kopieren
                 if os.path.isfile (self.csvname):

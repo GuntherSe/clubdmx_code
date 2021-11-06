@@ -75,7 +75,7 @@ try:
         if i == '#':
             print (infotxt)
         elif i == 'c':
-            print (cue1.cuelist())
+            print (cue1.cuecontent ())
         elif i == 'm':
             uni = 1 # input ("Universum: ")
             print (patch.show_mix(uni))

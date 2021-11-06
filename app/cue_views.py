@@ -10,7 +10,7 @@ from flask import Blueprint, render_template, request, json
 # from flask import flash, session
 # from flask_login import login_required
 # from apputils import standarduser_required, admin_required, redirect_url
-from common_views import check_clipboard
+# from common_views import check_clipboard
 
 import globs
 
@@ -78,7 +78,7 @@ def cueedit ():
     attribs = [] # pro Zeile in Cue 'head','attrib','level'
     levels  = []
     labels  = [] # Fader-Beschriftung 
-    for line in tmpcue.cuelist():
+    for line in tmpcue.cuecontent():
         # in topcue eintragen:
         globs.topcue.add_item (line[0], line[1], line[2])
         heads.append (line[0])

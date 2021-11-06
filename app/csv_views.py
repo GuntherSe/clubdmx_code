@@ -8,7 +8,7 @@ import csv
 
 from flask import Blueprint, render_template, request, json, redirect 
 from flask import flash, session
-# from flask_login import login_required
+from flask_login import login_required
 from apputils import standarduser_required, admin_required, redirect_url
 # from common_views import check_clipboard
 
@@ -149,6 +149,7 @@ def filename():
 
 
 @csvview.route ("/open", methods= ["GET","POST"])
+@login_required
 def open ():
 # Button "Öffnen":
     if request.method == 'POST':
@@ -188,8 +189,9 @@ def open ():
             return "ok"
 
         if option == "stage": # siehe stage.py und stage.html
-            globs.cfg.set ("stage", fileroot)
-            globs.cfg.save_data ()
+            session ["stagename"] = fileroot
+            # globs.cfg.set ("stage", fileroot)
+            # globs.cfg.save_data ()
             return "ok"
 
         if option == "patch": # patchtabelle ausgewählt
@@ -277,7 +279,10 @@ def saveas ():
             globs.cfg.save_data()
 
         elif option == "stage":
-            current = globs.cfg.get ("stage") 
+            if "stagename" in session:
+                current = session["stagename"]
+            else:
+                current = globs.cfg.get ("stage") 
             csvfile = Csvfile (os.path.join (globs.room.stagepath(), current))
             ret = csvfile.backup (fullname)
             globs.cfg.set ("stage", fileroot)

@@ -13,6 +13,7 @@ from ola          import OscOla
 from patch        import Patch
 from cue          import Cue
 from cuebutton    import Cuebutton
+from cuelist      import Cuelist
 from cuechild     import Topcue
 from roomclass    import Room
 
@@ -38,7 +39,8 @@ patch           = Patch()
 ola             = OscOla ()
 topcue          = Topcue(patch)   # entspricht Programmer
 fadertable      = []              # Liste der Cues für cuefader
-buttontable     = Cuebutton.instances
+buttontable     = Cuebutton.instances #  Liste der Buttons
+cltable         = Cuelist.instances # Liste der Cuelisten
 
 if os.environ.get ("PYTHONANYWHERE")  == "true":
     PYTHONANYWHERE  = "true"

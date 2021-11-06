@@ -27,12 +27,18 @@ stage = Blueprint ("stage", __name__, url_prefix="/stage",
 singleindexdict = {}
 
 def get_stage_filename () -> str:
-    """ Filename der Stage """
-    fname = globs.cfg.get("stage")
-    if fname:
-        return os.path.join (globs.room.stagepath(),fname)
+    """ Filename der Stage 
+
+    entweder session["stagename"] oder globs.cfg.get("stage")
+    """
+    if "stagename" in session:
+        return os.path.join (globs.room.stagepath(), session["stagename"])
     else:
-        return os.path.join (globs.room.stagepath(),"_neu")
+        fname = globs.cfg.get("stage")
+        if fname:
+            return os.path.join (globs.room.stagepath(),fname)
+        else:
+            return os.path.join (globs.room.stagepath(),"_neu")
 
 
 def px_to_int (s:str) ->int:

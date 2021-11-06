@@ -47,6 +47,7 @@ def create_app (test_config=None):
     # Blueprints:
     from basic_views import basic
     from common_views import common
+    from cuelist_views import clview
     from csv_views import csvview
     from csvcutpaste import csvcutpaste
     from dataform import dataform
@@ -63,6 +64,7 @@ def create_app (test_config=None):
 
     app.register_blueprint (basic)
     app.register_blueprint (common)
+    app.register_blueprint (clview)
     app.register_blueprint (csvview)
     app.register_blueprint (csvcutpaste)
     app.register_blueprint (data)

@@ -12,8 +12,10 @@ import time
 
 from csvfileclass import Csvfile
 
+# locations: wo kommen diese Elemente vor?
 button_locations = ["cuebuttons", "exebuttons1", "exebuttons2"]
 fader_locations  = ["cuefaders", "exefaders"]
+cuelist_locations = ["pages"]
 
 
 def activate_startcue ():
@@ -67,6 +69,8 @@ def backup_currentlevels (table:str) ->dict:
         cuetable = globs.fadertable
     elif table == "button":
         cuetable = globs.buttontable
+    elif table == "cuelist":
+        cuetable = globs.cltable
 
     # for i in range (len (cuetable)):
     #     key = cuetable[i].text
@@ -82,13 +86,6 @@ def backup_currentlevels (table:str) ->dict:
 def restore_currentlevels (cuetable:str, leveldict:dict, type:str=""):
     """ die gespeicherten Levels wiederherstellen
     """
-    # for i in range (len (cuetable)):
-    #     key = cuetable[i].text
-    #     if key in leveldict.keys ():
-    #         cuetable[i].level = leveldict[key]
-    #         if type == "button" and leveldict[key]:  # level > 0 -> status = 1
-    #             cuetable[i].status = 1
-
     for i, line in enumerate (cuetable):
         key = line.text
         if key in leveldict.keys ():
@@ -101,7 +98,7 @@ def level_to_csv (table:str):
     """ aktuelle cuelevels sichern
 
     levels werden beim Programmstart geladen, wenn Config "savecuelevels" == 1
-    table: 'button' oder 'fader'
+    table: 'button', 'fader' oder 'cuelist'
     """
     cfgdata = globs.cfg.get("savecuelevels") # Sliderwerte intitialisieren?
     if not cfgdata or cfgdata == '0':
@@ -120,6 +117,10 @@ def level_to_csv (table:str):
         locations = button_locations
         loc_root = globs.room.cuebuttonpath()
         cuetable = globs.buttontable
+    elif table == "cuelist":
+        locations = cuelist_locations
+        loc_root = globs.room.pagespath()
+        cuetable = globs.cltable
     else:
         return
 
@@ -156,6 +157,7 @@ def autosave_cuelevels ():
     while True :
         level_to_csv ("fader")
         level_to_csv ("button")
+        level_to_csv ("cuelist")
         time.sleep (30)
 
 

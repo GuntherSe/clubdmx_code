@@ -78,14 +78,13 @@
     activateCuebuttons ();
     //editableCsvFields (); // deaktiviert: hier kein Editieren
 
-    //setTimeout (periodic_faderstatus, 100);
     // slider erzeugen:
     var sliderlevels;
     $.get ("/getinfo/sliderval", function (data) {
       sliderlevels = $.parseJSON(data);
       var i;
       for (i = 0; i < sliderlevels.length; i++){
-        makeSlider(i, sliderlevels);
+        makeSlider(i, sliderlevels, "cuefader");
       };
       $(".slider").width (sliderwidth);
     });

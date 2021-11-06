@@ -66,6 +66,18 @@ def dataedit_cue ():
 def dataedit_cuebutton ():
     return render_template ("data/dataedit.html", spath="cuebutton")
 
+@data.route ("/dataedit_cuelist")
+@login_required
+@standarduser_required
+def dataedit_cuelist ():
+    return render_template ("data/dataedit.html", spath="cuelist")
+
+@data.route ("/dataedit_pages")
+@login_required
+@standarduser_required
+def dataedit_pages ():
+    return render_template ("data/dataedit.html", spath="pages")
+
 @data.route ("/dataedit_patch")
 @login_required
 @standarduser_required

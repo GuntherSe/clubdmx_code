@@ -6,7 +6,7 @@ Ein Cue ist eine Sammlung von Attributwerten diverser Heads.
 Wird ein Cue ausgeführt (cuecontent_to_contrib), werden die Werte an
 den Mixer geschickt.
 
-Für alle Attribute wird ein dict geführt: _cuecontent
+Für alle Attribute wird ein dict geführt: content
 
       
 """
@@ -17,17 +17,14 @@ import time
 import csv
 
 
-# from ola   import OscOla
-# from patch import Patch
 from contribclass import Contrib
 from csvfileclass import Csvfile
 
 class Cue ():
-    # global: CUEPATH, cuecount, Contrib
+    # global: 
     CUEPATH = ""
     contrib = Contrib()
     init_done = 0
-    # cuecount = 0
     
     def __init__(self, patch):
         if Cue.init_done == 0: # nur 1x ausführen
@@ -44,8 +41,8 @@ class Cue ():
             # Cue.contrib.start_mixing ()
 
         self.count = id (self) # eindeutige id für contrib-mix
-        self.patch      = patch
-        self._cuecontent   = [] # Struktur: [[Head1,Att1,Lev1], [Head2,Att2,Lev2], ...]
+        self.patch = patch
+        self.content = [] # Struktur: [[Head1,Att1,Lev1], [Head2,Att2,Lev2], ...]
         self._cuefields = [] # Struktur: ['HeadNr', 'Attr', 'Level']
         self._autoupdate = False # Auto-Update wenn _level == 0
         fname = os.path.join (Cue.CUEPATH, "_neu")
@@ -87,8 +84,13 @@ class Cue ():
 # File Methoden: -----------------------------------------------------
     def open (self, fname=""):
         """ Filename, in dem die Cueinformation gespeichert ist
+
+        fname: ohne Pfad und Endung
+        Wenn anderer fname, dann ftime auf 0 setzen.
         """
         if fname:
+            if fname != self.file.shortname ():
+                self.filetime = 0.0
             openname = os.path.join(Cue.CUEPATH, fname)
             self.file.name (openname)
         # else: filename = "_neu"
@@ -106,7 +108,7 @@ class Cue ():
         if os.path.isfile (filename) and \
             os.path.getmtime(filename) > self.filetime:
             self.rem_cuemix() # evtl aktiven Mix entfernen
-            self._cuecontent = []
+            self.content.clear () # = []
             with open (filename, 'r',encoding='utf-8') as pf: # zum Lesen öffnen und einlesen
                 reader = csv.DictReader (pf, restval= '')
                 self._cuefields = reader.fieldnames
@@ -114,7 +116,7 @@ class Cue ():
                     attribs = [] # zugehörige Attribute
                     for item in reader.fieldnames:
                         attribs.append (row[item])
-                    self._cuecontent.append (attribs)
+                    self.content.append (attribs)
             self.verify()
             self.filetime = os.path.getmtime (filename)
         else:
@@ -122,8 +124,8 @@ class Cue ():
             # print ("Cuefile nicht gefunden: ", filename)
 
 
-    def cuelist (self):
-        return self._cuecontent
+    def cuecontent (self):
+        return self.content
 
 
     def to_dictlist (self):
@@ -134,7 +136,7 @@ class Cue ():
                     ... ]
         """
         ret = []
-        for line in self._cuecontent:
+        for line in self.content:
             retline = {}
             for i in range (len (line)):
                 retline[self._cuefields[i]] = line[i] 
@@ -148,18 +150,18 @@ class Cue ():
         entweder update oder append
         """
         found = 0
-        for line in self._cuecontent:
+        for line in self.content:
             if line[0] == newline [0] and line[1] == newline [1]:
                 found = 1
                 line[2] = newline[2]
         if not found:
-            self._cuecontent.append (newline)
+            self.content.append (newline)
         # in Contrib eintragen:
         self.add_item (newline[0], newline[1], newline[2])
 
 
     def save (self, newname=None):
-        """ cueliste in Änderungsdatei oder newname speichern
+        """ cuecontent in Änderungsdatei oder newname speichern
         """
         if newname == None:
             self.file.backup()
@@ -172,13 +174,13 @@ class Cue ():
             writer = csv.writer(cf) 
             # Header schreiben:
             writer.writerow (self._cuefields)
-            # cuelist schreiben:
-            rows = len (self._cuecontent)
+            # cuecontent schreiben:
+            rows = len (self.content)
             fields = len (self._cuefields)
             for z in range(rows): # Zeile
                 row = []
                 for k in range (fields): #Feld
-                    row.append (self._cuecontent[z][k])
+                    row.append (self.content[z][k])
                 # print (row)
                 writer.writerow (row)
 
@@ -191,7 +193,7 @@ class Cue ():
         """
         ret = True
         headlist = self.patch.headlist()
-        for row in self._cuecontent:
+        for row in self.content:
             # HeadNr:
             if row[0] not in headlist:
                 print ("Head {}: nicht im Patch".format (row[0]))
@@ -237,9 +239,9 @@ class Cue ():
 
 
     def cuecontent_to_contrib (self):
-        """ cuelist an contrib schicken
+        """ cuecontent an contrib schicken
         """
-        for row in self._cuecontent:
+        for row in self.content:
             self.add_item (row[0], row[1], row[2])
 
 
@@ -272,16 +274,16 @@ class Cue ():
         hindex = self._cuefields.index("HeadNr") # 0
         aindex = self._cuefields.index("Attr")   # 1
         lindex = self._cuefields.index("Level")  # 2
-        rows = len (self._cuecontent)
+        rows = len (self.content)
         found = 0
         for z in range(rows):   # Zeile
-            if (head == self._cuecontent[z][hindex]) and \
-                (attr == self._cuecontent[z][aindex]):
+            if (head == self.content[z][hindex]) and \
+                (attr == self.content[z][aindex]):
                 found = 1
-                self._cuecontent[z][lindex] = level # level geändert
+                self.content[z][lindex] = level # level geändert
         if not found:
-            self._cuecontent.append ([head,attr,level])
-        # print (self._cuecontent)
+            self.content.append ([head,attr,level])
+        # print (self.content)
 
 
     def remove_attribute (self, head, attr):
@@ -290,16 +292,16 @@ class Cue ():
         # head,attrib in _cuecontent suchen:
         hindex = self._cuefields.index("HeadNr") # 0
         aindex = self._cuefields.index("Attr")   # 1
-        rows = len (self._cuecontent)
+        rows = len (self.content)
         found = -1
         for z in range(rows):   # Zeile
-            if (head == self._cuecontent[z][hindex]) and \
-                (attr == self._cuecontent[z][aindex]):
+            if (head == self.content[z][hindex]) and \
+                (attr == self.content[z][aindex]):
                 found = z
         if found != -1:
-            rem = self._cuecontent.pop (found)
+            rem = self.content.pop (found)
             print (rem)
-        # print (self._cuecontent)
+        # print (self.content)
 
 
 # ------------------------------------------------------------------------------

@@ -14,12 +14,13 @@ import os.path
 # from roomclass import Room
 from cue import Cue
 from cuebutton import Cuebutton
+from cuelist import Cuelist
 from csvfileclass import Csvfile
 from startup_levels import backup_currentlevels, restore_currentlevels
 from startup_levels import button_locations, fader_locations
 
 def del_cuetables ():
-    """ fadertable, buttontable löschen 
+    """ fadertable, buttontable, cltable löschen 
     Verwendet in load_config ()
     """
 
@@ -29,6 +30,18 @@ def del_cuetables ():
     for count in range (len(globs.buttontable)):
         globs.buttontable[count].rem_cuemix()
     globs.buttontable.clear ()
+    for count in range (len(globs.cltable)):
+        globs.cltable[count].outcue.rem_cuemix()
+    globs.cltable.clear ()
+
+
+def del_midilists ():
+    """ globale midifaderlist und midibuttonlist leeren
+    """
+    if globs.PYTHONANYWHERE == "false":
+        num_controllers = len (globs.midiin)
+        globs.midifaderlist  = [{} for i in range (num_controllers)]
+        globs.midibuttonlist = [{} for i in range (num_controllers)]    
 
 
 def check_levelrequest (with_savedlevels:bool) ->bool:
@@ -73,9 +86,10 @@ def make_fadertable (with_savedlevels:bool=False) :
 
     # für jeden Midicontroller ein dict mit den auszuwertenden
     # Midi-Aktionen anlegen:
+    # davor wurde bereits midifaderlist geleert!
     if globs.PYTHONANYWHERE == "false":
         num_controllers = len (globs.midiin)
-        globs.midifaderlist = [{} for i in range (num_controllers)]
+    #     globs.midifaderlist = [{} for i in range (num_controllers)]
 
     # sollen csv-gespeicherte Levels geladen werden?
     csvlevels_requested = check_levelrequest (with_savedlevels)
@@ -114,6 +128,7 @@ def make_fadertable (with_savedlevels:bool=False) :
 
             # nun Midi-Requests einlesen:
             if globs.PYTHONANYWHERE == "false":
+                num_controllers = len (globs.midiin)
                 try:
                     cnr = cuelist[count]["Midiinput"] # cnr:str ab 1 =ControllerNr
                     fnr = cuelist[count]["Midifader"] # fnr:str ab 1 =FaderNr
@@ -162,10 +177,10 @@ def make_cuebuttons (with_savedlevels:bool=False):
     # globs.buttontable.clear ()
     new_buttontable = []
 
-
-    if globs.PYTHONANYWHERE == "false":
-        num_controllers = len (globs.midiin)
-        globs.midibuttonlist   = [{} for i in range (num_controllers)]    
+    # midibuttonlist wurde bereits geleert
+    # if globs.PYTHONANYWHERE == "false":
+    #     num_controllers = len (globs.midiin)
+    #     globs.midibuttonlist   = [{} for i in range (num_controllers)]    
 
     # sollen csv-gespeicherte Levels geladen werden?
     csvlevels_requested = check_levelrequest (with_savedlevels)
@@ -209,6 +224,7 @@ def make_cuebuttons (with_savedlevels:bool=False):
 
             # nun Midi-Requests einlesen:
             if globs.PYTHONANYWHERE == "false":
+                num_controllers = len (globs.midiin)
                 try:
                     cnr = cuelist[count]["Midiinput"] # cnr:str ab 1 =ControllerNr
                     fnr = cuelist[count]["Midibutton"] # fnr:str ab 1 =FaderNr
@@ -260,4 +276,80 @@ def make_cuebuttons (with_savedlevels:bool=False):
     # print ("done")
     # Cue.contrib.resume ()
 
+
+# --- Cuelist-Tabelle erzeugen ------------------------------------------------
+
+def make_cuelistpages (with_savedlevels:bool=False) :
+    """ Liste mit Pages an Cuelisten erzeugen
+
+    falls in config angegeben, dann Levels einlesen
+    """
+    new_cltable = []
+
+    currentlevels = backup_currentlevels ("cuelist") # aktuelle Level
+    # sollen csv-gespeicherte Levels geladen werden?
+    csvlevels_requested = check_levelrequest (with_savedlevels)
+
+    fadernum = 0
+    filename = globs.cfg.get("pages")
+    fullname = os.path.join (globs.room.pagespath() , filename)
+    csvfile = Csvfile (fullname)
+    pagelist = csvfile.to_dictlist ()
+    fieldnames = csvfile.fieldnames()
+    try:
+        fileindex = fieldnames.index ("Filename") 
+    except:
+        print (f"'Filename' nicht in {filename}")
+        return
+    
+    if csvlevels_requested: 
+        try: # nur zur Fehler-Ausgabe
+            levelindex = fieldnames.index ("Level")
+        except:
+            print (f"'Level' nicht in {filename}")
+
+
+    for count in range (len (pagelist)):
+        newcl = Cuelist (globs.patch)
+        # globs.fadertable.append (newcl) # Konstruktor
+        new_cltable.append (newcl)
+        fadernum = fadernum + 1 
+        filename = pagelist[count]["Filename"]
+        if filename == "":
+            filename = "_neu"
+        newcl.open (filename)
+        newcl.id = newcl.location + str (count)
+        newcl.text = pagelist[count]["Text"]
+        newcl.text = pagelist[count]["Text"]
+
+        # nun Midi-Requests einlesen:
+        if globs.PYTHONANYWHERE == "false":
+            num_controllers = len (globs.midiin)
+            try:
+                cnr = pagelist[count]["Midiinput"] # cnr:str ab 1 =ControllerNr
+                fnr = pagelist[count]["Midifader"] # fnr:str ab 1 =FaderNr
+                # print (f"Midi-Controller:{cnr}, Fader:{fnr}")
+            except:
+                print ("Midi-Info nicht in cuefaders")
+                cnr = -1
+                fnr = -1
+            # cnr und fnr können '' sein:
+            if cnr and fnr:
+                cnr = int(cnr)-1
+                fnr = int(fnr)-1
+                if cnr in range(num_controllers):
+                    controller = globs.midifaderlist[cnr]
+                    controller[fnr] = fadernum - 1    #count
+    
+        # nun Levels:    
+        if csvlevels_requested:        
+            try:
+                level = float (pagelist[count]["Level"])
+            except: # Default 0.0
+                level = 0.0
+            newcl.level = level
+
+    if with_savedlevels == False: # aktuelle Levels wiederherstellen
+        restore_currentlevels (new_cltable, currentlevels)
+    globs.cltable = new_cltable
 
