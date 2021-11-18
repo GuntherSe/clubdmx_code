@@ -50,7 +50,7 @@
   <div id="center">
     <div id="upload_point"></div>
     <!-- Tabelle mit Buttons -->
-    {{ tbl.csv_buttons() }}
+    {{ tbl.csv_nav() }}
     {{ tbl.table() }}
   </div>
   <div class="row">
@@ -63,25 +63,26 @@
 <script>
   $("document").ready(function() {
 
-    $(".location").click (function () {
-      var txt = $(this).attr ("cuelist");
-      console.log ("click: " + txt);
-    })
-      editableCsvFields ();
-      selectableCsvLines ();
+    // $(".location").click (function () {
+    //   var txt = $(this).attr ("cuelist");
+    //   console.log ("click: " + txt);
+    // });
+    initMouseMode ();
+      // editableCsvFields ();
+      // selectableCsvLines ();
       // speichern/verwerfen-Buttons
-      csvSavediscardButtons ();
+    csvSavediscardButtons ();
 
-      var location = $("#csvtable").attr ("loc");
-      // cuefaders oder exefaders
-      filedialogToPython (".openButton", "/csv/open", 
-        {"option":"cuefader", "location":location});
-      filedialogToPython (".saveasButton", "/csv/saveas",
-        {"option":"cuefader", "location":location});
+    var location = $("#csvtable").attr ("loc");
+    // cuefaders oder exefaders
+    filedialogToPython (".openButton", "/csv/open", 
+      {"option":"cuefader", "location":location});
+    filedialogToPython (".saveasButton", "/csv/saveas",
+      {"option":"cuefader", "location":location});
 
-      activateUploadCsv ("#upload_point");
-      activateCuedetails ();
-      $("#sessiondata").attr ("history", "/cuefader");
+    activateUploadCsv ("#upload_point");
+    activateCuedetails ();
+    $("#sessiondata").attr ("history", "/cuefader");
   }); 
 </script>
 {% endblock %}

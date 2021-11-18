@@ -47,9 +47,6 @@
     });
 
     sliderwidth = $(".col-8").width();
-    activateCuedetails ();
-    editableCsvFields ();
-
     // slider erzeugen:
     var sliderlevels;
     $.get ("/getinfo/sliderval", function (data) {
@@ -60,6 +57,10 @@
       };
       $(".slider").width (sliderwidth);
     });
+
+    initMouseMode ();
+    activateCuedetails ();
+    // editableCsvFields ();
     periodic_faderstatus ();
 
   });     // ende document ready

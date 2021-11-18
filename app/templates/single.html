@@ -61,7 +61,7 @@
     $.get ("/stage/headfader", args, function (data) {
         var jdata = JSON.parse (data);
         if (jdata != "false") {
-            $(".selectDiv").html ("Selektion: " + headnr);
+//            $(".selectDiv").html ("Selektion: " + headnr);
             $("#workspace").html (jdata["table"]);
             var attribs = jdata["attribs"];
             var levels  = jdata["levels"];

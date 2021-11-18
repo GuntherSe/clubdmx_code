@@ -19,9 +19,16 @@
   <a class="dropdown-item" href="{{ url_for(endpoint) }}">{{text}}</a>
 {% endmacro %}
 
-{% macro edit_select_button () %}
+{# Dropdown-Link mit Javascript Funktionalität #}
+{% macro dropdown_link_js (idclass, text) %}
+  <a class="dropdown-item {{ idclass }}" href="#">{{text}}</a>
+{% endmacro %}
+
+
+
+{# % macro edit_select_button () %}
 <li class="nav-item dropdown">
-  <a class="nav-link dropdown-toggle" href="#" 
+  <a class="nav-link dropdown-toggle edit-select-button" href="#" 
     id="navbarEditDropdown" role="button" data-toggle="dropdown" 
     aria-haspopup="true" aria-expanded="false">
     {% if session["editmode"] == "edit" %}
@@ -31,6 +38,9 @@
     {% endif %}
   </a>
   <div class="dropdown-menu" aria-labelledby="navbarEditDropdown">
+    {{ dropdown_link_js ("mousemode-edit", "EDIT: Zellen bearbeiten")}}
+    {{ dropdown_link_js ("mousemode-select", "SELECT: Objekte wähjlen")}}
+    
     <a class="dropdown-item" 
        href="{{ url_for ('common.editmode', mode='edit') }}">
        Edit: Zellen bearbeiten
@@ -39,12 +49,13 @@
        href="{{ url_for ('common.editmode', mode='select') }}">
        Select: Objekte auswählen
     </a>
+
   </div>
 </li>
-{% endmacro %}
+{% endmacro % #}
 
 {% macro reload_button () %}
-  <a class="nav-item nav-link navbar-dark" 
+  <a class="nav-item nav-link navbar-dark " 
      onclick="window.location.reload();" >
     {{ svg_icon ("#svg-arrow-clockwise", "30px")}}
   </a>
@@ -96,7 +107,7 @@
 
 {% macro topsave_button () %}
 {% if current_user.role == "standard" or current_user.role == "admin" %}
-  <li class="nav-item dropdown">
+  <li class="nav-item dropdown  mx-n2">
     <a id="topnavSaveDropdown" role="button" href="#"
       class="nav-link nav-topcue dropdown-toggle dropdown-toggle-split" 
       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -140,9 +151,9 @@
             {{ nav_link ("dataform.config", "Einrichtung") }}
           {% endif %}
           {{ info_button () }}
-          {% if current_user.role == "standard" or current_user.role == "admin" %}
+          {#% if current_user.role == "standard" or current_user.role == "admin" %}
             {{ edit_select_button () }}
-          {% endif %}
+          {% endif %#}
           {{ reload_button () }}
         </ul>
 
@@ -186,16 +197,16 @@
   <div id="secondNav" class="nav-topcue" style="display:none;" >
     <div class="container-fluid">
       <ul class="nav nav-topcue text-white">
-        <li class="nav-item">
+        <li class="nav-item ml-n4">
           <!-- <a class="nav-link nav-topcue" href="#"> -->
             <strong class="nav-link nav-topcue">Topcue:</strong>
           <!-- </a> -->
         </li>
-        <li class="nav-item " >
+        <li class="nav-item mx-n2" >
           <a class="nav-link nav-topcue" href="{{ url_for('cuechild.topclear') }}">leeren</a>
         </li>
 
-        <li class="nav-item " >
+        <li class="nav-item  mx-n2" >
           <a class="nav-link nav-topcue topview" href="#" >
             anzeigen</a>  {# wird von jquery gemanaged #}
         </li>  

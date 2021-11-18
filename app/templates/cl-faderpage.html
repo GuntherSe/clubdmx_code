@@ -16,9 +16,14 @@
             option="{{ d['option'] }}">
       <tbody>
         {% for item in items %}
+          <tr class="row pt-2"></tr>
           {{ base.cueslider (item.Text, item.Filename, 
                 loop.index, 1+d["textcolumn"], item.Index, filebuttons) }}
-          {{ cl_buttons (item.Index) }}
+          <tr class="row">
+            {{ cl_status  (item.Index) }}
+            {{ cl_buttons (item.Index) }}
+          </tr>
+          <tr class="row border-bottom pb-2"></tr>
         {% endfor %}
       </tbody>  
     </table>
@@ -30,16 +35,39 @@
 
 {# cuelist Buttons: Go, Pause, next+1, next-1 #}
 {% macro cl_buttons (index) %}
-  <tr class="row">
-    <td class="col border-0">
-      <button type="button" id="cuelistgo-{{ index }}" index="{{ index }}" 
-        class="btn btn-primary gobutton">Go</button>
-    </td>
-    <td class="col border-0">
-      <button type="button" id="cuelistgo-{{ index }}" index="{{ index }}" 
-        class="btn btn-secondary pausebutton">||</button>
-    </td>
-  </tr>
+  <td class="col-2 border-0">
+    <button type="button" id="cuelistpause-{{ index }}" index="{{ index }}" 
+      class="btn btn-secondary pausebutton w-50 mx-auto">||</button>
+  </td>
+  <td class="col-2 border-0">
+    <button type="button" id="cuelistgo-{{ index }}" index="{{ index }}" 
+      class="btn btn-primary gobutton w-50 mx-auto">Go</button>
+  </td>
+{% endmacro %}
+
+{# cuelist Status: #}
+{% macro cl_status (index) %}
+<td class="col-1  border border-info rounded-pill"> {# id #}
+  <h3 id="currentid-{{ index }}" index="{{ index }}" 
+    class="text-primary text-center font-weight-bold align-text-bottom"></h3>
+</td>
+<td class="col-1 border border-success rounded-pill"> {# next #}
+  <h3 id="nextid-{{ index }}" index="{{ index }}" 
+    class="text-primary text-center align-text-bottom"></h3>
+</td>
+<td class="col-4 "> {# fading Info #}
+  <div id="fadein-{{ index }}" class="progress">
+    <div id="fadein-indicator-{{ index }}" class="progress-bar bg-success" 
+      role="progressbar" aria-valuenow="0" style="transition:400ms;"
+      aria-valuemin="0" aria-valuemax="100"></div>
+  </div>
+  <div id="fadeout-{{ index }}" class="progress">
+    <div id="fadeout-indicator-{{ index }}" class="progress-bar bg-info" 
+      role="progressbar" aria-valuenow="0" style="transition:400ms;"
+      aria-valuemin="0" aria-valuemax="100"></div>
+  </div>
+</td>
+
 {% endmacro %}
 
 {% block header %} 
@@ -83,12 +111,15 @@
     });
 
     sliderwidth = $(".col-8").width();
-    editableCsvFields ();
+    // editableCsvFields ();
 
     // slider erzeugen:
-    var sliderlevels;
-    $.get ("/getinfo/cl_sliderval", function (data) {
-      sliderlevels = $.parseJSON(data);
+    // var sliderlevels;
+    $.get ("/getinfo/cl_status", function (data) {
+      // console.log ("data: " + data);
+      var jdata = $.parseJSON(data);
+      var sliderlevels = jdata["levels"];
+
       var i;
       for (i = 0; i < sliderlevels.length; i++){
         makeSlider(i, sliderlevels, "cuelistlevel");

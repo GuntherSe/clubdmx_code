@@ -2,36 +2,21 @@
 // Verwendung in stage.html und stage_mobil.html
 
 function resizeStage () {
-  // Stage-Breite abhängig von den Stage-Elementen: 
-  // Breite: max (left+width), Höhe: max (top+height)
-  var resizewidth = 0, resizeheight = 0;
-  var position, right, height, screenheight;
-  $(".stage-element").each ( function () {
-    position = $(this).position ();
-    right = Math.abs (position.left) + $(this).width ();
-    height = Math.abs (position.top) + $(this).height ();
-    if (right > resizewidth) {
-        resizewidth = right;
-    }
-    if (height > resizeheight) {
-        resizeheight = height;
-    }
-  });
-  resizewidth = Math.max (resizewidth+20, $("#maincontainer").width());
+  // Breite: 100%
 
   var bodyheight = $("body").height() ;
-  var headerheight = Math.max ( $(".header-container").height(), $("#workspace").height() );
-  // var menuheight = $(".menuheight").height();
-  var navheight = $("#primaryNav").height();
-  if ($("#sessiondata").attr ("topcuecontent") == "true") {
-      navheight = navheight + $("#secondNav").height();
-  } 
-  var stbuttonheight = $(".stage-buttons").height();
-  var screenheight = bodyheight - headerheight - navheight - stbuttonheight -20;
-  resizeheight = Math.max (resizeheight+20, screenheight);
+  var navheight; 
+  var headerheight = $("#headercontainer").outerHeight();
+  if ($("#secondNav").css ("display")=="none") {
+    navheight = $("#primaryNav").outerHeight () ;
+  } else {
+    navheight = $("#nav-container").outerHeight (); 
+  };
+  var stbuttonheight = $(".stage-buttons").outerHeight();
+  var resizeheight = bodyheight - headerheight - navheight - stbuttonheight -20;
 
-  $(".stage").width (resizewidth);
   $(".stage").height (resizeheight);
+  // console.log ("resizeStage: "+ resizeheight);
 }
 
 // Resizeable mit Fenserbreite verändern:
@@ -87,30 +72,70 @@ function editableTextBlurred() {
   $(".csvchanges").removeClass ("d-none"); // Buttons anzeigen
 }
 
-$(document).ready(function() {
-  // Stage-Rahmen einfärben, div editierbar machen:
-  if ( editmode ("edit")) {
-    $("div.edit_div").click (divClicked);
-    $(".stage, .mob-stage").css ("border-color", "lightblue");
-    $("div.edit_div").each (function () {
-        if ($(this).is (":empty")) {
-            $(this).addClass ("emptybox");
-        };
-    });
-  } else if (editmode ("select")) {
-    $(".stage, .mob-stage").css ("border-color", "orange");
-  };
+// --- Maus-Verhalten --------------------------------------------------------
+function initStageMouse () {
+  // Stage:
+  if (editmode ("select")) {
+    // console.log ("Stage-Maus: select");
+    selectableStageElements ();
+    $(".stage").css ("border-color", "orange");
+    $("div.edit_div").removeClass ("emptybox").off ();
 
-});
+  } else if (editmode ("edit")) {
+    // console.log ("Stage-Maus: edit");
+    removeSelectableStage ();
+    $("div.edit_div").click (divClicked);
+    $("div.edit_div").each (function () {
+      if ($(this).is (":empty")) {
+        $(this).addClass ("emptybox");
+      };
+    });
+    $(".stage").css ("border-color", "lightblue");
+    // Buttons:
+    $(".navSelect").addClass ("d-none");
+    $(".csvClipboard").addClass ("d-none"); 
+  };
+}
+
+function initMobStageMouse () {
+  // Stage:
+  if (editmode ("select")) {
+    console.log ("Stage-Maus: select");
+    selectableMobileElements ();
+    $(".mob-stage").css ("border-color", "orange");
+    $("div.edit_div").removeClass ("emptybox").off ();
+
+  } else if (editmode ("edit")) {
+    console.log ("Stage-Maus: edit");
+    removeSelectableStage ();
+    $("div.edit_div").click (divClicked);
+    $("div.edit_div").each (function () {
+      if ($(this).is (":empty")) {
+        $(this).addClass ("emptybox");
+      };
+    });
+    $(".mob-stage").css ("border-color", "lightblue");
+    // Buttons:
+    $(".navSelect").addClass ("d-none");
+    $(".csvClipboard").addClass ("d-none"); 
+  };
+}
+
+
 // --- Selectable -------------------------------------------------------------
 
+var selectableStageEnabled = false;
 function selectableStageElements () {
   // Funktionalität für draggables, resizeables 
   // wie bei csv Tabellen: cut/paste
   var delta_x, delta_y, start_x, start_y, tmppos;
   var delta_w, delta_h, start_w, start_h;
-  selectableCsvInit ();
-  if (editmode ("select")) {
+  var stageleft, stagetop; 
+  var newwidth, newheight, tmpw, tmph;
+  if (! selectableStageEnabled ) {
+    selectableStageEnabled = true;
+    selectableCsvInit ();
+  
     $("#csvtable").selectable ({
       filter: ".stage-element",
       create: function( e, ui ) {
@@ -123,26 +148,32 @@ function selectableStageElements () {
         .resizable({containment: "#csvtable", 
           minWidth: 30, minHeight:30,
           start: function () {
+            // stageleft = $("#csvtable").scrollLeft ();
+            // stagetop = $("#csvtable").scrollTop ();
+            // console.log ("StageW: "+stageleft+", H: "+stagetop);
             delta_w = 0;
             delta_h = 0;
-            start_w = extract_int (this.style.width);
-            start_h = extract_int (this.style.height);
+            console.log ("ParseW: "+this.style.width+", H: "+this.style.height);
+            start_w = $(this).outerWidth(true);
+            start_h = $(this).outerHeight(true);
+            console.log ("StartW: "+start_w+", H: "+start_h);
           },
           resize: function () {
             // Größe berechnen:
-            var newwidth, newheight, tmpw, tmph;
-            newwidth  = extract_int (this.style.width);
-            newheight = extract_int (this.style.height);
+            
+            newwidth  = $(this).outerWidth(true);
+            newheight = $(this).outerHeight(true);
+            console.log ("W: "+newwidth+", H: "+newheight);
             delta_w = newwidth - start_w;
             delta_h = newheight - start_h;
             start_w = newwidth;
             start_h = newheight;
-            // console.log ("delta: "+delta_w+", "+delta_h);
+            console.log ("delta: "+delta_w+", "+delta_h);
             // Größe ändern:
             $(".highlight").each ( function () {
-              tmpw = Math.max (30, extract_int (this.style.width) + delta_w) ;
-              tmph = Math.max (30, extract_int (this.style.height) + delta_h) ;
-              // console.log ("width: "+tmpw+" height: "+tmph);
+              tmpw = Math.max (30, $(this).outerWidth(true) + delta_w) ;
+              tmph = Math.max (30, $(this).outerHeight(true) + delta_h) ;
+              console.log ("newwidth: "+tmpw+" height: "+tmph);
               $(this).css ({"width": tmpw, "height": tmph});
             }) ;
           },
@@ -152,11 +183,11 @@ function selectableStageElements () {
             $(".highlight").each (function (index) {
               item = {};
               item ["row_num"] = $(this).attr ("row_num");
-              item ["Width"]   = extract_int (this.style.width);
-              item ["Height"]  = extract_int (this.style.height);
+              item ["Width"]   = $(this).outerWidth(true);
+              item ["Height"]  = $(this).outerHeight(true);
               data[index.toString()] = item;
             });
-
+            console.log ("Data: "+JSON.stringify (data));
             $.get ("/stage/update_item", {"data":JSON.stringify (data)});
             // Buttons anzeigen:
             $(".csvchanges").removeClass ("d-none"); 
@@ -166,41 +197,54 @@ function selectableStageElements () {
           containment: "#csvtable", 
           scroll:true,
           start: function () {
+            // stageleft = stage.left;
+            stagetop = $("#csvtable").scrollTop ();
+            stageleft = $("#csvtable").scrollLeft ();
+            // console.log ("Stage Scrolltop:"+stagetop);
             delta_x = 0;
             delta_y = 0;
-            start_x = extract_int (this.style.left);
-            start_y = extract_int (this.style.top);
+            tmppos = $(this).position ();
+            start_x = tmppos.left;
+            start_y = tmppos.top;
+            // console.log ("Start L: "+start_x+", T: "+start_y);
+            // start_x = parseInt (this.style.left,10);
+            // start_y = parseInt (this.style.top,10);
           },
           drag: function () {
             // Verschiebung berechnen:
             var newleft, newtop;
-            newleft = extract_int (this.style.left);
-            newtop  = extract_int (this.style.top);
-            delta_x = newleft - start_x;
-            delta_y = newtop - start_y;
-            start_x = newleft;
-            start_y = newtop;
-            // Stagegröße:
-            // var stagew, stageh, newstagew, newstageh;
-            // stagew = $("#csvtable").width ();
-            // stageh = $("#csvtable").height ();
+            var dleft, dtop; //dragged element
+            // var doffleft, dofftop;
+            // var tmpoff, offleft, offtop; //offset
+            tmppos = $(this).position ();
+            dleft = tmppos.left;
+            dtop  = tmppos.top;
+            // tmppos = $(this).offset ();
+            // doffleft = tmppos.left;
+            // dofftop = tmppos.top;
+            // // newleft = parseInt (this.style.left,10);
+            // // newtop  = parseInt (this.style.top,10);
+            // console.log ("Drag-L: "+dleft+" T: "+dtop 
+            //   +" offL:"+doffleft+" offT:"+dofftop);
+            delta_x = dleft - start_x;
+            delta_y = dtop - start_y;
+            start_x = dleft;
+            start_y = dtop;
+            // console.log ("delta: "+delta_x+" "+delta_y);
 
             // verschieben:
             $(".highlight").each ( function () {
               tmppos = $(this).position ();
-              newleft = Math.round (tmppos.left);
-              newtop  = Math.round (tmppos.top);
+              // tmpoff = $(this).offset();
+              // offleft= tmpoff.left;
+              // offtop = tmpoff.top;
+              
+              newleft = tmppos.left + delta_x + stageleft;
+              newtop  = tmppos.top + delta_y + stagetop;
+              // console.log ("Each L:"+newleft+" T:"+newtop+" offL:"+offleft
+              //   +" offT:"+offtop);
 
-              // newstagew = newleft + this.style.width + delta_y;
-              // newstageh = newtop  + this.style.height + delta_x;
-              // if (newstagew > stagew) {
-              //   $("#csvtable").width (newstagew);  
-              // };
-              // if (newstageh > stageh) {
-              //   $("#csvtable").height (newstageh);  
-              // };
-              $(this).css ({"left": newleft+delta_x, 
-              "top": newtop + delta_y});
+              $(this).css ({"left": newleft, "top": newtop});
             }) ;
 
           },
@@ -230,9 +274,9 @@ function selectableStageElements () {
         $( ui.unselected ).removeClass("highlight")
           .draggable ("destroy")
           .resizable ("destroy");
-        $(".selectDiv").empty();
-        $("#workspace").empty ();
-        resizeStage ();
+        // $(".selectDiv").empty();
+        // $("#workspace").empty ();
+        //resizeStage ();
         var content = $("#sessiondata").attr ("topcuecontent");
         //console.log ("topcue: "+ content);
         if (content == "false") {
@@ -244,9 +288,29 @@ function selectableStageElements () {
   }; // endif
 }
 
+function removeSelectableStage () {
+  // selectable entfernen:
+  if (selectableStageEnabled) {
+    selectableStageEnabled = false;
+    $(".stage-element").off ()
+      .removeClass("ui-selected highlight")
+      .removeClass ("ui-resizable ui-draggable ui-draggable-handle") ;
+    $(".ui-resizable-handle").remove ();
+    $("#csvtable")
+    .removeClass ("ui-selectable").selectable ("destroy");
+    // $(".stage-element").removeClass("ui-selected highlight")
+    //   .removeClass ("ui-resizable ui-draggable ui-draggable-handle");
+      
+  }
+}
+
+
 function selectableMobileElements () {
+  if (! selectableStageEnabled ) {
+    selectableStageEnabled = true;
+
   selectableCsvInit ();
-  if (editmode ("select")) {
+  // if (editmode ("select")) {
     $("#csvtable").selectable ({
       filter: ".mobil-element",
       // cut/paste fehlerhaft durch Sortierung der Widgets
@@ -255,8 +319,8 @@ function selectableMobileElements () {
         if ($(ui.selected).hasClass('highlight')) {
           $(ui.selected).removeClass('highlight ui-selected');
           // do unselected stuff
-          $(".selectDiv").empty();
-          $("#workspace").empty ();
+          // $(".selectDiv").empty();
+          // $("#workspace").empty ();
           var content = $("#sessiondata").attr ("topcuecontent");
           //console.log ("topcue: "+ content);
           if (content == "false") {
@@ -268,8 +332,8 @@ function selectableMobileElements () {
       },
       unselected: function( e, ui ) {
         $( ui.unselected ).removeClass("highlight");
-        $(".selectDiv").empty();
-        $("#workspace").empty ();
+        // $(".selectDiv").empty();
+        // $("#workspace").empty ();
         var content = $("#sessiondata").attr ("topcuecontent");
         //console.log ("topcue: "+ content);
         if (content == "false") {
@@ -337,7 +401,9 @@ function periodic_attribstatus () {
 // ----------------------------------------------------------------------------
 
 $(document).ready ( function () {  
+  // initStageMouse ();
   resizeStage ();
+
   $(".stage, .mob-stage").on ("selectablestop", function( ) { 
     var selected = $(".highlight.head");
     //console.log ("selectablestop: "+ selected.length);
@@ -345,7 +411,7 @@ $(document).ready ( function () {
       selection_headslider (selected);
     };
   });
-
+  
   // --- Stage-Buttons: ----------------------------------------------------
   filedialogToPython (".openButton", "/csv/open", {"option":"stage"});
   filedialogToPython (".saveasButton", "/csv/saveas", {"option":"stage"});

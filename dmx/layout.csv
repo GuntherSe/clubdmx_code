@@ -41,7 +41,7 @@ config,value,text,,,,,,true
 cuelist,Id,decimal,,,,,,true
 cuelist,Cue,file,cue,,,,,
 cuelist,Fadein,decimal,,,0,,,true
-cuelist,Stay,decimal,,," ",leer = warten auf GO,,
+cuelist,Stay,decimal,,, ,leer = warten auf GO,,
 cuelist,Fadeout,decimal,,,,"wenn leer, dann Crossfade",,
 cuelist,Waitin,decimal,,,,,,
 cuelist,Waitout,decimal,,,,,,

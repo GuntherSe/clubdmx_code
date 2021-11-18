@@ -1,4 +1,4 @@
-// stage.js
+// stage.js backup 11.11.2021
 // Verwendung in stage.html und stage_mobil.html
 
 function resizeStage () {
@@ -17,7 +17,8 @@ function resizeStage () {
         resizeheight = height;
     }
   });
-  resizewidth = Math.max (resizewidth+20, $("#maincontainer").width());
+  // resizewidth = Math.max (resizewidth+20, $("#maincontainer").width());
+  resizewidth = $("#maincontainer").width();
 
   var bodyheight = $("body").height() ;
   var headerheight = Math.max ( $(".header-container").height(), $("#workspace").height() );
@@ -28,7 +29,8 @@ function resizeStage () {
   } 
   var stbuttonheight = $(".stage-buttons").height();
   var screenheight = bodyheight - headerheight - navheight - stbuttonheight -20;
-  resizeheight = Math.max (resizeheight+20, screenheight);
+  // resizeheight = Math.max (resizeheight+20, screenheight);
+  resizeheight = screenheight;
 
   $(".stage").width (resizewidth);
   $(".stage").height (resizeheight);
@@ -68,16 +70,20 @@ function editableTextBlurred() {
   // Daten in csv-Tabelle schreiben:
   var data = {};
   var row_num = viewableText.parent().attr ("row_num");
-  console.log ("row_num: " + row_num);
-  data["row_num"] = row_num;
+  //console.log ("row_num: " + row_num);
+  // data ist verschachteltes array, um kompatibel mit selectables zu sein
+  var item = {};
+  item["row_num"] = row_num;
+  // welches Feld wurde editiert?
   if (classlist.includes ("itemText")) {
-      data["Text"] = html;
+      item["Text"] = html;
   } else if (classlist.includes ("itemName")) {
-      data["Name"] = html;
+      item["Name"] = html;
   } else if (classlist.includes ("itemComment")) {
-      data["Comment"] = html;
+      item["Comment"] = html;
   };
-  $.get ("/stage/update_item", data);
+  data["1"] = item;
+  $.get ("/stage/update_item", {"data":JSON.stringify (data)});
   // setup the click event for this new div
   viewableText.click(divClicked);
   $(".csvchanges").removeClass ("d-none"); // Buttons anzeigen
@@ -103,6 +109,8 @@ $(document).ready(function() {
 function selectableStageElements () {
   // Funktionalität für draggables, resizeables 
   // wie bei csv Tabellen: cut/paste
+  var delta_x, delta_y, start_x, start_y, tmppos;
+  var delta_w, delta_h, start_w, start_h;
   selectableCsvInit ();
   if (editmode ("select")) {
     $("#csvtable").selectable ({
@@ -115,171 +123,128 @@ function selectableStageElements () {
         $(ui.selected).addClass('highlight')
         .addClass('ui-selected')
         .resizable({containment: "#csvtable", 
-                    minWidth: 30, minHeight:30,
-                    stop: function( event, ui ) {
-                      var row_num = $(this).attr ("row_num");
-                      var data = {};
-                      let str = this.style.width;
-                      data ["Width"]   = extract_int (str);
-                      str = this.style.height;
-                      data ["Height"]  = extract_int (str);
-                      data ["row_num"] = row_num;
-                      $.get ("/stage/update_item", data);
-                      $(".csvchanges").removeClass ("d-none"); 
-                      // Buttons anzeigen
-                    }
-        })
-        .draggable({containment: "#csvtable", 
-                    scroll:true,
-                    stop: function( event, ui ) {
-                      var row_num = $(this).attr ("row_num");
-                      var data = {};
-                      let str = this.style.left;
-                      data ["Left"]    = extract_int (str);
-                      str = this.style.top;
-                      data ["Top"]     = extract_int (str);
-                      data ["row_num"] = row_num;
-                      $.get ("/stage/update_item", data);
-                      $(".csvchanges").removeClass ("d-none"); 
-                      // Buttons anzeigen
+          minWidth: 30, minHeight:30,
+          start: function () {
+            delta_w = 0;
+            delta_h = 0;
+            start_w = extract_int (this.style.width);
+            start_h = extract_int (this.style.height);
+          },
+          resize: function () {
+            // Größe berechnen:
+            var newwidth, newheight, tmpw, tmph;
+            newwidth  = extract_int (this.style.width);
+            newheight = extract_int (this.style.height);
+            delta_w = newwidth - start_w;
+            delta_h = newheight - start_h;
+            start_w = newwidth;
+            start_h = newheight;
+            // console.log ("delta: "+delta_w+", "+delta_h);
+            // Größe ändern:
+            $(".highlight").each ( function () {
+              tmpw = Math.max (30, extract_int (this.style.width) + delta_w) ;
+              tmph = Math.max (30, extract_int (this.style.height) + delta_h) ;
+              // console.log ("width: "+tmpw+" height: "+tmph);
+              $(this).css ({"width": tmpw, "height": tmph});
+            }) ;
+          },
+          stop: function( event, ui ) {
+            var data = {};
+            var item;
+            $(".highlight").each (function (index) {
+              item = {};
+              item ["row_num"] = $(this).attr ("row_num");
+              item ["Width"]   = extract_int (this.style.width);
+              item ["Height"]  = extract_int (this.style.height);
+              data[index.toString()] = item;
+            });
 
-                      disableclick = true; // don't want to toggle selection when dragging
-                      setTimeout(function (e) {
-                          disableclick = false;
-                      }, 200);
-              
-                  }
-          });
-          selectableButtonUpdate ($(this));
+            $.get ("/stage/update_item", {"data":JSON.stringify (data)});
+            // Buttons anzeigen:
+            $(".csvchanges").removeClass ("d-none"); 
+          }
+        })
+        .draggable({
+          containment: "#csvtable", 
+          scroll:true,
+          start: function () {
+            delta_x = 0;
+            delta_y = 0;
+            start_x = extract_int (this.style.left);
+            start_y = extract_int (this.style.top);
+          },
+          drag: function () {
+            // Verschiebung berechnen:
+            var newleft, newtop;
+            newleft = extract_int (this.style.left);
+            newtop  = extract_int (this.style.top);
+            delta_x = newleft - start_x;
+            delta_y = newtop - start_y;
+            start_x = newleft;
+            start_y = newtop;
+            // Stagegröße:
+            // var stagew, stageh, newstagew, newstageh;
+            // stagew = $("#csvtable").width ();
+            // stageh = $("#csvtable").height ();
+
+            // verschieben:
+            $(".highlight").each ( function () {
+              tmppos = $(this).position ();
+              newleft = Math.round (tmppos.left);
+              newtop  = Math.round (tmppos.top);
+
+              // newstagew = newleft + this.style.width + delta_y;
+              // newstageh = newtop  + this.style.height + delta_x;
+              // if (newstagew > stagew) {
+              //   $("#csvtable").width (newstagew);  
+              // };
+              // if (newstageh > stageh) {
+              //   $("#csvtable").height (newstageh);  
+              // };
+              $(this).css ({"left": newleft+delta_x, 
+              "top": newtop + delta_y});
+            }) ;
+
+          },
+          stop: function () {
+            var data = {};
+            var item;
+            // Auswahl verschieben:
+            $(".highlight").each (function (index) {
+              tmppos = $(this).position ();
+              item = {};
+              item ["Left"] = Math.round (tmppos.left);
+              item ["Top"]  = Math.round (tmppos.top);
+              item ["row_num"] = $(this).attr ("row_num");
+              data[index.toString()] = item;
+
+              // console.log ("Data:" + data["Left"] + ","+ data["Top"] 
+              //   + "," + data["row_num"]);
+            });
+            $.get ("/stage/update_item", {"data":JSON.stringify (data)});
+            // Buttons anzeigen:
+            $(".csvchanges").removeClass ("d-none"); 
+          }
+        });
+        selectableButtonUpdate ($(this));
       },
       unselected: function( e, ui ) {
-          $( ui.unselected ).removeClass("highlight")
-                              .draggable ("destroy")
-                              .resizable ("destroy");
-          $(".selectDiv").empty();
-          $("#workspace").empty ();
-          resizeStage ();
-          var content = $("#sessiondata").attr ("topcuecontent");
-          //console.log ("topcue: "+ content);
-          if (content == "false") {
-              hideSecondNav ();
-          };
-          selectableButtonUpdate ($(this));
+        $( ui.unselected ).removeClass("highlight")
+          .draggable ("destroy")
+          .resizable ("destroy");
+        $(".selectDiv").empty();
+        $("#workspace").empty ();
+        resizeStage ();
+        var content = $("#sessiondata").attr ("topcuecontent");
+        //console.log ("topcue: "+ content);
+        if (content == "false") {
+            hideSecondNav ();
+        };
+        selectableButtonUpdate ($(this));
       }
     }); // ende selectable
   }; // endif
 }
-
-
-var disableclick = false;
-
-var boundingBoxTop, boundingBoxBottom, boundingBoxLeft, boundingBoxRight;
-var $container = $("#csvtable");
-var containerHeight = $container.height();
-var containerWidth = $container.width();
-var containerTop = $container.offset().top;
-var containerLeft = $container.offset().left;
-
-// add the bounding box to the container and make it draggable
-var $boundingBox = $("<div id='boundingBox' style='position:absolute;background-color:#fcf5d4'>").prependTo($container);
-
-$boundingBox.draggable({
-    grid: [10, 10],
-    containment: "parent",
-    stop: function (event, ui) {
-        disableclick = true; // don't want to toggle selection when dragging
-        setTimeout(function (e) {
-            disableclick = false;
-        }, 200);
-    },
-});
-
-
-// $('.obj').draggable({
-//     grid: [10, 10],
-//     containment: "parent",
-//     stop: function (event, ui) {
-//         disableclick = true; // don't want to toggle selection when dragging
-//         setTimeout(function (e) {
-//             disableclick = false;
-//         }, 200);
-//     },
-// });
-
-function selectionStarted() {
-    $boundingBox.find('*').each(function () {
-        var $this = $(this);
-
-        if ($this.parent().is($boundingBox)) {
-            // adjust its positioning to be relative to the container
-            $this.css("top", ($this.offset().top - containerTop) + "px");
-            $this.css("left", ($this.offset().left - containerLeft) + "px");
-            $this.draggable("enable");
-            $container.append($this); // return it to the container
-
-        }
-
-    });
-
-    $boundingBox.css("top", "0px");
-    $boundingBox.css("left", "0px");
-    $boundingBox.css("width", "0px");
-    $boundingBox.css("height", "0px");
-}
-
-function selectedEnded() {
-    var $selectedItems = $("#container .ui-selected");
-
-    // reversing co-ords to what might be expected here so that we can scale them back to what they need to be for a bounding box
-    boundingBoxTop = containerHeight;
-    boundingBoxBottom = 0;
-    boundingBoxLeft = containerWidth;
-    boundingBoxRight = 0;
-
-    // find the bounds of the smallest rectangle that will cover all the currently selected objects
-    $selectedItems.each(function () {
-        var $this = $(this);
-
-        var top = $this.offset().top - containerTop;
-        var bottom = $this.offset().top - containerTop + $this.height();
-        var left = $this.offset().left - containerLeft;
-        var right = $this.offset().left - containerLeft + $this.width();
-
-        boundingBoxTop = (top < boundingBoxTop) ? top : boundingBoxTop;
-        boundingBoxBottom = (bottom > boundingBoxBottom) ? bottom : boundingBoxBottom;
-        boundingBoxLeft = (left < boundingBoxLeft) ? left : boundingBoxLeft;
-        boundingBoxRight = (right > boundingBoxRight) ? right : boundingBoxRight;
-    });
-
-    // get the height and width of bounding box
-    var boundingBoxHeight = boundingBoxBottom -= boundingBoxTop;
-    var boundingBoxWidth = boundingBoxRight -= boundingBoxLeft;
-
-    if (boundingBoxBottom > 0) // will be negative when nothing is selected
-    {
-        // update the bounding box with its new position and size
-        $boundingBox.css("top", boundingBoxTop + "px");
-        $boundingBox.css("left", boundingBoxLeft + "px");
-        $boundingBox.css("width", boundingBoxWidth + "px");
-        $boundingBox.css("height", boundingBoxHeight + "px");
-
-        // add each selected item to the bounding box so we can drag the box with them in it
-        $selectedItems.each(function () {
-            var $this = $(this);
-
-            // correct the item's position to be relative to the bounding box
-            $this.css("top", ($this.offset().top - containerTop - boundingBoxTop) + "px");
-            $this.css("left", ($this.offset().left - containerLeft - boundingBoxLeft) + "px");
-
-            $this.draggable("disable");
-            $boundingBox.append($this); // add item to bounding box
-
-        });
-    }
-}
-
-
-
 
 function selectableMobileElements () {
   selectableCsvInit ();

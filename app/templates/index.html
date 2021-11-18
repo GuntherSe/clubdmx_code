@@ -72,13 +72,13 @@
               <br><i class="px-1">EDIT</i> ermöglicht das Ändern von Text in Objekten.
               <br><i class="px-1">SELECT</i> ermöglicht die Objektauswahl.
           </p>
+          {#
             <div class="row btn-group w-100 ml-0">
-              {#
               {{ idx.button_elem ("aus", url_for ("common.editmode", mode="view"), "4") }}
-              #}
               {{ idx.button_elem ("edit", url_for ("common.editmode", mode="edit")) }}
               {{ idx.button_elem ("select", url_for ("common.editmode", mode="select")) }}
             </div>
+          #}
           </div>
           <h5 class="card-title mt-4">Einrichtung</h5>
           <div class="card-text">

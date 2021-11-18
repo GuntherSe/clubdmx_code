@@ -7,7 +7,7 @@ import os.path
 import csv
 
 from flask import Blueprint, render_template, request, json 
-# from flask import flash, session
+from flask import session
 # from flask_login import login_required
 # from apputils import standarduser_required, admin_required, redirect_url
 # from common_views import check_clipboard
@@ -33,6 +33,7 @@ def cuedetails () ->json:
     cuenr von 1 bis SLIDERS
     Callback data zum Anzeigen der Cue-Info
     return: Tabelle mit Cue-Daten
+    editmode auf 'edit' stellen!
     """
     filename = request.args.get ("filename")
     fullname = os.path.join (globs.room.cuepath (), filename)
@@ -40,6 +41,8 @@ def cuedetails () ->json:
 
     excludebuttons = ["openButton", "saveasButton", "newlineButton",
                         "uploadButton", "saveChanges", "discardChanges"]
+                        
+    session["editmode"] = "edit"
 
     table = render_template ("modaldialog.html", 
                     body = "csvbody",
@@ -92,7 +95,7 @@ def cueedit ():
                                         heads=heads,
                                         attribs=attribs,
                                         labels=labels,
-                                        title="Cue "+filename)
+                                        title=filename)
     return json.dumps (ret)
 
 

@@ -64,8 +64,13 @@
                             {spath:dataPath});
         activateUploadCsv ("#upload_point");
 
-        editableCsvFields ();
-        selectableCsvLines ();
+        // Mousemode Optionen:
+        initMouseMode ();
+        changeMousemode (".mousemode-edit", "edit");
+        changeMousemode (".mousemode-select", "select");
+
+        // selectableCsvLines ();
+        // editableCsvFields ();
         csvSavediscardButtons ();
 
       }); // ende then
@@ -92,6 +97,7 @@
       dataPath = $("#dataPath").attr ("spath");
       // console.log ("dataPath: "+ dataPath);
       
+      // initMouseMode ();
       showDir ("explore");
       loadTable (insert_id="#rechts");
       $("#sessiondata").attr ("history", "/dataform/config");

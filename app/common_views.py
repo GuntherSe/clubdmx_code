@@ -47,7 +47,7 @@ def bootstraptheme (theme:str):
 
 # --- Edit/Select Umschaltung ------------------------------------
 @common.route ("/editmode/<mode>")
-@standarduser_required
+@login_required
 def editmode (mode:str=""):
     """ Bearbeitungsmodus: view/edit/select
 
@@ -59,11 +59,9 @@ def editmode (mode:str=""):
     if mode in modes:
         session["editmode"] = mode
         i = modes.index (mode)
-        flash (f"Bearbeitungs-Modus '{modetext[i]}' ausgewählt.")
+        return modetext[i]
     else:
-        flash (f"Bearbeitungs-Modus '{mode}' nicht vorhanden.", category="danger")
-    return redirect (redirect_url())
-    # return "ok"
+        return "SELECT"
 
 # --- Clipboard ---------------------------------------------------
 def check_clipboard ():
@@ -149,10 +147,14 @@ def get_info (item:str) -> json:
         buttonstat = [globs.buttontable[i].status for i in range (buttons)]
         return json.dumps (buttonstat)
     
-    if item == "cl_sliderval": # sliderwerte der cuelist-Fader
-        sliders = len (globs.cltable)
-        bytevals = [int (globs.cltable[i].level *255) for i in range (sliders)]
-        return json.dumps (bytevals)
+    if item == "cl_status": # sliderwerte der cuelist-Fader
+        ret = {}
+        num_cl = len (globs.cltable)
+        levels = [int (globs.cltable[i].level *255) for i in range (num_cl)]
+        ret["levels"] = levels
+        status = [globs.cltable[i].status () for i in range (num_cl)]
+        ret["status"] = status
+        return json.dumps (ret)
 
     elif item == "mix": # Mix output 
         unis = globs.cfg.get ("universes")

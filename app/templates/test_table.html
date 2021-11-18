@@ -15,7 +15,7 @@
 
 <div id="center">
   <!-- Tabelle mit Buttons -->
-  {#{ tbl.csv_buttons() }#}
+  {#{ tbl.csv_nav() }#}
   {{ tbl.table() }}
 </div>
 <div class="row">
@@ -42,7 +42,8 @@
 //    prepEdit();
 
     //selectableCsvLines ();
-    editableCsvFields ();
+    // editableCsvFields ();
+    initMouseMode ();
 
     var editfield = undefined;
 

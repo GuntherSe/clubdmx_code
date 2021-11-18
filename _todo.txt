@@ -1,6 +1,8 @@
-Topcue: Snapshot
+-- Topcue: Snapshot
 
-Cuelist: OSC Kommando abschicken
+-- Cuelist: OSC Kommando abschicken
+
+-- Stage Single: Eingabefeld für Headnr
 
 -- neu: Startcue  ok 0.95
 
@@ -15,7 +17,7 @@ Cuelist: OSC Kommando abschicken
 -- neu: sendosc.sh und sendosc.bat zum Senden eines OSC-Befehls
    damit kann crontab zeitabhängig ClubDMX steuern 0.96
 
--- edit/select Umschalten ohne reload, dh. mit Javascript
+-- edit/select Umschalten ohne reload, dh. mit Javascript ok 0.98
 
 -- Login: Basic-User startet mit Executer ok 0.95
 
@@ -26,9 +28,9 @@ Cuelist: OSC Kommando abschicken
    - Beim Löschen von Fader: Contrib Löschen
    - Stage -> Import Patch: Koordinaten falsch berechnet ok 0.97
    - neuer Raum/neuer Patch, "speichern als" fehlerhaft
-   - Stage resizeable: Koordinaten werden nicht gespeichert
+   - Stage resizeable: Koordinaten werden nicht gespeichert ok 0.98
    - csvnameclass: "sichern als" produziert Fehler, wenn gleiche Source 
-     und Dest angegeben
+     und Dest angegeben ok 0.98
 
 -- individuelle Stages, auch unterscheiden nach Gerät
 

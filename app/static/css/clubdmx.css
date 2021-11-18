@@ -12,9 +12,9 @@
     background-color: #d3d3d3af;        
 }
 /* Abstand von navbar und Seitenüberschrift: */
-.menuheight {
+/* .menuheight {
     min-height: 110px;
-}
+} */
 
 /* #headercontainer {
   padding-top: 10px;
@@ -23,6 +23,11 @@
 .nav-topcue {
     color: white;
     background-color: chocolate;
+}
+
+.nav-csvtable {
+  width: 100%;
+  /* position: fixed; */
 }
 
 .cuefader.ui-slider .ui-slider-handle {
@@ -58,7 +63,7 @@
 html, body {
   height: 100%;
   
-  /* width: 100%; */
+  width: 100%;
 }
 /* Formular */
 .form-content {
@@ -176,18 +181,24 @@ und: https://codepen.io/sosuke/pen/Pjoqqp
 
 
 /* Stage, Stage_Mobil */
-.stage .mob-stage {
-  border-width: 3px;
+/* .stage-canvas {
+  display:flex;
+}
+ */
+.stage, .mob-stage {
+  border: 3px solid;
   border-radius: 5px;
 }
 
 .stage {
   position: relative;
   min-height: 200px;
-  min-width: 300px;
-  height: calc(100vh - 405px);
+  /* min-width: 300px; */
+  width: 100%;
+  height:100%;
+  /* height: calc(100vh - 405px); */
   overflow: auto;
-  /* -webkit-overflow-scrolling: inherit; */
+  -webkit-overflow-scrolling: initial;
 }
 .stage-element {
   position: absolute;

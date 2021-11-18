@@ -19,7 +19,7 @@
 <div id="center">
   <div id="upload_point"></div>
   <!-- Tabelle mit Buttons -->
-  {{ tbl.csv_buttons() }}
+  {{ tbl.csv_nav() }}
   {{ tbl.table() }}
 </div>
 <div class="row">
@@ -33,8 +33,10 @@
 
   $('document').ready (function () {
     // editierbare Spalten:
-    editableCsvFields ();
-    selectableCsvLines ();
+    //editableCsvFields ();
+    //selectableCsvLines ();
+    initMouseMode ();
+
     // speichern/verwerfen-Buttons
     csvSavediscardButtons ();
 

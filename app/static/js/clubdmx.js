@@ -19,6 +19,7 @@ function extract_int (str)  {
   // var part = str.match(/([A-Za-z\-_]+)([0-9]+)/);
   // return part[2];
 };
+
 // ---------------------------------------------------------------------------
 // Toggle Fullscreen:
 // https://developers.google.com/web/fundamentals/native-hardware/fullscreen
@@ -48,14 +49,50 @@ function jsmessage (data)  {
 
 }
 // ----------------------------------------------------------------------------
+// Mousemode ändern: mögliche Werte: 'edit', 'select'
+var MouseModeStr;
+
+function changeMousemode (id, newmode) {
+  $(id).on ("click", function () {
+    $.get ("/editmode/"+newmode, function (data) {
+      $(".edit-select-button").text (data);
+      $("#sessiondata").attr ("editmode", newmode);
+      MouseModeStr = newmode;
+      initMouseMode ();
+    });
+  }); 
+}
+
+function initCsvtableMouse () {
+  // Verhalten bei Click in CSV-Tabelle:
+  if (editmode ("select")) {
+    selectableCsvLines ();
+  } else if (editmode ("edit")) {
+    $("tr").removeClass ("ui-state-highlight");
+    removeSelectableCsvLines ();
+    editableCsvFields ();
+    // Buttons:
+    $(".navSelect").addClass ("d-none");
+    $(".csvClipboard").addClass ("d-none"); 
+  }
+}
+
+function initMouseMode () {
+  // wird in der jeweiligen html-Seite neu definiert
+  initCsvtableMouse ();
+  // console.log ("Maus: nothing to do.");
+}
+
+
 // CELL-EDIT start
 var editcell = undefined; // zu editierende Text-Zelle
 
 function editmode (str) {
   // prüfen, welcher editmode eingeschalten ist
   // mögliche Werte: edit, select=default
-  if ( $("#sessiondata").attr ("editmode") == str) {
-    return true;
+  // if ( $("#sessiondata").attr ("editmode") == str) {
+  if ( MouseModeStr == str) {
+      return true;
   } else {
     return false;
   };
@@ -148,6 +185,10 @@ function createSelectOptions (values, current) {
 };
 
 function editableCsvFields () {
+  // select-Buttons entfernen:
+  $(".navSelect").addClass ("d-none");
+  $(".csvClipboard").addClass ("d-none"); 
+
   // csv-Felder editierbar machen, nach Feldname unterscheiden:
   $(".csvcell").click (function (event) {
     if (editcell == undefined && editmode ("edit")) {
@@ -232,6 +273,9 @@ function editableCsvFields () {
 
 $(document).ready (function() {
 
+  // MouseMode initialisieren:
+  MouseModeStr = $("#sessiondata").attr ("editmode");
+
   // editcell leeren:
   editcell = undefined
   //--->save single field data > start
@@ -249,17 +293,23 @@ $(document).ready (function() {
 // CELL EDIT Ende
 
 // --- Topcue Navigation anzeigen/verbergen ---------------------------------
+function resizeStage () {
+  // wird in stage.js neu definiert
+  console.log ("Resize:nothing to do");
+}
 
 function showSecondNav () {
   $("#secondNav").show ();
   var navheight = $("#primaryNav").height () + $("#secondNav").height ();
   $("#menu").css ("padding-top", navheight);
+  resizeStage ();
 }
 
 function hideSecondNav () {
   $("#secondNav").hide ();
   var navheight = $("#primaryNav").height ();
   $("#menu").css ("padding-top", navheight);
+  resizeStage ();
 }
 
 
@@ -326,36 +376,56 @@ function selectableButtonUpdate ($sel) {
   }
 }
 
+var selectableCsvLinesEnabled = false;
 function selectableCsvLines () {
   // 
-  selectableCsvInit ();
-  if (editmode ("select")) {
-
+  if (! selectableCsvLinesEnabled) {
+    selectableCsvLinesEnabled = true;
+    selectableCsvInit ();
+    // if (editmode ("select")) {
+  
     $("#csvtable > tbody").selectable ({
-        filter:"tr",
-        create: function( e, ui ) {
-            postSelectedRows ( $() );
-        },
-
-        selected: function( e, ui ) {
-            if ($(ui.selected).hasClass('ui-state-highlight')) {
-                $(ui.selected).removeClass('ui-state-highlight')
-                              .removeClass('ui-selected');
-            } else {            
-                $(ui.selected).addClass('ui-state-highlight')
-                              .addClass('ui-selected');
-            }  
-            selectableButtonUpdate ($(this));
-        },
-
-        unselected: function( e, ui ) {
-            $( ui.unselected ).removeClass( "ui-state-highlight" );
-            selectableButtonUpdate ($(this));
-        }
+      filter:"tr",
+      create: function( e, ui ) {
+          postSelectedRows ( $() );
+      },
+  
+      selected: function( e, ui ) {
+          if ($(ui.selected).hasClass('ui-state-highlight')) {
+              $(ui.selected).removeClass('ui-state-highlight')
+                            .removeClass('ui-selected');
+          } else {            
+              $(ui.selected).addClass('ui-state-highlight')
+                            .addClass('ui-selected');
+          }  
+          // selectableButtonUpdate ($(this));
+      },
+  
+      unselected: function( e, ui ) {
+          $( ui.unselected ).removeClass( "ui-state-highlight" );
+          // selectableButtonUpdate ($(this));
+      },
+      stop: function (e, ui) {
+        selectableButtonUpdate ($(this));  
+      }
+      
     });
-  }; // end editmode select
+  
+    // }; // end if editmode select
+  
+  }
 }
 
+function removeSelectableCsvLines () {
+  // selectable entfernen
+  if (selectableCsvLinesEnabled) {
+    selectableCsvLinesEnabled = false;
+    $("#csvtable > tr").removeClass('ui-state-highlight')
+      .removeClass('ui-selected');
+    $("#csvtable > tbody").selectable ("destroy");
+
+  }
+}
 // ---------------------------------------------------------------------
 // Slider in cuefader und executer:
 // Funktion zum Slider erzeugen:
@@ -483,12 +553,9 @@ function activateCuedetails () {
         $("#viewModal").modal();
 
         // Editierbar machen:
-//        $(".headnr").addClass ("edittext_data");
-//        $(".attr").addClass ("edittext_data");
-//        $(".level").addClass ("edittext_data");
-//        prepEdit();
-        editableCsvFields ();
-        selectableCsvLines ();
+        initCsvtableMouse ();
+        // editableCsvFields ();
+        // selectableCsvLines ();
 
         $("#viewModal").on ("hide.bs.modal"), function () {
             if (fileDialogParams.select=='true') {
@@ -497,7 +564,6 @@ function activateCuedetails () {
         };
         //$("#fileselect").show ();
         $("#viewModal").on ("hidden.bs.modal", function () {
-          // console.log ("hidden Modal");
           //savecellReload = true; // reload wieder ein
           postSelectedRows ( $() ); // selektierte Reihen löschen
           location.reload ();
@@ -518,7 +584,7 @@ function activateCuedetails () {
       if (jdata != "false") {
         $("#showCueModal").trigger ("click");
         $("#dialogModal").on ("shown.bs.modal", function () {
-          $(".selectDiv").html ("Cue: " + filename);
+          $(".selectDiv").html (filename);
           $("#faderspace").html (jdata["table"]);
           saveEditButton (filename);
           var heads   = jdata["heads"];
@@ -618,6 +684,11 @@ function csvSavediscardButtons () {
 // --- Navigation für Topcue und CSV-Buttons: --------------------------------
 
 $(document).ready (function() {
+  // Mousemode Optionen:
+  changeMousemode (".mousemode-edit", "edit");
+  changeMousemode (".mousemode-select", "select");
+
+
   // topcue Nav Anzeige auf allen Seiten:
   if ($("#sessiondata").attr ("topcuecontent") == "true") {
     showSecondNav ();

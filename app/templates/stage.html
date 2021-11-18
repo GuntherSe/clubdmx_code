@@ -35,38 +35,46 @@ style="left:{{ left }}; top:{{ top }}; width:{{ width }}; height:{{ height }};"
 <div id="showModal"></div>
 
 <div id="stagewrapper" class="stage-wrapper">
-  {{ tbl.stage_buttons () }}
+  {{ tbl.stage_nav () }}
 
-  <div id="csvtable" class="ui-widget-content bg-light stage"
-       file="{{ file }}" pluspath="{{ pluspath }}" changes="{{ changes }}">
+  <!-- <div id="canvas" class="stage-canvas"> -->
 
-    {% for item in items %}
-    <div class="stage-element {{ item.Type.lower() }}" 
-      row_num="{{ loop.index }}"
-      {{ position (left=item.Left,   top=item.Top, 
-                   width=item.Width, height=item.Height ) }} >
-      {% if item.Type == "Head" %}
-        <div class="intensity-container">
-          <div class="intensity-indicator head-{{ item.Name }}"></div>
-        </div>
-        <div class="color-indicator"></div>
-      {% endif %}
-      <div class="itemName edit_div text-wrap">{{ item.Name }}</div>
-      <div class="itemText edit_div text-wrap">{{ item.Text }}</div>
-      <div class="itemComment edit_div text-wrap">{{ item.Comment }}</div>
-    </div>
-    {% endfor %}
-  </div> 
+    <div id="csvtable" class=" bg-light stage" 
+        file="{{ file }}" pluspath="{{ pluspath }}" changes="{{ changes }}">
+<!-- ui-widget-content -->
+      {% for item in items %}
+      <div class="stage-element {{ item.Type.lower() }}" 
+        row_num="{{ loop.index }}"
+        {{ position (left=item.Left,   top=item.Top, 
+                    width=item.Width, height=item.Height ) }} >
+        {% if item.Type == "Head" %}
+          <div class="intensity-container">
+            <div class="intensity-indicator head-{{ item.Name }}"></div>
+          </div>
+          <div class="color-indicator"></div>
+        {% endif %}
+        <div class="itemName edit_div text-wrap">{{ item.Name }}</div>
+        <div class="itemText edit_div text-wrap">{{ item.Text }}</div>
+        <div class="itemComment edit_div text-wrap">{{ item.Comment }}</div>
+      </div>
+      {% endfor %}
+    </div> 
 
+  <!-- </div> canvas -->
 </div>
 {% endblock %}
 
 {% block javascript %}
   <script src="/static/js/stage.js"></script>
   <script>
-
+    function initMouseMode () {
+      // wird in der jeweiligen html-Seite neu definiert
+      initStageMouse ();
+    };
+   
     $(document).ready ( function () {  
-      selectableStageElements ();
+      initStageMouse ();
+      // selectableStageElements ();
       periodic_attribstatus ();
       csvSavediscardButtons ();
     });  

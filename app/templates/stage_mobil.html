@@ -34,7 +34,7 @@ style="left:{{ left }}; top:{{ top }}; width:{{ width }}; height:{{ height }};"
 <div id="showModal"></div>
 
 <div id="stagewrapper" class="stage-wrapper">
-  {{ tbl.stage_buttons () }}
+  {{ tbl.stage_nav () }}
 
   <div class="container-fluid">
     <div id="csvtable" class="row mob-stage ui-widget-content"
@@ -64,15 +64,23 @@ style="left:{{ left }}; top:{{ top }}; width:{{ width }}; height:{{ height }};"
 
 {% block javascript %}
   <script src="{{ url_for('static', filename='js/stage.js')}}"></script>
+
   <script>
+    function initMouseMode () {
+      // wird in der jeweiligen html-Seite neu definiert
+      initMobStageMouse ();
+    };
+
+
     $(document).ready ( function () {  
-      selectableMobileElements ();
+      initMobStageMouse ()
+      // selectableMobileElements ();
       periodic_attribstatus ();
       csvSavediscardButtons ();
       // Fadermodal schließen:
       $("#dialogModal").on ("hide.bs.modal", function () {
         $(".mobil-element").removeClass("highlight ui-selected");
-        $(".selectDiv").empty();
+//        $(".selectDiv").empty();
 //        $("#workspace").empty ();
         var content = $("#sessiondata").attr ("topcuecontent");
         if (content == "false") {
