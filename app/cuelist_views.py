@@ -74,6 +74,19 @@ def faderpage () ->json:
     return render_template ("cl-faderpage.html", data=data)
 
 
+@clview.route ("/status")
+def status () ->json:
+    """ Cuelist Status """
+    ret = {}
+    num_cl = len (globs.cltable)
+    levels = [int (globs.cltable[i].level *255) for i in range (num_cl)]
+    ret["levels"] = levels
+    status = [globs.cltable[i].status () for i in range (num_cl)]
+    ret["status"] = status
+    return json.dumps (ret)
+
+
+
 @clview.route ("/go")
 def go () -> str:
     """ Go-Button drücken """
@@ -93,3 +106,20 @@ def pause () -> str:
         globs.cltable[index].pause ()
     return "ok"
 
+@clview.route ("/minus")
+def minus () -> str:
+    """ Minus-Button """
+    butt = request.args.get ("index")
+    index = int(butt)
+    if index in range (len (globs.cltable)):
+        globs.cltable[index].decrement_nextprep ()
+    return "ok"
+
+@clview.route ("/plus")
+def plus () -> str:
+    """ Plus-Button """
+    butt = request.args.get ("index")
+    index = int(butt)
+    if index in range (len (globs.cltable)):
+        globs.cltable[index].increment_nextprep ()
+    return "ok"

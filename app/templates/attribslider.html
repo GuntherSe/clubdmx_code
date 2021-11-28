@@ -8,29 +8,29 @@ Parameter:
 #}
 
 {% macro sliderelem (index) %}
-<div class="col mx-auto">
-    <div  style="margin-bottom:10px;">
-        {{ labels[index] }}
-    </div>
-    <!-- <div style="min-height: 4px;"></div> -->
-    <div id="attrib-{{ heads[index] }}{{ attribs[index] }}" 
-         class="attribslider mx-auto">
-         <!-- style="height:150px; padding:10px;"> -->
-    </div>
+<div class="col mx-auto"> <!-- col -->
+  <div class="sliderelement">
+    <!--   style="margin-bottom:10px; margin-top:20px; flex: 0 0 auto;" -->
+      {{ labels[index] }}
+  </div>
+  <!-- <div style="min-height: 4px;"></div> -->
+  <div id="attrib-{{ heads[index] }}{{ attribs[index] }}" 
+        class="attribslider mx-auto">
+        <!-- style="height:150px; padding:10px;"> -->
+  </div>
 </div>
 {% endmacro %}
 
-<div>
-    <div id="attribslider" class="row text-center">
-        <!-- style="text-align: center;"> -->
-        {% for attrib in attribs %}
-        {{ sliderelem (loop.index0) }}
-        {% endfor %}
+<div >
+  <div class="row slidercontainer text-center" > <!-- row -->
+    {% for attrib in attribs %}
+    {{ sliderelem (loop.index0) }}
+    {% endfor %}
 {#    
-        <div class="col-4">
-            <h5>Selektion</h5>
-            {{ title }}
-        </div>
-#}
+    <div class="col-4">
+        <h5>Selektion</h5>
+        {{ title }}
     </div>
+#}
+  </div>
 </div>

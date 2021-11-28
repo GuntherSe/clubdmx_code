@@ -5,20 +5,19 @@
 class Cuelist
 
 Cuelist ist eine Tabelle mit folgender Struktur:
-Id,Cue,Fadein,Fadeout,Waitin,Waitout,Linkwith,Text,Comment
+Id,Cue,Fadein,Fadeout,Waitin,Waitout,Text,Comment
 Id: Laufende Nummer mit evtl 2 Kommastellen, z.B 1, 1.2, 1.23
 Cue: Filename, lokalisiert in <room>/cue
 Fadein, Fadeout, Waitin, Waitout: Zeiten in sec
 Stay: '' .. Warten auf GO, Zeit >= 0 in sec .. Wartezeit vor Auto-GO
-Linkwith: '' oder Cue, der auch aufgerufen wird
 Text: Anzeigetext kurz
 Comment: Anzeigetext lang = Cue-Information
 
 Eine Cuelist wird durch den outcue in Cue.contrib in den Mix eingebunden. 
 Im Gegensatz zum Cue, wo der 
-Cue-Content in einem File gelistet und daher statisch ist, ist der in den Mix eingebundene
-Content dynamisch: Abhängig von aktuellem und nächsten Cue und dem Zeitpunkt wird der 
-_cuecontent von outcue berechnet.
+Cue-Content in einem File gelistet und daher statisch ist, ist der in den 
+Mix eingebundene Content dynamisch: Abhängig von aktuellem und nächsten 
+Cue und dem Zeitpunkt wird der _cuecontent von outcue berechnet.
 
 """
 
@@ -64,7 +63,6 @@ class Cuelist ():
         self.outcue = Cue (patch) # dieser content wird an contrib geschickt
         self.outcue.level = 1.0
         self.location = "pages"
-        # self.id = ""
         # self.text = ""
         # current-Werte:
         self.currentcue = Cue (patch) # Infos zum aktuellen Cue
@@ -77,6 +75,8 @@ class Cuelist ():
         self.nextid = 0.0 # float
         self.nextpos = 0 # Position des next Cue in self._idlist
         self.nextkeys = []
+        self.nextprep = 0   # Nächste Position in Vorbereitung, 
+                            # nextpos wird erst bei go festgelegt
         # Status:
         self.is_fading_in = True
         self.is_fading_out = False
@@ -147,16 +147,27 @@ class Cuelist ():
         return ret
     
 
+    def line (self, pos:int) -> dict:
+        """ liefert cuelist[pos] als dict 
+        """
+        ret = {}
+        if 0 <= pos < len (self.cuelist):
+            id = self._idlist[pos]
+            ret = self.cuelist[id]
+        return ret
+
     def status (self) -> dict:
         """ aktueller Status der Cuelist"""
         ret = {}
         # current-Werte:
         ret["currentid"] = self.currentid # float
-        ret["currentpos"] = self.currentpos # Position des current Cue in self._idlist
+        ret["currentline"] = self.line (self.currentpos)
+        # ret["currentpos"] = self.currentpos # Position des current Cue in self._idlist
         # next-Werte:
-        ret["nextid"] = self.nextid # float
-        ret["nextpos"] = self.nextpos # Position des next Cue in self._idlist
-        # ret[""] = self.nextkeys = []
+        # ret["nextid"] = self.nextid # float
+        # ret["nextpos"] = self.nextpos # Position des next Cue in self._idlist
+        # ret["nextprep"] = self.nextprep # vorbereitete nächste Pos.
+        ret["nextline"] = self.line (self.nextprep)
         # Status:
         ret["fading_in"] = self.fadein_percent
         ret["fading_out"] = self.fadeout_percent
@@ -236,15 +247,17 @@ class Cuelist ():
 
         curfactor = self.tmfactor (self.currentid, tm, "out")
         nextfactor = self.tmfactor (self.nextid, tm, "in")
-        self.fadein_percent = int (nextfactor["in"] * 100)
-        if curfactor["xfade"]:
-            self.fadeout_percent = 100 - self.fadein_percent
-        else:
-            self.fadeout_percent = int (curfactor["out"] * 100)
+
+        # self.fadein_percent = int (nextfactor["in"] * 100)
+        # if curfactor["xfade"]:
+        #     self.fadeout_percent = 100 - self.fadein_percent
+        # else:
+        #     self.fadeout_percent = int (curfactor["out"] * 100)
 
         # Übergänge berechnen:
         # 1. items, die in nextcue vorkommen:
         if self.is_fading_in:
+            self.fadein_percent = int (nextfactor["in"] * 100)
             for item in self.nextcue.cuecontent ():
                 itemkey = item[0] + item[1]
                 nextlevel = int (item[2])
@@ -264,7 +277,9 @@ class Cuelist ():
         if curfactor["xfade"] == True: # crossfade
             self.is_fading_out = self.is_fading_in
             curfactor["out"] = 1 - nextfactor["in"]
+
         if self.is_fading_out: # and not (itemkey in self.nextkeys):
+            self.fadeout_percent = int (curfactor["out"] * 100)
             for item in self.currentcue.cuecontent ():
                 itemkey = item[0] + item[1]
                 if itemkey not in self.nextkeys:
@@ -285,7 +300,10 @@ class Cuelist ():
         if fading_done and not self.is_loaded: # and not self.currentpos == -1:
             self.is_loaded = True
             # print ("\rFading Done.\nCMD: ", end='')
-            self.currentpos = self.nextpos
+
+            self.fadeout_percent = 100
+            self.fadein_percent = 0
+
             # Cueliste updaten:
             # evtl. könnte next ID gelöscht sein
             nextid = self.nextid
@@ -295,8 +313,12 @@ class Cuelist ():
                 self.reset_ids ()
 
             # nextcue wird zum currentcue, neuen nextcue einlesen
+            self.currentpos = self.nextpos
             self.setcurrentcue (self.currentpos)
             self.current_to_output () # outcue mit currentcue abgleichen
+            if self.nextprep == self.nextpos:
+                self.increment_nextprep () # nextprep um 1 erhöhen
+            # else: nextprep wurde bereits verändert
 
             # Stay Time:
             staytm = self.cuelist[self.currentid]["Stay"]
@@ -311,27 +333,29 @@ class Cuelist ():
             self.go ()
 
 
-    def increment_nextpos (self):
-        """ nextpos um 1 erhöhen oder zu 0 springen 
+    def increment_nextprep (self):
+        """ nextprep um 1 erhöhen oder zu 0 springen
+        nextpos wird erst bei GO aktualisiert
         """
-        if self.nextpos < len (self._idlist) -1:
-            self.nextpos += 1
+        if self.nextprep < len (self._idlist) -1:
+            self.nextprep += 1
         else:
-            self.nextpos = 0 # beginnt von vorn
+            self.nextprep = 0 # beginnt von vorn
 
 
-    def decrement_nextpos (self):
-        """ nextpos um 1 vermindern oder zum Ende der cuelist springen
+    def decrement_nextprep (self):
+        """ nextprep um 1 vermindern oder zum Ende der cuelist springen
+        nextpos wird erst bei GO aktualisiert
         """
-        if self.nextpos > 0:
-            self.nextpos -= 1
+        if self.nextprep > 0:
+            self.nextprep -= 1
         else: # zum Ende springen
-            self.nextpos = len (self._idlist) -1
+            self.nextprep = len (self._idlist) -1
 
     def go (self, cuenr:str=""):
         """ Fade beginnen und Startzeit speichern 
 
-        cuenr: nächste Cuenr
+        cuenr: nächste Cuenr oder '-1' -> go back
         """
         if self.is_fading_in: # aktueller Fade noch nicht abgeschlossen
             # print ("GO between...")
@@ -340,21 +364,23 @@ class Cuelist ():
         # nextpos bestimmen:
         if cuenr == "":
             if not self.is_paused:
-                self.increment_nextpos ()
+                self.nextpos = self.nextprep
+                # self.increment_nextpos ()
                 # bei GO nach Pause bleibt nextpos gleich
-        elif cuenr == "-1":
+        elif cuenr == "-1": # go back
             if self.is_paused:
-                self.nextpos = self.currentpos
-                self.setnextcue (self.nextpos)
+                # self.nextpos = self.currentpos
+                self.nextprep = self.currentpos
+                # self.setnextcue (self.nextpos)
             else:
-                self.decrement_nextpos ()
+                self.decrement_nextprep ()
         else: # nächste cuenr angegeben
             try:
                 id = float (cuenr) # evtl Error
                 pos = self._idlist.index (id) # evtl ValueError
-                self.nextpos = pos # cuenr vorhanden
+                self.nextprep = pos # cuenr vorhanden
             except: # cuenr nicht vorhanden: stehen bleiben
-                self.nextpos = self.currentpos
+                self.nextprep = self.currentpos
 
         if self.is_paused:
             self.start_tm = time.time () - self.elapsed_tm
@@ -362,7 +388,7 @@ class Cuelist ():
             # alle anderen Statuswerte bleiben gleich
             return
 
-        self.setnextcue (self.nextpos)
+        self.setnextcue (self.nextprep) 
         if self.nextpos != self.currentpos:
             self.is_fading_in = True
             self.is_fading_out = True
@@ -482,6 +508,7 @@ class Cuelist ():
         zuerst nextid, dann die Infos dazu ermitteln
         """
         if 0 <= pos < len (self._idlist):
+            self.nextpos = pos
             self.nextid    = self._idlist[pos]
             fname = self.cuelist[self.nextid]["Cue"]
             self.nextcue.open (fname)
@@ -528,8 +555,8 @@ class Cuelist ():
             fname = "_neu"
             self.nextcue.open (fname)
         else: 
-            # self.setcurrentcue (0)
             self.setnextcue (0)
+            self.nextprep = 0
 
 
     def check_tm_value (self, row:float, col:str, empty_allowed=False):
@@ -597,7 +624,7 @@ if __name__ == "__main__":
     Cuelist.set_path (os.getcwd())
 
     list1 = Cuelist (patch)
-    list1.open ("list2")
+    list1.open ("list1")
 
     pp = pprint.PrettyPrinter(depth=6)
 
@@ -611,9 +638,13 @@ if __name__ == "__main__":
             i = Zeige OutCue
             d = zeige Patch Dict
             m = Zeige Mix Universum 1
+            s = Status
 
-            1 = zeige Current Cue Info
+            1 = zeige current Cue Info
             2 = zeige current Cue content
+            3 = zeige nächste Cue Info
+            + = nächster Cue um 1 höher
+            - = nächster Cue um 1 niedriger
             g <Nr> = GO zu Cue <Nr>
             b = GO back
             p = Pause 
@@ -641,6 +672,8 @@ if __name__ == "__main__":
                 print (patch.pdict)
             elif i == 'i':
                 print (list1.outcue.cuecontent())
+            elif i == 's':
+                pp.pprint (list1.status ())
             elif i == '1':
                 try:
                     print (f"current id:{list1.currentid}, ", end='')
@@ -649,6 +682,14 @@ if __name__ == "__main__":
                     pass
             elif i == '2':
                 pp.pprint (list1.currentcue.cuecontent())    
+            elif i == '3':
+                print (f"nächste Pos: {list1.nextprep}")
+            elif i == '+':
+                list1.increment_nextprep ()
+                print (f"nächste Pos: {list1.nextprep}")
+            elif i == '-':
+                list1.decrement_nextprep ()
+                print (f"nächste Pos: {list1.nextprep}")
             elif i == 'g':
                 if len (inp) > 1:
                     list1.go (inp[1])

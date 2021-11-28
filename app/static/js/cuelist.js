@@ -6,38 +6,66 @@ function activateCuelistbuttons () {
   $(".gobutton").click ( function (){
     var index = $(this).attr ("index");
     var args = {index:index};
-    var pauseid = "#cuelistpause-" + index;
-    $.get ("/cuelist/go", args, function () {
-      $(pauseid).removeClass ("btn-warning").addClass ("btn-secondary");
-    });
+    $.get ("/cuelist/go", args);
+    // var pauseid = ".pausebut-" + index;
+    // $.get ("/cuelist/go", args, function () {
+    //   $(pauseid).removeClass ("btn-warning").addClass ("btn-secondary");
+    // });
   });
 
   // Pause Button:
   $(".pausebutton").click ( function (){
     var index = $(this).attr ("index");
     var args = {index:index};
-    var pauseid = "#cuelistpause-" + index;
-    $.get ("/cuelist/pause", args, function () {
-      $(pauseid).removeClass ("btn-secondary").addClass ("btn-warning");
-    });
+    $.get ("/cuelist/pause", args);
+    // var pauseid = ".pausebut-" + index;
+    // $.get ("/cuelist/pause", args, function () {
+    //   $(pauseid).removeClass ("btn-secondary").addClass ("btn-warning");
+    // });
   });
+
+  // Minus Button:
+  $(".minusbutton").click ( function (){
+    var index = $(this).attr ("index");
+    var args = {index:index};
+    // var pauseid = ".pausebut-" + index;
+    $.get ("/cuelist/minus", args);
+  });
+  
+  // Plus Button:
+  $(".plusbutton").click ( function (){
+    var index = $(this).attr ("index");
+    var args = {index:index};
+    // var pauseid = ".pausebut-" + index;
+    $.get ("/cuelist/plus", args);
+  });
+  
 }
 
 function cuelistStatus (num, data) {
   // Statusdaten in macro cl_status anzeigen:
   var numstring = num.toString ();
   var val = data[num] ;
-  // var strval;
+  // ID und Text
   $("#currentid-"+numstring).text (val["currentid"]);
-  $("#nextid-"+numstring).text (val["nextid"]);
-  // TODO: Fade-Status
-  // strval = val["fading_in"];
+  $("#nextid-"+numstring).text (val["nextline"]["Id"]);
+  $("#currenttext-"+numstring).text (val["currentline"]["Text"]);
+  $("#nexttext-"+numstring).text (val["nextline"]["Text"]);
+
   $("#fadein-indicator-"+numstring)
     .attr ("aria-valuenow", val["fading_in"])
     .css ("width", val["fading_in"] + "%");
   $("#fadeout-indicator-"+numstring)
     .attr ("aria-valuenow", val["fading_out"])
     .css ("width", val["fading_out"] + "%");
+
+  // Pause-Status:
+  var pauseid = ".pausebut-" + numstring;
+  if (val["is_paused"] == "true") {
+    $(pauseid).removeClass ("btn-secondary").addClass ("btn-warning");
+  } else {
+    $(pauseid).removeClass ("btn-warning").addClass ("btn-secondary");
+  };
 }
 
 function periodic_cueliststatus () {
@@ -45,7 +73,7 @@ function periodic_cueliststatus () {
 // aktuelle Faderwerte der Cuelist Levels am Schieberegler zeigen:       
 // var sliderlevels;
 $.ajax ({
-    url: "/getinfo/cl_status", 
+    url: "/cuelist/status", 
     success: function(data) {
       var jdata = $.parseJSON(data);
       // Slider:

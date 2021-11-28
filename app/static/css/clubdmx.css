@@ -37,9 +37,16 @@
   border-radius: 5px;
 }
 
+.sliderelement {
+  /* siehe attribslider.html */
+  margin-bottom: 20px; 
+  margin-top: 20px; 
+  flex: 0 0 auto;
+}
+
 .attribslider.ui-slider {
     height: 150px;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
     margin-left: 12px;
 }
 

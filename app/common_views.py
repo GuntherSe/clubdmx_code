@@ -147,15 +147,6 @@ def get_info (item:str) -> json:
         buttonstat = [globs.buttontable[i].status for i in range (buttons)]
         return json.dumps (buttonstat)
     
-    if item == "cl_status": # sliderwerte der cuelist-Fader
-        ret = {}
-        num_cl = len (globs.cltable)
-        levels = [int (globs.cltable[i].level *255) for i in range (num_cl)]
-        ret["levels"] = levels
-        status = [globs.cltable[i].status () for i in range (num_cl)]
-        ret["status"] = status
-        return json.dumps (ret)
-
     elif item == "mix": # Mix output 
         unis = globs.cfg.get ("universes")
         items = []

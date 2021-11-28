@@ -2,6 +2,18 @@
 {% extends 'base.html' %}
 {% import "csvtable-macros.html" as tbl with context %}
 
+{% block css %}
+<style>
+  .slidercontainer {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    width: 100%;
+  }
+
+</style>
+{% endblock %}
+
+
 {% block header %}
 <div class="container-fluid">
   <h2 class="row">
@@ -27,9 +39,6 @@
     {{ tbl.button_elem (id="plusTen", text="", 
       svgid = "#svg-chevron-right-double") }}
   </ul>
-{% endblock %}
-
-{% block css %}
 {% endblock %}
 
 {% block content %}
