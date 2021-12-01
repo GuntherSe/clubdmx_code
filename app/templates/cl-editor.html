@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% import "csvtable-macros.html" as tbl with context %}
+{% import "base-macros.html" as base with context %}
+
+{% block header %}
+<h2> {% block title %} Cuelist-Editor {% endblock %} </h2>
+{% endblock %}
+
+{% block subtitle %}
+<h5>{{ base.subtitle_with_backbutton (shortname) }}</h5>
+{% endblock %}
+
+{% block css%}
+{% endblock %}
+
+{% block content %}
+<div id="center">
+  <div id="upload_point"></div>
+  <!-- Tabelle mit Buttons -->
+  {{ tbl.csv_nav() }}
+  {{ tbl.table() }}
+</div>
+<div class="row">
+  <div class="col" id="links"></div>
+  <div class="col" id="rechts"></div>
+</div>  
+{% endblock %}
+
+{% block javascript %}
+<script>
+
+  function colEdit () {
+    // Spalten einer CSV-Datei editieren:
+    $("th").click (function (event) {
+      event.preventDefault ();
+      editcell = $(this);
+      let celldata = get_celldata (editcell);
+
+      let args = {field:celldata.text};
+
+      console.log ("Spalte "+args.field+" editieren.");
+      // siehe modaldialogToPython:
+      $.get ("/cuelist/coledit", args, function (data) {
+        $("#dialogModal").html (data);
+        $("#viewModal").modal ();
+        // auswerten bei Strings:
+        $("#selectButton").on ('click', function(){
+          var newval = $("#input-text").first().val();
+          let data = {option:celldata.option,
+                      col_num:celldata.col_num,
+                      field:celldata.text,
+                      file:celldata.file,
+                      newval:newval}; 
+            //var data = {selectButton:"true", newval:newval};
+            //data.args = JSON.stringify (args);
+            $.post ("/cuelist/coledit", data, function (response) {
+                location.reload (); 
+            });
+        });
+        //$(".close-modal").on ("click", function(){
+            // console.log ("Modal close");
+            // $.post ("/forms/modalclose");
+        //});
+      });
+    });
+  }
+
+  $('document').ready (function () {
+    // editierbare Spalten:
+    colEdit ();
+    //editableCsvFields ();
+    //selectableCsvLines ();
+    initMouseMode ();
+
+    // speichern/verwerfen-Buttons
+    csvSavediscardButtons ();
+
+
+    filedialogToPython (".openButton", "/csv/open", {"option":"cuelist"});
+    filedialogToPython (".saveasButton", "/csv/saveas", {"option":"cuelist"});
+
+    activateUploadCsv ("#upload_point");
+
+    $("#sessiondata").attr ("history", "/cuelist/pages");
+  });
+</script>
+{% endblock %}

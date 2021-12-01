@@ -89,7 +89,7 @@ class Roombase:
         return os.path.join (self.PATH, "cue")
 
     def cuebuttonpath (self):
-        """ Verzeichnis für Cuefader liefern """
+        """ Verzeichnis für Cuebutton liefern """
         return os.path.join (self.PATH, "cuebutton")
 
 
@@ -97,6 +97,9 @@ class Roombase:
         """ Verzeichnis für Cuefader liefern """
         return os.path.join (self.PATH, "cuefader")
 
+    def cuelistpath (self):
+        """ Verzeichnis für Cuelist liefern """
+        return os.path.join (self.PATH, "cuelist")
 
     def pagespath (self):
         """ Verzeichnis für Cuelist-Pages liefern """

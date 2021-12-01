@@ -4,22 +4,21 @@
 
 import os
 import os.path
-import csv
 
 from flask import Blueprint, render_template, request, json 
 from flask import flash, session
-# from flask_login import login_required
-# from apputils import standarduser_required, admin_required, redirect_url
-# from common_views import check_clipboard
+from flask_login import login_required
+from apputils import standarduser_required, admin_required, redirect_url
+from common_views import check_clipboard
 
 import globs
 
-from cue import Cue
+# from cue import Cue
 from csvfileclass import Csvfile   
 from cuelist import Cuelist
+# from room_views import new
 # from startup_levels import cuelist_locations
 # from cuebutton import Cuebutton
-# from startup_func import make_fadertable, get_cuebuttons
 # from csv_views import evaluate_option
 
 clview = Blueprint ("cuelist", __name__, url_prefix="/cuelist", 
@@ -27,7 +26,7 @@ clview = Blueprint ("cuelist", __name__, url_prefix="/cuelist",
 
 
 def get_cldata () -> dict:
-    """ Daten aus global.cltable 
+    """ Daten zu allen Cuelisten, aus global.cltable 
     
     data: { "cldata" : {"fieldname1":"val1", "fieldname2":"val2", ... }
             "found_data" : "true" oder "false"
@@ -61,9 +60,9 @@ def get_cldata () -> dict:
 
 # --- cuelist Viewfunktionen ------------------------------------------------
 
-@clview.route ("/faderpage")
-def faderpage () ->json: 
-    """ Fader-Seite: pro Cuelist ein level-Fader und Bedienbuttons
+@clview.route ("/pages")
+def pages () ->json: 
+    """ Cuelist-Seite: pro Cuelist ein level-Fader und Bedienbuttons
     
     """
     data = get_cldata ()
@@ -71,8 +70,44 @@ def faderpage () ->json:
     if data["found_data"] == "false":
         flash ("Es sind noch keine Cuelisten vorhanden.")
 
-    return render_template ("cl-faderpage.html", data=data)
+    return render_template ("cl-pages.html", data=data)
 
+
+@clview.route ("/editor")
+@clview.route ("/editor/<sel>")
+@login_required
+@standarduser_required
+def editor (fname:str = "") ->json: 
+    """ Editor für Cueliste 
+    fname: Name der zuletzt editierten Cuelist
+    """
+    # Name:
+    if fname:
+        session["selected_cuelist"] = fname
+    elif "selected_cuelist" in session:
+        fname = session["selected_cuelist"]
+    else:
+        fname = "_neu"
+    filename = os.path.join (globs.room.cuelistpath(),fname)
+    csvfile = Csvfile (filename)
+    if csvfile.changed():
+        changes = "true"
+    else:
+        changes = "false"
+    
+    check_clipboard ()
+
+    return render_template ("cl-editor.html", 
+                            shortname = csvfile.shortname(),
+                            pluspath = csvfile.pluspath(),
+                            fieldnames = csvfile.fieldnames(),
+                            items = csvfile.to_dictlist(), 
+                            option  = "cuelist",
+                            changes = changes,
+                            excludebuttons = [] )
+  
+
+# --- Hilfsfunktionen -------------------------------------------------------
 
 @clview.route ("/status")
 def status () ->json:
@@ -123,3 +158,33 @@ def plus () -> str:
     if index in range (len (globs.cltable)):
         globs.cltable[index].increment_nextprep ()
     return "ok"
+
+@clview.route ("/coledit",  methods = ["GET", "POST"])
+def coledit () -> str:
+    """ Spalten editieren """
+    if request.method == 'POST':
+        newval = request.form["newval"]
+        fname  = request.form["file"]
+        fname  = fname.replace ('+', os.sep)
+        option = request.form["option"] 
+        field  = request.form["field"]
+        col_num  = request.form["col_num"]
+        # neuen Wert prüfen:
+        chk = globs.room.layout.check (option+field.lower() , newval)
+        if chk == False:
+            flash (f"'{newval}' passt nicht ins Feld '{field}'.", 
+                category="danger")
+            return "error"
+        # CSV-File modifizieren:
+        csvfile = Csvfile (fname)
+        col_num = int(col_num) -1
+        ret = csvfile.col_edit (col_num, chk)
+        flash (ret["message"], category=ret["category"])
+        return "ok"
+
+    field = request.args.get ("field")
+    text = f"Neuer Wert für {field}:"
+    return render_template ("modaldialog.html", title="Spalte editieren",
+                                                text=text,
+                                                body="stringbody",
+                                                submit_text="OK")

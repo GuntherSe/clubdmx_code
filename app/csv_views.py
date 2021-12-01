@@ -19,7 +19,7 @@ from csvfileclass import Csvfile
 from cuebutton import Cuebutton
 from startup import load_config
 # from startup_levels import fader_locations, button_locations
-from startup_func import make_fadertable, make_cuebuttons
+from startup_func import make_cuelistpages, make_fadertable, make_cuebuttons
 
 csvview = Blueprint ("csvview", __name__, url_prefix="/csv", 
                      static_folder="static", template_folder="templates")
@@ -47,6 +47,8 @@ def evaluate_option (option:str=None):
         make_cuebuttons ()
     elif option == "cuebutton":
         make_cuebuttons ()
+    elif option == "pages":
+        make_cuelistpages ()
     elif option == "layout":
         globs.room.layout.__init__ ("layout")
 
@@ -111,7 +113,7 @@ def save_cell():
                 category="danger")
             return "error"
 
-    ret = csvfile.write_cell (row_num, col_num, text)
+    ret = csvfile.write_cell (row_num, col_num, chk)
     if ret["tablechanged"] == "true":
         evaluate_option (option)
     return "ok"
@@ -202,6 +204,11 @@ def open ():
                 globs.cfg.save_data()
             flash (ret["message"], category=ret["category"])
             return "ok"
+
+        if option == "cuelist": # cuelist ausgewählt
+            session["selected_cuelist"] = fileroot
+            return "ok"
+            
     ret = {}
     ret["spath"] = request.args.get ("option")
     ret["dialogbox"] = render_template ("modaldialog.html", body="filedialog")
@@ -287,6 +294,16 @@ def saveas ():
             ret = csvfile.backup (fullname)
             globs.cfg.set ("stage", fileroot)
             globs.cfg.save_data ()
+            session["stagename"] = fileroot
+
+        elif option == "cuelist":
+            if "selected_cuelist" in session:
+                current = session["selected_cuelist"]
+            else:
+                current = "_neu" 
+            csvfile = Csvfile (os.path.join (globs.room.cuelistpath(), current))
+            ret = csvfile.backup (fullname)
+            session["selected_cuelist"] = fileroot
 
         flash (ret["message"], category=ret["category"])
         return "ok"

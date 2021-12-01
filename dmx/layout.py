@@ -8,6 +8,17 @@ import os.path
 
 from csvfileclass import Csvfile
 
+def check_float_to_int (val:float) -> str:
+    """ prüfen, ob val in int umgewandelt werden kann 
+    val: zu prüfende Zahl
+    return: str(int(val)) wenn möglich sonst str(val)
+    """
+    intval = int(val)
+    if intval == val:
+        return str(intval)
+    else:
+        return str(val)
+
 class Layout (Csvfile):
     """ Klasse zur Verwaltung der CSV-Dateien eines Raums 
     self._layout ist das Dictionary, das zu 'Subdir-Field' alle Regeln 
@@ -72,6 +83,9 @@ class Layout (Csvfile):
             # required ?:
             if "Required" in row and row["Required"] :
                 ret["required"] = row["Required"]
+            # Option:
+            if "Option" in row and row["Option"]:
+                ret["option"] = row["Option"]
 
             # type (text,decimal,select) -> unterschiedliche Field-Konstruktoren:
             # type 'head': choices in forms.py ermitteln
@@ -93,6 +107,11 @@ class Layout (Csvfile):
                 bereich = row["Range"]
                 if len (bereich):
                     ret["min"] , ret["max"] = bereich.split()
+            elif fieldtype == "decimal":
+                # Range:
+                if "Range" in row and row["Range"] == ">=0": # positiv
+                    ret["min"] = 0
+
             elif fieldtype == "file": # file
                 if "Option" in row:
                     ret["subdir"] = row["Option"]
@@ -106,15 +125,21 @@ class Layout (Csvfile):
                 ret["kwargs"] = kwargs
         return ret
 
-    def check (self, key:str, checkval:str) ->bool:
+    def check (self, key:str, checkval:str) :
         """ Test, ob checkval die Kriterien von layout erfüllt 
+        key: Subdir+Field
+        checkval: zu überprüfender String
+        return: False, wenn nicht bestanden
+                checkval
+                checkval modifiziert (int statt float)
         """
+
         if key not in self.keys (): # dann darf editiert werden
-            return True
+            return checkval
         rule = self.rule (key)
         if rule["type"] == "list":
             if checkval in rule["values"]:
-                return True
+                return checkval
             else:
                 return False
 
@@ -127,7 +152,7 @@ class Layout (Csvfile):
                     if "required" in rule:
                         return False
                     else:
-                        return True
+                        return checkval
                 else:
                     return False
 
@@ -138,25 +163,38 @@ class Layout (Csvfile):
                 except: # min und max sind keine integer
                     return False
                 if minimum <= checkint <= maximum:
-                    return True
+                    return checkval
                 else:
                     return False
             else: # min und max nicht angegeben
-                return True
+                return checkval
 
         elif rule["type"] == "decimal":
             try:
-                checkval = float (checkval)
-                return True
+                val = float (checkval)
+                # return True
             except:
                 # leeres Feld möglich?
                 if checkval == '':
                     if "required" in rule:
                         return False
                     else:
-                        return True
+                        return checkval
                 else:
                     return False
+            # Range auswerten:
+            if "min" in rule.keys ():
+                try:
+                    minimum = float (rule["min"])
+                except: # min ist kein float
+                    return False
+                if minimum <= val:
+                    return check_float_to_int (val) # evtl umwandeln in int
+                else:
+                    return False
+            else: # min 
+                return check_float_to_int (val) # evtl umwandeln in int
+
 
         else:
             # checkval ist string

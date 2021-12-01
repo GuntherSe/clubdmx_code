@@ -168,7 +168,6 @@ def load_config (with_savedlevels=False):
 
     # zur Absturzvermeidung: fadertable und buttontable löschen:
     # damit gibt es auch keine aktuellen Levels
-    # Cue.contrib.pause ()
     del_cuetables ()
 
     # jetzt config laden:
@@ -181,9 +180,6 @@ def load_config (with_savedlevels=False):
 
     cfgdata = globs.cfg.get("patch")
     ret = globs.patch.open (cfgdata)
-    # if ret["category"] != "success":
-    #     print ("Patchfile nicht gefunden.")
-    #     globs.patch.open ("_neu")
 
     cfgdata = globs.cfg.get("universes")
     globs.patch.set_universes (int(cfgdata))
@@ -245,5 +241,3 @@ def load_config (with_savedlevels=False):
     if start_with_cue == "1":
         activate_startcue ()
 
-
-    # Cue.contrib.resume ()

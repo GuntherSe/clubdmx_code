@@ -41,20 +41,27 @@ def create_field (F:Form, field:str, rule:dict):
             description["label"] = rule["label"]
         else:
             label = None
-        if "default" in rule:
+
+        if "default" in rule and len (rule["default"].strip()):
             default = rule["default"]
         else:
             default = None
+
         if "placeholder" in rule:
             description["placeholder"] = rule["placeholder"]
 
         if "required" in rule:
             validat = [validators.InputRequired(message="Pflichtfeld!")]
         else:
-            validat = []
-        if "min" in rule: # max ist sicher auch da
-            validat.append (validators.NumberRange (min=int (rule["min"]),
+            validat = [validators.Optional()]
+
+        if "min" in rule: 
+            if "max" in rule:
+                validat.append (validators.NumberRange (min=int (rule["min"]),
                                                     max=int (rule["max"])))
+            else:
+                validat.append (validators.NumberRange (min=float (rule["min"])))
+
         
         fieldtype = rule["type"] # muß definiert sein
         if fieldtype == "list":
@@ -123,6 +130,9 @@ def csvline ():
     
     for field in fieldnames:
         rule = globs.room.layout.rule (subdir + field.lower())
+        # option == counter:
+        if "option" in rule and rule["option"] == "counter":
+            rule["default"] = csvfile.nextint (field)
         create_field (F, field, rule)
 
     form = F (request.form)

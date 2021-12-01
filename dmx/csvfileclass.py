@@ -6,6 +6,7 @@ import os.path
 import shutil # fürs kopieren
 import json
 import csv
+import math
 from urllib.parse import unquote
 
 from csvnameclass import Csvname
@@ -353,8 +354,52 @@ Backup, Sichern
         return -1
             
 
-                
-            
+    def col_edit (self, col:int, newval:str) -> dict:
+        """ Spalte editieren 
+        col: Spaltennummer
+        newval: neuer Wert für Zellen
+        """
+        ret = {}
+        if 0 <= col < len (self._fieldnames):
+
+            current = self.to_list ()
+            num_lines = len (current) -1 # Anzahl Zeilen ohne fieldnames
+            for line in range (num_lines):
+                current[1+line][col] = newval
+            self.backup ()
+            with open (self.name(), 'w',encoding='utf-8', newline='') as pf:
+                writer = csv.writer (pf)
+                writer.writerows (current)
+            ret["category"] = "success"
+            ret["message"] = f"Neuer Wert für '{self._fieldnames[col]}':  {newval}. "
+        else:
+            ret["category"] = "danger"
+            ret["message"] = f"'{col}' außerhalb des gültigen Bereichs."
+        return ret
+
+
+    def nextint (self, field:str) -> str:
+        """ nächste Integer in Spalte 'field' finden 
+        """
+        try:
+            col = self._fieldnames.index (field)
+        except:
+            return '0'
+        
+        content = self.to_list ()
+        intvals = []
+        for line in content:
+            try:
+                val = float (line[col])
+                intvals.append (val)
+            except: # nicht in int umwandelbar
+                pass
+        
+        if len (intvals):
+            ret = math.floor (max (intvals)) +1
+            return str (ret)
+        else:
+            return '1'
 
 
 # -------------------------------------------------------------------------

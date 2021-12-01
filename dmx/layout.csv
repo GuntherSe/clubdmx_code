@@ -17,8 +17,8 @@ cuebutton,Text,text,,,,,,
 cuebutton,Filename,file,cue,,,,,true
 cuebutton,Type,list,,Schalter Taster Auswahl,Schalter,,Typ,true
 cuebutton,Group,int,,0 10,0,,Auswahl-Gruppe,true
-cuebutton,Fadein,decimal,,,3,,,true
-cuebutton,Fadeout,decimal,,,3,,,true
+cuebutton,Fadein,decimal,,>=0,3,,,true
+cuebutton,Fadeout,decimal,,>=0,3,,,true
 cuebutton,Midiinput,int,,0 4,0,0: kein Midi-Input,,
 cuebutton,Midibutton,int,,,0,Buttonnummer,,
 cuebutton,Midimonitor,int,,,0,"wenn leer, dann Midibutton",,
@@ -38,13 +38,13 @@ stage,Height,int,px,,85,,Höhe in px,
 stage,Comment,text,,,,,,
 config,key,disabled,,,,,,true
 config,value,text,,,,,,true
-cuelist,Id,decimal,,,,,,true
+cuelist,Id,decimal,counter,>=0,,,,true
 cuelist,Cue,file,cue,,,,,
-cuelist,Fadein,decimal,,,0,,,true
-cuelist,Stay,decimal,,, ,leer = warten auf GO,,
-cuelist,Fadeout,decimal,,,,"wenn leer, dann Crossfade",,
-cuelist,Waitin,decimal,,,,,,
-cuelist,Waitout,decimal,,,,,,
+cuelist,Fadein,decimal,,>=0,0,,,true
+cuelist,Stay,decimal,,>=0, ,leer = warten auf GO,,
+cuelist,Fadeout,decimal,,>=0,,"wenn leer, dann Crossfade",,
+cuelist,Waitin,decimal,,>=0,,,,
+cuelist,Waitout,decimal,,>=0,,,,
 cuelist,Text,text,,,,Beschreibung,,
 cuelist,Comment,text,,,,nächste Cue Info,,
 pages,Page,int,,,1,,,true

@@ -296,7 +296,7 @@ def make_cuelistpages (with_savedlevels:bool=False) :
     csvfile = Csvfile (fullname)
     pagelist = csvfile.to_dictlist ()
     fieldnames = csvfile.fieldnames()
-    try:
+    try: # Filename muss vorhanden sein
         fileindex = fieldnames.index ("Filename") 
     except:
         print (f"'Filename' nicht in {filename}")
@@ -351,5 +351,7 @@ def make_cuelistpages (with_savedlevels:bool=False) :
 
     if with_savedlevels == False: # aktuelle Levels wiederherstellen
         restore_currentlevels (new_cltable, currentlevels)
+        
+    Cuelist.instances = new_cltable
     globs.cltable = new_cltable
 

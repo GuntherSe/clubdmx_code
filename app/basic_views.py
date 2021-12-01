@@ -166,6 +166,7 @@ def fadertable (sel:str=""):
     """ Fader-Seite einrichten/bearbeiten 
     eine der Fader-Tabellen wird angezeigt. Auswahl der angezeigten
     Tabelle wird in session gespeichert
+    sel: cuefaders oder exefaders
     """
     # data = get_faderdata ()
 
@@ -207,7 +208,7 @@ def fadertable (sel:str=""):
                     changes = changes,
                     option  = "cuefader", #sel, # 'cuefaders' oder 'exefaders'
                     loc = sel,
-                    buttons = "true",
+                    buttons = "true", # in macro csvtble-macros.html -> table
                     excludebuttons = [] )
 
 
@@ -229,6 +230,7 @@ def cuebutton ():
 @standarduser_required
 def buttontable (sel:str=""):
     """ Button-Seite einrichten/bearbeiten
+    sel: cuebuttons, exebuttons1, exebuttons2
     """
     # data = get_buttondata ()
     check_clipboard ()
