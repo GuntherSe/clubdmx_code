@@ -27,13 +27,11 @@ cueview = Blueprint ("cueview", __name__, url_prefix="/cue",
 
 @cueview.route ("/cuedetails")
 def cuedetails () ->json: 
-    """ liefert Infos zum Cue 'cuenr'
+    """ liefert Infos zum Cue 'filename'
 
     JSON String mit Fileinfo von cue.csv
-    cuenr von 1 bis SLIDERS
     Callback data zum Anzeigen der Cue-Info
     return: Tabelle mit Cue-Daten
-    editmode auf 'edit' stellen!
     """
     filename = request.args.get ("filename")
     fullname = os.path.join (globs.room.cuepath (), filename)
@@ -42,7 +40,7 @@ def cuedetails () ->json:
     excludebuttons = ["openButton", "saveasButton", "newlineButton",
                         "uploadButton", "saveChanges", "discardChanges"]
                         
-    session["editmode"] = "edit"
+    # session["editmode"] = "edit"
 
     table = render_template ("modaldialog.html", 
                     body = "csvbody",

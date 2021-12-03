@@ -52,7 +52,6 @@ def evaluate_option (option:str=None):
     elif option == "layout":
         globs.room.layout.__init__ ("layout")
 
-# def save_changes (item:str) -> "return url":
 @csvview.route ("/save")
 @admin_required
 def save_changes () :

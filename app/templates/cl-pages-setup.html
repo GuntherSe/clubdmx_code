@@ -6,7 +6,7 @@
 {#  Macro file_item: 
     erzeugt einen Listeneintrag in den Fileselector, mit dem die
     anzuzeigende Tabelle ausgewählt wird
-#}
+
 {% macro file_item (text, loc) -%}
   {% if loc.status == "active" %}
   <a href="#" 
@@ -21,10 +21,10 @@
   </a>
   {% endif %}  
 {%- endmacro %}
-
+#}
 
 {% block header %}
-  <h2> {% block title %} Button-Info {% endblock %} </h2>
+  <h2> {% block title %} Cuelist Pages-Info {% endblock %} </h2>
 {% endblock %}
 
 {% block subtitle %}
@@ -35,9 +35,9 @@
 <!-- Button für modaldialogToPython -->
 <div id="showCueModal"></div>
 
+{# 
 <div id="fileselector" >
   <div class="list-group mb-4">
-    {# Reihenfolge wie in cuebutton.html #}
     {% set title1 = "Buttons im Executer oben: " ~ locations.exebuttons1.text %}
     {{ file_item (title1,locations.exebuttons1) }}
 
@@ -48,6 +48,7 @@
     {{ file_item (title2, locations.cuebuttons) }}
   </div>
 </div>
+#}
 
 <div id="center">
     <div id="upload_point"></div>
@@ -64,11 +65,11 @@
 {% endblock %}
 
 {% block javascript %}
+<script src="/static/js/cuelist.js"></script>
+
 <script>
 
   $("document").ready(function() {
-    // editableCsvFields ();
-    // selectableCsvLines ();
     initMouseMode ();
     // speichern/verwerfen-Buttons
     csvSavediscardButtons ();
@@ -76,14 +77,14 @@
     var location = $("#csvtable").attr ("loc");
     // exebuttons1, exebuttons2, cuebuttons
     filedialogToPython (".openButton", "/csv/open", 
-      {"option":"cuebutton", "location":location});
+      {"option":"pages", "location":location});
 
     filedialogToPython (".saveasButton", "/csv/saveas",
-      {"option":"cuebutton", "location":location});
+      {"option":"pages", "location":location});
 
     activateUploadCsv ("#upload_point");
-    activateCuedetails (); // Buttons 'ansehen' und 'Topcue'
-    $("#sessiondata").attr ("history", "/cuebutton");
+    activateCuelistDetails (); // Button 'ansehen' 
+    $("#sessiondata").attr ("history", "/cuelist/pages");
   }); 
 </script>
 {% endblock %}

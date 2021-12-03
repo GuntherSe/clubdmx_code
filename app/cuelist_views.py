@@ -47,6 +47,7 @@ def get_cldata () -> dict:
     data["option"]     = "pages"
     data["items"]      = Cuelist.items ()
     data["textcolumn"] = csvfile.fieldnames().index("Text")
+    data["filebuttons"] = "cuelist"
     if csvfile.changed():
         data["changes"] = "true"
     else:
@@ -73,22 +74,48 @@ def pages () ->json:
     return render_template ("cl-pages.html", data=data)
 
 
+@clview.route ("/pagessetup")
+def pagessetup () -> json:
+    """ Pages-Seite einrichten/bearbeiten 
+    """
+    check_clipboard ()
+
+    # Daten von der csv-Datei holen:                            
+    fname = globs.cfg.get("pages")
+    filename = os.path.join (globs.room.pagespath(),fname)
+    csvfile = Csvfile (filename)
+    if csvfile.changed():
+        changes = "true"
+    else:
+        changes = "false"
+
+    return render_template ("cl-pages-setup.html", 
+                    shortname = csvfile.shortname(),
+                    pluspath = csvfile.pluspath(),
+                    fieldnames = csvfile.fieldnames(),
+                    items = csvfile.to_dictlist(), 
+                    changes = changes,
+                    option  = "pages", 
+                    filebuttons = "cuelist",
+                    excludebuttons = [] )
+
+
 @clview.route ("/editor")
-@clview.route ("/editor/<sel>")
+@clview.route ("/editor/<name>")
 @login_required
 @standarduser_required
-def editor (fname:str = "") ->json: 
+def editor (name:str = "") ->json: 
     """ Editor für Cueliste 
     fname: Name der zuletzt editierten Cuelist
     """
     # Name:
-    if fname:
-        session["selected_cuelist"] = fname
+    if name:
+        session["selected_cuelist"] = name
     elif "selected_cuelist" in session:
-        fname = session["selected_cuelist"]
+        name = session["selected_cuelist"]
     else:
-        fname = "_neu"
-    filename = os.path.join (globs.room.cuelistpath(),fname)
+        name = "_neu"
+    filename = os.path.join (globs.room.cuelistpath(),name)
     csvfile = Csvfile (filename)
     if csvfile.changed():
         changes = "true"
@@ -104,6 +131,7 @@ def editor (fname:str = "") ->json:
                             items = csvfile.to_dictlist(), 
                             option  = "cuelist",
                             changes = changes,
+                            filebuttons = "cue",
                             excludebuttons = [] )
   
 
@@ -188,3 +216,30 @@ def coledit () -> str:
                                                 text=text,
                                                 body="stringbody",
                                                 submit_text="OK")
+
+@clview.route ("/details")
+def details () ->json: 
+    """ liefert Infos zur Cueliste 'filename'
+
+    return: Tabelle mit Cue-Daten
+    """
+    filename = request.args.get ("filename")
+    fullname = os.path.join (globs.room.cuelistpath (), filename)
+    csvfile = Csvfile (fullname)
+
+    excludebuttons = ["openButton", "saveasButton", "newlineButton",
+                        "uploadButton", "saveChanges", "discardChanges"]
+                        
+    # session["editmode"] = "edit"
+
+    table = render_template ("modaldialog.html", 
+                    body = "csvbody",
+                    title      = csvfile.shortname(),
+                    shortname  = csvfile.shortname(),
+                    pluspath   = csvfile.pluspath(),
+                    fieldnames = csvfile.fieldnames(),
+                    items      = csvfile.to_dictlist (),
+                    excludebuttons = excludebuttons,
+                    option     = "cuelist")
+    return json.dumps (table)
+

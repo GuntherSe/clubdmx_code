@@ -201,8 +201,8 @@ class Layout (Csvfile):
             if checkval == '':
                 if "required" in rule:
                     return False
-                else:
-                    return True
+            else:
+                return checkval
 
 
     def defaults (self, subdir:str) ->dict:

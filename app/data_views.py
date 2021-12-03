@@ -38,6 +38,7 @@ def patch ():
                             items = csvfile.to_dictlist(), 
                             option  = "patch",
                             changes = changes,
+                            filebuttons = "false",
                             excludebuttons = [] )
 
 # -- Datenbank ----------------------------------------------------------------
@@ -131,6 +132,7 @@ def dblayout ():
                     option     = "layout",
                     changes    = changes,
                     style      = "table-sm table-striped table-responsive",
+                    filebuttons = "false", 
                     excludebuttons = excludebuttons )
 
 
@@ -175,6 +177,7 @@ def gettable () ->json:
                     items      = csvfile.to_dictlist(),
                     changes    = changes,
                     excludebuttons = excludebuttons,
+                    filebuttons = "false",
                     option     = option)
     return json.dumps (table)
 

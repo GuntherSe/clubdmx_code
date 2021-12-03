@@ -4,7 +4,7 @@
 {% import "csvtable-macros.html" as tbl with context %}
 {% import "base-macros.html" as base with context %}
 
-{% macro cl_fadertable (header, d, filebuttons="false") %}
+{% macro cl_fadertable (header, d, filebuttons="cuelist") %}
 <div class="container">
   {% set items = d["items"] %}
   {% if items|length > 0 %}
@@ -18,7 +18,8 @@
         {% for item in items %}
           <tr class="row pt-2"></tr>
           {{ base.cueslider (item.Text, item.Filename, 
-                loop.index, 1+d["textcolumn"], item.Index, filebuttons) }}
+                loop.index, 1+d["textcolumn"], item.Index, 
+                filebuttons) }}
           <tr class="row">
             {{ cl_status  (item.Index) }}
             {{ button_row (item.Index) }}
@@ -118,16 +119,16 @@
 
 
 {% block header %} 
-  <h2> {% block title %}Cuelist{% endblock %} </h2>
+  <h2> {% block title %}Cuelist-Pages{% endblock %} </h2>
 {% endblock %}
 
 {#% set subtext = data.exefaders.shortname ~ ", " ~ data.cuefaders.shortname %#}
-{#% block subtitle %}
-  {{ base.subtitle_with_button ("",
+{% block subtitle %}
+  {{ base.subtitle_with_button (data["shortname"],
     svgid = "#svg-gear",
-    endpoint = url_for ('basic.fadertable') )
+    endpoint = url_for ('cuelist.pagessetup') )
   }}
-{% endblock %#}
+{% endblock %}
 
 {% block css %}
 {% endblock %}
@@ -176,7 +177,9 @@
     periodic_cueliststatus ();
 
     // Buttons aktivieren:
-    activateCuelistbuttons ();
+    activateCuelistbuttons (); // Bedienbuttons: GO, PAUSE etc.
+    activateCuelistDetails (); // Button 'ansehen' 
+
 
   });     // ende document ready
 </script>

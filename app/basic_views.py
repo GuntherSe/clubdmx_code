@@ -57,6 +57,7 @@ def get_buttondata () ->dict:
         d["option"]     = "cuebutton" # subdir von room
         d["loc"]        = loc # die ntsprechende Tabelle
         d["items"]      = Cuebutton.items (loc)
+        d["filebuttons"] = "true"
         # d["textcolumn"] = csvfile.fieldnames().index("Text")
         if csvfile.changed():
             d["changes"] = "true"
@@ -94,6 +95,7 @@ def get_faderdata () ->dict:
         d["loc"]        = loc
         d["items"]      = fadertable_items (loc)
         d["textcolumn"] = csvfile.fieldnames().index("Text")
+        d["filebuttons"] = "true"
         if csvfile.changed():
             d["changes"] = "true"
         else:
@@ -199,7 +201,7 @@ def fadertable (sel:str=""):
     
     check_clipboard ()
 
-    return render_template ("cuefader_table.html", 
+    return render_template ("cuefader-setup.html", 
                     locations = locations,
                     shortname = csvfile.shortname(),
                     pluspath = csvfile.pluspath(),
@@ -208,7 +210,7 @@ def fadertable (sel:str=""):
                     changes = changes,
                     option  = "cuefader", #sel, # 'cuefaders' oder 'exefaders'
                     loc = sel,
-                    buttons = "true", # in macro csvtble-macros.html -> table
+                    filebuttons = "cue", # in macro csvtble-macros.html -> table
                     excludebuttons = [] )
 
 
@@ -263,7 +265,7 @@ def buttontable (sel:str=""):
     else:
         changes = "false"
 
-    return render_template ("cuebutton_table.html", 
+    return render_template ("cuebutton-setup.html", 
                     locations = locations,
                     shortname = csvfile.shortname(),
                     pluspath = csvfile.pluspath(),
@@ -272,7 +274,7 @@ def buttontable (sel:str=""):
                     changes = changes,
                     option  = "cuebutton", # sel
                     loc = sel,
-                    buttons = "true",
+                    filebuttons = "cue",
                     excludebuttons = [] )
 
 

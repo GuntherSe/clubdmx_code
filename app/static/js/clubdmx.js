@@ -528,23 +528,20 @@ function periodic_buttonstatus () {
 
 
 // ----------------------------------------------------------------------------
-// Filebuttons 'ansehen' und '>Topcue'
+// Filebuttons 'ansehen' und '>Topcue' 
+// verwendet in Tabellen und Sliderzeilen, die Cues enthalten
 
 function activateCuedetails () {
   // Button "ansehen"  in Cueinfo und cuefader
-  $("button.fileview").on ("click", function ()  {
+  $("button.cueview").on ("click", function ()  {
     event.preventDefault ();
     event.stopPropagation ();
 
-    // var row_num = $(this).attr ("row_num");
-    // var table    = $(this).closest("table");
-    // var option   = table.attr("option");
     var filename = $(this).attr ("name")
 
     $.get({
       url: "/cue/cuedetails", 
       data: {filename:filename},
-      //   data: {row_num:row_num, option:option}, 
       cache: false })
       .then ( function(data){
         modaldata = $.parseJSON(data);
@@ -554,8 +551,6 @@ function activateCuedetails () {
 
         // Editierbar machen:
         initCsvtableMouse ();
-        // editableCsvFields ();
-        // selectableCsvLines ();
 
         $("#viewModal").on ("hide.bs.modal"), function () {
             if (fileDialogParams.select=='true') {
@@ -564,14 +559,13 @@ function activateCuedetails () {
         };
         //$("#fileselect").show ();
         $("#viewModal").on ("hidden.bs.modal", function () {
-          //savecellReload = true; // reload wieder ein
           postSelectedRows ( $() ); // selektierte Reihen löschen
           location.reload ();
         });
       });
   }); // ende $ fileview
 
-  // --- Cue-Auswahl: ----------------------------------------------------
+  // --- Cue-Auswahl:
     $("button.cueedit").on ("click", function () {
     event.stopPropagation();
     var filename = $(this).attr ("name")
@@ -595,9 +589,7 @@ function activateCuedetails () {
               makeCueAttribSlider (heads[i], attribs[i], levels[i],
                                   '/cue/cueedit' );
           };
-
         }); // on shown
-
         }; // if
       }); // get
   });

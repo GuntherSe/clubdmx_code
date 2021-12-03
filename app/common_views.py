@@ -10,8 +10,6 @@ from flask import session, flash, url_for #, send_from_directory
 from flask_login import login_required
 # from cuebutton import Cuebutton
 
-# from ola import get_ip_address
-
 from apputils import standarduser_required, admin_required, redirect_url
 from apputils import calc_mixoutput, press_cuebutton
 
@@ -195,10 +193,6 @@ def getattribs (headnr:str):
     """
     attribs = globs.patch.attriblist (headnr)
     return json.dumps (attribs)
-
-
-# @common.route ("/getlayout")
-# def getlayout
 
 
 @common.route ("/notinpythonanywhere")

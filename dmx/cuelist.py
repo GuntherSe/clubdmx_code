@@ -493,7 +493,7 @@ class Cuelist ():
         """
         if 0 <= pos < len (self._idlist):
             self.currentid    = self._idlist[pos]
-            fname = self.cuelist[self.currentid]["Cue"]
+            fname = self.cuelist[self.currentid]["Filename"]
             self.currentcue.open (fname)
             self.currentkeys.clear ()
             self.currentlevels.clear ()
@@ -510,7 +510,7 @@ class Cuelist ():
         if 0 <= pos < len (self._idlist):
             self.nextpos = pos
             self.nextid    = self._idlist[pos]
-            fname = self.cuelist[self.nextid]["Cue"]
+            fname = self.cuelist[self.nextid]["Filename"]
             self.nextcue.open (fname)
             self.nextkeys.clear ()
             for item in self.nextcue.cuecontent ():
@@ -522,7 +522,7 @@ class Cuelist ():
         """
         ret = True
         # Feldnamen prüfen:
-        required = ["Id", "Cue", "Fadein", "Fadeout", "Waitin", "Waitout", \
+        required = ["Id", "Filename", "Fadein", "Fadeout", "Waitin", "Waitout", \
             "Stay", "Text", "Comment"]
         for fieldname in required:
             if fieldname not in self._listfields:

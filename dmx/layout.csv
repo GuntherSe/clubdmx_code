@@ -39,7 +39,7 @@ stage,Comment,text,,,,,,
 config,key,disabled,,,,,,true
 config,value,text,,,,,,true
 cuelist,Id,decimal,counter,>=0,,,,true
-cuelist,Cue,file,cue,,,,,
+cuelist,Filename,file,cue,,,,,
 cuelist,Fadein,decimal,,>=0,0,,,true
 cuelist,Stay,decimal,,>=0, ,leer = warten auf GO,,
 cuelist,Fadeout,decimal,,>=0,,"wenn leer, dann Crossfade",,
@@ -48,7 +48,7 @@ cuelist,Waitout,decimal,,>=0,,,,
 cuelist,Text,text,,,,Beschreibung,,
 cuelist,Comment,text,,,,nächste Cue Info,,
 pages,Page,int,,,1,,,true
-pages,Position,int,,,1,,,true
+pages,Position,int,counter,,1,,,true
 pages,Text,text,,,,,,
 pages,Filename,file,cuelist,,,,,true
 pages,Midiinput,int,,0 4,0,0: kein Midi-Input,,

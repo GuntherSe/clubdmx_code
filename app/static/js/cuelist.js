@@ -95,5 +95,47 @@ $.ajax ({
 }); // ende $.ajax
 }
 
+// ----------------------------------------------------------------------------
+// Filebutton 'ansehen'
+// verwendet in Tabellen und Sliderzeilen, die Cuelisten enthalten:
+// cl-pages, cl-pages-setup
+// siehe auch: activateCuedetails ()
+
+function activateCuelistDetails () {
+  // Button "ansehen"  in Cueinfo und cuefader
+  $("button.cuelistview").on ("click", function ()  {
+    event.preventDefault ();
+    event.stopPropagation ();
+
+    var filename = $(this).attr ("name")
+
+    $.get({
+      url: "/cuelist/details", 
+      data: {filename:filename},
+      cache: false })
+      .then ( function(data){
+        modaldata = $.parseJSON(data);
+        // console.log ("modaldata: " + modaldata);
+        $("#dialogModal").html (modaldata);
+        $("#viewModal").modal();
+
+        // Editierbar machen:
+        initCsvtableMouse ();
+
+        $("#viewModal").on ("hide.bs.modal"), function () {
+            if (fileDialogParams.select=='true') {
+                saveCell ();
+            };
+        };
+        //$("#fileselect").show ();
+        $("#viewModal").on ("hidden.bs.modal", function () {
+          postSelectedRows ( $() ); // selektierte Reihen löschen
+          location.reload ();
+        });
+      });
+  }); // ende $ fileview
+
+};
+
   
   
