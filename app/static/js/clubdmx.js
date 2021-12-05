@@ -78,9 +78,9 @@ function initCsvtableMouse () {
 }
 
 function initMouseMode () {
-  // wird in der jeweiligen html-Seite neu definiert
+  // kann in der betreffenden html-Seite neu definiert werden.
+  // speziell: stage.html und stage-mobil.html
   initCsvtableMouse ();
-  // console.log ("Maus: nothing to do.");
 }
 
 
@@ -221,6 +221,23 @@ function editableCsvFields () {
             editcell.html (result);
             editcell = undefined;
             $.post ('/csv/savecell', celldata);
+          });
+
+        } else if (layout.type == "head") { // Head in Cue-Zeile:
+          $.get ("/getheads", function (data) {
+            var heads = $.parseJSON (data);
+            // ab hier gleich wie layout.type == 'list'
+            let optionHTML = createSelectOptions (heads, current);
+            editcell.html (optionHTML);
+            $("#cell_selector").focus ();
+    
+            $("#cell_selector").focusout ( function () {
+              let result = $("#cell_selector").val ();
+              celldata.text = result;
+              editcell.html (result);
+              editcell = undefined;
+              $.post ('/csv/savecell', celldata);
+            });
           });
     
         } else if (layout.type == "file") { // File
@@ -422,7 +439,9 @@ function removeSelectableCsvLines () {
     selectableCsvLinesEnabled = false;
     $("#csvtable > tr").removeClass('ui-state-highlight')
       .removeClass('ui-selected');
-    $("#csvtable > tbody").selectable ("destroy");
+    if ($("#csvtable > tbody").selectable ("instance") != undefined) {
+      $("#csvtable > tbody").selectable ("destroy");
+    };
 
   }
 }
@@ -547,16 +566,23 @@ function activateCuedetails () {
         modaldata = $.parseJSON(data);
         // console.log ("modaldata: " + modaldata);
         $("#dialogModal").html (modaldata);
+
+        $("#viewModal").on ("shown.bs.modal", function () {
+          // Editierbar machen:
+          initCsvtableMouse ();
+          changeMousemode (".mousemode-edit", "edit");
+          changeMousemode (".mousemode-select", "select");
+        
+        });
+
         $("#viewModal").modal();
 
-        // Editierbar machen:
-        initCsvtableMouse ();
+        // $("#viewModal").on ("hide.bs.modal", function () {
+        //     if (fileDialogParams.select=='true') {
+        //         saveCell ();
+        //     };
+        // });
 
-        $("#viewModal").on ("hide.bs.modal"), function () {
-            if (fileDialogParams.select=='true') {
-                saveCell ();
-            };
-        };
         //$("#fileselect").show ();
         $("#viewModal").on ("hidden.bs.modal", function () {
           postSelectedRows ( $() ); // selektierte Reihen löschen
@@ -590,8 +616,8 @@ function activateCuedetails () {
                                   '/cue/cueedit' );
           };
         }); // on shown
-        }; // if
-      }); // get
+      }; // if
+    }); // get
   });
 };
 

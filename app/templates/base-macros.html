@@ -73,18 +73,18 @@
   cl-pages, cl-pages-setup
   name = Filename des Cues ohne Pfad und Endung
 #}
-{% macro cuelistbuttons (name) %}
+{% macro cuelistbuttons (name, index) %}
 <div class="btn-group float-right" role="group">
-    <a href="{{ url_for ('cuelist.editor', name=name) }}"
+    <!-- <a href="{{ url_for ('cuelist.editor', name=name) }}"
       role="button"
       class="btn btn-sm btn-outline-secondary cuelistview">
       Edit
-    </a>
-    <!-- <button type="button" 
+    </a> -->
+    <button type="button" 
             class="btn btn-sm btn-outline-secondary cuelistview"
-            name="{{ name }}">
-      Liste
-    </button> -->
+            name="{{ name }}" index="{{ index }}" >
+      Editor
+    </button>
   </div>
 {% endmacro %}
 
@@ -98,7 +98,7 @@
     row, col: für Texteditor
 #}
 
-{% macro slidertext (text,filename, row, col, filebuttons) -%}
+{% macro slidertext (text,filename, row, col) -%}
 <div class="csvcell" id="cuetext-{{ row }}"
     row_num="{{ row }}" col_num="{{ col }}">
     {{ text }}
@@ -106,11 +106,11 @@
 {%- endmacro %}
 
 {# Buttonblock: zeigt die Filebuttons an, entweder cuebuttons oder cuelistbuttons #}
-{% macro buttonblock (filebuttons, filename) -%}
+{% macro buttonblock (filebuttons, filename, index) -%}
   {% if filebuttons == "cue" %}
   {{ cuebuttons (filename) }}
   {% elif filebuttons == "cuelist" %}
-  {{ cuelistbuttons (filename) }}
+  {{ cuelistbuttons (filename, index) }}
   {% endif %}
 {%- endmacro %}
 
@@ -123,11 +123,11 @@
 
   {# kleiner als md #}
   <td class="d-md-none col col-12 border-0">
-    {{ slidertext (text, filename, row, col, filebuttons) }}
+    {{ slidertext (text, filename, row, col) }}
   </td>
   {# md und größer #}
   <td class="d-none d-md-block col-md-3 border-0">
-    {{ slidertext (text, filename, row, col, filebuttons) }}
+    {{ slidertext (text, filename, row, col) }}
   </td>
 
   {% else %}
@@ -140,20 +140,20 @@
     <div class="row w-100">
 
       <td class="col d-md-none border-0">
-        {{ slidertext (text, filename, row, col, filebuttons) }}
+        {{ slidertext (text, filename, row, col) }}
       </td>
-      <td class="col d-md-none float-right border-0">
-        {{ buttonblock (filebuttons, filename) }}
+      <td class="col d-md-none float-right border-0" >
+        {{ buttonblock (filebuttons, filename, index) }}
       </td>
     </div>
   </div>
 
   {# md und größer #}
   <td class="d-none d-md-block col-md-2 border-0">
-    {{ slidertext (text, filename, row, col, filebuttons) }}
+    {{ slidertext (text, filename, row, col) }}
   </td>
   <td class="d-none d-md-block col-md-2 border-0">
-    {{ buttonblock (filebuttons, filename) }}
+    {{ buttonblock (filebuttons, filename, index) }}
   </td>
   {% endif %}
 
@@ -162,8 +162,11 @@
 
 {# Macro fadertable erzeugt aus Daten d eine Tabelle mit Slidern, 
    Beschriftung und Viewbuttons
+   header: aktuell nicht verwendet
+   d: data
+   filebuttons: false, cue oder cuelist. Muss angegeben werden.
 #}
-{% macro fadertable (header, d, filebuttons="true") %}
+{% macro fadertable (header, d, filebuttons) %}
 <div class="container">
   {% set items = d["items"] %}
   {% if items|length > 0 %}
@@ -203,13 +206,13 @@
     group:    Auswahl-Gruppe
     footer:   Fußzeile ein/aus
 #}
-{% macro cuebutton (text, filename, type, group, index, footer="true") -%}
+{% macro cuebutton (text, filename, type, group, index, footer) -%}
 
 <div class="card h-100">
   <div class="card-body cuebutton px-2" id="but-{{ index }}"  index="{{ index }}">
     <h5 class="card-title text" id="cuetext-{{ index }}" >{{ text }}</h5>
   </div>
-  {% if footer == "true" %}
+  {% if footer == "cue" %} {# Buttons #}
   <div class="card-footer px-1">
     <div class="row mx-n2">
       {% if type == "Auswahl" %}
@@ -238,11 +241,11 @@
     sonst footer aus. 
     Davon abhängig ist die Buttongröße.
 #}
-{% macro buttontable (header, d, filebuttons="true") %}
-  {% if filebuttons == "true" %}
-    {% set buttonsize = "col-12 col-md-4 col-lg-3 " %}
+{% macro buttontable (header, d, filebuttons) %}
+  {% if filebuttons == "false" %}
+  {% set buttonsize = " col-6 col-md-3 col-lg-2" %}
   {% else %}
-    {% set buttonsize = " col-6 col-md-3 col-lg-2" %}
+  {% set buttonsize = "col-12 col-md-4 col-lg-3 " %}
   {% endif %}
 
 

@@ -3,13 +3,14 @@
 
 {% import "csvtable-macros.html" as tbl with context %}
 {% import "base-macros.html" as base with context %}
+{% import "cl-macros.html" as cl with context %}
 
 {% macro cl_fadertable (header, d, filebuttons="cuelist") %}
 <div class="container">
   {% set items = d["items"] %}
   {% if items|length > 0 %}
   <div class="shadow p-3 mb-5 rounded"> {# shadow #}
-    <h5 class="alert alert-info">{{ header }}</h5>
+    <!-- <h5 class="alert alert-info">{{ header }}</h5> -->
     <table table_id="{{ d['loc'] }}" class="table csvfile " 
             file="{{ d['shortname'] }}" 
             pluspath="{{ d['pluspath'] }}" 
@@ -21,8 +22,10 @@
                 loop.index, 1+d["textcolumn"], item.Index, 
                 filebuttons) }}
           <tr class="row">
-            {{ cl_status  (item.Index) }}
-            {{ button_row (item.Index) }}
+            <td class="col col-sm-12 col-md-9 border-0">
+              {{ cl.cl_status  (item.Index) }}
+            </td>
+            {{ cl.button_row (item.Index) }}
           </tr>
           <tr class="row border-bottom pb-2"></tr>
         {% endfor %}
@@ -31,88 +34,6 @@
   
   </div>
   {% endif %}
-</div>
-{% endmacro %}
-
-
-{# cuelist Status: #}
-{% macro cl_status (index) %}
-<td class="col col-sm-12 col-md-9 border-0">
-  <table class="table table-borderless">
-    <tbody>
-      <tr class="row">
-        <td class="col-1">
-          <h4 id="currentid-{{ index }}" index="{{ index }}" 
-          class="col-2 text-left"></h4>
-        </td>
-        <td id="currenttext-{{ index }}" index="{{ index }}"
-          class="col-7 text-center ml-3"></td>
-        <td class="col-3">
-          <div id="fadeout-{{ index }}" class="progress">
-            <div id="fadeout-indicator-{{ index }}" class="progress-bar bg-info" 
-              role="progressbar" aria-valuenow="0" style="transition:400ms;"
-              aria-valuemin="0" aria-valuemax="100">
-            </div>
-          </div>
-        </td>
-      </tr>
-      <tr class="row">
-        <td class="col-1">
-          <h4 id="nextid-{{ index }}" index="{{ index }}" 
-          class="col-2 text-left"></h4>
-        </td>
-        <td id="nexttext-{{ index }}" index="{{ index }}"
-          class="col-7 text-center ml-3"></td>
-        <td class="col-3">
-          <div id="fadein-{{ index }}" class="progress">
-            <div id="fadein-indicator-{{ index }}" class="progress-bar bg-success" 
-              role="progressbar" aria-valuenow="0" style="transition:400ms;"
-              aria-valuemin="0" aria-valuemax="100">
-            </div>
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</td>
-{% endmacro %}
-
-{# button-Row: alle Buttons für eine Cueliste #}
-{% macro button_row (row_index) %}
-{# kleiner als md #}
-<td class="d-md-none col col-12 border-0">
-  {{ cl_buttons (row_index) }}
-</td>
-{# md und größer #}
-<td class="d-none d-md-block col-md-3 border-0">
-  {{ cl_buttons (row_index) }}
-</td>
-{% endmacro %}
-
-
-{# cuelist Buttons: Go, Pause, next+1, next-1 #}
-{% macro cl_buttons (index) %}
-<!-- <div class="col col-3"> -->
-<div class="container-fluid">
-  <div class="row mb-3">
-      <button type="button" index="{{ index }}" 
-        class="col btn btn-secondary pausebutton pausebut-{{ index }} ">
-        ||
-      </button>
-
-    <button type="button" index="{{ index }}" 
-    class="col btn btn-primary gobutton gobut-{{ index }} ">
-      Go
-    </button>
-  </div>
-
-  <div class="row mb-3">
-    <button type="button" index="{{ index }}" 
-    class="col btn btn-secondary minusbutton minusbut-{{ index }} "><<</button>
-
-    <button type="button" index="{{ index }}" 
-    class="col btn btn-secondary plusbutton plusbut-{{ index }} ">>></button>
-  </div>
 </div>
 {% endmacro %}
 
@@ -139,7 +60,7 @@
 
 <div>
   <!-- Cuelist -->
-  {{ cl_fadertable ("Page 1", data) }}
+  {{ cl_fadertable ("Page", data) }}
 </div>
 {% endblock %}
 
@@ -163,7 +84,7 @@
 
     // slider erzeugen:
     // var sliderlevels;
-    $.get ("/cuelist/status", function (data) {
+    $.get ("/cuelist/allstatus", function (data) {
       // console.log ("data: " + data);
       var jdata = $.parseJSON(data);
       var sliderlevels = jdata["levels"];
@@ -174,7 +95,7 @@
       };
       $(".slider").width (sliderwidth);
     });
-    periodic_cueliststatus ();
+    periodic_allcueliststatus ();
 
     // Buttons aktivieren:
     activateCuelistbuttons (); // Bedienbuttons: GO, PAUSE etc.

@@ -57,7 +57,7 @@ def get_buttondata () ->dict:
         d["option"]     = "cuebutton" # subdir von room
         d["loc"]        = loc # die ntsprechende Tabelle
         d["items"]      = Cuebutton.items (loc)
-        d["filebuttons"] = "true"
+        d["filebuttons"] = "cue"
         # d["textcolumn"] = csvfile.fieldnames().index("Text")
         if csvfile.changed():
             d["changes"] = "true"
@@ -95,7 +95,7 @@ def get_faderdata () ->dict:
         d["loc"]        = loc
         d["items"]      = fadertable_items (loc)
         d["textcolumn"] = csvfile.fieldnames().index("Text")
-        d["filebuttons"] = "true"
+        d["filebuttons"] = "cue"
         if csvfile.changed():
             d["changes"] = "true"
         else:

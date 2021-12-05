@@ -1,0 +1,84 @@
+<!-- Cuelist - Macros -->
+{% import "base-macros.html" as base with context %}
+
+
+{# cuelist Status: #}
+{% macro cl_status (index) %}
+<table class="table table-borderless">
+  <tbody>
+    <tr class="row">
+      <td class="col-1">
+          <h4 id="currentid-{{ index }}" index="{{ index }}" 
+          class="col-2 text-left"></h4>
+      </td>
+      <td id="currenttext-{{ index }}" index="{{ index }}"
+          class="col-7 text-center ml-3"></td>
+      <td class="col-3">
+          <div id="fadeout-{{ index }}" class="progress">
+          <div id="fadeout-indicator-{{ index }}" class="progress-bar bg-info" 
+              role="progressbar" aria-valuenow="0" style="transition:400ms;"
+              aria-valuemin="0" aria-valuemax="100">
+          </div>
+          </div>
+      </td>
+    </tr>
+    <tr class="row">
+      <td class="col-1">
+          <h4 id="nextid-{{ index }}" index="{{ index }}" 
+          class="col-2 text-left"></h4>
+      </td>
+      <td id="nexttext-{{ index }}" index="{{ index }}"
+          class="col-7 text-center ml-3"></td>
+      <td class="col-3">
+          <div id="fadein-{{ index }}" class="progress">
+          <div id="fadein-indicator-{{ index }}" class="progress-bar bg-success" 
+              role="progressbar" aria-valuenow="0" style="transition:400ms;"
+              aria-valuemin="0" aria-valuemax="100">
+          </div>
+          </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+{% endmacro %}
+
+{# button-Row: alle Buttons für eine Cueliste #}
+{% macro button_row (row_index) %}
+{# kleiner als md #}
+<td class="d-md-none col col-12 border-0">
+  {{ cl_buttons (row_index) }}
+</td>
+{# md und größer #}
+<td class="d-none d-md-block col-md-3 border-0">
+  {{ cl_buttons (row_index) }}
+</td>
+{% endmacro %}
+
+
+{# cuelist Buttons: Go, Pause, next+1, next-1 #}
+{% macro cl_buttons (index) %}
+<!-- <div class="col col-3"> -->
+<div class="container-fluid">
+  <div class="row mb-3">
+      <button type="button" index="{{ index }}" 
+        class="col btn btn-secondary pausebutton pausebut-{{ index }} ">
+        ||
+      </button>
+
+    <button type="button" index="{{ index }}" 
+    class="col btn btn-primary gobutton gobut-{{ index }} ">
+      Go
+    </button>
+  </div>
+
+  <div class="row mb-3">
+    <button type="button" index="{{ index }}" 
+    class="col btn btn-secondary minusbutton minusbut-{{ index }} "><<</button>
+
+    <button type="button" index="{{ index }}" 
+    class="col btn btn-secondary plusbutton plusbut-{{ index }} ">>></button>
+  </div>
+</div>
+{% endmacro %}
+
+

@@ -115,7 +115,6 @@ def copy_to_clipboard ():
 def modify_clipboard (option:str):
     """ CSV Clipboard vor Paste anpassen
     zur Unterscheidbarkeit der Original-Zeilen
-    TODO: hier alle Zeilen auf Defaultwerte testen, ggf hinzufügen.
     """
     # csvfile = Csvfile ("temp")
     if option == "stage":
@@ -124,7 +123,7 @@ def modify_clipboard (option:str):
             top  = px_to_int(item["Top"])
             item["Left"] = str (left + 30) #+ "px"
             item["Top"] =  str (top + 30) #+ "px"
-            item["Text"] = item["Text"] + "(Kopie)"
+            # item["Text"] = item["Text"] + "(Kopie)"
 
     # für alle 'option': Defaults ergänzen
     for item in Csvfile.clipboard:

@@ -107,14 +107,36 @@ def pagessetup () -> json:
 def editor (name:str = "") ->json: 
     """ Editor für Cueliste 
     fname: Name der zuletzt editierten Cuelist
+    index: editor wurde über Button von cl-pages.html aufgerufen. 
+        Status-Fenster wird angezeigt.
     """
+    # index: Wenn vorhanden, dann kommt der Aufruf von cl-pages
+    index = request.args.get ("index")
+    if index:
+        excludebuttons = ["openButton", "saveasButton"]
+    else:
+        excludebuttons = []
+        index = ""
+
     # Name:
-    if name:
+    filename = request.args.get ("filename")
+    if filename:
+        name = filename
+        session["selected_cuelist"] = name
+    # if "open_requested" in session and session["open_requested"] == True: 
+    #     # open-Button hat editor neu geladen.
+    #     session.pop ("open_requested")
+    #     name = session["selected_cuelist"]
+    #     index = ""
+    elif name:
         session["selected_cuelist"] = name
     elif "selected_cuelist" in session:
         name = session["selected_cuelist"]
     else:
         name = "_neu"
+    
+    
+
     filename = os.path.join (globs.room.cuelistpath(),name)
     csvfile = Csvfile (filename)
     if csvfile.changed():
@@ -132,14 +154,15 @@ def editor (name:str = "") ->json:
                             option  = "cuelist",
                             changes = changes,
                             filebuttons = "cue",
-                            excludebuttons = [] )
+                            index = index,
+                            excludebuttons = excludebuttons )
   
 
 # --- Hilfsfunktionen -------------------------------------------------------
 
-@clview.route ("/status")
-def status () ->json:
-    """ Cuelist Status """
+@clview.route ("/allstatus")
+def allstatus () ->json:
+    """ Status aller Cuelisten"""
     ret = {}
     num_cl = len (globs.cltable)
     levels = [int (globs.cltable[i].level *255) for i in range (num_cl)]
@@ -147,6 +170,22 @@ def status () ->json:
     status = [globs.cltable[i].status () for i in range (num_cl)]
     ret["status"] = status
     return json.dumps (ret)
+
+
+@clview.route ("/status/<index>")
+def status (index:str) ->json:
+    """ Status der Cuelist mit Index 'index' 
+    
+    index: index in Cuelist.instances
+    """
+    ret = {}
+    idx = int (index)
+    if idx in range (len (globs.cltable)):
+        ret["level"]  = int (globs.cltable[idx].level *255) 
+        ret["status"] = globs.cltable[idx].status ()
+
+    return json.dumps (ret)
+
 
 
 

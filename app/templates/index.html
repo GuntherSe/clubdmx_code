@@ -66,19 +66,15 @@
           <div class="card-text">
             <p>
               Der Bearbeitungsmodus bestimmt, welche Aktion das Auswählen eines Objektes auslöst.
-              {#
-              <br><i class="px-1">AUS</i> schaltet die Bearbeitungs-Funktionen ab. 
-              #}
               <br><i class="px-1">EDIT</i> ermöglicht das Ändern von Text in Objekten.
               <br><i class="px-1">SELECT</i> ermöglicht die Objektauswahl.
+              <br>Aktuell: 
+              <span class="edit-indicator text-uppercase font-weight-bold"></span>
           </p>
-          {#
             <div class="row btn-group w-100 ml-0">
-              {{ idx.button_elem ("aus", url_for ("common.editmode", mode="view"), "4") }}
-              {{ idx.button_elem ("edit", url_for ("common.editmode", mode="edit")) }}
-              {{ idx.button_elem ("select", url_for ("common.editmode", mode="select")) }}
+              {{ idx.button_elem_js ("edit", "mousemode-edit") }}
+              {{ idx.button_elem_js ("select", "mousemode-select") }}
             </div>
-          #}
           </div>
           <h5 class="card-title mt-4">Einrichtung</h5>
           <div class="card-text">
@@ -154,12 +150,19 @@
  
 {% block javascript %}
 <script>
-//  $("document").ready(function () {
+  function initMouseMode () {
+    // wird in der jeweiligen html-Seite neu definiert:
+    // zur Anzeige des Editmode auf der Seite
+    let currentmode = $("#sessiondata").attr ("editmode");
+    $(".edit-indicator").text (currentmode);
+  };
 
+  $("document").ready(function () {
+    initMouseMode ();
 //    $(".fullscreenOnOff").click (function () {
 //       toggleFullScreen ();
 //    });
-//  });
+  });
 </script>
 {% endblock %}
 

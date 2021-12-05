@@ -38,19 +38,19 @@
 <div>
   {% set b1title = "Executer-Buttons oben: " ~ data.exebuttons1.shortname %}
   {{ base.buttontable (b1title, data.exebuttons1,
-      filebuttons="true") }}
+      filebuttons="cue") }}
 </div>
 <!-- Zweiter Executerbutton-Block -->
 <div>
   {% set b2title = "Executer-Buttons unten: " ~ data.exebuttons2.shortname %}
   {{ base.buttontable (b2title, data.exebuttons2,
-      filebuttons="true") }}
+      filebuttons="cue") }}
 </div>
 <!-- Extra-Bbutton-Block -->
 <div>
   {% set b3title = "Zusätzliche Buttons: " ~ data.cuebuttons.shortname %}
   {{ base.buttontable (b3title, data.cuebuttons,
-      filebuttons="true") }}
+      filebuttons="cue") }}
 </div>
 
 {% endblock %}

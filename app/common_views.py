@@ -47,7 +47,7 @@ def bootstraptheme (theme:str):
 @common.route ("/editmode/<mode>")
 @login_required
 def editmode (mode:str=""):
-    """ Bearbeitungsmodus: view/edit/select
+    """ Bearbeitungsmodus: edit/select
 
     edit: Zellen bearbeiten
     select: Objektauswahl, z.B. Zeile in CSV oder Head in Stage
@@ -186,6 +186,13 @@ def get_info (item:str) -> json:
 
     return json.dumps("???")
 
+
+@common.route ("/getheads")
+def getheads ():
+    """ die Heads ald Liste liefern 
+    """
+    heads = globs.patch.headlist ()
+    return json.dumps (heads)
 
 @common.route ("/getattribs/<headnr>")
 def getattribs (headnr:str):

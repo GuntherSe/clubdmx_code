@@ -2,7 +2,8 @@
 
 {% import "csvtable-macros.html" as tbl with context %}
 {% import "base-macros.html" as base with context %}
-
+{% from "cl-macros.html" import cl_status with context %}
+{% from "cl-macros.html" import cl_buttons with context %}
 {% block header %}
 <h2> {% block title %} Cuelist-Editor {% endblock %} </h2>
 {% endblock %}
@@ -11,12 +12,34 @@
 <h5>{{ base.subtitle_with_backbutton (shortname) }}</h5>
 {% endblock %}
 
-{% block css%}
+{% block css %}
 {% endblock %}
 
+{% block workspace %}
+{% if index|length > 0 %}
+<div class="container-fluid">
+  <div class="row mt-2">
+    <div class="col col-8">
+      <!-- status -->
+      {{ cl_status (index) }}
+    </div>
+    <div class="col col-4">
+      <!-- buttons -->
+      {{ cl_buttons (index) }}
+    </div>
+  </div>
+</div>
+{% endif %}
+{% endblock %}
+
+
 {% block content %}
+<!-- Button für modaldialogToPython -->
+<div id="showCueModal"></div>
+
 <div id="center">
   <div id="upload_point"></div>
+  <div id="cuelistindex" index="{{ index }}"></div>
   <!-- Tabelle mit Buttons -->
   {{ tbl.csv_nav() }}
   {{ tbl.table() }}
@@ -28,6 +51,8 @@
 {% endblock %}
 
 {% block javascript %}
+<script src="/static/js/cuelist.js"></script>
+
 <script>
 
   function colEdit () {
@@ -65,13 +90,58 @@
       });
     });
   }
+  var clIndex; // Index der Cueliste in globs.Cuelist.instances
+  var clIndexString; // als String
 
+  function addIdClass () {
+    // den Table-Zeilen eine eindeutige Klasse zuordnen
+    $("tr").each (function (index) {
+      let idclass = $(this).children (".Id").text().trim();
+      if (idclass.length) {
+        idclass = idclass.replace ('.', '-');
+        //console.log (idclass);
+        $(this).addClass ("id-"+idclass);
+      };
+    });
+  }
+
+  function periodic_cueliststatus () {
+    // siehe: https://stackoverflow.com/questions/5052543/how-to-fire-ajax-request-periodically
+    // aktuelle Statusdaten zeigen:     
+    $.ajax ({
+      url: "/cuelist/status/" + clIndexString, 
+      success: function(data) {
+        var jdata = $.parseJSON(data);
+        // Slider:
+        // var sliderlevel = jdata["level"];
+        // let numstring = clIndex.toString ();
+        //$("#sl-"+numstring).slider ("option", "value", sliderlevel);
+
+        // Status:
+        var data = jdata["status"];
+        cuelistStatus (clIndex, data);
+        // Status in Tabelle anzeigen:
+        let currentid = "tr.id-" + data["currentid"];
+        let nextid = "tr.id-" + data["nextid"];
+        $("tr").removeClass ("table-info table-success")
+        $(currentid).addClass ("table-info");
+        $(nextid).addClass ("table-success");
+  
+      },
+      complete: function () {
+        setTimeout (periodic_cueliststatus, 300);
+      }
+    }); // ende $.ajax
+  }
+  
   $('document').ready (function () {
+    // clIndex bestimmen:
+    clIndex = $("#cuelistindex").attr ("index");
+    
     // editierbare Spalten:
     colEdit ();
-    //editableCsvFields ();
-    //selectableCsvLines ();
     initMouseMode ();
+    addIdClass ();
 
     // speichern/verwerfen-Buttons
     csvSavediscardButtons ();
@@ -81,8 +151,19 @@
     filedialogToPython (".saveasButton", "/csv/saveas", {"option":"cuelist"});
 
     activateUploadCsv ("#upload_point");
+
+    // Buttons aktivieren:
+    activateCuelistbuttons (); // Bedienbuttons: GO, PAUSE etc.
     activateCuedetails (); // Buttons 'ansehen' und 'Topcue'
     $("#sessiondata").attr ("history", "/cuelist/pages");
+
+    // Editor von cl-pages aufgerufen, hat einen cuelist-Index:
+    if (clIndex.length) {
+      clIndexString = clIndex.toString ();
+      periodic_cueliststatus ();
+    } else {
+      console.log ("kein Cuelist-Index.")
+    };
   });
 </script>
 {% endblock %}

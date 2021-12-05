@@ -206,6 +206,7 @@ def open ():
 
         if option == "cuelist": # cuelist ausgewählt
             session["selected_cuelist"] = fileroot
+            # session["open_requested"] = True
             return "ok"
             
     ret = {}

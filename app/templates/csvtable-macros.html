@@ -1,21 +1,28 @@
-{# CSV-Tabelle
+{# CSV-Tabellen Macros
 
-    Parameter:
-    shortname:   "xy", ohne Pfadangaben, ohne Endung
-    pluspath:   "C+Pfad+zum+Verzeichnis"
-    fieldnames: [field-1,...,field-n]
-    items: [{field-1:val-1-1, ... , field-n:val-1-n},
-            ...
-            {field-1:val-m-1, ... , field-n:val-m-n}
-           ]
-    siehe csv_to_html() in csvutil.py
 #}
 {% from "base-macros.html" import svg_icon with context %}
 {% from "base-macros.html" import cuebuttons with context %}
 {% from "base-macros.html" import cuelistbuttons with context %}
 {% from "navbar.html" import dropdown_link_js with context %}
 
-{# Style Typen: table-striped table-dark table-sm table-responsive #}
+{# Tabelle: 
+  mit Parameter:
+  shortname:  "xy", ohne Pfadangaben, ohne Endung
+  pluspath:   "C+Pfad+zum+Verzeichnis"
+  option:     im Allgemeinen das Subdir, in dem die Tabelle zu finden ist.
+  loc:        in cuebutton und cuefader verwendet
+  changes:    ungespeicherte Änderungen vorhanden
+  fieldnames: [field-1,...,field-n]
+  filebuttons: false, cue oder cuelist. Wird in filename-Feldern verwendet.
+  items:  [{field-1:val-1-1, ... , field-n:val-1-n},
+          ...
+          {field-1:val-m-1, ... , field-n:val-m-n}
+          ]
+  style:  zusätzliche Style-Klassen der folgenden Typen:
+          table-striped table-dark table-sm table-responsive 
+
+#}
 {% macro table () %}
 <!-- csvtable -->
 <div class="table-responsive-sm">
@@ -35,7 +42,7 @@
       {% set rowloop = loop %}  
       <tr class="csvrow" row_num="{{ rowloop.index }}">
         {% for field in fieldnames %}
-        <td class="csvcell "
+        <td class="csvcell {{ field }}" 
           row_num="{{ rowloop.index }}" 
           col_num="{{ loop.index }}"> 
           {{ item[field] }} 
@@ -55,7 +62,7 @@
 </div>
 {% endmacro %}
 
-
+{# button_elem: Ein Eintrag in der Navigation #}
 {% macro button_elem (id, text, svgid="", endpoint="#", addclass="") -%}
 {% if id  not in excludebuttons %}
   {% set aclass  = "nav-link bg-secondary text-white " ~  id %}
@@ -115,122 +122,10 @@
   name=fullname(), option=option)) }}
 {%- endmacro %}
 
-{# Dropdown-Link mit Javascript Funktionalität #}
-{#% macro dropdown_link_js (idclass, text) %}
-  <a class="dropdown-item {{ idclass }}" href="#">{{text}}</a>
-{% endmacro %#}
 
-
-{# Buttons zur CSV-Tabelle: 
-  - openButton
-  - saveasButton
-  - newlineButton
-  - uploadButton
-  - saveChanges
-  - discardChanges
-  - selectRowCut
-  - selectCopy
-  - selectPaste  
+{# Navigation für CSV Dateien (Tabellen, Stage) 
+  Tabellen und Stage haben selebe Struktur, einzelne Elementer werden angepasst
 #}
-{% macro csv_buttons () %}
-<!-- <ul class="nav nav-fill"> -->
-  {{ button_elem (id="openButton", text="öffnen", 
-    svgid="#svg-folder")  }}
-
-  {{ button_elem ("saveasButton", "sichern als", 
-      svgid = "#svg-option" ) }}
-
-  {% if option == "patch" %}
-    {{ button_elem ("newpatchButton", "neue Zeile(n)", 
-        svgid = "#svg-plus" ,
-        endpoint= url_for ("patchform.patchnew", 
-                            next=request.referrer) ) }}
-  {% else %}
-    {{ button_elem ("newlineButton", "neue Zeile", 
-        svgid = "#svg-plus" ,
-        endpoint= url_for ("forms.csvline", 
-                            name=fullname(), 
-                            option=option,
-                            next=request.referrer) ) }}
-  {% endif %}
-
-  {{ button_elem ("uploadButton", "upload",
-      svgid = "#svg-upload" ) }}
-
-  {{ csvchanges_buttons () }}
-  {{ csvclipboard_buttons () }}
-<!-- </ul> -->
-{% endmacro %}
-
-{# Stage-Buttons 
-  - saveStage
-  - discardChanges
-  - saveStageAs
-  - openButton
-  - newStage
-  - newElement
-  - importPatch  
-#}
-{% macro stage_nav_bak () %}
-  {% if current_user.role == "standard" or current_user.role == "admin" %}
-
-  <nav class="navbar navbar-expand-lg  navbar-dark bg-secondary
-    stage-buttons py-0 nav-csvtable ">
-    <a class=" dropdown-toggle text-white edit-select-button" 
-      href="#" 
-      id="csvbuttonEditDropdown" role="button" data-toggle="dropdown" 
-      aria-haspopup="true" aria-expanded="false">
-      {% if session["editmode"] == "edit" %}
-      EDIT
-      {% else %}
-      SELECT
-      {% endif %}
-    </a>
-  
-    <div class="dropdown-menu" aria-labelledby="navbarEditDropdown">
-      {{ dropdown_link_js ("mousemode-edit", "EDIT: Zellen bearbeiten")}}
-      {{ dropdown_link_js ("mousemode-select", "SELECT: Objekte wähjlen")}}
-    </div>
-
-    <button class="navbar-toggler" type="button" 
-      data-toggle="collapse" data-target="#navbarCsvContent" 
-      aria-controls="navbarSupportedContent" aria-expanded="false" 
-      aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-  
-    <div class="collapse navbar-collapse" id="navbarCsvContent">
-      <ul class="navbar-nav mr-auto">
-
-        {# Button Content: #}
-        {{ button_elem ("openButton", "öffnen", 
-        svgid="#svg-folder" ) }}
-    
-        {{ button_elem ("saveasButton", "sichern als", 
-            svgid = "#svg-option" ) }}
-
-        {{ button_elem ("newElement", "neues Element", 
-            svgid = "#svg-plus" ,
-            endpoint= url_for ("forms.csvline", 
-            name=fullname(), 
-            option=option,
-            next=url_for ("stage.show")) ) }}
-
-        {{ button_elem ("importPatch", "Import Patch", 
-            svgid = "#svg-grid" ,
-            endpoint= url_for ("stage.import_patch") ) }}
-
-        {{ csvchanges_buttons () }}
-        {{ csvclipboard_buttons () }}
-
-      </ul>
-    </div>
-  </nav>
-  {% else %}
-  <div class="stage-buttons"></div>
-  {% endif %}
-{% endmacro %}
-
 {% macro csvnav_base (content="", addclass="") %}
   {% if current_user.role == "standard" or current_user.role == "admin" %}
 
@@ -289,6 +184,57 @@
   {% endif %}
 {% endmacro %}
 
+{# Buttons zur CSV-Tabelle: 
+  - openButton
+  - saveasButton
+  - newlineButton
+  - uploadButton
+  - saveChanges
+  - discardChanges
+  - selectRowCut
+  - selectCopy
+  - selectPaste  
+#}
+{% macro csv_buttons () %}
+<!-- <ul class="nav nav-fill"> -->
+  {{ button_elem (id="openButton", text="öffnen", 
+    svgid="#svg-folder")  }}
+
+  {{ button_elem ("saveasButton", "sichern als", 
+      svgid = "#svg-option" ) }}
+
+  {% if option == "patch" %}
+    {{ button_elem ("newpatchButton", "neue Zeile(n)", 
+        svgid = "#svg-plus" ,
+        endpoint= url_for ("patchform.patchnew", 
+                            next=request.referrer) ) }}
+  {% else %}
+    {{ button_elem ("newlineButton", "neue Zeile", 
+        svgid = "#svg-plus" ,
+        endpoint= url_for ("forms.csvline", 
+                            name=fullname(), 
+                            option=option,
+                            next=request.referrer) ) }}
+  {% endif %}
+
+  {{ button_elem ("uploadButton", "upload",
+      svgid = "#svg-upload" ) }}
+
+  {{ csvchanges_buttons () }}
+  {{ csvclipboard_buttons () }}
+<!-- </ul> -->
+{% endmacro %}
+
+
+{# Stage-Buttons 
+  - saveStage
+  - discardChanges
+  - saveStageAs
+  - openButton
+  - newStage
+  - newElement
+  - importPatch  
+#}
 {% macro stage_buttons () -%}
   {{ button_elem ("openButton", "öffnen", 
       svgid="#svg-folder" ) }}
@@ -311,6 +257,7 @@
   {{ csvclipboard_buttons () }}
 {%- endmacro %}
 
+{# Hier die kompletten Nav-Zeilen: #}
 {% macro stage_nav () %}
   {{ csvnav_base (addclass="stage-buttons", content=stage_buttons() )}}
 {% endmacro %}
@@ -318,3 +265,4 @@
 {% macro csv_nav () %}
 {{ csvnav_base (content=csv_buttons() )}}
 {% endmacro %}
+

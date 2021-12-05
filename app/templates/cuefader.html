@@ -26,10 +26,10 @@
 <div>
   <!-- Exefaders -->
   {% set title1 = "Fader im Executer: " ~ data.exefaders.shortname %}
-  {{ base.fadertable (title1, data.exefaders) }}
+  {{ base.fadertable (title1, data.exefaders, filebuttons="cue") }}
   <!-- Cuefaders -->
   {% set title2 = "Zusätzliche Fader: " ~ data.cuefaders.shortname %}
-  {{ base.fadertable (title2, data.cuefaders)}}
+  {{ base.fadertable (title2, data.cuefaders, filebuttons="cue")}}
 </div>
 {% endblock %}
 

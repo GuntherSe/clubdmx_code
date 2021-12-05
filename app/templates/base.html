@@ -87,7 +87,9 @@
   <div id="headercontainer" class="container-fluid header-container">
   <!-- header -->
     <div class="row ">
-      <div id="workspace" class="col-sm-12 col-md-8 mb-2" ></div>
+      <div id="workspace" class="col-sm-12 col-md-8 mb-2" >
+        {% block workspace %}{% endblock %}  
+      </div>
   
       {# kleiner als md: #}
       <div class="d-md-none col text-dark bg-light px-3 py-2 mb-1"> 

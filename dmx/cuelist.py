@@ -160,14 +160,18 @@ class Cuelist ():
         """ aktueller Status der Cuelist"""
         ret = {}
         # current-Werte:
-        ret["currentid"] = self.currentid # float
         ret["currentline"] = self.line (self.currentpos)
-        # ret["currentpos"] = self.currentpos # Position des current Cue in self._idlist
-        # next-Werte:
-        # ret["nextid"] = self.nextid # float
-        # ret["nextpos"] = self.nextpos # Position des next Cue in self._idlist
-        # ret["nextprep"] = self.nextprep # vorbereitete nächste Pos.
+        if "Id" in ret["currentline"]:
+            numstr = ret["currentline"]["Id"].replace ('.', '-')
+        else:
+            numstr = ''
+        ret["currentid"] = numstr # String mit Umwandlung von '.' in '-'
         ret["nextline"] = self.line (self.nextprep)
+        if "Id" in ret["nextline"]:
+            numstr = ret["nextline"]["Id"].replace ('.', '-')
+        else:
+            numstr = ''
+        ret["nextid"] = numstr
         # Status:
         ret["fading_in"] = self.fadein_percent
         ret["fading_out"] = self.fadeout_percent
@@ -242,7 +246,7 @@ class Cuelist ():
         hängt ab von: start_tm, tm, currentcue, nextcue
 
         """
-        if self.is_paused: # Pause - keine Auswertung
+        if self.is_paused or self.level == 0: # Pause - keine Auswertung
             return
 
         curfactor = self.tmfactor (self.currentid, tm, "out")

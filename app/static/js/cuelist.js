@@ -45,35 +45,35 @@ function activateCuelistbuttons () {
 function cuelistStatus (num, data) {
   // Statusdaten in macro cl_status anzeigen:
   var numstring = num.toString ();
-  var val = data[num] ;
+  
   // ID und Text
-  $("#currentid-"+numstring).text (val["currentid"]);
-  $("#nextid-"+numstring).text (val["nextline"]["Id"]);
-  $("#currenttext-"+numstring).text (val["currentline"]["Text"]);
-  $("#nexttext-"+numstring).text (val["nextline"]["Text"]);
+  $("#currentid-"+numstring).text (data["currentline"]["Id"]);
+  $("#nextid-"+numstring).text (data["nextline"]["Id"]);
+  $("#currenttext-"+numstring).text (data["currentline"]["Text"]);
+  $("#nexttext-"+numstring).text (data["nextline"]["Text"]);
 
   $("#fadein-indicator-"+numstring)
-    .attr ("aria-valuenow", val["fading_in"])
-    .css ("width", val["fading_in"] + "%");
+    .attr ("aria-valuenow", data["fading_in"])
+    .css ("width", data["fading_in"] + "%");
   $("#fadeout-indicator-"+numstring)
-    .attr ("aria-valuenow", val["fading_out"])
-    .css ("width", val["fading_out"] + "%");
+    .attr ("aria-valuenow", data["fading_out"])
+    .css ("width", data["fading_out"] + "%");
 
   // Pause-Status:
   var pauseid = ".pausebut-" + numstring;
-  if (val["is_paused"] == "true") {
+  if (data["is_paused"] == "true") {
     $(pauseid).removeClass ("btn-secondary").addClass ("btn-warning");
   } else {
     $(pauseid).removeClass ("btn-warning").addClass ("btn-secondary");
   };
 }
 
-function periodic_cueliststatus () {
-// siehe: https://stackoverflow.com/questions/5052543/how-to-fire-ajax-request-periodically
-// aktuelle Faderwerte der Cuelist Levels am Schieberegler zeigen:       
-// var sliderlevels;
-$.ajax ({
-    url: "/cuelist/status", 
+function periodic_allcueliststatus () {
+  // siehe: https://stackoverflow.com/questions/5052543/how-to-fire-ajax-request-periodically
+  // aktuelle Faderwerte der Cuelist Levels am Schieberegler zeigen:    
+  // verwendet in cl-pages.html   
+  $.ajax ({
+    url: "/cuelist/allstatus", 
     success: function(data) {
       var jdata = $.parseJSON(data);
       // Slider:
@@ -84,16 +84,19 @@ $.ajax ({
       };
       // Status:
       var clstatus = jdata["status"];
+      var data;
       for (i = 0; i < clstatus.length; i++){
-        cuelistStatus (i, clstatus);
+        data = clstatus[i] ;
+        cuelistStatus (i, data);
       };
 
     },
     complete: function () {
-      setTimeout (periodic_cueliststatus, 200);
+      setTimeout (periodic_allcueliststatus, 200);
     }
-}); // ende $.ajax
+  }); // ende $.ajax
 }
+  
 
 // ----------------------------------------------------------------------------
 // Filebutton 'ansehen'
@@ -104,36 +107,40 @@ $.ajax ({
 function activateCuelistDetails () {
   // Button "ansehen"  in Cueinfo und cuefader
   $("button.cuelistview").on ("click", function ()  {
-    event.preventDefault ();
-    event.stopPropagation ();
+    // event.preventDefault ();
+    // event.stopPropagation ();
 
-    var filename = $(this).attr ("name")
+    var filename = $(this).attr ("name");
+    var index = $(this).attr ("index");
+    //$.get ("/cuelist/editor", {name:filename, index:index});
+    let url = "/cuelist/editor?filename=" + filename + "&index=" + index;
+    location.href = url;
+    return false;
+    // $.get({
+    //   url: "/cuelist/details", 
+    //   data: {filename:filename},
+    //   cache: false })
+    //   .then ( function(data){
+    //     modaldata = $.parseJSON(data);
+    //     // console.log ("modaldata: " + modaldata);
+    //     $("#dialogModal").html (modaldata);
+    //     $("#viewModal").modal();
 
-    $.get({
-      url: "/cuelist/details", 
-      data: {filename:filename},
-      cache: false })
-      .then ( function(data){
-        modaldata = $.parseJSON(data);
-        // console.log ("modaldata: " + modaldata);
-        $("#dialogModal").html (modaldata);
-        $("#viewModal").modal();
+    //     // Editierbar machen:
+    //     initCsvtableMouse ();
 
-        // Editierbar machen:
-        initCsvtableMouse ();
-
-        $("#viewModal").on ("hide.bs.modal"), function () {
-            if (fileDialogParams.select=='true') {
-                saveCell ();
-            };
-        };
-        //$("#fileselect").show ();
-        $("#viewModal").on ("hidden.bs.modal", function () {
-          postSelectedRows ( $() ); // selektierte Reihen löschen
-          location.reload ();
-        });
-      });
-  }); // ende $ fileview
+    //     $("#viewModal").on ("hide.bs.modal"), function () {
+    //         if (fileDialogParams.select=='true') {
+    //             saveCell ();
+    //         };
+    //     };
+    //     //$("#fileselect").show ();
+    //     $("#viewModal").on ("hidden.bs.modal", function () {
+    //       postSelectedRows ( $() ); // selektierte Reihen löschen
+    //       location.reload ();
+    //     });
+    //   });
+  }); // ende $ cuelistview
 
 };
 
