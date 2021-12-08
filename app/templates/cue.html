@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% import "csvtable-macros.html" as tbl with context %}
+{% import "base-macros.html" as base with context %}
+
+{% block header %}
+<h2> {% block title %} Cue {% endblock %} </h2>
+{% endblock %}
+
+{% block subtitle %}
+{{ base.subtitle_with_backbutton (shortname) }}
+<!-- <h5>{{ shortname }}</h5> -->
+{% endblock %}
+
+{% block css%}
+{% endblock %}
+
+{% block content %}
+<div id="center">
+  <div id="upload_point"></div>
+  <!-- Tabelle mit Buttons -->
+  {{ tbl.csv_nav() }}
+  {{ tbl.table() }}
+</div>
+<!-- <div class="row">
+  <div class="col" id="links"></div>
+  <div class="col" id="rechts"></div>
+</div>   -->
+{% endblock %}
+
+{% block javascript %}
+<script>
+
+  $('document').ready (function () {
+    // editierbare Spalten:
+    initMouseMode ();
+
+    // speichern/verwerfen-Buttons
+    csvSavediscardButtons ();
+
+//    filedialogToPython (".openButton", "/csv/open", {"option":"cue"});
+    filedialogToPython (".saveasButton", "/csv/saveas", {"option":"cue"});
+
+    activateUploadCsv ("#upload_point");
+
+//    $("#sessiondata").attr ("history", "/dataform/config");
+  });
+</script>
+{% endblock %}

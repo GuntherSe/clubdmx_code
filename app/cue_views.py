@@ -10,7 +10,7 @@ from flask import Blueprint, render_template, request, json
 from flask import session
 # from flask_login import login_required
 # from apputils import standarduser_required, admin_required, redirect_url
-# from common_views import check_clipboard
+from common_views import check_clipboard
 
 import globs
 
@@ -25,13 +25,11 @@ cueview = Blueprint ("cueview", __name__, url_prefix="/cue",
 
 # --- cue Viewfunktionen ------------------------------------------------
 
-@cueview.route ("/cuedetails")
-def cuedetails () ->json: 
+@cueview.route ("/cuetomodal")
+def cuetomodal () ->json: 
     """ liefert Infos zum Cue 'filename'
 
-    JSON String mit Fileinfo von cue.csv
-    Callback data zum Anzeigen der Cue-Info
-    return: Tabelle mit Cue-Daten
+    return: Tabelle mit Cue-Daten für Modal-Anzeige
     """
     filename = request.args.get ("filename")
     fullname = os.path.join (globs.room.cuepath (), filename)
@@ -40,7 +38,7 @@ def cuedetails () ->json:
     excludebuttons = ["openButton", "saveasButton", "newlineButton",
                         "uploadButton", "saveChanges", "discardChanges"]
                         
-    # session["editmode"] = "edit"
+    session["editmode"] = "edit"
 
     table = render_template ("modaldialog.html", 
                     body = "csvbody",
@@ -95,5 +93,38 @@ def cueedit ():
                                         labels=labels,
                                         title=filename)
     return json.dumps (ret)
+
+
+@cueview.route ("/cuepage")
+def cuetopage () ->json: 
+    """ liefert Infos zum Cue 'filename'
+
+    return: Seitenaufruf mit Cue-Daten für Modal-Anzeige
+    """
+    history = request.args.get ("history") # für Rücksprung
+    if history:
+        session["history"] = history
+    filename = request.args.get ("filename")
+    fullname = os.path.join (globs.room.cuepath (), filename)
+    csvfile = Csvfile (fullname)
+    if csvfile.changed():
+        changes = "true"
+    else:
+        changes = "false"
+
+    # Clipboard enthält Daten?
+    check_clipboard ()
+
+    excludebuttons = ["openButton"]
+
+    return render_template ("cue.html", 
+                    shortname  = csvfile.shortname(),
+                    pluspath   = csvfile.pluspath(),
+                    fieldnames = csvfile.fieldnames(),
+                    items      = csvfile.to_dictlist(),
+                    changes    = changes,
+                    excludebuttons = excludebuttons,
+                    filebuttons = "false",
+                    option     = "cue")
 
 

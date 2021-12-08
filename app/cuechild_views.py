@@ -67,7 +67,7 @@ def topview ():
 
     return render_template ("modaldialog.html", body="csvbody",
                                                 title="Topcue-Daten",
-                                                shortname="Im Arbeitsspeicher",
+                                                shortname="Topcue Inhalt",
                                                 pluspath="",
                                                 fieldnames=fieldnames,
                                                 items=items,

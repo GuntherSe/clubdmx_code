@@ -59,6 +59,15 @@ def get_cldata () -> dict:
     return data
 
 
+def reload_cuelist (args:dict):
+    """ cueliste neu laden:
+    wenn Änderungen gepeichert wurden oder pages-Seite geändert wurde
+    siehe evaluate_option in csv_views.py
+    filename: geänderte page
+    row_num: Filename in Zeile row_num geändert, Zählung ab 1
+    """
+    pass
+
 # --- cuelist Viewfunktionen ------------------------------------------------
 
 @clview.route ("/pages")
@@ -135,8 +144,6 @@ def editor (name:str = "") ->json:
     else:
         name = "_neu"
     
-    
-
     filename = os.path.join (globs.room.cuelistpath(),name)
     csvfile = Csvfile (filename)
     if csvfile.changed():
@@ -187,8 +194,6 @@ def status (index:str) ->json:
     return json.dumps (ret)
 
 
-
-
 @clview.route ("/go")
 def go () -> str:
     """ Go-Button drücken """
@@ -208,6 +213,7 @@ def pause () -> str:
         globs.cltable[index].pause ()
     return "ok"
 
+
 @clview.route ("/minus")
 def minus () -> str:
     """ Minus-Button """
@@ -217,6 +223,7 @@ def minus () -> str:
         globs.cltable[index].decrement_nextprep ()
     return "ok"
 
+
 @clview.route ("/plus")
 def plus () -> str:
     """ Plus-Button """
@@ -225,6 +232,7 @@ def plus () -> str:
     if index in range (len (globs.cltable)):
         globs.cltable[index].increment_nextprep ()
     return "ok"
+
 
 @clview.route ("/coledit",  methods = ["GET", "POST"])
 def coledit () -> str:
@@ -255,6 +263,7 @@ def coledit () -> str:
                                                 text=text,
                                                 body="stringbody",
                                                 submit_text="OK")
+
 
 @clview.route ("/details")
 def details () ->json: 

@@ -68,7 +68,7 @@ function initCsvtableMouse () {
   if (editmode ("select")) {
     selectableCsvLines ();
   } else if (editmode ("edit")) {
-    $("tr").removeClass ("ui-state-highlight");
+    // $("tr").removeClass ("ui-state-highlight");
     removeSelectableCsvLines ();
     editableCsvFields ();
     // Buttons:
@@ -312,7 +312,7 @@ $(document).ready (function() {
 // --- Topcue Navigation anzeigen/verbergen ---------------------------------
 function resizeStage () {
   // wird in stage.js neu definiert
-  console.log ("Resize:nothing to do");
+  // console.log ("Resize:nothing to do");
 }
 
 function showSecondNav () {
@@ -437,11 +437,13 @@ function removeSelectableCsvLines () {
   // selectable entfernen
   if (selectableCsvLinesEnabled) {
     selectableCsvLinesEnabled = false;
-    $("#csvtable > tr").removeClass('ui-state-highlight')
-      .removeClass('ui-selected');
-    if ($("#csvtable > tbody").selectable ("instance") != undefined) {
+    if ($("#csvtable > tbody").hasClass ("ui-selectable")) {
+      $("#csvtable > tr").removeClass('ui-state-highlight ui-selected');
       $("#csvtable > tbody").selectable ("destroy");
     };
+    // if ($("#csvtable > tbody").selectable ("instance") != undefined) {
+    //   $("#csvtable > tbody").selectable ("destroy");
+    // };
 
   }
 }
@@ -553,46 +555,17 @@ function periodic_buttonstatus () {
 function activateCuedetails () {
   // Button "ansehen"  in Cueinfo und cuefader
   $("button.cueview").on ("click", function ()  {
-    event.preventDefault ();
-    event.stopPropagation ();
 
-    var filename = $(this).attr ("name")
+    var filename = $(this).attr ("name");
+    let url = "/cue/cuepage?filename=" + filename 
+              + "&history=" + window.location.href;
+    location.href = url;
+    return false;
 
-    $.get({
-      url: "/cue/cuedetails", 
-      data: {filename:filename},
-      cache: false })
-      .then ( function(data){
-        modaldata = $.parseJSON(data);
-        // console.log ("modaldata: " + modaldata);
-        $("#dialogModal").html (modaldata);
+  }); // ende $ cueview
 
-        $("#viewModal").on ("shown.bs.modal", function () {
-          // Editierbar machen:
-          initCsvtableMouse ();
-          changeMousemode (".mousemode-edit", "edit");
-          changeMousemode (".mousemode-select", "select");
-        
-        });
-
-        $("#viewModal").modal();
-
-        // $("#viewModal").on ("hide.bs.modal", function () {
-        //     if (fileDialogParams.select=='true') {
-        //         saveCell ();
-        //     };
-        // });
-
-        //$("#fileselect").show ();
-        $("#viewModal").on ("hidden.bs.modal", function () {
-          postSelectedRows ( $() ); // selektierte Reihen löschen
-          location.reload ();
-        });
-      });
-  }); // ende $ fileview
-
-  // --- Cue-Auswahl:
-    $("button.cueedit").on ("click", function () {
+  // --- Cue in Topcue editieren :
+  $("button.cueedit").on ("click", function () {
     event.stopPropagation();
     var filename = $(this).attr ("name")
     var args = {filename:filename};

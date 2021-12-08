@@ -27,6 +27,12 @@
   {%- endif %}
 {%- endmacro %}
 
+{% macro get_history () -%}
+  {% if session["history"] -%}{{ session["history"] }}
+  {%- else -%}
+  {%- endif %}
+{%- endmacro %}
+
 
 {% macro pagetitle () -%}
 <div class="text-primary">
@@ -80,7 +86,8 @@
     editmode="{{ get_editmode() }}"
     topcuecontent="{{ topcue_content }}"
     modalactive="{{ get_modalactive() }}"
-    csvclipboard="{{ get_csv_clipboard() }}">
+    csvclipboard="{{ get_csv_clipboard() }}"
+    history="{{ get_history() }}">
     {# csvchanges = "{{ changes }}" #}
   </div>
 

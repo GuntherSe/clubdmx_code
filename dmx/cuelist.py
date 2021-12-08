@@ -237,6 +237,19 @@ class Cuelist ():
         #     # self.remain_tm = 0.0
         #     return {"in":0.0, "out":1.0, "xfade":False}
 
+    def update_cuelist (self):
+        """ cueliste updaten 
+        wenn Fades abgeschlossen sind
+        wenn pause
+        wenn level == 0
+        """
+        # evtl. könnte next ID gelöscht sein
+        nextid = self.nextid
+        self.get_cuelist (reset_ids=False)
+        if not (nextid in self._idlist):
+            self.nextpos = 0
+            self.reset_ids ()
+
 
     def calc_cuecontent (self, tm:"time"):
         """ aktuellen Content berechnen 
@@ -247,6 +260,7 @@ class Cuelist ():
 
         """
         if self.is_paused or self.level == 0: # Pause - keine Auswertung
+            self.update_cuelist ()
             return
 
         curfactor = self.tmfactor (self.currentid, tm, "out")
@@ -308,13 +322,7 @@ class Cuelist ():
             self.fadeout_percent = 100
             self.fadein_percent = 0
 
-            # Cueliste updaten:
-            # evtl. könnte next ID gelöscht sein
-            nextid = self.nextid
-            self.get_cuelist (reset_ids=False)
-            if not (nextid in self._idlist):
-                self.nextpos = 0
-                self.reset_ids ()
+            self.update_cuelist ()
 
             # nextcue wird zum currentcue, neuen nextcue einlesen
             self.currentpos = self.nextpos

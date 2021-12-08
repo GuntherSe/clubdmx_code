@@ -105,7 +105,7 @@ function periodic_allcueliststatus () {
 // siehe auch: activateCuedetails ()
 
 function activateCuelistDetails () {
-  // Button "ansehen"  in Cueinfo und cuefader
+  // Button "Editor"  
   $("button.cuelistview").on ("click", function ()  {
     // event.preventDefault ();
     // event.stopPropagation ();

@@ -38,9 +38,7 @@ def evaluate_option (option:str=None):
         load_config ()
     elif option == "cuefader":
         make_fadertable ()
-    elif option == "cue":
-        make_fadertable ()
-        make_cuebuttons ()
+    # cue: automatisches Update, wenn level == 0
     elif option == "head":
         globs.patch.reload ()
         make_fadertable ()
@@ -49,6 +47,9 @@ def evaluate_option (option:str=None):
         make_cuebuttons ()
     elif option == "pages":
         make_cuelistpages ()
+    # cuelist: automatisches Update (level==0, Pause oder fading-done)
+    # elif option == "cuelist":
+    #     make_cuelistpages ()
     elif option == "layout":
         globs.room.layout.__init__ ("layout")
 
@@ -137,7 +138,7 @@ def filename():
 
         if (ret["tablechanged"] == "true"):
             evaluate_option (option)
-            flash (ret["message"], category=ret["category"])
+            # flash (ret["message"], category=ret["category"])
         return "ok" #json.dumps (ret)
 
     option = request.args.get ("option")
@@ -304,6 +305,13 @@ def saveas ():
             csvfile = Csvfile (os.path.join (globs.room.cuelistpath(), current))
             ret = csvfile.backup (fullname)
             session["selected_cuelist"] = fileroot
+
+        elif option == "pages":
+            current = globs.cfg.get ("pages")
+            csvfile = Csvfile (os.path.join (globs.room.pagespath(), current))
+            ret = csvfile.backup (fullname)
+            globs.cfg.set ("pages", fileroot)
+            globs.cfg.save_data ()
 
         flash (ret["message"], category=ret["category"])
         return "ok"

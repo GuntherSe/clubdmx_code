@@ -1,4 +1,6 @@
--- Topcue: Snapshot
+-- Topcue: 
+   - Snapshot
+   - editierbar machen
 
 -- Cuelist: 
    - OSC Kommando abschicken
