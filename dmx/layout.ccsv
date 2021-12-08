@@ -1,0 +1,55 @@
+Subdir,Field,Fieldtype,Option,Range,Default,Placeholder,Label,Required
+patch,HeadNr,int,counter,,,,,true
+patch,HeadType,file,head,,,,,true
+patch,Addr,text,,,,uni-address,Adresse,true
+patch,Name,text,,,,,,
+patch,Gel,text,,,0,,Farbe,
+patch,Comment,text,,,,,,
+head,Attrib,text,,,,,Attributname,true
+head,Addr,text,v oder int,,,'v' oder Zahl,Adresse,true
+head,Type,list,,HTP LTP vLTP,,,Typ,true
+head,Default,text,,,,,,
+head,Size,list,,1 8 16,8,Bit-Anzahl,Größe,
+cue,HeadNr,head,,,,,,true
+cue,Attr,headattr,,,,,,true
+cue,Level,int,,0 255,,,,true
+cuebutton,Text,text,,,,,,
+cuebutton,Filename,file,cue,,,,,true
+cuebutton,Type,list,,Schalter Taster Auswahl,Schalter,,Typ,true
+cuebutton,Group,int,,0 10,0,,Auswahl-Gruppe,true
+cuebutton,Fadein,decimal,,>=0,3,,,true
+cuebutton,Fadeout,decimal,,>=0,3,,,true
+cuebutton,Midiinput,int,,0 4,0,0: kein Midi-Input,,
+cuebutton,Midibutton,int,,,0,Buttonnummer,,
+cuebutton,Midimonitor,int,,,0,"wenn leer, dann Midibutton",,
+cuebutton,Level,disabled,,,0,,,
+cuefader,Text,text,,,,,,
+cuefader,Filename,file,cue,,,,,true
+cuefader,Midiinput,int,,0 4,0,0: kein Midi-Input,,
+cuefader,Midifader,int,,,0,Fadernummer,,
+cuefader,Level,disabled,,,0,,,
+stage,Name,text,,,,Headnr oder Name,,true
+stage,Type,list,,Head Text,,,,true
+stage,Text,text,,,,,,
+stage,Left,int,px,,0,,links in px,
+stage,Top,int,px,,0,,oben in px,
+stage,Width,int,px,,120,,Breite in px,
+stage,Height,int,px,,85,,Höhe in px,
+stage,Comment,text,,,,,,
+config,key,disabled,,,,,,true
+config,value,text,,,,,,true
+cuelist,Id,decimal,counter,>=0,,,,true
+cuelist,Filename,file,cue,,,,,
+cuelist,Fadein,decimal,,>=0,0,,,true
+cuelist,Stay,decimal,,>=0, ,leer = warten auf GO,,
+cuelist,Fadeout,decimal,,>=0,,"wenn leer, dann Crossfade",,
+cuelist,Waitin,decimal,,>=0,,,,
+cuelist,Waitout,decimal,,>=0,,,,
+cuelist,Text,text,,,,Beschreibung,,
+cuelist,Comment,text,,,,nächste Cue Info,,
+pages,Page,int,,,1,,,true
+pages,Text,text,,,,,,
+pages,Filename,file,cuelist,,,,,true
+pages,Midiinput,int,,0 4,0,0: kein Midi-Input,,
+pages,Midifader,int,,,0,Fadernummer,,
+pages,Level,disabled,,,0,,,

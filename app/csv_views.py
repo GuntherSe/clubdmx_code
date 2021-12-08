@@ -135,9 +135,13 @@ def filename():
 
         csvfile = Csvfile (fname)
         ret = csvfile.write_cell (row_num, col_num, text)
-
+        
+        # evaluate_option für Liste auswählen, die File enthält
+        # zB cuebutton enthält cue, daher evaluate_option für cuebutton
+        direc = os.path.dirname (fname)
+        root, subdir = os.path.split (direc)
         if (ret["tablechanged"] == "true"):
-            evaluate_option (option)
+            evaluate_option (subdir)
             # flash (ret["message"], category=ret["category"])
         return "ok" #json.dumps (ret)
 
