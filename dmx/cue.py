@@ -59,6 +59,7 @@ class Cue ():
         # self.line = 0 # Zeilennummer (ab 0) aus csv-Datei
         self.id       = ""  # = location + Zeilennummer (ab 0) in 
                             # CSV-Datei der Cue-Gruppe
+                            # wird bei startup erzeugt
 
     def __del__ (self):
         self.rem_cuemix ()

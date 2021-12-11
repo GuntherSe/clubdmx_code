@@ -15,7 +15,8 @@ style="left:{{ left }}; top:{{ top }}; width:{{ width }}; height:{{ height }};"
 {% block subtitle %}
   {{ base.subtitle_with_button (shortname, 
       svgid = "#svg-gear",
-      endpoint = url_for ('data.dataedit_stage') )
+      endpoint = url_for ('data.dataedit_stage', 
+                 history=url_for('stage.show')) )
   }}
 {% endblock %}
 

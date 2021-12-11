@@ -290,7 +290,7 @@ def make_cuelistpages (with_savedlevels:bool=False) :
     # sollen csv-gespeicherte Levels geladen werden?
     csvlevels_requested = check_levelrequest (with_savedlevels)
 
-    fadernum = 0
+    fadernum = 1000 # unterscheidet fader von cuefader
     filename = globs.cfg.get("pages")
     fullname = os.path.join (globs.room.pagespath() , filename)
     csvfile = Csvfile (fullname)

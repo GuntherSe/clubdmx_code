@@ -110,41 +110,44 @@ def pagessetup () -> json:
 
 
 @clview.route ("/editor")
-@clview.route ("/editor/<name>")
+# @clview.route ("/editor/<name>")
 @login_required
 @standarduser_required
-def editor (name:str = "") ->json: 
+def editor () ->json: 
     """ Editor für Cueliste 
     fname: Name der zuletzt editierten Cuelist
     index: editor wurde über Button von cl-pages.html aufgerufen. 
         Status-Fenster wird angezeigt.
     """
     # index: Wenn vorhanden, dann kommt der Aufruf von cl-pages
+    # Name:
     index = request.args.get ("index")
     if index:
         excludebuttons = ["openButton", "saveasButton"]
+        name = request.args.get ("filename") # muss angegeben sein
+        session["selected_cuelist"] = name
     else:
         excludebuttons = []
         index = ""
+        if "selected_cuelist" in session:
+            name = session["selected_cuelist"]
+        else:
+            name = "_neu"
 
     # Name:
-    filename = request.args.get ("filename")
-    if filename:
-        name = filename
-        session["selected_cuelist"] = name
-    # if "open_requested" in session and session["open_requested"] == True: 
-    #     # open-Button hat editor neu geladen.
-    #     session.pop ("open_requested")
+    # filename = request.args.get ("filename")
+    # if filename:
+    #     name = filename
+    #     session["selected_cuelist"] = name
+    # elif name:
+    #     session["selected_cuelist"] = name
+    # elif "selected_cuelist" in session:
     #     name = session["selected_cuelist"]
-    #     index = ""
-    elif name:
-        session["selected_cuelist"] = name
-    elif "selected_cuelist" in session:
-        name = session["selected_cuelist"]
-    else:
-        name = "_neu"
+    # else:
+    #     name = "_neu"
     
     filename = os.path.join (globs.room.cuelistpath(),name)
+
     csvfile = Csvfile (filename)
     if csvfile.changed():
         changes = "true"

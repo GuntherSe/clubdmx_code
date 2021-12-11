@@ -101,6 +101,12 @@ def dataedit_head ():
 @login_required
 @standarduser_required
 def dataedit_stage ():
+    history = request.args.get ("history") # für Rücksprung
+    if history:
+        session["history"] = history
+    else:
+        session.pop ("history", None)
+
     return render_template ("data/dataedit.html", spath="stage")
 
 @data.route ("/ola")

@@ -172,7 +172,10 @@ def evaluate_midi (*data):
     # index:int=data[0], type:str=data[1], fader:int=data[2], level:int=data[3]
     if data[1]=="fader" and data[2] in globs.midifaderlist[data[0]]:
         fader =  globs.midifaderlist[data[0]][data[2]]
-        globs.fadertable[fader].level = data[3] / 127
+        if fader < 1000:
+            globs.fadertable[fader].level = data[3] / 127
+        else:
+            globs.cltable[fader-1000].level = data[3] / 127
     elif data[1]=="button":
         try:
             index = globs.midibuttonlist[data[0]][data[2]]

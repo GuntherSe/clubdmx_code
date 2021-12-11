@@ -595,7 +595,7 @@ class Cuelist ():
             self.cuelist[row][col] = val
 
 
-# --- Level ändern: -------------------------------------------------------
+# --- Level Property: -----------------------------------------------------
     def __set_level (self, newlevel):
         self.outcue.level = newlevel
 
@@ -604,7 +604,7 @@ class Cuelist ():
 
     level = property(__get_level, __set_level)
 
-# --- Text ändern: -------------------------------------------------------
+# --- Text Property: -------------------------------------------------------
     def __set_text (self, newtext):
         self.outcue.text = newtext
 
@@ -612,6 +612,15 @@ class Cuelist ():
         return self.outcue.text
 
     text = property(__get_text, __set_text)
+
+# --- id Property: ----------------------------------------------------------
+    def __set_id (self, newid):
+        self.outcue.id = newid
+
+    def __get_id (self):
+        return self.outcue.id
+
+    id = property(__get_id, __set_id)
 
 # --- Test -----------------------------------------------------------------
 if __name__ == "__main__":

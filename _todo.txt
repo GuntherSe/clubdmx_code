@@ -4,46 +4,28 @@
 
 -- Cuelist: 
    - OSC Kommando abschicken
-   - Page Editor
-   - Detailansicht
-   - Sprung-Buttons zwischen den Cuelist-Seiten
-
+   - Page Editor ok 0.98
+   - Detailansicht ok 0.98
+   - Sprung-Buttons zwischen den Cuelist-Seiten 0k 0.98
 
 -- Stage Single: Eingabefeld für Headnr
 
--- neu: Startcue  ok 0.95
-
--- neu: Executer-Seite ok 0.95
-
--- neu: Tabellen-Layout beim Feld editieren berücksichtigen ok 0.96
-
--- neu: Close-Button in Message ok 0.96
-
--- neu: speichern/verwerfen Buttons mit JS ein/aus 0.96
-
--- neu: sendosc.sh und sendosc.bat zum Senden eines OSC-Befehls
-   damit kann crontab zeitabhängig ClubDMX steuern 0.96
-
 -- edit/select Umschalten ohne reload, dh. mit Javascript ok 0.98
-
--- Login: Basic-User startet mit Executer ok 0.95
 
 -- Sessions permanent für 365 Tage (noch zu testen)
 
 -- Bug:
-   - Stage: px in Koordinaten berücksichtigen ok 0.96
+   - Cueliste editieren: Zeilen verschieben -> Idlist neu laden
+   - Cueliste Id editieren ->  Idlist neu laden
    - Beim Löschen von Fader: Contrib Löschen
-   - Stage -> Import Patch: Koordinaten falsch berechnet ok 0.97
    - neuer Raum/neuer Patch, "speichern als" fehlerhaft
-   - Stage resizeable: Koordinaten werden nicht gespeichert ok 0.98
-   - csvnameclass: "sichern als" produziert Fehler, wenn gleiche Source 
-     und Dest angegeben ok 0.98
 
 -- individuelle Stages, auch unterscheiden nach Gerät ok 0.98
    noch zu testen
 
 -- resizeable: Größe aller selektierten Elemente ändern ok 0.97
-
+   Hier ist ein Bug in jqueryUI. Daher resize evtl entfernen?
+-- kleine/große Geräte-Symbole in der Stage
 
 -- _neu.db: Admin-Account anlegen
    ok: 'Administrator' mit Passwort 'ClubAdmin2021'
@@ -51,17 +33,13 @@
 
 -- Github ok
 
--- Patch: neue Zeile durch anderes Formular ersetzen: 
-   hier soll auch Anzahl der Heads einzugeben sein ok 0.96
-
 -- Room: env-Variable CLUBDMX_ROOMPATH berücksichtigen ok 0.96
 
 -- Gruppen (Geräte)
 
 -- selectables in File-explorer
 -- Selektion von Dateien im Datenbank-Editor (dataedit)
-
--- kleine/große Geräte-Symbole in der Stage
+   Aktionen für selektierte Files: löschen, umbenennen, kopieren
 
 -- html-Tabelle in CSV-Tabelle speichern
 
@@ -75,17 +53,8 @@ mit Anfangs-Großbuchstaben:
       return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
--- newline_form mit Helper-Funktion ok
-   fehlt: Attributliste zu Head ok 0.96
-
 -- app_start.sh update
    Prüfen, ob %2 angegeben, sonst existenz von clubdmx_code.zip prüfen.
    Wenn vorhanden, dann unzip etc.
    wenn nicht: Fehlermeldung -> noch testen
    
--- Stage: Fader für selektierte Heads in Modal anzeigen - nicht in $('#workspace')
-   ok 0.97
-
--- draggable: Selektion verschieben, nicht nur einzelnes Element ok 0.97
-
--- Für nicht angemeldete User: Startpage mit Bildergalerie ok 0.97

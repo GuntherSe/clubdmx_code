@@ -46,6 +46,9 @@ class OscInput (threading.Thread):
             self.dispatcher.map ("/fader/" + istr, self.eval)
         self.dispatcher.map ("/head", self.eval)
         self.dispatcher.map ("/clear", self.eval)
+        self.dispatcher.map ("/go", self.eval)
+        self.dispatcher.map ("/cuelistfader", self.eval)
+        
         # map auch in set_eval_function eintragen
 
         # nur wenn port != 0 server starten:
@@ -91,9 +94,13 @@ class OscInput (threading.Thread):
             self.dispatcher.map ("/button/" + istr, newfunc)
             self.dispatcher.map ("/fader/" + istr, newfunc)
         self.dispatcher.unmap ("/head", self.eval)
-        self.dispatcher.map ("/head", newfunc)
         self.dispatcher.unmap ("/clear", self.eval)
+        self.dispatcher.unmap ("/go", self.eval)
+        self.dispatcher.unmap ("/cuelistfader", self.eval)
+        self.dispatcher.map ("/head", newfunc)
         self.dispatcher.map ("/clear", newfunc)
+        self.dispatcher.map ("/go", newfunc)
+        self.dispatcher.map ("/cuelistfader", newfunc)
 
         self.eval = newfunc
         # print ("ok eval.")
