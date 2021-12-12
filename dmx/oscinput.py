@@ -37,26 +37,11 @@ class OscInput (threading.Thread):
         self.dispatcher = dispatcher.Dispatcher ()
         self.dispatcher.set_default_handler (self.default_handler)
 
-        # for i in range (100):
-        #     istr = str (1+i)
-        #     self.dispatcher.map ("/exebutton1/" + istr, self.eval)
-        #     self.dispatcher.map ("/exebutton2/" + istr, self.eval)
-        #     self.dispatcher.map ("/exefader/" + istr, self.eval)
-        #     self.dispatcher.map ("/button/" + istr, self.eval)
-        #     self.dispatcher.map ("/fader/" + istr, self.eval)
+        self.addresses = ["/button", "/exebutton1", "/exebutton2", "/fader",
+           "/exefader", "/head", "/clear", "/go", "/pause", "/cuelistfader"]
 
-        self.dispatcher.map ("/exebutton1", self.eval)
-        self.dispatcher.map ("/exebutton2", self.eval)
-        self.dispatcher.map ("/exefader", self.eval)
-        self.dispatcher.map ("/button", self.eval)
-        self.dispatcher.map ("/fader", self.eval)
-
-        self.dispatcher.map ("/head", self.eval)
-        self.dispatcher.map ("/clear", self.eval)
-        self.dispatcher.map ("/go", self.eval)
-        self.dispatcher.map ("/cuelistfader", self.eval)
-        
-        # map auch in set_eval_function eintragen
+        for addr in self.addresses:
+            self.dispatcher.map (addr, self.eval)
 
         # nur wenn port != 0 server starten:
         self.set_port (self.in_port)
@@ -88,40 +73,13 @@ class OscInput (threading.Thread):
     def set_eval_function (self, newfunc):
         """ Eval-Funktion zuweisen 
         """
-        # for i in range (50):
-        #     istr = str (1+i)
-        #     self.dispatcher.unmap ("/exebutton1/" + istr, self.eval)
-        #     self.dispatcher.unmap ("/exebutton2/" + istr, self.eval)
-        #     self.dispatcher.unmap ("/exefader/" + istr, self.eval)
-        #     self.dispatcher.unmap ("/button/" + istr, self.eval)
-        #     self.dispatcher.unmap ("/fader/" + istr, self.eval)
-        #     self.dispatcher.map ("/exebutton1/" + istr, newfunc)
-        #     self.dispatcher.map ("/exebutton2/" + istr, newfunc)
-        #     self.dispatcher.map ("/exefader/" + istr,   newfunc)
-        #     self.dispatcher.map ("/button/" + istr, newfunc)
-        #     self.dispatcher.map ("/fader/" + istr, newfunc)
-        self.dispatcher.unmap ("/exebutton1", self.eval)
-        self.dispatcher.unmap ("/exebutton2", self.eval)
-        self.dispatcher.unmap ("/exefader", self.eval)
-        self.dispatcher.unmap ("/button", self.eval)
-        self.dispatcher.unmap ("/fader", self.eval)
-        self.dispatcher.unmap ("/head", self.eval)
-        self.dispatcher.unmap ("/clear", self.eval)
-        self.dispatcher.unmap ("/go", self.eval)
-        self.dispatcher.unmap ("/cuelistfader", self.eval)
-
-        self.dispatcher.map ("/exebutton1", newfunc)
-        self.dispatcher.map ("/exebutton2", newfunc)
-        self.dispatcher.map ("/exefader",   newfunc)
-        self.dispatcher.map ("/button", newfunc)
-        self.dispatcher.map ("/fader", newfunc)
-        self.dispatcher.map ("/head", newfunc)
-        self.dispatcher.map ("/clear", newfunc)
-        self.dispatcher.map ("/go", newfunc)
-        self.dispatcher.map ("/cuelistfader", newfunc)
+        for addr in self.addresses:
+            self.dispatcher.unmap (addr, self.eval)
+            self.dispatcher.map (addr, newfunc)
 
         self.eval = newfunc
         # print ("ok eval.")
+
 
     def set_port (self, newport:int):
         """ self.port ändern und server starten"""

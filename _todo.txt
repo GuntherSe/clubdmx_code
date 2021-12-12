@@ -15,8 +15,10 @@
 -- Sessions permanent für 365 Tage (noch zu testen)
 
 -- Bug:
-   - Cueliste editieren: Zeilen verschieben -> Idlist neu laden
-   - Cueliste Id editieren ->  Idlist neu laden
+   - Daenbank edit: reload beim Seitenaufruf fehleerhaft?
+   - Datenbank edit: Backbutton fehlerhaft?
+   - Cueliste editieren: Zeilen verschieben -> Idlist neu laden ok
+   - Cueliste Id editieren ->  Idlist neu laden ok
    - Beim Löschen von Fader: Contrib Löschen
    - neuer Raum/neuer Patch, "speichern als" fehlerhaft
 
