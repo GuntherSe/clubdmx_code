@@ -376,6 +376,8 @@ class Cuelist ():
         # nextpos bestimmen:
         if cuenr == "":
             if not self.is_paused:
+                if self.nextprep == self.currentpos: # next nicht angegeben
+                    self.increment_nextprep ()
                 self.nextpos = self.nextprep
                 # self.increment_nextpos ()
                 # bei GO nach Pause bleibt nextpos gleich
@@ -393,6 +395,7 @@ class Cuelist ():
                 self.nextprep = pos # cuenr vorhanden
             except: # cuenr nicht vorhanden: stehen bleiben
                 self.nextprep = self.currentpos
+
 
         if self.is_paused:
             self.start_tm = time.time () - self.elapsed_tm

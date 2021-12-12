@@ -25,6 +25,7 @@ import mount as mount
 from functools import wraps
 from flask_login import current_user
 from flask import flash, redirect, url_for, request
+from startup_levels import button_locations, fader_locations
 
 # --- Redirect back Funktion -------------------------------------
 # siehe: https://stackoverflow.com/questions/14277067/redirect-back-in-flask
@@ -213,7 +214,7 @@ def calc_mixoutput ():
     globs.topcue.contrib.mix_function ()
 
 
-def evaluate_osc (address, *args):
+def evaluate_osc (address, *arg):
     """ OSC Input je nach Adresse auswerten
     
     adress: OSC String 
@@ -230,65 +231,126 @@ def evaluate_osc (address, *args):
                 return elem
         return False
 
+    buttonaddr = ["/button", "/exebutton1", "/exebutton2"]
+    faderaddr  = ["/fader", "/exefader"]
+    if isinstance (arg[0], list):
+        args = arg[0]
+    else:
+        args = arg
 
     if not globs.oscinput.paused:
         if address == "/head":
-            # Attribut, Head-Nr, Level
+            # args: Attribut, Head-Nr, Level
             try:
                 head = str (int (args[1])) # Test, ob Headnummer
-                faderval = float (args[2])
+                val = float (args[2])
             except:
                 return
-            if 0.0 <= faderval <= 1.0:
-                globs.topcue.add_item (head, args[0], int(faderval * 255))
+            if 0.0 <= val <= 1.0:
+                globs.topcue.add_item (head, args[0], int(val * 255))
         elif address == "/clear":
             # topcue clear
             globs.topcue.clear()
-        else:
-            # Button, Fader
-            adr = address.split (sep='/')
+        elif address == "/go":
+            # args: cuelist-Nr in Pages-Seite [, next cue ]
             try:
-                num = int (adr[2])
+                num = int (args[0])
             except:
                 return
+            id = "pages" + str (num-1)
+            cl = search_for (id, globs.cltable)
+            if cl:
+                if len (args) == 1:
+                    print (f"go: {num}")
+                    cl.go ()
+                elif len (args) >= 2: # args > 2 ignorieren
+                    print (f"go: {num}, next = {args[1]}")
+                    cl.go (args[1])
 
-            if adr[1] == "button":
-                id = "cuebuttons" + str (num-1)
-                but = search_for (id, globs.buttontable)
-                if but:
-                    but.go ()
-                # if 0 <= num-1 < len (globs.buttontable):
-                #     globs.buttontable[num-1].go()
-            elif adr[1] == "exebutton1":
-                id = "exebuttons1" + str (num-1)
-                but = search_for (id, globs.buttontable)
-                if but:
-                    but.go ()
-            elif adr[1] == "exebutton2":
-                id = "exebuttons2" + str (num-1)
-                but = search_for (id, globs.buttontable)
-                if but:
-                    but.go ()
+        elif address == "/cuelistfader":
+            # args: cuelist-Nr, level
+            try:
+                num = int (args[0])
+                val = float (args[1])
+            except:
+                return
+            id = "pages" + str (num-1)
+            cl = search_for (id, globs.cltable)
+            if cl and  0.0 <= val <= 1.0:
+                cl.level = val
+
+        # cuebuttons:
+        elif address in buttonaddr:
+            #arg: Nr in buttontable
+            try:
+                num = int (args[0])
+            except:
+                return
+            pos = buttonaddr.index (address)
+            id = button_locations[pos] + str (num-1)
+            but = search_for (id, globs.buttontable)
+            if but:
+                but.go ()
+
+        #cuefader
+        elif address in faderaddr:
+            # args: Nr. in fadertable, level
+            try:
+                num = int (args[0])
+                val = float (args[1])
+            except:
+                return
+            pos = faderaddr.index (address)
+            id = fader_locations[pos] + str (num-1)
+            fader = search_for (id, globs.fadertable)
+            if fader and 0.0 <= val <= 1.0:
+                fader.level = val
+
+        # else:
+            # # Button, Fader
+            # adr = address.split (sep='/')
+            # try:
+            #     num = int (adr[2])
+            # except:
+            #     return
+
+            # if adr[1] == "button":
+            #     id = "cuebuttons" + str (num-1)
+            #     but = search_for (id, globs.buttontable)
+            #     if but:
+            #         but.go ()
+            #     # if 0 <= num-1 < len (globs.buttontable):
+            #     #     globs.buttontable[num-1].go()
+            # elif adr[1] == "exebutton1":
+            #     id = "exebuttons1" + str (num-1)
+            #     but = search_for (id, globs.buttontable)
+            #     if but:
+            #         but.go ()
+            # elif adr[1] == "exebutton2":
+            #     id = "exebuttons2" + str (num-1)
+            #     but = search_for (id, globs.buttontable)
+            #     if but:
+            #         but.go ()
             
-            elif adr[1] == "fader":
-                try:
-                    faderval = float (args[0])
-                except:
-                    return
-                id = "cuefaders" + str (num-1)
-                fader = search_for (id, globs.fadertable)
-                if fader and 0.0 <= faderval <= 1.0:
-                    fader.level = faderval
-                # if 0 <= num-1 < len (globs.fadertable) and 0.0 <= faderval <= 1.0:
-                #     globs.fadertable[num-1].level = faderval
-            elif adr[1] == "exefader":
-                try:
-                    faderval = float (args[0])
-                except:
-                    return
-                id = "exefaders" + str (num-1)
-                fader = search_for (id, globs.fadertable)
-                if fader and 0.0 <= faderval <= 1.0:
-                    fader.level = faderval
+            # elif adr[1] == "fader":
+            #     try:
+            #         faderval = float (args[0])
+            #     except:
+            #         return
+            #     id = "cuefaders" + str (num-1)
+            #     fader = search_for (id, globs.fadertable)
+            #     if fader and 0.0 <= faderval <= 1.0:
+            #         fader.level = faderval
+            #     # if 0 <= num-1 < len (globs.fadertable) and 0.0 <= faderval <= 1.0:
+            #     #     globs.fadertable[num-1].level = faderval
+            # elif adr[1] == "exefader":
+            #     try:
+            #         faderval = float (args[0])
+            #     except:
+            #         return
+            #     id = "exefaders" + str (num-1)
+            #     fader = search_for (id, globs.fadertable)
+            #     if fader and 0.0 <= faderval <= 1.0:
+            #         fader.level = faderval
             
             

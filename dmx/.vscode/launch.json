@@ -28,7 +28,7 @@
             "program": "${file}",
             // "console": "externalTerminal",
             "console": "integratedTerminal",
-            "args": ["--port=1234"]
+            "args": ["--port=8800", "--value=1 2 3"]
             // Kommandozeilen-Argumente
         }
     ]

@@ -320,7 +320,6 @@ def make_cuelistpages (with_savedlevels:bool=False) :
         newcl.open (filename)
         newcl.id = newcl.location + str (count)
         newcl.text = pagelist[count]["Text"]
-        newcl.text = pagelist[count]["Text"]
 
         # nun Midi-Requests einlesen:
         if globs.PYTHONANYWHERE == "false":

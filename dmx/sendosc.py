@@ -16,7 +16,7 @@ if __name__ == '__main__':
     parser.add_argument("--ip", help="IP des OSC-Servers")
     parser.add_argument("--port", type=int, help="Port des Servers")
     parser.add_argument ("--address", help="Der Adress-String beginnt mit '/'")
-    parser.add_argument ("--value", help="Der zu sendende Wert")
+    parser.add_argument ("--value",nargs='*', help="Die zu sendenden Werte")
     args = parser.parse_args()
 
     # Default-Werte setzen:
@@ -40,6 +40,7 @@ if __name__ == '__main__':
     else:
         value = ""
 
+    print (f"{osc_ip}:{osc_port} {address} {value} ")
     client = udp_client.UDPClient(osc_ip, osc_port)
     msg = osc_message_builder.OscMessageBuilder(address = address)
     msg.add_arg (value)
