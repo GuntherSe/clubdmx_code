@@ -157,8 +157,24 @@
     if (clIndex.length) {
       clIndexString = clIndex.toString ();
       periodic_cueliststatus ();
-    } else {
-      console.log ("kein Cuelist-Index.")
+      // Leertaste = GO:
+      $(document).keydown (function (event) {
+        console.log ("Key: " + event.which);
+        var args = {index:clIndex};
+        switch (event.which) {
+          case 32: // enter
+            $.get ("/cuelist/go", args);
+            break;
+          case 40: // down
+            $.get ("/cuelist/plus", args);
+            break;
+          case 38: // up
+            $.get ("/cuelist/minus", args);
+            break;
+        };
+      }); 
+//    } else {
+//      console.log ("kein Cuelist-Index.")
     };
   });
 </script>

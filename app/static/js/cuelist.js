@@ -7,10 +7,6 @@ function activateCuelistbuttons () {
     var index = $(this).attr ("index");
     var args = {index:index};
     $.get ("/cuelist/go", args);
-    // var pauseid = ".pausebut-" + index;
-    // $.get ("/cuelist/go", args, function () {
-    //   $(pauseid).removeClass ("btn-warning").addClass ("btn-secondary");
-    // });
   });
 
   // Pause Button:
@@ -18,17 +14,12 @@ function activateCuelistbuttons () {
     var index = $(this).attr ("index");
     var args = {index:index};
     $.get ("/cuelist/pause", args);
-    // var pauseid = ".pausebut-" + index;
-    // $.get ("/cuelist/pause", args, function () {
-    //   $(pauseid).removeClass ("btn-secondary").addClass ("btn-warning");
-    // });
   });
 
   // Minus Button:
   $(".minusbutton").click ( function (){
     var index = $(this).attr ("index");
     var args = {index:index};
-    // var pauseid = ".pausebut-" + index;
     $.get ("/cuelist/minus", args);
   });
   
@@ -36,7 +27,6 @@ function activateCuelistbuttons () {
   $(".plusbutton").click ( function (){
     var index = $(this).attr ("index");
     var args = {index:index};
-    // var pauseid = ".pausebut-" + index;
     $.get ("/cuelist/plus", args);
   });
   

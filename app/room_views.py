@@ -52,7 +52,12 @@ def change ():
         load_config (with_savedlevels=True)
         flash ("in neuen Raum wechseln.", category="success")
         flash ("und nun Konfiguration öffnen!", category="danger")
-        clear_session_subdirs ()        
+        clear_session_subdirs () 
+        if "stagename" in session: 
+            session.pop ("stagename")
+        if "selected_cuelist" in session:
+            session.pop ("selected_cuelist")
+
         return "ok"
 
     rootpath = globs.room.rootpath().replace (os.sep, '+')

@@ -1,12 +1,14 @@
 -- Topcue: 
    - Snapshot
    - editierbar machen
+   - clear Button über MIDI
 
 -- Cuelist: 
    - OSC Kommando abschicken
    - Page Editor ok 0.98
    - Detailansicht ok 0.98
    - Sprung-Buttons zwischen den Cuelist-Seiten 0k 0.98
+   - Editor: Leertaste = GO, Up- und Down-Tasten bestimmen next Cue ok 0.99
 
 -- Stage Single: Eingabefeld für Headnr
 
@@ -15,7 +17,7 @@
 -- Sessions permanent für 365 Tage (noch zu testen)
 
 -- Bug:
-   - Daenbank edit: reload beim Seitenaufruf fehleerhaft?
+   - Datenbank edit: reload beim Seitenaufruf fehlerhaft?
    - Datenbank edit: Backbutton fehlerhaft?
    - Cueliste editieren: Zeilen verschieben -> Idlist neu laden ok
    - Cueliste Id editieren ->  Idlist neu laden ok
@@ -32,8 +34,6 @@
 -- _neu.db: Admin-Account anlegen
    ok: 'Administrator' mit Passwort 'ClubAdmin2021'
    'Standard' mit Passwort 'Standard2021'
-
--- Github ok
 
 -- Room: env-Variable CLUBDMX_ROOMPATH berücksichtigen ok 0.96
 

@@ -16,7 +16,7 @@ if __name__ == '__main__':
     parser.add_argument("-i", "--ip", help="IP des OSC-Servers")
     parser.add_argument("-p", "--port", type=int, help="Port des Servers")
     parser.add_argument ("-a","--address", help="Der Adress-String beginnt mit '/'")
-    parser.add_argument ("-v", "--value",nargs='*', help="Die zu sendenden Werte")
+    parser.add_argument ("-e", "--value",nargs='*', help="Die zu sendenden Werte")
     args = parser.parse_args()
 
     # Default-Werte setzen:

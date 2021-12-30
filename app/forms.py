@@ -117,7 +117,9 @@ def create_field (F:Form, field:str, rule:dict):
 
 @forms.route ("/csvline", methods=['GET', 'POST'])
 def csvline ():
-    """ Form zum Erzeugen einer neuen Zeile in csv-Datei  
+    """ Form zum Erzeugen einer neuen Zeile in csv-Datei 
+
+    nach Anlegen einer Zeile wird editmode auf EDIT geschalten 
     """
     class F(Form):
         pass
@@ -150,6 +152,7 @@ def csvline ():
                 evaluate_option (option)
             
             flash (ret["message"], category=ret["category"])
+            session["editmode"] = "edit" 
             return leave_form ()
         
         else:                                       # falsche Daten

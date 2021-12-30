@@ -4,20 +4,9 @@
 """ 
 class Cuelist
 
-Cuelist ist eine Tabelle mit folgender Struktur:
-Id,Cue,Fadein,Fadeout,Waitin,Waitout,Text,Comment
-Id: Laufende Nummer mit evtl 2 Kommastellen, z.B 1, 1.2, 1.23
-Cue: Filename, lokalisiert in <room>/cue
-Fadein, Fadeout, Waitin, Waitout: Zeiten in sec
-Stay: '' .. Warten auf GO, Zeit >= 0 in sec .. Wartezeit vor Auto-GO
-Text: Anzeigetext kurz
-Comment: Anzeigetext lang = Cue-Information
-
-Eine Cuelist wird durch den outcue in Cue.contrib in den Mix eingebunden. 
-Im Gegensatz zum Cue, wo der 
-Cue-Content in einem File gelistet und daher statisch ist, ist der in den 
-Mix eingebundene Content dynamisch: Abhängig von aktuellem und nächsten 
-Cue und dem Zeitpunkt wird der _cuecontent von outcue berechnet.
+Die Basis für die Cuelist Klasse ist in Cuelistbase definiert. Hier finden sich die
+grundlegenden Attribute und Methoden. In Klasse Cuelsit werden die Berechnungen
+des Mix-Outputs gemacht.
 
 """
 
@@ -32,61 +21,14 @@ from csvfileclass import Csvfile
 from patch import Patch
 from ola import OscOla
 from cue import Cue
+from cuelistbase import Cuelistbase
 
 
 
-class Cuelist ():
+class Cuelist (Cuelistbase):
 
-    instances = []
-    timeout = 0.02 # 0.02
-    running = False
-    CUELISTPATH = ""
-    init_done = 0
-    
     def __init__ (self, patch):
-        self.__class__.instances.append (self)
-        if Cuelist.init_done == 0:
-            if Cuelist.CUELISTPATH == "":
-                path = os.path.dirname(os.path.realpath(__file__))
-                self.set_path (path)
-
-        self.patch = patch
-        fname = os.path.join (Cuelist.CUELISTPATH, "_neu")
-        self.file = Csvfile (fname) 
-        self.filetime = 0.0 # bei get_cuelist aktualisieren
-        self._autoupdate = False # update, wenn _level == 0
-        self._listfields = [] # Feldnamen der cuelist
-        self._idlist = [] # liste der in der cuelist vorhandenen Id's, sortiert
-                          # diese Id's sind vom Typ float
-
-        self.cuelist = {} # Dict, das die Cue-Informationen enthält
-        self.outcue = Cue (patch) # dieser content wird an contrib geschickt
-        self.outcue.level = 1.0
-        self.location = "pages"
-        # self.text = ""
-        # current-Werte:
-        self.currentcue = Cue (patch) # Infos zum aktuellen Cue
-        self.currentid = 0.0 # float
-        self.currentpos = 0 # Position des current Cue in self._idlist
-        self.currentkeys = [] # Liste an keys = 'Headnr'+'Attrib'
-        self.currentlevels = [] # Liste an Levels zu den Keys
-        # next-Werte:
-        self.nextcue = Cue (patch) # Infos zum nächsten Cue
-        self.nextid = 0.0 # float
-        self.nextpos = 0 # Position des next Cue in self._idlist
-        self.nextkeys = []
-        self.nextprep = 0   # Nächste Position in Vorbereitung, 
-                            # nextpos wird erst bei go festgelegt
-        # Status:
-        self.is_fading_in = True
-        self.is_fading_out = False
-        self.fadein_percent = 0
-        self.fadeout_percent = 100
-        self.is_loaded = False  # True: keine Fades, currentcue am output
-        self.is_paused = False # True: Zeitfunktionen (Fade, Stay) pausieren
-        self.elapsed_tm = 0.0 # vergangene Zeit beim Drücken von Pause
-        self.start_tm = time.time ()
-        self.go_time = -1 # Zeit für Go nach Stay-Time
+        Cuelistbase.__init__ (self, patch)
 
         if not Cuelist.running:
             Cuelist.running = True
@@ -102,15 +44,6 @@ class Cuelist ():
     def printInstances (cls):
         for instance in cls.instances:
             print (instance)
-
-    @classmethod
-    def set_path (cls, newpath):
-        """ Pfad für Cuelisten-Verzeichnis festlegen 
-        
-        newpath: 'Raum-Verzeichnis', Absolut-Pfad
-        """
-        Cuelist.CUELISTPATH = os.path.join (newpath, "cuelist")
-
 
     @classmethod 
     def run (cls):
@@ -131,57 +64,6 @@ class Cuelist ():
             pass
 
 
-    @classmethod
-    def items (cls) ->list:
-        """ alle cuelists in dictlist ausgeben
-        """
-        ret = []
-        for inst in cls.instances:
-            item = {}
-            item["Text"] = inst.outcue.text
-            item["Filename"] = inst.file.shortname()
-            item["Index"] = cls.instances.index (inst)
-            # Status:
-            # item["current_id"] = str (cls.currentid)
-            ret.append (item)
-        return ret
-    
-
-    def line (self, pos:int) -> dict:
-        """ liefert cuelist[pos] als dict 
-        """
-        ret = {}
-        if 0 <= pos < len (self.cuelist):
-            id = self._idlist[pos]
-            ret = self.cuelist[id]
-        return ret
-
-    def status (self) -> dict:
-        """ aktueller Status der Cuelist"""
-        ret = {}
-        # current-Werte:
-        ret["currentline"] = self.line (self.currentpos)
-        if "Id" in ret["currentline"]:
-            numstr = ret["currentline"]["Id"].replace ('.', '-')
-        else:
-            numstr = ''
-        ret["currentid"] = numstr # String mit Umwandlung von '.' in '-'
-        ret["nextline"] = self.line (self.nextprep)
-        if "Id" in ret["nextline"]:
-            numstr = ret["nextline"]["Id"].replace ('.', '-')
-        else:
-            numstr = ''
-        ret["nextid"] = numstr
-        # Status:
-        ret["fading_in"] = self.fadein_percent
-        ret["fading_out"] = self.fadeout_percent
-        ret["is_paused"] = "true" if self.is_paused else "false" # True: Zeitfunktionen (Fade, Stay) pausieren
-        ret["self.elapsed_tm"] = self.elapsed_tm # vergangene Zeit beim Drücken von Pause
-        ret["start_tm"] = self.start_tm 
-        # ret["go_time"] = self.go_time # Zeit für Go nach Stay-Time
-        return ret
-
-
     def tmfactor (self, id:float, tm:"time", direction:str) -> dict:
         """ Fadefaktor berechnen
         
@@ -192,13 +74,13 @@ class Cuelist ():
         """
         infactor = 0.0 # default
         outfactor = 1.0 # default 
-        xfade = True # default
+        xfade = False # default
 
         if id in self._idlist:
             if direction == "in":
             # Zeitfaktor für fade-in:
-                waitintm = self.cuelist[id]["Waitin"]
-                fadeintm = self.cuelist[id]["Fadein"]
+                waitintm = self.cuedict[id]["Waitin"]
+                fadeintm = self.cuedict[id]["Fadein"]
                 if tm <  self.start_tm + waitintm: # in der Wartezeit
                     infactor = 0.0
                 else:
@@ -212,10 +94,13 @@ class Cuelist ():
 
             elif direction == "out":
             # Zeitfaktor für Fade-out:
-                waitouttm = self.cuelist[id]["Waitout"]
-                fadeouttm = self.cuelist[id]["Fadeout"]
-                if fadeouttm != -1.0: # crossfade
-                    xfade = False
+                waitouttm = self.cuedict[id]["Waitout"]
+                fadeouttm = self.cuedict[id]["Fadeout"]
+                if fadeouttm == -1.0 and waitouttm == 0: # crossfade
+                    xfade = True
+                    # outfactor wird nicht benötigt
+                elif fadeouttm == -1.0: # fadeout nicht angegeben
+                    fadeouttm = self.cuedict[id]["Fadein"]
 
                 if tm < self.start_tm + waitouttm:
                     outfactor = 1.0
@@ -233,23 +118,6 @@ class Cuelist ():
             # self.remain_tm = self.start_tm + total_tm - tm
         return {"in":infactor, "out":outfactor, "xfade":xfade}
 
-        # else:
-        #     # self.remain_tm = 0.0
-        #     return {"in":0.0, "out":1.0, "xfade":False}
-
-    def update_cuelist (self):
-        """ cueliste updaten 
-        wenn Fades abgeschlossen sind
-        wenn pause
-        wenn level == 0
-        """
-        # evtl. könnte next ID gelöscht sein
-        nextid = self.nextid
-        self.get_cuelist (reset_ids=False)
-        if not (nextid in self._idlist):
-            self.nextpos = 0
-            self.reset_ids ()
-
 
     def calc_cuecontent (self, tm:"time"):
         """ aktuellen Content berechnen 
@@ -265,37 +133,34 @@ class Cuelist ():
 
         curfactor = self.tmfactor (self.currentid, tm, "out")
         nextfactor = self.tmfactor (self.nextid, tm, "in")
-
-        # self.fadein_percent = int (nextfactor["in"] * 100)
-        # if curfactor["xfade"]:
-        #     self.fadeout_percent = 100 - self.fadein_percent
-        # else:
-        #     self.fadeout_percent = int (curfactor["out"] * 100)
+        if curfactor["xfade"] == True: # crossfade
+            self.is_fading_out = self.is_fading_in
+            curfactor["out"] = 1 - nextfactor["in"]
 
         # Übergänge berechnen:
         # 1. items, die in nextcue vorkommen:
         if self.is_fading_in:
-            self.fadein_percent = int (nextfactor["in"] * 100)
+            self.fadein_percent = int (nextfactor["in"] * 100) 
             for item in self.nextcue.cuecontent ():
-                itemkey = item[0] + item[1]
+                itemkey = item[0] + item[1] # head + attribute
                 nextlevel = int (item[2])
-                if itemkey in self.currentkeys: # kommt auch in currentcue vor
-                    # Crossfade
+                if itemkey not in self.currentkeys: # Fade in 
+                    level = nextfactor["in"] * nextlevel
+                elif curfactor["xfade"] == True: # crossfade
                     index = self.currentkeys.index (itemkey)
                     curlevel = int (self.currentlevels[index])
                     level = curlevel + nextfactor["in"] * (nextlevel - curlevel)
-                else:
-                    # Fade in 
-                    level = nextfactor["in"] * nextlevel
+                else: # max aus fadeout und fadein
+                    index = self.currentkeys.index (itemkey)
+                    curlevel = int (self.currentlevels[index])
+                    level = max (curlevel * curfactor["out"],  
+                                nextlevel * nextfactor["in"] )
+
                 self.outcue.line_to_cuecontent ([item[0],item[1],
                     str(int(level))])
                 # print (f"Fading in: {item[0]} {item[1]} {int(level)}")
         
         # 2. items, die nur in currentcue vorkommen:
-        if curfactor["xfade"] == True: # crossfade
-            self.is_fading_out = self.is_fading_in
-            curfactor["out"] = 1 - nextfactor["in"]
-
         if self.is_fading_out: # and not (itemkey in self.nextkeys):
             self.fadeout_percent = int (curfactor["out"] * 100)
             for item in self.currentcue.cuecontent ():
@@ -308,6 +173,7 @@ class Cuelist ():
 
         #Test:
         # print (f"\rxFade: {self.fadein_percent} {self.fadeout_percent}", end='')
+
         # current Cue und next Cue evtl updaten:
         if self.is_fading_in and nextfactor["in"] == 1:
             self.is_fading_in = False
@@ -333,7 +199,7 @@ class Cuelist ():
             # else: nextprep wurde bereits verändert
 
             # Stay Time:
-            staytm = self.cuelist[self.currentid]["Stay"]
+            staytm = self.cuedict[self.currentid]["Stay"]
             if staytm == -1:
                 self.go_time = -1
             else:
@@ -344,25 +210,6 @@ class Cuelist ():
             self.go_time = -1
             self.go ()
 
-
-    def increment_nextprep (self):
-        """ nextprep um 1 erhöhen oder zu 0 springen
-        nextpos wird erst bei GO aktualisiert
-        """
-        if self.nextprep < len (self._idlist) -1:
-            self.nextprep += 1
-        else:
-            self.nextprep = 0 # beginnt von vorn
-
-
-    def decrement_nextprep (self):
-        """ nextprep um 1 vermindern oder zum Ende der cuelist springen
-        nextpos wird erst bei GO aktualisiert
-        """
-        if self.nextprep > 0:
-            self.nextprep -= 1
-        else: # zum Ende springen
-            self.nextprep = len (self._idlist) -1
 
     def go (self, cuenr:str=""):
         """ Fade beginnen und Startzeit speichern 
@@ -447,184 +294,6 @@ class Cuelist ():
             if item[0]+item[1] in self.currentkeys]
 
 
-# File Methoden: --------------------------------------------------------------
-    def open (self, fname = ""):
-        """ öffnet fname und liest cuelist ein 
-
-        wenn fname == '', dann cuelist neu einlesen
-        """
-        if fname:
-            openname = os.path.join (Cuelist.CUELISTPATH, fname)
-            self.file.name (openname)
-        self.get_cuelist ()
-
-        # ersten Cue starten:
-        self.is_fading_in = True
-        # self.is_loaded = True
-        self.start_tm = time.time ()
-        # self.go ()
-
-
-    def get_cuelist (self, reset_ids = True) ->int:
-        """ Cueliste einlesen
-
-        Struktur: {'1':{'Id':'1','Cue':'cue1','Fadein':'fade1', ...}
-                   '1.10':{'Id':'1.10','Cue':'cue2', ...}
-                   ...}
-        """
-        filename = self.file.name ()
-        if os.path.isfile (filename) and \
-            os.path.getmtime(filename) > self.filetime:
-            self.cuelist = {} # cuelist leeren
-            self._idlist = []
-            with open (filename, 'r',encoding='utf-8') as pf: # zum Lesen öffnen und einlesen
-                reader = csv.DictReader (pf, restval= '')
-                self._listfields = reader.fieldnames
-                if "Id" not in self._listfields:
-                    # muss vor Einlesen geprüft werden
-                    print ("Feld 'Id' nicht in Cueliste gefunden")
-                    return
-
-                for row in reader:
-                    try: # kann in float konvertiert werden:
-                        num = float (row["Id"])
-                        self.cuelist[num] = row
-                        self._idlist.append (num)
-                    except:
-                        print (f"{row['Id']} ist keine Dezimalzahl.")
-
-            self._idlist = sorted (self._idlist)
-            self.verify()
-            if reset_ids:
-                self.reset_ids ()
-            self.filetime = os.path.getmtime (filename)
-        else:
-            pass
-
-
-    def setcurrentcue (self, pos):
-        """ Infos zu currentcue ermitteln 
-        zuerst currentid, dann die Infos dazu ermitteln
-        """
-        if 0 <= pos < len (self._idlist):
-            self.currentid    = self._idlist[pos]
-            fname = self.cuelist[self.currentid]["Filename"]
-            self.currentcue.open (fname)
-            self.currentkeys.clear ()
-            self.currentlevels.clear ()
-            for item in self.currentcue.cuecontent ():
-                self.currentkeys.append (item[0]+item[1]) # head-attrib ohne Bindestrich
-                self.currentlevels.append (item[2])
-        # print ("Currentkeys: ", self.currentkeys)
-
-
-    def setnextcue (self, pos):
-        """ Infos zu nextcue ermitteln 
-        zuerst nextid, dann die Infos dazu ermitteln
-        """
-        if 0 <= pos < len (self._idlist):
-            self.nextpos = pos
-            self.nextid    = self._idlist[pos]
-            fname = self.cuelist[self.nextid]["Filename"]
-            self.nextcue.open (fname)
-            self.nextkeys.clear ()
-            for item in self.nextcue.cuecontent ():
-                self.nextkeys.append (item[0]+item[1]) # head-attrib ohne Bindestrich
-        # print ("Nextkeys: ", self.nextkeys)
-
-    def verify (self):
-        """ Cueliste prüfen 
-        """
-        ret = True
-        # Feldnamen prüfen:
-        required = ["Id", "Filename", "Fadein", "Fadeout", "Waitin", "Waitout", \
-            "Stay", "Text", "Comment"]
-        for fieldname in required:
-            if fieldname not in self._listfields:
-                print (f"Feld '{fieldname}' nicht gefunden. ")
-                ret = False
-
-        # Zeitwerte prüfen und in float wandeln:
-        timecols = ["Fadein", "Waitin", "Waitout"]
-        specialtimes = ["Fadeout", "Stay"] # können leer sein
-        for row in self._idlist:
-            for col in timecols:
-                self.check_tm_value (row, col)
-            for col in specialtimes:
-                self.check_tm_value (row, col, empty_allowed=True)
-        return ret
-
-
-    def reset_ids (self):
-        """ current Cue und next Cue auf Ausgangswerte setzen
-        Damit wird beim __init__ ein Einfaden des ersten Cues ausgelöst.
-        """
-        # current Cue:
-        self.currentpos = -1
-        self.currentid = 0.0 
-        fname = "_neu"
-        self.currentcue.open (fname)
-        # next Cue:
-        if len (self.cuelist) == 0:
-            self.nextid = 0.0 #"-1"
-            fname = "_neu"
-            self.nextcue.open (fname)
-        else: 
-            self.setnextcue (0)
-            self.nextprep = 0
-
-
-    def check_tm_value (self, row:float, col:str, empty_allowed=False):
-        """ Zeitangabe in cuelist prüfen
-        
-        empty_allowed: True für Fadeout und Stay.
-        Fadeout: -> crossfade
-        Stay: -> warten auf Go
-        keine negativen Werte, str als float umrechenbar
-        """
-        strval = self.cuelist[row][col]
-        if strval == "":
-            if empty_allowed: 
-                self.cuelist[row][col] = -1.0
-            else:
-                self.cuelist[row][col] = 0.0    
-        else:
-            try:
-                val = float (strval)
-                if val < 0: # fehlerhafte csv-Datei
-                    val = 0.0
-            except:
-                val = 0.0
-            self.cuelist[row][col] = val
-
-
-# --- Level Property: -----------------------------------------------------
-    def __set_level (self, newlevel):
-        self.outcue.level = newlevel
-
-    def __get_level (self):
-        return self.outcue.level
-
-    level = property(__get_level, __set_level)
-
-# --- Text Property: -------------------------------------------------------
-    def __set_text (self, newtext):
-        self.outcue.text = newtext
-
-    def __get_text (self):
-        return self.outcue.text
-
-    text = property(__get_text, __set_text)
-
-# --- id Property: ----------------------------------------------------------
-    def __set_id (self, newid):
-        self.outcue.id = newid
-
-    def __get_id (self):
-        return self.outcue.id
-
-    id = property(__get_id, __set_id)
-
 # --- Test -----------------------------------------------------------------
 if __name__ == "__main__":
     """ Test Cuelist:
@@ -649,6 +318,7 @@ if __name__ == "__main__":
 
     list1 = Cuelist (patch)
     list1.open ("list1")
+    list1.level = 1.0
 
     pp = pprint.PrettyPrinter(depth=6)
 
@@ -688,7 +358,7 @@ if __name__ == "__main__":
             if i == '#':
                 print (infotxt)
             elif i == 'c':
-                pp.pprint (list1.cuelist)
+                pp.pprint (list1.cuedict)
             elif i == 'm':
                 uni = 1 # input ("Universum: ")
                 print (patch.show_mix(uni))

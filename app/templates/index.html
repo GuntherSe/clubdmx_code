@@ -46,9 +46,12 @@
           <p class="card-text">
             Bedienung von Szenen mit Fadern oder Buttons:
             <div class="row btn-group w-100 ml-0">
-              {{ idx.button_elem ("Exec", url_for ("basic.exec"),"4" )}}
-              {{ idx.button_elem ("Fader", url_for ("basic.cuefader"),"4") }}
-              {{ idx.button_elem ("Button", url_for ("basic.cuebutton"),"4") }}
+              {{ idx.button_elem ("Fader", url_for ("basic.cuefader")) }}
+              {{ idx.button_elem ("Button", url_for ("basic.cuebutton")) }}
+            </div>
+            <div class="row btn-group w-100 ml-0 mt-1">
+              {{ idx.button_elem ("Exec", url_for ("basic.exec")) }}
+              {{ idx.button_elem ("Cuelist", url_for ("cuelist.pages")) }}
             </div>
           </p>
 
