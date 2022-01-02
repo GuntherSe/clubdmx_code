@@ -29,13 +29,13 @@ cuefader,Midiinput,int,,0 4,0,0: kein Midi-Input,,
 cuefader,Midifader,int,,,0,Fadernummer,,
 cuefader,Level,disabled,,,0,,,
 stage,Name,text,,,,Headnr oder Name,,true
-stage,Type,list,,Head Text,,,,true
+stage,Type,list,,Head Gruppe Text,,,,true
 stage,Text,text,,,,,,
 stage,Left,int,px,,0,,links in px,
 stage,Top,int,px,,0,,oben in px,
 stage,Width,int,px,,120,,Breite in px,
 stage,Height,int,px,,85,,Höhe in px,
-stage,Comment,text,,,,,,
+stage,Comment,text,heads,,,Gruppe: Heads in Gruppe,,
 config,key,disabled,,,,,,true
 config,value,text,,,,,,true
 cuelist,Id,decimal,counter,>=0,,,,true
@@ -48,7 +48,6 @@ cuelist,Waitout,decimal,,>=0,,,,
 cuelist,Text,text,,,,Beschreibung,,
 cuelist,Comment,text,,,,nächste Cue Info,,
 pages,Page,int,,,1,,,true
-pages,Position,int,counter,,1,,,true
 pages,Text,text,,,,,,
 pages,Filename,file,cuelist,,,,,true
 pages,Midiinput,int,,0 4,0,0: kein Midi-Input,,

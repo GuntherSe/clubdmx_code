@@ -188,7 +188,7 @@ class Cuelist (Cuelistbase):
             self.fadeout_percent = 100
             self.fadein_percent = 0
 
-            self.update_cuelist ()
+            self.update_cuelist () # File-Änderungen prüfen/laden
 
             # nextcue wird zum currentcue, neuen nextcue einlesen
             self.currentpos = self.nextpos
@@ -288,10 +288,16 @@ class Cuelist (Cuelistbase):
         """ current Cue an out Cue kopieren
         
         Nach dem Fade ausführen, um überzählige Null-Items zu entfernen
-        current keys und levels neu erzeugen
+        Contrib aktualisieren
         """
-        self.outcue.content[:] = [item for item in self.outcue.content \
-            if item[0]+item[1] in self.currentkeys]
+        self.outcue.content[:] = [item for item in self.currentcue.content]
+        outkeys = [line[0]+'-'+line[1] for line in self.outcue.content]
+        for key in Cue.contrib.contribs[self.outcue.count].copy().keys():
+            if key != "faderlevel" and key not in outkeys:
+                Cue.contrib.remove_key (self.outcue.count, key)
+
+        # self.outcue.content[:] = [item for item in self.outcue.content \
+        #     if item[0]+item[1] in self.currentkeys]
 
 
 # --- Test -----------------------------------------------------------------

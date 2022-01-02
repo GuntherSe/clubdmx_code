@@ -303,3 +303,31 @@ und: https://codepen.io/sosuke/pen/Pjoqqp
   width: 0.7em;
 }
 
+/* Gruppe: */
+.stage-element.gruppe, .mobil-element.gruppe {
+  background-color: lightyellow;
+}
+
+.gruppe > .itemName { 
+  position: absolute;
+  left: 5px;
+  top: 0px;
+  text-align: right; 
+  margin: 5px; 
+  color: blueviolet;
+}
+.gruppe > .itemText {
+  position: absolute;
+  left: 5px;
+  top: 1.5rem;
+  text-align: left;
+  margin: 5px;
+  color:rgb(42, 33, 173)
+}
+.gruppe > .itemComment {
+  position: absolute;
+  text-align: left;
+  bottom: 5px;
+  left: 5px;
+  color:rgb(42, 33, 173)
+}

@@ -135,6 +135,12 @@ def csvline ():
         # option == counter:
         if "option" in rule and rule["option"] == "counter":
             rule["default"] = csvfile.nextint (field)
+        # option == heads:
+        elif "option" in rule and rule["option"] == "heads" \
+                        and "headstring" in session:
+            rule["default"] = session["headstring"]
+
+
         create_field (F, field, rule)
 
     form = F (request.form)

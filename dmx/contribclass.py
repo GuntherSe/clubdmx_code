@@ -59,16 +59,12 @@ class Contrib (threading.Thread):
         val als int eintragen, nicht str
         """
         key = args[0]
-        # print ("Index: {}, Key: {}".format (index,key))
         if index not in self.contribs.keys(): # index nicht vorhanden
             self.contribs[index] = {}
 
         values = [arg for arg in args]
         values = values [1:] # key entfernen
         self.contribs[index][key] = values
-
-        # print ("contrib.add: ", index, key, values)
-        # return (index, key, values)
 
 
     def remove_index (self, index):
@@ -82,6 +78,17 @@ class Contrib (threading.Thread):
             time.sleep (self._sleep)
             self.contribs.pop  (index, None)
 
+
+    def remove_key (self, index, key):
+        """ key entfernen, der in index : {...} enthalten ist 
+
+        benötigt in cuelist
+        """
+        self.mix_function () # aktualisieren
+        if index in self.contribs and key in self.contribs[index]:
+            self.contribs[index].pop (key, None)
+
+
     def contrib(self):
         """ contribs zeigen
         """
@@ -91,7 +98,7 @@ class Contrib (threading.Thread):
     def to_dictlist(self) ->list:
         """ contrib in Liste, dict pro Zeile
         zur Tabellenansicht
-        Zeile: {index:val1, key:val2, level:val3, time:val4}
+        Zeile: {index:val1, key:val2, level:val3, extra:val4}
         Output: [Zeile-1, Zeile-2, ... , Zeile-n]
         """
         ret = []

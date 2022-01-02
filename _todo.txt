@@ -21,7 +21,7 @@
    - Datenbank edit: Backbutton fehlerhaft?
    - Cueliste editieren: Zeilen verschieben -> Idlist neu laden ok
    - Cueliste Id editieren ->  Idlist neu laden ok
-   - Beim Löschen von Fader: Contrib Löschen
+   - Beim Löschen von Fader: Contrib Löschen ok
    - neuer Raum/neuer Patch, "speichern als" fehlerhaft
 
 -- individuelle Stages, auch unterscheiden nach Gerät ok 0.98
@@ -37,7 +37,7 @@
 
 -- Room: env-Variable CLUBDMX_ROOMPATH berücksichtigen ok 0.96
 
--- Gruppen (Geräte)
+-- Gruppen (Geräte) ok 0.99
 
 -- selectables in File-explorer
 -- Selektion von Dateien im Datenbank-Editor (dataedit)

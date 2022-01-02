@@ -35,6 +35,7 @@ function divClicked() {
   var width = $(this).parent().width ();
   //console.log ("Breite: " + width);
   editableText.width ( width );
+  editableText.height ("2rem");
   $(this).replaceWith(editableText);
   editableText.focus();
   // setup the blur event for this new textarea
@@ -153,7 +154,7 @@ function selectableStageElements () {
             // console.log ("StageW: "+stageleft+", H: "+stagetop);
             delta_w = 0;
             delta_h = 0;
-            console.log ("ParseW: "+this.style.width+", H: "+this.style.height);
+            // console.log ("ParseW: "+this.style.width+", H: "+this.style.height);
             start_w = $(this).outerWidth(true);
             start_h = $(this).outerHeight(true);
             console.log ("StartW: "+start_w+", H: "+start_h);
@@ -163,17 +164,17 @@ function selectableStageElements () {
             
             newwidth  = $(this).outerWidth(true);
             newheight = $(this).outerHeight(true);
-            console.log ("W: "+newwidth+", H: "+newheight);
+            // console.log ("W: "+newwidth+", H: "+newheight);
             delta_w = newwidth - start_w;
             delta_h = newheight - start_h;
             start_w = newwidth;
             start_h = newheight;
-            console.log ("delta: "+delta_w+", "+delta_h);
+            // console.log ("delta: "+delta_w+", "+delta_h);
             // Größe ändern:
             $(".highlight").each ( function () {
               tmpw = Math.max (30, $(this).outerWidth(true) + delta_w) ;
               tmph = Math.max (30, $(this).outerHeight(true) + delta_h) ;
-              console.log ("newwidth: "+tmpw+" height: "+tmph);
+              // console.log ("newwidth: "+tmpw+" height: "+tmph);
               $(this).css ({"width": tmpw, "height": tmph});
             }) ;
           },
@@ -187,7 +188,7 @@ function selectableStageElements () {
               item ["Height"]  = $(this).outerHeight(true);
               data[index.toString()] = item;
             });
-            console.log ("Data: "+JSON.stringify (data));
+            // console.log ("Data: "+JSON.stringify (data));
             $.get ("/stage/update_item", {"data":JSON.stringify (data)});
             // Buttons anzeigen:
             $(".csvchanges").removeClass ("d-none"); 
@@ -207,23 +208,14 @@ function selectableStageElements () {
             start_x = tmppos.left;
             start_y = tmppos.top;
             // console.log ("Start L: "+start_x+", T: "+start_y);
-            // start_x = parseInt (this.style.left,10);
-            // start_y = parseInt (this.style.top,10);
           },
           drag: function () {
             // Verschiebung berechnen:
             var newleft, newtop;
             var dleft, dtop; //dragged element
-            // var doffleft, dofftop;
-            // var tmpoff, offleft, offtop; //offset
             tmppos = $(this).position ();
             dleft = tmppos.left;
             dtop  = tmppos.top;
-            // tmppos = $(this).offset ();
-            // doffleft = tmppos.left;
-            // dofftop = tmppos.top;
-            // // newleft = parseInt (this.style.left,10);
-            // // newtop  = parseInt (this.style.top,10);
             // console.log ("Drag-L: "+dleft+" T: "+dtop 
             //   +" offL:"+doffleft+" offT:"+dofftop);
             delta_x = dleft - start_x;
@@ -235,10 +227,6 @@ function selectableStageElements () {
             // verschieben:
             $(".highlight").each ( function () {
               tmppos = $(this).position ();
-              // tmpoff = $(this).offset();
-              // offleft= tmpoff.left;
-              // offtop = tmpoff.top;
-              
               newleft = tmppos.left + delta_x + stageleft;
               newtop  = tmppos.top + delta_y + stagetop;
               // console.log ("Each L:"+newleft+" T:"+newtop+" offL:"+offleft
@@ -274,8 +262,6 @@ function selectableStageElements () {
         $( ui.unselected ).removeClass("highlight")
           .draggable ("destroy")
           .resizable ("destroy");
-        // $(".selectDiv").empty();
-        // $("#workspace").empty ();
         //resizeStage ();
         var content = $("#sessiondata").attr ("topcuecontent");
         //console.log ("topcue: "+ content);
@@ -298,8 +284,6 @@ function removeSelectableStage () {
     $(".ui-resizable-handle").remove ();
     $("#csvtable")
     .removeClass ("ui-selectable").selectable ("destroy");
-    // $(".stage-element").removeClass("ui-selected highlight")
-    //   .removeClass ("ui-resizable ui-draggable ui-draggable-handle");
       
   }
 }
@@ -318,9 +302,6 @@ function selectableMobileElements () {
       selected: function( event, ui ) {
         if ($(ui.selected).hasClass('highlight')) {
           $(ui.selected).removeClass('highlight ui-selected');
-          // do unselected stuff
-          // $(".selectDiv").empty();
-          // $("#workspace").empty ();
           var content = $("#sessiondata").attr ("topcuecontent");
           //console.log ("topcue: "+ content);
           if (content == "false") {
@@ -332,8 +313,6 @@ function selectableMobileElements () {
       },
       unselected: function( e, ui ) {
         $( ui.unselected ).removeClass("highlight");
-        // $(".selectDiv").empty();
-        // $("#workspace").empty ();
         var content = $("#sessiondata").attr ("topcuecontent");
         //console.log ("topcue: "+ content);
         if (content == "false") {
@@ -346,15 +325,34 @@ function selectableMobileElements () {
 // --- Head-Slider erzeugen: -------------------------------------------------
 // für die Selektion Slider erzeugen: alle row_num's an Server schicken
 // dort für alle Attribute Sammel-Slider erzeugen und retournieren
-function selection_headslider (selection) {
-  var selectedHeads = "";
+
+var selectedHeads;
+
+function headsInSelection () {
+  // alle Headnummer einer Selektion in selectedHeads anfügen
+  var headnr;
+  var selected = $(".highlight.head");
+  //console.log ("selectablestop: "+ selected.length);
+  if (selected.length) {
+    $(selected).each (function () {
+      headnr = $(this).children (".itemName").text ().trim ();
+      selectedHeads  = selectedHeads + headnr + " " ;
+    });
+  };
+}
+
+function headsInSelectedGroups () {
+  // alle Headnummern der selektierten Gruppen 
+  var headnr;
+  $(".highlight.gruppe").each (function () {
+    headnr = $(this).children (".itemComment").text ().trim ();
+    selectedHeads  = selectedHeads + headnr + " " ;
+  })
+}
+
+function selection_headslider () {
+  // zu selectedHeads Attributslider erzeugen
   showSecondNav ();
-  // Headnr:
-  $(selection).each (function () {
-    headnr = $(this).children (".itemName").text ().trim ();
-    // console.log ("Head: " + headnr);
-    selectedHeads  = selectedHeads + " " + headnr;
-  });
   // console.log ("Selektion: " + selectedHeads);
   // Headfader vom Server holen:
   var args = {heads:selectedHeads};
@@ -365,11 +363,12 @@ function selection_headslider (selection) {
       // alert (jdata["table"]);
       $("#showModal").trigger ("click");
       $("#dialogModal").on ("shown.bs.modal", function () {
-      $(".selectDiv").html ("Selektion:" + selectedHeads);
-      $("#faderspace").html (jdata["table"]);
-        var heads   = jdata["heads"];
-        var attribs = jdata["attribs"];
-        var levels  = jdata["levels"];
+        var heads      = jdata["heads"];
+        var attribs    = jdata["attribs"];
+        var levels     = jdata["levels"];
+        var headstring = jdata["headstring"];
+        $(".selectDiv").html ("Selektion: " + headstring);
+        $("#faderspace").html (jdata["table"]);
         // console.log ("Levels: " +JSON.stringify (levels));
         for (var i=0; i < attribs.length; i++){
             makeCueAttribSlider (heads[i], attribs[i], 
@@ -405,10 +404,11 @@ $(document).ready ( function () {
   resizeStage ();
 
   $(".stage, .mob-stage").on ("selectablestop", function( ) { 
-    var selected = $(".highlight.head");
-    //console.log ("selectablestop: "+ selected.length);
-    if (selected.length) {
-      selection_headslider (selected);
+    selectedHeads = "";
+    headsInSelection ();
+    headsInSelectedGroups ();
+    if (selectedHeads.length) {
+      selection_headslider ();
     };
   });
   

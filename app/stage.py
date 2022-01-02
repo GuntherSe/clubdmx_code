@@ -91,6 +91,10 @@ def show(mode=""):
     - an stage.html übergeben und dort Seite rendern
     """
 
+    # selektierte Heads leeren
+    if "headstring" in session:
+        session.pop ("headstring", None)
+
     fullname = get_stage_filename ()
     csvfile = Csvfile (fullname)
     if csvfile.changed():
@@ -182,6 +186,14 @@ def headfader ():
         singleindexdict[current_user.username] = singleindex
         # print ("headindex:", singleindex)
     requestheads = hd.split ()
+    # Duplikate entfernen:
+    # siehe https://www.w3schools.com/python/python_howto_remove_duplicates.asp
+    requestheads = list (dict.fromkeys(requestheads))
+    requestheads = sorted (requestheads, key=natural_keys)
+    headstring = ""
+    for item in requestheads:
+        headstring = headstring + item + ' '
+    session["headstring"] = headstring
 
     ret = {}
     # Attribute und Levels pro Head abfragen
@@ -219,6 +231,7 @@ def headfader ():
     ret["attribs"] = retattribs
     ret["levels"]  = retlevels
     ret["heads"]   = retheadlist
+    ret["headstring"] = headstring
     ret["table"]   = render_template ("attribslider.html", 
                                     heads=retheadlist,
                                     attribs=retattribs,

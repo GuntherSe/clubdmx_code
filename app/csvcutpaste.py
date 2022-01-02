@@ -44,9 +44,7 @@ def selected_rows ():
     """
     rows   = request.form["rows"]
     rowlist = rows.split ()
-    # session["selected_rows"] = rowlist
     selectedrowdict[current_user.username] = rowlist
-    # print (f"Rows: {rowlist}")
     return "ok"
 
 
@@ -54,7 +52,7 @@ def selected_rows ():
 def remove_rows ():
     """ selektierte CSV-Zeilen löschen
 
-    Selektion ist in session['selected_rows'] gespeichert
+    Selektion ist in selectedrowdict gespeichert
     """
     fname = request.args.get ("name")
     fname = fname.replace ('+', os.sep)
@@ -65,10 +63,6 @@ def remove_rows ():
 
     # zu löschende Zeilen:
     rowlist = clipboarddata ()
-    # try:
-    #     rowlist = session["selected_rows"] # str
-    # except:
-    #     rowlist = ""
     if len (rowlist):
         lines = [] # int
         for item in rowlist:
@@ -92,11 +86,7 @@ def copy_to_clipboard ():
     """
     fname = request.args.get ("name")
     fname = fname.replace ('+', os.sep)
-    # option = request.args.get ("option")
     csvfile = Csvfile (fname)
-
-    # zu kopierende Zeilen:
-    # rowlist = session["selected_rows"] # str
     rowlist = clipboarddata ()
     if len (rowlist):
         lines = [] # int
@@ -141,7 +131,6 @@ def paste_clipboard ():
     # Backup:
     csvfile.backup ()
     rowlist = clipboarddata ()
-    # rowlist = session["selected_rows"]
     if len (rowlist):
         pos = int (rowlist[0])  # vor der ersten selektierten Zeile einfügen
     else:

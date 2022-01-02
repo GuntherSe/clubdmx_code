@@ -12,8 +12,6 @@ import globs
 import os
 import os.path
 
-# from flask import current_app as app
-
 from configclass  import Config
 from roomclass import Room
 #from csvnameclass import Csvname
