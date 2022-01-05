@@ -20,12 +20,12 @@ elements-overview
       <div class="card-body">
         <h5 class="card-title">Übersicht zu Bedienelementen</h5>
         <p class="card-text">
-          Bedienelemente sind die Stage, die Fader und die Buttons. 
+          Bedienelemente sind die Stage, die Fader, die Buttons und die Cueliste. 
           Auf der Stage sind die einzelnen Geräte zu bedienen. 
           Fader und Buttons bedienen Szenen (=Cues).
         </p>
         <p class="card-text">
-          Die Parametrierung der Fader und Buttons ist in einzelnen Dateien
+          Die Parametrierung der Bedienelemente ist in einzelnen Dateien
           gespeichert. Durch die Auswahl der Dateien wird festgelegt, welche
           Cues zur Bedienung zur Verfügung gestellt werden.
         </p>
@@ -66,6 +66,8 @@ elements-overview
               {{ render_bs_field (configform.cuebuttons )}} 
               {{ render_bs_field (configform.exefaders )}} 
               {{ render_bs_field (configform.cuefaders )}} 
+              {{ render_bs_field (configform.pages )}} 
+
               <h5 class="mt-3">Start-Optionen:</h5>
               {{ render_bs_field (configform.savecuelevels )}} 
               {{ render_bs_field (configform.start_with_cue )}} 

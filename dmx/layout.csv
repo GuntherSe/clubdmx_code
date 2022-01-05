@@ -20,12 +20,13 @@ cuebutton,Group,int,,0 10,0,,Auswahl-Gruppe,true
 cuebutton,Fadein,decimal,,>=0,3,,,true
 cuebutton,Fadeout,decimal,,>=0,3,,,true
 cuebutton,Midiinput,int,,0 4,0,0: kein Midi-Input,,
+cuebutton,Midioutput,int,,0 4,0,0: kein Midi-Output,,
 cuebutton,Midibutton,int,,,0,Buttonnummer,,
-cuebutton,Midimonitor,int,,,0,"wenn leer, dann Midibutton",,
 cuebutton,Level,disabled,,,0,,,
 cuefader,Text,text,,,,,,
 cuefader,Filename,file,cue,,,,,true
 cuefader,Midiinput,int,,0 4,0,0: kein Midi-Input,,
+cuefader,Midioutput,int,,0 4,0,0: kein Midi-Output,,
 cuefader,Midifader,int,,,0,Fadernummer,,
 cuefader,Level,disabled,,,0,,,
 stage,Name,text,,,,Headnr oder Name,,true
@@ -51,5 +52,6 @@ pages,Page,int,,,1,,,true
 pages,Text,text,,,,,,
 pages,Filename,file,cuelist,,,,,true
 pages,Midiinput,int,,0 4,0,0: kein Midi-Input,,
+pages,Midioutput,int,,0 4,0,0: kein Midi-Output,,
 pages,Midifader,int,,,0,Fadernummer,,
 pages,Level,disabled,,,0,,,

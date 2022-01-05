@@ -11,7 +11,7 @@ from flask_login import login_required
 # from cuebutton import Cuebutton
 
 from apputils import standarduser_required, admin_required, redirect_url
-from apputils import calc_mixoutput, press_cuebutton
+from apputils import calc_mixoutput, press_cuebutton, midifader_monitor
 
 import globs
 
@@ -229,6 +229,7 @@ def sliderlevel(index:int) -> str:
     if index in range (sliders):
         level = request.form["level"]
         globs.fadertable[index].level = float(level) / 255
+        # midifader_monitor (1+index, int (level)/2)
     return "ok"
 
 
@@ -244,6 +245,9 @@ def cuelistlevel(index:int) -> str:
     if index in range (sliders):
         level = request.form["level"]
         globs.cltable[index].level = float(level) / 255
+        if globs.PYTHONANYWHERE == "false" and globs.midiactive:
+            pass
+            # globs.MidiOutput.level ()
     return "ok"
 
 
@@ -253,7 +257,7 @@ def buttonpress () -> str:
     """ Cuebutton drücken """
     butt = request.args.get ("index") 
     index = int(butt)
-    press_cuebutton (index, 1)
+    press_cuebutton (index)
     return "ok"
 
 

@@ -36,12 +36,14 @@ def del_cuetables ():
 
 
 def del_midilists ():
-    """ globale midifaderlist und midibuttonlist leeren
+    """ globale midiin_faders und midiin_buttons leeren
     """
     if globs.PYTHONANYWHERE == "false":
         num_controllers = len (globs.midiin)
-        globs.midifaderlist  = [{} for i in range (num_controllers)]
-        globs.midibuttonlist = [{} for i in range (num_controllers)]    
+        globs.midiin_faders   = [{} for i in range (num_controllers)]
+        globs.midiin_buttons  = [{} for i in range (num_controllers)]    
+        globs.midiout_buttons = [{} for i in range (num_controllers)]
+        globs.midiout_faders  = [{} for i in range (num_controllers)]
 
 
 def check_levelrequest (with_savedlevels:bool) ->bool:
@@ -86,10 +88,10 @@ def make_fadertable (with_savedlevels:bool=False) :
 
     # für jeden Midicontroller ein dict mit den auszuwertenden
     # Midi-Aktionen anlegen:
-    # davor wurde bereits midifaderlist geleert!
+    # davor wurde bereits midiin_faders geleert!
     if globs.PYTHONANYWHERE == "false":
         num_controllers = len (globs.midiin)
-    #     globs.midifaderlist = [{} for i in range (num_controllers)]
+    #     globs.midiin_faders = [{} for i in range (num_controllers)]
 
     # sollen csv-gespeicherte Levels geladen werden?
     csvlevels_requested = check_levelrequest (with_savedlevels)
@@ -98,7 +100,7 @@ def make_fadertable (with_savedlevels:bool=False) :
         filename = globs.cfg.get(loc)
         fullname = os.path.join (globs.room.cuefaderpath() , filename)
         csvfile = Csvfile (fullname)
-        cuelist = csvfile.to_dictlist ()
+        content = csvfile.to_dictlist ()
         fieldnames = csvfile.fieldnames()
         try:
             fileindex = fieldnames.index ("Filename") 
@@ -113,25 +115,25 @@ def make_fadertable (with_savedlevels:bool=False) :
                 print (f"'Level' nicht in {filename}")
 
 
-        for count in range (len (cuelist)):
+        for count in range (len (content)):
             newcue = Cue (globs.patch)
             # globs.fadertable.append (newcue) # Konstruktor
             new_fadertable.append (newcue)
             fadernum = fadernum + 1 
-            filename = cuelist[count]["Filename"]
+            filename = content[count]["Filename"]
             if filename == "":
                 filename = "_neu"
             newcue.open (filename)
             newcue.location = loc
             newcue.id = loc + str (count)
-            newcue.text = cuelist[count]["Text"]
+            newcue.text = content[count]["Text"]
 
             # nun Midi-Requests einlesen:
             if globs.PYTHONANYWHERE == "false":
                 num_controllers = len (globs.midiin)
                 try:
-                    cnr = cuelist[count]["Midiinput"] # cnr:str ab 1 =ControllerNr
-                    fnr = cuelist[count]["Midifader"] # fnr:str ab 1 =FaderNr
+                    cnr = content[count]["Midiinput"] # cnr:str ab 1 =ControllerNr
+                    fnr = content[count]["Midifader"] # fnr:str ab 1 =FaderNr
                     # print (f"Midi-Controller:{cnr}, Fader:{fnr}")
                 except:
                     print ("Midi-Info nicht in cuefaders")
@@ -142,13 +144,22 @@ def make_fadertable (with_savedlevels:bool=False) :
                     cnr = int(cnr)-1
                     fnr = int(fnr)-1
                     if cnr in range(num_controllers):
-                        controller = globs.midifaderlist[cnr]
+                        controller = globs.midiin_faders[cnr]
                         controller[fnr] = fadernum - 1    #count
+                # MIDI-Monitor:
+                try:
+                    cnr = content[count]["Midioutput"] # cnr:str ab 1 =ControllerNr
+                    cnr = int (cnr)  - 1
+                except:
+                    print ("Midioutput nicht in cuebuttons")
+                    cnr = 0
+                if fnr != -1:
+                    globs.midiout_faders[cnr][fadernum-1] = fnr
         
             # nun Levels:    
             if csvlevels_requested:        
                 try:
-                    level = float (cuelist[count]["Level"])
+                    level = float (content[count]["Level"])
                 except: # Default 0.0
                     level = 0.0
                 newcue.level = level
@@ -171,25 +182,24 @@ def make_cuebuttons (with_savedlevels:bool=False):
         False: aktuelle Levels wiederherstellen
     """
     currentlevels = backup_currentlevels ("button") # aktuelle Level
-    # Cue.contrib.pause ()
 
     locations = button_locations
     # globs.buttontable.clear ()
     new_buttontable = []
 
-    # midibuttonlist wurde bereits geleert
+    # midiin_buttons wurde bereits geleert
     # if globs.PYTHONANYWHERE == "false":
     #     num_controllers = len (globs.midiin)
-    #     globs.midibuttonlist   = [{} for i in range (num_controllers)]    
+    #     globs.midiin_buttons   = [{} for i in range (num_controllers)]    
 
     # sollen csv-gespeicherte Levels geladen werden?
     csvlevels_requested = check_levelrequest (with_savedlevels)
-    butnum = 0    
+    butnum = 0    # zählt Buttons in allen locations
 
     for loc in locations:
         filename = globs.cfg.get (loc)
         csvfile = Csvfile (os.path.join (globs.room.cuebuttonpath(), filename))
-        cuelist = csvfile.to_dictlist ()
+        content = csvfile.to_dictlist ()
         fieldnames = csvfile.fieldnames()
         try: # nur zur Fehler-Ausgabe
             fileindex = fieldnames.index ("Filename") 
@@ -203,60 +213,86 @@ def make_cuebuttons (with_savedlevels:bool=False):
             except:
                 print (f"Feld 'Level' nicht in {filename}")
 
-        for count in range (len (cuelist)):
+        for count in range (len (content)):
             newbut = Cuebutton(globs.patch) # Konstruktor
             new_buttontable.append (newbut)
             butnum = butnum + 1
-            filename = cuelist[count]["Filename"]
+            filename = content[count]["Filename"]
             if filename == "":
                 filename = "_neu"
             newbut.open (filename)
             newbut.location = loc
             newbut.id = loc + str (count)
-            newbut.text = cuelist[count]["Text"]
+            newbut.text = content[count]["Text"]
 
             # Zeiten einlesen:
-            newbut.fade_in = float (cuelist[count]["Fadein"])
-            newbut.fade_out = float (cuelist[count]["Fadeout"])
+            newbut.fade_in = float (content[count]["Fadein"])
+            newbut.fade_out = float (content[count]["Fadeout"])
             # Type (Schalter, Taster, Auswahl) und Group einlesen:
-            newbut.type = cuelist[count]["Type"] 
-            newbut.group = int (cuelist[count]["Group"])
+            newbut.type = content[count]["Type"] 
+            newbut.group = int (content[count]["Group"])
 
             # nun Midi-Requests einlesen:
             if globs.PYTHONANYWHERE == "false":
                 num_controllers = len (globs.midiin)
-                try:
-                    cnr = cuelist[count]["Midiinput"] # cnr:str ab 1 =ControllerNr
-                    fnr = cuelist[count]["Midibutton"] # fnr:str ab 1 =FaderNr
-                    # mon = cuelist[count]["Midibutton"] # MIDI-monitor
-                    # print (f"Midi-Controller:{cnr}, Fader:{fnr}")
+                # input-Controller, Zählung ab 1:
+                try: 
+                    incnr = int (content[count]["Midiinput"])
+                    if not (1 <= incnr <= num_controllers):
+                        incnr = 0
                 except:
-                    print ("Midi-Info nicht in cuebuttons")
-                    cnr = -1
-                    fnr = -1
-                # cnr und fnr können '' sein:
-                if cnr and fnr:
-                    cnr = int(cnr)-1
-                    fnr = int(fnr)-1
-                    if cnr in range(num_controllers):
-                        controller = globs.midibuttonlist[cnr]
-                        controller[fnr] = butnum -1  #count
-                else:
-                    fnr = -1
-                # MIDI-Monitor:
-                try:
-                    # TODO noch nicht implementiert, in layout anlegen
-                    mon = cuelist[count]["Midimonitor"] # MIDI-monitor
+                    incnr = 0
+                # output-Controller, Zählung ab 1:
+                try: 
+                    outcnr = int (content[count]["Midioutput"])
+                    if not (1 <= outcnr <= num_controllers):
+                        outcnr = 0
                 except:
-                    # MIDI-monitor von button übernehmen
-                    mon = fnr 
-                if mon != -1:
-                    globs.midiout_table[butnum-1] = mon
+                    outcnr = 0
+                # MidiButton-Nummer, Zählung ab 1:
+                try: 
+                    butnr = int (content[count]["Midibutton"])
+                except:
+                    butnr = 0
+                # Midi-Input:
+                if incnr and butnr:
+                    globs.midiin_buttons[incnr-1][butnr-1] = butnum-1
+                # Midi-Output:
+                if outcnr and butnr:
+                    globs.midiout_buttons[outcnr-1][butnr-1] = butnum-1   
+
+                # try:
+                #     cnr = content[count]["Midiinput"] # cnr:str ab 1 =ControllerNr
+                #     fnr = content[count]["Midibutton"] # fnr:str ab 1 =FaderNr
+                #     # mon = content[count]["Midibutton"] # MIDI-monitor
+                #     # print (f"Midi-Controller:{cnr}, Fader:{fnr}")
+                # except:
+                #     print ("Midi-Info nicht in cuebuttons")
+                #     cnr = -1
+                #     fnr = -1
+                # # cnr und fnr können '' sein:
+                # if cnr and fnr:
+                #     cnr = int(cnr)-1
+                #     fnr = int(fnr)-1
+                #     if cnr in range(num_controllers):
+                #         controller = globs.midiin_buttons[cnr]
+                #         controller[fnr] = butnum -1  #count
+                # else:
+                #     fnr = -1
+                # # MIDI-Monitor:
+                # try:
+                #     cnr = content[count]["Midioutput"] # cnr:str ab 1 =ControllerNr
+                #     cnr = int (cnr)  - 1
+                # except:
+                #     print ("Midioutput nicht in cuebuttons")
+                #     cnr = 0
+                # if fnr != -1:
+                #     globs.midiout_buttons[cnr][butnum-1] = fnr
 
             # nun Levels:     
             if csvlevels_requested:
                 try:
-                    level = float (cuelist[count]["Level"])
+                    level = float (content[count]["Level"])
                 except: # Defaultwert eintragen
                     level = 0.0
                 newbut.level = level
@@ -337,8 +373,17 @@ def make_cuelistpages (with_savedlevels:bool=False) :
                 cnr = int(cnr)-1
                 fnr = int(fnr)-1
                 if cnr in range(num_controllers):
-                    controller = globs.midifaderlist[cnr]
+                    controller = globs.midiin_faders[cnr]
                     controller[fnr] = fadernum - 1    #count
+            # MIDI-Monitor:
+            try:
+                cnr = pagelist[count]["Midioutput"] # cnr:str ab 1 =ControllerNr
+                cnr = int (cnr)  - 1
+            except:
+                print ("Midioutput nicht in pages")
+                cnr = 0
+            if fnr != -1:
+                globs.midiout_faders[cnr][fadernum-1] = fnr
     
         # nun Levels:    
         if csvlevels_requested:        

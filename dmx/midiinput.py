@@ -79,9 +79,9 @@ class MidiInput (MidiDevice, threading.Thread):
                     self.buttons = mdev.midi_device_dict [self.name][1]
                     self.message (f"verwende {self.name}")
                 else:
-                    self.faders  = mdev.Kontrol2_faders
-                    self.buttons = mdev.Kontrol2_buttons
-                    self.message (f"verwende {self.name} mit nanoKONTROL-2 Settings")
+                    self.faders  = mdev.default_faders
+                    self.buttons = mdev.default_buttons
+                    self.message (f"verwende {self.name} mit 1:1 Zuordnung")
                 # buffer anlegen:
                 fadercount = len (self.faders)
                 self.fader_buffer = [0 for i in range (fadercount)]

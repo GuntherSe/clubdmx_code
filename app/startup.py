@@ -192,7 +192,7 @@ def load_config (with_savedlevels=False):
             globs.midiactive = True
             if MidiInput.paused:
                 MidiInput.resume ()
-            # MIDI-Input:
+            # MIDI-Input und -Output:
             for i in range (4): # max 4 Midi-Controller
                 num = str (1+i)
                 device = globs.cfg.get("midi_input_"+num)
@@ -203,8 +203,12 @@ def load_config (with_savedlevels=False):
                     devnum = -1 # kein Midi
                 globs.midiin[i].set_device (devnum)
             # MIDI-Output:
-            device = globs.cfg.get ("midi_output")
-            globs.midiout.set_device (int(device))
+                device = globs.cfg.get ("midi_output_"+num)
+                try:
+                    devnum = int(device)
+                except:
+                    devnum = -1 # kein Midi
+                globs.midiout[i].set_device (int(device))
         else:
             globs.midiactive = False
             if MidiInput.paused == False:

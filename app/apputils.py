@@ -135,10 +135,10 @@ def dbrestore (src:str) -> dict:
     return ret
 
 
-def press_cuebutton (index:int, direction:int) -> int:
+def press_cuebutton (index:int) -> int:
     """ cuebutton auf website oder midi drücken
+    
     index: button-Nummer ab 0
-    direction: 1 = press, 0 = release
     return: 1 = on, 0 = off
     """
     ret = 0
@@ -152,14 +152,14 @@ def press_cuebutton (index:int, direction:int) -> int:
                 for count in range (buttons):
                     item = globs.buttontable[count]
                     if item.type == "Auswahl" and item.group == buttongroup:
-                        midi_monitor (count, 0)
-            midi_monitor (index, ret)
+                        midibutton_monitor (count, 0)
+            midibutton_monitor (index, ret)
     return ret
 
 
 # --- MIDI Funktionen ---
 # nur importieren, wenn PYTHONANYWHERE == "false"
-def evaluate_midi (*data):
+def eval_midiinput (*data):
     """ midicontroller an requests schicken
     wird als output-Funktion für Midicontroller verwendet
     in Midicontroller.poll: self.output (index, type, cnt, self.fader_buffer[cnt
@@ -171,36 +171,46 @@ def evaluate_midi (*data):
     if not len (globs.fadertable): # beim Neu-Laden von config möglich
         return
     # index:int=data[0], type:str=data[1], fader:int=data[2], level:int=data[3]
-    if data[1]=="fader" and data[2] in globs.midifaderlist[data[0]]:
-        fader =  globs.midifaderlist[data[0]][data[2]]
+    if data[1]=="fader" and data[2] in globs.midiin_faders[data[0]]:
+        fader =  globs.midiin_faders[data[0]][data[2]]
         if fader < 1000:
             globs.fadertable[fader].level = data[3] / 127
         else:
             globs.cltable[fader-1000].level = data[3] / 127
     elif data[1]=="button":
         try:
-            index = globs.midibuttonlist[data[0]][data[2]]
+            index = globs.midiin_buttons[data[0]][data[2]]
             if data[3]: # nur 'drücken' auswerten, nicht 'loslassen'
-                press_cuebutton (index, 1)
-                # ret = globs.buttontable[index].go ()
-                # midi_monitor (index, ret)
-            else: # nur relevant, wenn Buttontype = Taster
+                press_cuebutton (index)
+            else: # nur relevant, wenn Buttontype == Taster
+                # dann auch Loslassen auswerten
                 if index in range (len (globs.buttontable)):
                     buttontype = globs.buttontable[index].type
                     if buttontype == "Taster":
-                        press_cuebutton (index, 0)
+                        press_cuebutton (index)
         except: # button nicht in requests
             pass
 
 
-def midi_monitor (button:int, status:int):
+def midibutton_monitor (button:int, status:int):
     """ Button-Status per LED am midioutput anzeigen """
-    if button in globs.midiout_table:
-        led = int (globs.midiout_table[button]) 
-        if status: # status == 1
-            globs.midiout.led_on (led)
-        else:
-            globs.midiout.led_off (led)
+    for i in range (len (globs.midiout_buttons)):
+        if button in globs.midiout_buttons[i]:
+            led = int (globs.midiout_buttons[i][button]) 
+            if status: # status == 1
+                globs.midiout[i].led_on (led)
+            else:
+                globs.midiout[i].led_off (led)
+
+def midifader_monitor (fader:int, level:int):
+    """ Faderlevel an Midioutput senden """
+    level = int (level)
+    if globs.PYTHONANYWHERE == "false" and globs.midiactive:
+        for i in range (len (globs.midiout_faders)):
+            if fader in globs.midiout_faders[i]:
+                num = int (globs.midiout_faders[i][fader]) 
+                globs.midiout[i].level (num, level)
+
 
 
 def calc_mixoutput ():

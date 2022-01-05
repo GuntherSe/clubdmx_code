@@ -16,6 +16,9 @@ MODE_4 = 3
 # MAXFADERS = 20  # Maximale Anzahl der Fader
 NO_MIDI_DEVICE = "kein MIDI"
 
+default_faders = {i:i for i in range (127)}
+default_buttons = [i for i in range (127)]
+
 # Controller-Werte von NanoKONTROL:
 Kontrol_faders = [{
   # mode 1, sliders

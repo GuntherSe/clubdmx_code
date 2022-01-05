@@ -13,7 +13,6 @@ from cuebutton import Cuebutton
 from ola import get_ip_address
 
 from apputils import standarduser_required #, admin_required, redirect_url
-# from apputils import calc_mixoutput, press_cuebutton
 from common_views import check_clipboard
 from filedialog_util import list_dir
 

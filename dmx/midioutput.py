@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-""" MIDI Output """
+""" Klassen MidiDevice und MidiOutput """
 
 import pygame
 import pygame.midi
@@ -117,7 +117,10 @@ class MidiOutput (MidiDevice):
 
     def __init__ (self):
         MidiDevice.__init__ (self)
-        self.buttons = {}
+        # Dict der buttons und fader
+        # key = controller, val = Button-Nummer
+        self.buttons = {} 
+        self.faders = {}  
 
     def __del__ (self):
         try:
@@ -134,10 +137,13 @@ class MidiOutput (MidiDevice):
             if ret["status"] == "frei":
                 if self.name in mdev.midi_device_dict:
                     self.buttons = mdev.midi_device_dict [self.name][1]
+                    self.faders  = mdev.midi_device_dict [self.name][0]
                     # self.message (f"verwende {self.name}")
                 else:
-                    self.buttons = mdev.Kontrol2_buttons
+                    self.buttons = mdev.default_buttons
+                    self.faders  = mdev.default_faders
                     # self.message (f"verwende {self.name} mit nanoKONTROL-2 Settings")
+                
         else:
             ret = MidiDevice.set_device (self, -1)
         return ret
@@ -163,6 +169,15 @@ class MidiOutput (MidiDevice):
         # device = 0xb0 + self.device_id
         self.midi_device.write_short (0xb0, self.buttons[lednum], 0)
 
+    def level (self, num:int, lev:int):
+        """ Level an Fader-Monitor schicken 
+        """
+        if not self.midi_device:
+            return
+        if isinstance (num, str):
+            num = int (num)
+        if 0 < num <= len (self.faders):
+            self.midi_device.write_short (0xb0, self.faders[num], lev)
 
     
 # --- Test -------------------------------------------------------------------

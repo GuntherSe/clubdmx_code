@@ -1,7 +1,7 @@
 {# Config-Tab #}
 
 {% macro _help_id() -%}
-config-overview
+midi-overview
 {%- endmacro %}
 
 <div class="container-fluid">
@@ -66,7 +66,10 @@ config-overview
             {{ render_bs_field (configform.midi_input_2 )}} 
             {{ render_bs_field (configform.midi_input_3 )}} 
             {{ render_bs_field (configform.midi_input_4 )}} 
-            {{ render_bs_field (configform.midi_output )}} 
+            {{ render_bs_field (configform.midi_output_1 )}} 
+            {{ render_bs_field (configform.midi_output_2 )}} 
+            {{ render_bs_field (configform.midi_output_3 )}} 
+            {{ render_bs_field (configform.midi_output_4 )}} 
           </div>
           {% else %}
           <div id="formBody" class="form-body">

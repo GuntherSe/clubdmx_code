@@ -178,7 +178,7 @@ class Roombase:
         if self.PATH != self.codepath: # codepath nicht umbenennen
             # cwd = os.getcwd()
             # path, src = os.path.split (self.PATH)    
-            dst = os.path.join (self.rootpath, newname)
+            dst = os.path.join (self.rootpath(), newname)
             if os.path.isdir (dst): # existiert bereits
                 ret["category"]="danger"
                 ret["message"] = f"Raum existiert bereits: {newname}"

@@ -43,7 +43,7 @@ def config ():
         for elem in mididevices:
             midiin_choices.append ((str(elem[0]), elem[1])) # Namen
 
-        midioutdevices = globs.midiout.list_devices ("output")
+        midioutdevices = globs.midiout[0].list_devices ("output")
         midiout_choices = [("-1", "kein Midi-Output")]
         for elem in midioutdevices:
             midiout_choices.append ((str (elem[0]), elem[1])) # Namen
@@ -53,22 +53,28 @@ def config ():
                         default=cur["patch"])
         ola_ip       = StringField  ("OLA-Adresse", default=cur["ola_ip"])
         universes    = IntegerField ("Universes", default=cur["universes"])
-        pages        = SelectField ("Cuelist-Pages", choices=pages_choices,
+        pages        = SelectField ("Cuelist-Tabelle", choices=pages_choices,
                         default=cur["pages"])
     
         if globs.PYTHONANYWHERE == "false":
             midi_on      = SelectField ("Midi ein/aus", choices=onoff_choices,
                             default=cur["midi_on"])
-            midi_input_1 = SelectField ("Midi Gerät 1", choices=midiin_choices,
+            midi_input_1 = SelectField ("Midi Input 1", choices=midiin_choices,
                             default=cur["midi_input_1"])
-            midi_input_2 = SelectField ("Midi Gerät 2", choices=midiin_choices,
+            midi_input_2 = SelectField ("Midi Input 2", choices=midiin_choices,
                             default=cur["midi_input_2"])
-            midi_input_3 = SelectField ("Midi Gerät 3", choices=midiin_choices,
+            midi_input_3 = SelectField ("Midi Input 3", choices=midiin_choices,
                             default=cur["midi_input_3"])
-            midi_input_4 = SelectField ("Midi Gerät 4", choices=midiin_choices,
+            midi_input_4 = SelectField ("Midi Input 4", choices=midiin_choices,
                             default=cur["midi_input_4"])
-            midi_output  = SelectField ("Midi Output", choices=midiout_choices,
-                            default=cur["midi_output"])
+            midi_output_1  = SelectField ("Midi Output 1", choices=midiout_choices,
+                            default=cur["midi_output_1"])
+            midi_output_2  = SelectField ("Midi Output 2", choices=midiout_choices,
+                            default=cur["midi_output_2"])
+            midi_output_3  = SelectField ("Midi Output 3", choices=midiout_choices,
+                            default=cur["midi_output_3"])
+            midi_output_4  = SelectField ("Midi Output 4", choices=midiout_choices,
+                            default=cur["midi_output_4"])
             osc_input    = SelectField ("OSC Input ein/aus", choices=onoff_choices,
                             default=cur["osc_input"])
             osc_inputport = IntegerField ("OSC Input Port", 

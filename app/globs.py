@@ -53,7 +53,7 @@ if PYTHONANYWHERE == "false":
     from midiinput import MidiInput
     from midioutput import MidiOutput
     from oscinput import OscInput
-    from apputils import evaluate_midi, evaluate_osc
+    from apputils import eval_midiinput, evaluate_osc
 
 
     midiactive      = False   
@@ -62,14 +62,15 @@ if PYTHONANYWHERE == "false":
     midiin = [MidiInput (index=i) for i in range (4)]  
     # die von den Controllern zu beschickenden Empfänger.
     # nur diese Midi-Aktionen werden weiterverarbeitet:
-    midifaderlist    = [{} for i in range (4)]              
-    midibuttonlist   = [{} for i in range (4)]         
+    midiin_faders    = [{} for i in range (4)]              
+    midiin_buttons   = [{} for i in range (4)]         
 
-    midiout = MidiOutput ()  
-    midiout_table = {}
+    midiout = [MidiOutput () for i in range (4)]
+    midiout_buttons = [{} for i in range (4)]
+    midiout_faders = [{} for i in range (4)]
 
     for i in range (4):
-        midiin[i].set_eval_function (evaluate_midi)
+        midiin[i].set_eval_function (eval_midiinput)
 
     oscinput = OscInput ()
     oscinput.set_eval_function (evaluate_osc)
