@@ -229,6 +229,8 @@ def sliderlevel(index:int) -> str:
     if index in range (sliders):
         level = request.form["level"]
         globs.fadertable[index].level = float(level) / 255
+        if globs.PYTHONANYWHERE == "false" and globs.midiactive:
+            midifader_monitor ("cuefader", index, int(int(level)/2))
         # midifader_monitor (1+index, int (level)/2)
     return "ok"
 
@@ -246,7 +248,7 @@ def cuelistlevel(index:int) -> str:
         level = request.form["level"]
         globs.cltable[index].level = float(level) / 255
         if globs.PYTHONANYWHERE == "false" and globs.midiactive:
-            pass
+            midifader_monitor ("cuelist", index, int(int(level)/2))
             # globs.MidiOutput.level ()
     return "ok"
 

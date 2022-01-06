@@ -48,6 +48,7 @@ class MidiDevice ():
         for count in range (device_count):
             xy = pygame.midi.get_device_info(count)
             name = xy[1].decode()
+            description = name +  f" ({count})"
 
             if xy[2] == 1: # input device
                 in_out = "input"
@@ -60,7 +61,7 @@ class MidiDevice ():
                     except:
                         stat = "verwendet"
                 if mode == "all" or mode == "input":
-                    devs.append ((count, name, in_out, stat))
+                    devs.append ((count, name, in_out, stat, description))
 
             elif xy[3] == 1:
                 in_out = "output"
@@ -69,7 +70,7 @@ class MidiDevice ():
                 else:
                     stat = "frei"
                 if mode == "all" or mode == "output":
-                    devs.append ((count, name, in_out, stat))
+                    devs.append ((count, name, in_out, stat, description))
 
             else:
                 in_out = "?"

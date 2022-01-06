@@ -41,12 +41,12 @@ def config ():
         mididevices = globs.midiin[0].list_devices ("input")
         midiin_choices = [("-1", "kein Midi-Input")]
         for elem in mididevices:
-            midiin_choices.append ((str(elem[0]), elem[1])) # Namen
+            midiin_choices.append ((str(elem[0]), elem[4])) # Namen
 
         midioutdevices = globs.midiout[0].list_devices ("output")
         midiout_choices = [("-1", "kein Midi-Output")]
         for elem in midioutdevices:
-            midiout_choices.append ((str (elem[0]), elem[1])) # Namen
+            midiout_choices.append ((str (elem[0]), elem[4])) # Namen
 
     class Configform (Form):
         patch        = SelectField ("Patch", choices=patch_choices,

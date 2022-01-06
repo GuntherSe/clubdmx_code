@@ -27,7 +27,7 @@ basedir = os.path.dirname(thispath)
 # aktuell: /clubdmx_code
 
 ALLOWED_EXTENSIONS = set(['txt', 'csv', 'ccsv', 'zip'])
-
+SHIFT = 1000 # für Fadertabellen zur Untrscheidung, siehe startup_func.py
 
 # Globale Objekte:
 cfgbase         = Config (os.path.join(basedir, ".app"))  
@@ -66,8 +66,8 @@ if PYTHONANYWHERE == "false":
     midiin_buttons   = [{} for i in range (4)]         
 
     midiout = [MidiOutput () for i in range (4)]
-    midiout_buttons = [{} for i in range (4)]
-    midiout_faders = [{} for i in range (4)]
+    midiout_buttons = [[] for i in range (4)]
+    midiout_faders = [[] for i in range (4)]
 
     for i in range (4):
         midiin[i].set_eval_function (eval_midiinput)

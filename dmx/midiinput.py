@@ -99,12 +99,13 @@ class MidiInput (MidiDevice, threading.Thread):
         if self.midi_device and self.device_id != -1:
             if self.midi_device.poll():
                 msg = self.midi_device.read(100) # mehrere messages einlesen, sonst träge
+                # print (msg)
                 msglen = len(msg) # anzahl midi-messages
                 for cnt in range (msglen):
                     controller = msg[cnt][0][1]
                     value = msg[cnt][0][2]
                     if controller in self.faders: # fader gefunden
-                        fader = self.faders[controller]
+                        fader = self.faders.index (controller)
                         if value != self.fader_buffer[fader]:
                             self.fader_buffer[fader] = value
                             self.fader_update[fader] = 1

@@ -138,7 +138,9 @@ def dbrestore (src:str) -> dict:
 def press_cuebutton (index:int) -> int:
     """ cuebutton auf website oder midi drücken
     
+    controller: Midi-Controller Nummer ab 0
     index: button-Nummer ab 0
+           (das ist auch der index in globs.buttontable.instances)
     return: 1 = on, 0 = off
     """
     ret = 0
@@ -173,10 +175,12 @@ def eval_midiinput (*data):
     # index:int=data[0], type:str=data[1], fader:int=data[2], level:int=data[3]
     if data[1]=="fader" and data[2] in globs.midiin_faders[data[0]]:
         fader =  globs.midiin_faders[data[0]][data[2]]
-        if fader < 1000:
+        if fader < globs.SHIFT:
             globs.fadertable[fader].level = data[3] / 127
+            midifader_monitor ("cuefader", fader ,data[3])
         else:
-            globs.cltable[fader-1000].level = data[3] / 127
+            globs.cltable[fader-globs.SHIFT].level = data[3] / 127
+            midifader_monitor ("cuelist", fader-globs.SHIFT ,data[3])
     elif data[1]=="button":
         try:
             index = globs.midiin_buttons[data[0]][data[2]]
@@ -192,25 +196,36 @@ def eval_midiinput (*data):
             pass
 
 
-def midibutton_monitor (button:int, status:int):
-    """ Button-Status per LED am midioutput anzeigen """
-    for i in range (len (globs.midiout_buttons)):
-        if button in globs.midiout_buttons[i]:
-            led = int (globs.midiout_buttons[i][button]) 
-            if status: # status == 1
-                globs.midiout[i].led_on (led)
-            else:
-                globs.midiout[i].led_off (led)
+def midibutton_monitor (index:int, status:int):
+    """ Button-Status per LED am midioutput anzeigen 
 
-def midifader_monitor (fader:int, level:int):
-    """ Faderlevel an Midioutput senden """
-    level = int (level)
-    if globs.PYTHONANYWHERE == "false" and globs.midiactive:
-        for i in range (len (globs.midiout_faders)):
-            if fader in globs.midiout_faders[i]:
-                num = int (globs.midiout_faders[i][fader]) 
-                globs.midiout[i].level (num, level)
+    index: index in globs.buttontable
+    status 0 oder 1
+    """
+    outnum = globs.buttontable[index].midioutput
+    button = globs.buttontable[index].midicontroller
+    if outnum != -1 and  button != -1 :
+        # led = int (globs.midiout_buttons[controller].index (button)) 
+        if status: # status == 1
+            globs.midiout[outnum].led_on (button)
+        else:
+            globs.midiout[outnum].led_off (button)
 
+
+def midifader_monitor (table: str, index:int, level:int):
+    """ Faderlevel an Midioutput senden 
+    
+    table: 'cuefader' oder 'cuelist'
+    index: index in der betreffenden Tabelle
+    level: Wert zwischen 0 und 127
+    """
+    if table == "cuefader":
+        outnum = globs.fadertable[index].midioutput
+        controller = globs.fadertable[index].midicontroller
+    elif table == "cuelist":
+        outnum = globs.cltable[index].midioutput
+        controller = globs.cltable[index].midicontroller
+    globs.midiout[outnum].level (controller, level)
 
 
 def calc_mixoutput ():

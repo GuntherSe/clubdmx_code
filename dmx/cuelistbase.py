@@ -371,6 +371,25 @@ class Cuelistbase ():
 
     id = property(__get_id, __set_id)
 
+# --- midioutput Property: ---------------------------------------------------
+    def __set_midioutput (self, newval):
+        self.outcue.midioutput = newval
+
+    def __get_midioutput (self):
+        return self.outcue.midioutput
+
+    midioutput = property(__get_midioutput, __set_midioutput)
+
+# --- midicontroller Property: ----------------------------------------------
+    def __set_midictl (self, newval):
+        self.outcue.midicontroller = newval
+
+    def __get_midictl (self):
+        return self.outcue.midicontroller
+
+    midicontroller = property(__get_midictl, __set_midictl)
+
+
 # --- Test -----------------------------------------------------------------
 if __name__ == "__main__":
     """ Test Cuelist:

@@ -60,6 +60,9 @@ class Cue ():
         self.id       = ""  # = location + Zeilennummer (ab 0) in 
                             # CSV-Datei der Cue-Gruppe
                             # wird bei startup erzeugt
+        self.midioutput = -1     # Midioutput, an den Status geschickt wird
+        self.midicontroller = -1 # Midicontroller, an den Status geschickt wird
+        
 
     def __del__ (self):
         self.rem_cuemix ()
