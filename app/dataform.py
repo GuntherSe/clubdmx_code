@@ -38,12 +38,12 @@ def config ():
     pages_choices = dir_choices ("pages")
 
     if globs.PYTHONANYWHERE == "false":
-        mididevices = globs.midiin[0].list_devices ("input")
+        mididevices = globs.midi.list_devices ("input")
         midiin_choices = [("-1", "kein Midi-Input")]
         for elem in mididevices:
             midiin_choices.append ((str(elem[0]), elem[4])) # Namen
 
-        midioutdevices = globs.midiout[0].list_devices ("output")
+        midioutdevices = globs.midi.list_devices ("output")
         midiout_choices = [("-1", "kein Midi-Output")]
         for elem in midioutdevices:
             midiout_choices.append ((str (elem[0]), elem[4])) # Namen

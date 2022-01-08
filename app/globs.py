@@ -50,27 +50,30 @@ else:
 # --- MIDI und OSC-Input ----------------------------------------------------
 
 if PYTHONANYWHERE == "false":
-    from midiinput import MidiInput
-    from midioutput import MidiOutput
+    from midiinput import Midi
+    # from midioutput import MidiOutput
     from oscinput import OscInput
     from apputils import eval_midiinput, evaluate_osc
 
 
     midiactive      = False   
 
-    # Liste der zugeordneten Midi-Controller:
-    midiin = [MidiInput (index=i) for i in range (4)]  
-    # die von den Controllern zu beschickenden Empfänger.
-    # nur diese Midi-Aktionen werden weiterverarbeitet:
-    midiin_faders    = [{} for i in range (4)]              
-    midiin_buttons   = [{} for i in range (4)]         
+    # # Liste der zugeordneten Midi-Controller:
+    # midiin = [MidiInput (index=i) for i in range (4)]  
+    # # die von den Controllern zu beschickenden Empfänger.
+    # # nur diese Midi-Aktionen werden weiterverarbeitet:
+    # midiin_faders    = [{} for i in range (4)]              
+    # midiin_buttons   = [{} for i in range (4)]         
 
-    midiout = [MidiOutput () for i in range (4)]
-    midiout_buttons = [[] for i in range (4)]
-    midiout_faders = [[] for i in range (4)]
+    # midiout = [MidiOutput () for i in range (4)]
+    # midiout_buttons = [[] for i in range (4)]
+    # midiout_faders = [[] for i in range (4)]
 
-    for i in range (4):
-        midiin[i].set_eval_function (eval_midiinput)
+    # for i in range (4):
+    #     midiin[i].set_eval_function (eval_midiinput)
+
+    midi = Midi ()
+    midi.set_eval_function (eval_midiinput)
 
     oscinput = OscInput ()
     oscinput.set_eval_function (evaluate_osc)

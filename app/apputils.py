@@ -24,7 +24,7 @@ import mount as mount
 
 from functools import wraps
 from flask_login import current_user
-from flask import flash, redirect, url_for, request
+from flask import flash, redirect, url_for, request, session
 from startup_levels import button_locations, fader_locations
 
 # --- Redirect back Funktion -------------------------------------
@@ -173,27 +173,24 @@ def eval_midiinput (*data):
     if not len (globs.fadertable): # beim Neu-Laden von config möglich
         return
     # index:int=data[0], type:str=data[1], fader:int=data[2], level:int=data[3]
-    if data[1]=="fader" and data[2] in globs.midiin_faders[data[0]]:
-        fader =  globs.midiin_faders[data[0]][data[2]]
+    if data[1]=="fader" and data[2] in globs.midi.in_faders[data[0]]:
+        fader =  globs.midi.in_faders[data[0]][data[2]]
         if fader < globs.SHIFT:
             globs.fadertable[fader].level = data[3] / 127
             midifader_monitor ("cuefader", fader ,data[3])
         else:
             globs.cltable[fader-globs.SHIFT].level = data[3] / 127
             midifader_monitor ("cuelist", fader-globs.SHIFT ,data[3])
-    elif data[1]=="button":
-        try:
-            index = globs.midiin_buttons[data[0]][data[2]]
-            if data[3]: # nur 'drücken' auswerten, nicht 'loslassen'
-                press_cuebutton (index)
-            else: # nur relevant, wenn Buttontype == Taster
-                # dann auch Loslassen auswerten
-                if index in range (len (globs.buttontable)):
-                    buttontype = globs.buttontable[index].type
-                    if buttontype == "Taster":
-                        press_cuebutton (index)
-        except: # button nicht in requests
-            pass
+    elif data[1]=="button" and data[2] in globs.midi.in_buttons[data[0]]:
+        index = globs.midi.in_buttons[data[0]][data[2]]
+        if data[3]: # nur 'drücken' auswerten, nicht 'loslassen'
+            press_cuebutton (index)
+        else: # nur relevant, wenn Buttontype == Taster
+            # dann auch Loslassen auswerten
+            if index in range (len (globs.buttontable)):
+                buttontype = globs.buttontable[index].type
+                if buttontype == "Taster":
+                    press_cuebutton (index)
 
 
 def midibutton_monitor (index:int, status:int):
@@ -207,9 +204,9 @@ def midibutton_monitor (index:int, status:int):
     if outnum != -1 and  button != -1 :
         # led = int (globs.midiout_buttons[controller].index (button)) 
         if status: # status == 1
-            globs.midiout[outnum].led_on (button)
+            globs.midi.led_on (outnum, button)
         else:
-            globs.midiout[outnum].led_off (button)
+            globs.midi.led_off (outnum, button)
 
 
 def midifader_monitor (table: str, index:int, level:int):
@@ -225,7 +222,8 @@ def midifader_monitor (table: str, index:int, level:int):
     elif table == "cuelist":
         outnum = globs.cltable[index].midioutput
         controller = globs.cltable[index].midicontroller
-    globs.midiout[outnum].level (controller, level)
+    globs.midi.level (outnum, controller, level)
+    # globs.midi.out_devices[outnum].level (controller, level)
 
 
 def calc_mixoutput ():
@@ -281,6 +279,7 @@ def evaluate_osc (address, *arg):
         elif address == "/clear":
             # topcue clear
             globs.topcue.clear()
+            session.pop ("topcuecontent", None)
         elif address == "/go":
             # args: cuelist-Nr in Pages-Seite [, next cue ]
             try:
@@ -291,7 +290,7 @@ def evaluate_osc (address, *arg):
             cl = search_for (id, globs.cltable)
             if cl:
                 if len (args) == 1:
-                    print (f"go: {num}")
+                    # print (f"go: {num}")
                     cl.go ()
                 elif len (args) >= 2: # args > 2 ignorieren
                     # print (f"go: {num}, next = {args[1]}")

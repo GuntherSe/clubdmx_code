@@ -18,12 +18,12 @@ from roomclass import Room
 from csvfileclass import Csvfile
 from cue import Cue
 from cuelist import Cuelist
-from startup_func import del_cuetables, del_midilists
+from startup_func import del_cuetables
 from startup_func import make_cuebuttons, make_fadertable, make_cuelistpages
 from startup_levels import activate_startcue
 
 if os.environ.get ("PYTHONANYWHERE")  != "true":
-    from midiinput import MidiInput
+    from midiinput import Midi
 
 current_room = ""
 
@@ -190,8 +190,8 @@ def load_config (with_savedlevels=False):
         cfgdata = globs.cfg.get ("midi_on") 
         if cfgdata == "1": 
             globs.midiactive = True
-            if MidiInput.paused:
-                MidiInput.resume ()
+            if Midi.paused:
+                Midi.resume ()
             # MIDI-Input und -Output:
             for i in range (4): # max 4 Midi-Controller
                 num = str (1+i)
@@ -201,18 +201,18 @@ def load_config (with_savedlevels=False):
                     devnum = int(device)
                 except:
                     devnum = -1 # kein Midi
-                globs.midiin[i].set_device (devnum)
+                globs.midi.set_indevice (i, devnum)
             # MIDI-Output:
                 device = globs.cfg.get ("midi_output_"+num)
                 try:
                     devnum = int(device)
                 except:
                     devnum = -1 # kein Midi
-                globs.midiout[i].set_device (int(device))
+                globs.midi.set_outdevice (i, int(device))
         else:
             globs.midiactive = False
-            if MidiInput.paused == False:
-                MidiInput.pause ()
+            if Midi.paused == False:
+                Midi.pause ()
     # OSC Input:
         cfgdata = globs.cfg.get ("osc_input")
         if cfgdata == "1":
@@ -235,7 +235,8 @@ def load_config (with_savedlevels=False):
         # suchen und Auswerten des Startcues erst nachdem
         # die Fadertabelle erzeugt ist.
 
-    del_midilists ()
+    # del_midilists ()
+    globs.midi.clear_lists ()
     make_fadertable (with_savedlevels=with_savedlevels)
     make_cuebuttons (with_savedlevels=with_savedlevels)
     make_cuelistpages (with_savedlevels=with_savedlevels)

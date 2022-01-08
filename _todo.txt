@@ -3,6 +3,11 @@
    - editierbar machen
    - clear Button über MIDI
 
+-- Midi:
+   - 4 in und 4 out Geräte ok 0.99
+   - nur 1 Midi-Instanz ok 0.99
+   - Buttons: clear Topcue, Cuelist GO, Pause, next, prev
+
 -- Cuelist: 
    - OSC Kommando abschicken
    - Page Editor ok 0.98

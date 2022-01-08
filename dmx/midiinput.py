@@ -9,29 +9,31 @@ import threading
 import time
 
 import midi_devices as mdev
-from midioutput import MidiDevice
+from midioutput import MidiDevice, MidiOutput
 
-class MidiInput (MidiDevice, threading.Thread):
-    """ Midi-Input 
+TEST = False
+
+class Midi (MidiOutput, threading.Thread):
+    """ class Midi 
+
     Evaluierung als Thread ausführen 
     """
 
     paused = False
     pause_cond = threading.Condition (threading.Lock ())
 
-    def __init__ (self, index:int=0):
+    def __init__ (self):
         threading.Thread.__init__ (self, target=self.run)
-        MidiDevice.__init__ (self)
+        MidiOutput.__init__ (self)
 
         self.setDaemon (True)
 
-        self.index  = index # für die Eval-Funktion als Erkennung
+        # self.index  = index # für die Eval-Funktion als Erkennung
         self.eval = print   # Auswertung des Midi-Inputs
-        self.faders = {}
-        self.buttons = {}
-        # Liste der Midi-Fader timestamps:
-        self.fader_buffer  = []
-        self.fader_update  = []
+
+        self.in_devices = [MidiDevice() for i in range (4)] # verwendete Geräte
+        self.in_buttons = [{} for i in range (4)] # verwendete Buttons
+        self.in_faders = [{} for i in range (4)] # verwendete Fader
 
         # Thread starten:
         self.start ()
@@ -41,9 +43,9 @@ class MidiInput (MidiDevice, threading.Thread):
         """ thread starten 
         """
         while True:
-            with MidiInput.pause_cond:
-                while MidiInput.paused:
-                    MidiInput.pause_cond.wait ()
+            with Midi.pause_cond:
+                while Midi.paused:
+                    Midi.pause_cond.wait ()
 
                 self.receive_midi ()
             time.sleep (0.02)
@@ -68,26 +70,54 @@ class MidiInput (MidiDevice, threading.Thread):
         """ Eval-Funktion zuweisen """
         self.eval = newfunc
 
-    def set_device (self, num:int) ->str:
-        devlist = self.list_devices("input")
-        devnums = [dev[0] for dev in devlist]
-        if num in devnums: # input Gerät
-            ret = MidiDevice.set_device (self, num)
-            if ret["status"] == "frei":
-                if self.name in mdev.midi_device_dict:
-                    self.faders  = mdev.midi_device_dict [self.name][0]
-                    self.buttons = mdev.midi_device_dict [self.name][1]
-                    self.message (f"verwende {self.name}")
-                else:
-                    self.faders  = mdev.default_faders
-                    self.buttons = mdev.default_buttons
-                    self.message (f"verwende {self.name} mit 1:1 Zuordnung")
-                # buffer anlegen:
-                fadercount = len (self.faders)
-                self.fader_buffer = [0 for i in range (fadercount)]
-                self.fader_update = [0 for i in range (fadercount)]
+    def clear (self, pos:int):
+        """ self.in_devices[pos] zurücksetzen
+        """
+        if 0 <= pos < 4:
+            self.in_devices[pos].clear ()
         else:
-            ret = MidiDevice.set_device (self, -1)
+            return f"{pos} nicht gültig."
+
+
+    def clear_lists (self):
+        """ Listen der verwendeten Fader und Buttons leeren 
+        """
+        self.in_buttons = [{} for i in range (4)] # verwendete Buttons
+        self.in_faders = [{} for i in range (4)] # verwendete Fader
+        self.out_buttons = [[] for i in range (4)] # verwendete Buttons
+        self.out_faders = [[] for i in range (4)] # verwendete Fader
+
+
+    def set_indevice (self, pos:int, num:int) ->str:
+        """ Midigerät zuweisen
+        
+        pos: Position in self.out_devices, 0 <= pos < 4
+        num: Devicenummer neu oder ändern
+        """
+        if 0 <= pos < 4:
+            newdev = self.in_devices[pos] # MidiDevice 
+        else:
+            return f"{pos} nicht gültig."
+
+        if self.check_devicenum (num, "all"):
+            # midi_device bereits zugewiesen:
+            if newdev.device_id == num: # keine Änderung
+                return {"keine Änderung."}
+
+            if newdev.midi_device: # midi_device vorhanden
+                newdev.clear ()
+
+            devlist = self.check_devicenum (num, "input")
+            if devlist: # input Gerät
+                ret = newdev.set_device (devlist, num)
+                # buffer anlegen:
+                fadercount = len (newdev.faders)
+                newdev.fader_buffer = [0 for i in range (fadercount)]
+                newdev.fader_update = [0 for i in range (fadercount)]
+
+        else:
+            self.clear (pos)
+            ret = "Fehler beim Zuordnen von Midi-Device"
         return ret
 
 
@@ -95,35 +125,38 @@ class MidiInput (MidiDevice, threading.Thread):
         """ midi-input mittels eval weiterverarbeiten
         eval: print oder andere eval-Funktion
         """
+        for i in range (len (self.in_devices)): # alle MidiInputs
+            device = self.in_devices[i]
 
-        if self.midi_device and self.device_id != -1:
-            if self.midi_device.poll():
-                msg = self.midi_device.read(100) # mehrere messages einlesen, sonst träge
-                # print (msg)
-                msglen = len(msg) # anzahl midi-messages
-                for cnt in range (msglen):
-                    controller = msg[cnt][0][1]
-                    value = msg[cnt][0][2]
-                    if controller in self.faders: # fader gefunden
-                        fader = self.faders.index (controller)
-                        if value != self.fader_buffer[fader]:
-                            self.fader_buffer[fader] = value
-                            self.fader_update[fader] = 1
-                    elif controller in self.buttons: # button
-                        button = self.buttons.index(controller)
-                        self.eval (self.index, "button", button, value)
-                        # print (button, value)
-                    else:
-                        print ("NanoKontrol: Szene 1 aktiv?")
-                for cnt in range (len(self.fader_update)):
-                    if self.fader_update[cnt] == 1:
-                        self.fader_update[cnt] = 0
-                        self.eval (self.index, "fader", cnt, self.fader_buffer[cnt])
+            if device.midi_device and device.device_id != -1:
+                if device.midi_device.poll():
+                    msg = device.midi_device.read(100) # mehrere messages einlesen, sonst träge
+                    if TEST:
+                        print (msg)
+                    msglen = len(msg) # anzahl midi-messages
+                    for cnt in range (msglen):
+                        controller = msg[cnt][0][1]
+                        value = msg[cnt][0][2]
+                        if controller in device.faders: # fader gefunden
+                            fader = device.faders.index (controller)
+                            if value != device.fader_buffer[fader]:
+                                device.fader_buffer[fader] = value
+                                device.fader_update[fader] = 1
+                        elif controller in device.buttons: # button
+                            button = device.buttons.index(controller)
+                            self.eval (i, "button", button, value)
+                            # print (button, value)
+                    for cnt in range (len(device.fader_update)):
+                        if device.fader_update[cnt] == 1:
+                            device.fader_update[cnt] = 0
+                            self.eval (i, "fader", cnt, device.fader_buffer[cnt])
 
 
 
 # --- Test -------------------------------------------------------------------
 if __name__ == "__main__":
+    
+    # TEST = True
 
     infotxt = """
 ---- MIDI Input Test -----
@@ -135,10 +168,11 @@ Kommandos: x = Exit
            i = zeige alle MIDI-input-Geräte
            o = zeige alle MIDI-output-Geräte
            <num> = verwende MIDI Input <num>
-           k = verwende kein MIDI
+           <pos> <num> = verwende MIDI Output <num> an Gerät <pos>
+           k <pos> = verwende kein MIDI an Gerät <pos>
 """
 
-    mididev = MidiInput ()
+    mididev = Midi ()
     # midiout = MidiOutput ()
     print (infotxt)
 
@@ -146,6 +180,7 @@ Kommandos: x = Exit
         i = 1
         while i != 'x':
             i = input ("CMD: ")
+            cmd = i.split ()
             if i == '#':
                 print (infotxt)
             elif i == 'a':
@@ -160,17 +195,23 @@ Kommandos: x = Exit
                 ret = mididev.list_devices ("output")
                 for item in ret:
                     print (item)
-            elif i == 'k':
-                ret = mididev.set_device (-1)
+            elif i == 's':
+                for dev in mididev.in_devices:
+                    print (dev)
+
+            elif cmd[0] == 'k':
+                try:
+                    ret = mididev.set_indevice (int(cmd[1]), -1)
+                except:
+                    ret = mididev.set_indevice (0, -1)
                 print (ret)
 
             else:
                 try:
-                    num = int(i)
+                    ret = mididev.set_device (int(cmd[0]), int(cmd[1]))
+                    print (ret)
                 except:
-                    num = None
-                ret = mididev.set_device (num)
-                print (f"Verwende {ret}, {mididev.miditype}")
+                    pass
 
     finally:
         print ("exit...")

@@ -34,15 +34,15 @@ def del_cuetables ():
     globs.cltable.clear ()
 
 
-def del_midilists ():
-    """ globale midiin_faders und midiin_buttons leeren
-    """
-    if globs.PYTHONANYWHERE == "false":
-        num_controllers = len (globs.midiin)
-        globs.midiin_faders   = [{} for i in range (num_controllers)]
-        globs.midiin_buttons  = [{} for i in range (num_controllers)]    
-        globs.midiout_buttons = [[] for i in range (num_controllers)]
-        globs.midiout_faders  = [[] for i in range (num_controllers)]
+# def del_midilists ():
+#     """ globale midiin_faders und midiin_buttons leeren
+#     """
+#     if globs.PYTHONANYWHERE == "false":
+#         num_controllers = len (globs.midiin)
+#         globs.midiin_faders   = [{} for i in range (num_controllers)]
+#         globs.midiin_buttons  = [{} for i in range (num_controllers)]    
+#         globs.midiout_buttons = [[] for i in range (num_controllers)]
+#         globs.midiout_faders  = [[] for i in range (num_controllers)]
 
 
 def check_levelrequest (with_savedlevels:bool) ->bool:
@@ -82,8 +82,6 @@ def make_fadertable (with_savedlevels:bool=False) :
 
     locations = fader_locations
     new_fadertable = []
-    if globs.PYTHONANYWHERE == "false":
-        num_controllers = len (globs.midiin)
 
     # sollen csv-gespeicherte Levels geladen werden?
     csvlevels_requested = check_levelrequest (with_savedlevels)
@@ -121,18 +119,18 @@ def make_fadertable (with_savedlevels:bool=False) :
 
             # nun Midi-Requests einlesen:
             if globs.PYTHONANYWHERE == "false":
-                num_controllers = len (globs.midiin)
+                num_devices = len (globs.midi.in_devices)
                 # Midiinput-Nummer, Zählung ab 1:
                 try: 
                     incnr = int (content[count]["Midiinput"])
-                    if not (1 <= incnr <= num_controllers):
+                    if not (1 <= incnr <= num_devices):
                         incnr = 0
                 except:
                     incnr = 0
                 # Midioutput-Nummer, Zählung ab 1:
                 try: 
                     outcnr = int (content[count]["Midioutput"])
-                    if not (1 <= outcnr <= num_controllers):
+                    if not (1 <= outcnr <= num_devices):
                         outcnr = 0
                 except:
                     outcnr = 0
@@ -145,11 +143,11 @@ def make_fadertable (with_savedlevels:bool=False) :
                 newcue.midicontroller = fnr -1
                 # Midi-Input:
                 if incnr and fnr:
-                    globs.midiin_faders[incnr-1][fnr-1] = fadernum-1
+                    globs.midi.in_faders[incnr-1][fnr-1] = fadernum-1                    
                 # Midi-Output:
                 if outcnr and fnr:
                     # globs.midiout_faders[outcnr-1][fnr-1] = fadernum-1   
-                    globs.midiout_faders[outcnr-1].append (fnr-1)
+                    globs.midi.out_faders[outcnr-1].append (fnr-1)
         
             # nun Levels:    
             if csvlevels_requested:        
@@ -222,18 +220,18 @@ def make_cuebuttons (with_savedlevels:bool=False):
 
             # nun Midi-Requests einlesen:
             if globs.PYTHONANYWHERE == "false":
-                num_controllers = len (globs.midiin)
+                num_devices = len (globs.midi.in_devices)
                 # Midiinput-Nummer, Zählung ab 1:
                 try: 
                     incnr = int (content[count]["Midiinput"])
-                    if not (1 <= incnr <= num_controllers):
+                    if not (1 <= incnr <= num_devices):
                         incnr = 0
                 except:
                     incnr = 0
                 # Midioutput-Nummer, Zählung ab 1:
                 try: 
                     outcnr = int (content[count]["Midioutput"])
-                    if not (1 <= outcnr <= num_controllers):
+                    if not (1 <= outcnr <= num_devices):
                         outcnr = 0
                 except:
                     outcnr = 0
@@ -246,11 +244,11 @@ def make_cuebuttons (with_savedlevels:bool=False):
                 newbut.midicontroller = butnr - 1
                 # Midi-Input:
                 if incnr and butnr:
-                    globs.midiin_buttons[incnr-1][butnr-1] = butnum-1
+                    globs.midi.in_buttons[incnr-1][butnr-1] = butnum-1
                 # Midi-Output:
                 if outcnr and butnr:
                     # globs.midiout_buttons[outcnr-1][butnr-1] = butnum-1   
-                    globs.midiout_buttons[outcnr-1].append (butnr-1)
+                    globs.midi.out_buttons[outcnr-1].append (butnr-1)
 
             # nun Levels:     
             if csvlevels_requested:
@@ -317,18 +315,18 @@ def make_cuelistpages (with_savedlevels:bool=False) :
 
         # nun Midi-Requests einlesen:
         if globs.PYTHONANYWHERE == "false":
-            num_controllers = len (globs.midiin)
+            num_devices = len (globs.midi.in_devices)
             # Midiinput-Nummer, Zählung ab 1:
             try: 
                 incnr = int (pagelist[count]["Midiinput"])
-                if not (1 <= incnr <= num_controllers):
+                if not (1 <= incnr <= num_devices):
                     incnr = 0
             except:
                 incnr = 0
             # Midioutput-Nummer, Zählung ab 1:
             try: 
                 outcnr = int (pagelist[count]["Midioutput"])
-                if not (1 <= outcnr <= num_controllers):
+                if not (1 <= outcnr <= num_devices):
                     outcnr = 0
             except:
                 outcnr = 0
@@ -341,11 +339,11 @@ def make_cuelistpages (with_savedlevels:bool=False) :
             newcl.midicontroller = fnr -1
             # Midi-Input:
             if incnr and fnr:
-                globs.midiin_faders[incnr-1][fnr-1] = fadernum-1
+                globs.midi.in_faders[incnr-1][fnr-1] = fadernum-1
             # Midi-Output:
             if outcnr and fnr:
                 # globs.midiout_faders[outcnr-1][fnr-1] = fadernum-1   
-                globs.midiout_faders[outcnr-1].append (fnr-1) 
+                globs.midi.out_faders[outcnr-1].append (fnr-1) 
 
         # nun Levels:    
         if csvlevels_requested:        

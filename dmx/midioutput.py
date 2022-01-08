@@ -10,23 +10,82 @@ import pygame.midi
 import midi_devices as mdev
 
 class MidiDevice ():
+    """ Datensammlung zu einem Midi-Gerät """
+
     def __init__ (self):
-        # defaults:
         self.device_id = -1
         self.name = mdev.NO_MIDI_DEVICE
-        self.miditype = None # 'input' oder 'output'
-        # das pygame.midi.Input bzw. Output Objekt:
-        self.midi_device = None
+        # self.miditype = None # 'input' oder 'output'
+        self.midi_device = None # das pygame.midi.Input bzw. Output Objekt
+        # pygame wird hier in dieser Klasse nicht initialisiert
+        self.buttons = [] # Kontrollerliste der Buttons am Gerät
+        self.faders = []  # Kontrollerliste der Fader am Gerät
+        # zur späteren Verwendung in Klasse Midi:
+        # Liste der Midi-Fader timestamps:
+        self.fader_buffer  = []
+        self.fader_update  = []
 
+
+    def __repr__(self):
+        return "<MidiDevice {}, {}>".format (self.device_id, self.name)
+
+    def clear (self):
+        """ Mididevice rücksetzen """
+        self.device_id = -1
+        self.name = mdev.NO_MIDI_DEVICE
+        if self.midi_device:
+            self.midi_device.close ()
+        self.midi_device = None
+        self.buttons.clear ()
+        self.faders.clear ()
+        self.fader_buffer.clear ()
+        self.fader_update.clear ()
+        # self.miditype = None
+
+    def set_device (self, devlist:list, num:int):
+        """ Werte zuweisen 
+        
+        devlist: Liste mit Device-Daten
+        num: Nummer in devlist
+        """
+        devnums = [dev[0] for dev in devlist]
+        if num in devnums:
+            index = devnums.index (num)
+            if devlist[index][3] == "frei":             # 'frei' oder 'verwendet'
+                self.device_id = devlist[index][0]      # int >= 0
+                self.name = devlist[index][1]           # str
+                miditype  = devlist[index][2]      # 'input' oder 'output'
+                if miditype == "input":
+                    self.midi_device = pygame.midi.Input (self.device_id)
+                else:
+                    self.midi_device = pygame.midi.Output (self.device_id)
+
+                if self.name in mdev.midi_device_dict:
+                    self.buttons = mdev.midi_device_dict [self.name][1]
+                    self.faders  = mdev.midi_device_dict [self.name][0]
+                else:
+                    self.buttons = mdev.default_buttons
+                    self.faders  = mdev.default_faders
+
+            return {"name":self.name, "status":devlist[index][3]} 
+            # else:
+            #     return devlist[index][3]
+        else:
+            return {"name":mdev.NO_MIDI_DEVICE, "status":""} 
+
+
+class MidiOutput ():
+    """ MIDI Output Klasse """
+
+    def __init__ (self):
+        # MidiDevice.__init__ (self)
+        self.out_devices = [MidiDevice() for i in range (4)] # verwendete Geräte
+        self.out_buttons = [[] for i in range (4)] # verwendete Buttons
+        self.out_faders = [[] for i in range (4)] # verwendete Fader
         self.msg_function = print 
 
         pygame.init()
         pygame.midi.init()
-
-
-    def __del__ (self):
-        if self.midi_device:
-            del self.midi_device
 
 
     def set_msg_function (self, newfunc):
@@ -79,106 +138,98 @@ class MidiDevice ():
         return devs
 
 
-    def set_device (self, num:int) ->str:
-        """ midi-Objekt über midi-Nummer zuweisen 
+    def check_devicenum (self, num:int, devtype:str) :
+        """ prüfen, ob num in devicelist ist
+        
+        num: int >= 0
+        devtype: 'all', 'input' oder 'output'
+        return: devicelist zu 'devtype' oder False
         """
-        devlist = self.list_devices("all")
+        devlist = self.list_devices(devtype)
         devnums = [dev[0] for dev in devlist]
-
-        # midi_device bereits zugewiesen:
-        if self.device_id == num: # keine Änderung
-            return {"name":self.name, "status":"verwendet"}
-
-        if self.midi_device: # midi_device ändern
-            self.midi_device.close ()
-            # del self.midi_device
-            self.midi_device = None
-            self.name = mdev.NO_MIDI_DEVICE
-            self.device_id = -1
-            self.miditype = None
-
         if num in devnums:
-            index = devnums.index (num)
-            if devlist[index][3] == "frei":             # 'frei' oder 'verwendet'
-                self.device_id = devlist[index][0]      # int >= 0
-                self.name = devlist[index][1]           # str
-                self.miditype  = devlist[index][2]      # 'input' oder 'output'
-                if self.miditype == "input":
-                    self.midi_device = pygame.midi.Input (self.device_id)
-                else:
-                    self.midi_device = pygame.midi.Output (self.device_id)
-            return {"name":self.name, "status":devlist[index][3]} 
-            # else:
-            #     return devlist[index][3]
+            return devlist
         else:
-            return {"name":mdev.NO_MIDI_DEVICE, "status":""} 
-
-class MidiOutput (MidiDevice):
-    """ MIDI Output Klasse """
-
-    def __init__ (self):
-        MidiDevice.__init__ (self)
-        # Dict der buttons und fader
-        # key = controller, val = Button-Nummer
-        self.buttons = {} 
-        self.faders = {}  
-
-    def __del__ (self):
-        try:
-            MidiDevice.__del__ (self)
-        except:
-            pass
+            return False
 
 
-    def set_device (self, num:int) ->str:
-        devlist = self.list_devices("output")
-        devnums = [dev[0] for dev in devlist]
-        if num in devnums: # output Gerät
-            ret = MidiDevice.set_device (self, num)
-            if ret["status"] == "frei":
-                if self.name in mdev.midi_device_dict:
-                    self.buttons = mdev.midi_device_dict [self.name][1]
-                    self.faders  = mdev.midi_device_dict [self.name][0]
-                    # self.message (f"verwende {self.name}")
-                else:
-                    self.buttons = mdev.default_buttons
-                    self.faders  = mdev.default_faders
-                    # self.message (f"verwende {self.name} mit nanoKONTROL-2 Settings")
+    def clear (self, pos:int):
+        """ self.out_devices[pos] zurücksetzen
+        """
+        if 0 <= pos < 4:
+            self.out_devices[pos].clear ()
+        else:
+            return f"{pos} nicht gültig."
+
+
+    def set_outdevice (self, pos:int, num:int) ->str:
+        """ Midigerät zuweisen
+        
+        pos: Position in self.out_devices, 0 <= pos < 4
+        num: Devicenummer neu oder ändern
+        """
+        if 0 <= pos < 4:
+            newdev = self.out_devices[pos] # MidiDevice 
+        else:
+            return f"{pos} nicht gültig."
+
+        if self.check_devicenum (num, "all"):
+            # midi_device bereits zugewiesen:
+            if newdev.device_id == num: # keine Änderung
+                return {"keine Änderung."}
+
+            if newdev.midi_device: # midi_device vorhanden
+                newdev.clear ()
+
+            devlist = self.check_devicenum (num, "output")
+            if devlist:
+                ret = newdev.set_device (devlist, num)
                 
         else:
-            ret = MidiDevice.set_device (self, -1)
+            self.clear (pos)
+            ret = "Fehler beim Zuordnen von Midi-Device"
         return ret
 
-    def led_on (self, lednum:int):
-        """ led Nr ab 0 """
-        if not self.midi_device:
+
+    def led_on (self, pos:int, lednum:int):
+        """ Wert 127 an Midi Output schicken 
+        
+        pos: Position in self.out_devices, 0 <= pos < 4
+        lednum: index in self.buttons
+        """
+        device = self.out_devices[pos]
+        if not device.midi_device:
             return
         if isinstance (lednum, str):
             lednum = int (lednum)
-        if lednum < 0 or lednum >= len (self.buttons):
-            return
-        # device = 0xb0 + self.device_id
-        self.midi_device.write_short (0xb0, self.buttons[lednum], 127)
+        if 0 <= lednum < len (device.buttons):
+            device.midi_device.write_short (0xb0, device.buttons[lednum], 127)
 
-    def led_off (self, lednum:int):
-        if not self.midi_device:
+    def led_off (self, pos:int, lednum:int):
+        """ Wert 0 an Midi Output schicken 
+        
+        pos: Position in self.out_devices, 0 <= pos < 4
+        lednum: index in self.buttons
+        """
+        device = self.out_devices[pos]
+        if not device.midi_device:
             return
         if isinstance (lednum, str):
             lednum = int (lednum)
-        if lednum < 0 or lednum >= len (self.buttons):
-            return
-        # device = 0xb0 + self.device_id
-        self.midi_device.write_short (0xb0, self.buttons[lednum], 0)
+        if 0 <= lednum < len (device.buttons):
+            device.midi_device.write_short (0xb0, device.buttons[lednum], 0)
 
-    def level (self, num:int, lev:int):
+
+    def level (self, pos:int, num:int, lev:int):
         """ Level an Fader-Monitor schicken 
         """
-        if not self.midi_device:
+        device = self.out_devices[pos]
+        if not device.midi_device:
             return
         if isinstance (num, str):
             num = int (num)
-        if 0 < num <= len (self.faders):
-            self.midi_device.write_short (0xb0, self.faders[num], lev)
+        if 0 < num <= len (device.faders):
+            device.midi_device.write_short (0xb0, device.faders[num], lev)
 
     
 # --- Test -------------------------------------------------------------------
@@ -193,10 +244,11 @@ Kommandos: x = Exit
            a = zeige alle MIDI-Geräte
            i = zeige alle MIDI-input-Geräte
            o = zeige alle MIDI-output-Geräte
-           <num> = verwende MIDI Input <num>
-           k = verwende kein MIDI
-           c = LED on
-           v = LED off
+           s = zeige verwendete Geräte
+           <pos> <num> = verwende MIDI Output <num> an Gerät <pos>
+           k <pos> = verwende kein MIDI an Gerät <pos>
+           v <pos> <num> = LED <num> off an Gerät <pos>
+           c <pos> <num> = LED <num> on an Gerät <pos>
 """
 
     mididev = MidiOutput ()
@@ -204,9 +256,10 @@ Kommandos: x = Exit
     print (infotxt)
 
     try:
-        i = 1
+        i = "1"
         while i != 'x':
             i = input ("CMD: ")
+            cmd = i.split ()
             if i == '#':
                 print (infotxt)
             elif i == 'a':
@@ -221,29 +274,33 @@ Kommandos: x = Exit
                 ret = mididev.list_devices ("output")
                 for item in ret:
                     print (item)
-            elif i == 'k':
-                ret = mididev.set_device (-1)
+            elif i == 's':
+                for dev in mididev.out_devices:
+                    print (dev)
+
+            elif cmd[0] == 'k':
+                try:
+                    ret = mididev.set_outdevice (int(cmd[1]), -1)
+                except:
+                    ret = mididev.set_outdevice (0, -1)
                 print (ret)
-            elif i[0] == 'c':
+            elif cmd[0] == 'c':
                 try:
-                    cmd, num = i.split ()
+                    mididev.led_on (int(cmd[1]), cmd[2])
                 except:
-                    num = 0
-                mididev.led_on (num)
-            elif i[0] == 'v':
+                    mididev.led_on (0,0)
+            elif cmd[0] == 'v':
                 try:
-                    cmd, num = i.split ()
+                    mididev.led_off (int(cmd[1]), cmd[2])
                 except:
-                    num = 0
-                mididev.led_off (num)
+                    mididev.led_off (0,0)
 
             else:
                 try:
-                    num = int(i)
+                    ret = mididev.set_device (int(cmd[0]), int(cmd[1]))
+                    print (ret)
                 except:
-                    num = None
-                ret = mididev.set_device (num)
-                print (f"Verwende {ret}, {mididev.miditype}")
+                    pass
 
     finally:
         print ("exit...")
