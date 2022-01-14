@@ -18,6 +18,7 @@ midi_output_1,-1
 midi_output_2,-1
 midi_output_3,-1
 midi_output_4,-1
+midi_buttons,_neu
 osc_input,0
 osc_inputport,8800
 exebuttons1,_neu

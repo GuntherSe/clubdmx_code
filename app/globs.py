@@ -53,7 +53,8 @@ if PYTHONANYWHERE == "false":
     from midiinput import Midi
     # from midioutput import MidiOutput
     from oscinput import OscInput
-    from apputils import eval_midiinput, evaluate_osc
+    from apputils import evaluate_osc
+    from midiutils import eval_midiinput 
 
 
     midiactive      = False   

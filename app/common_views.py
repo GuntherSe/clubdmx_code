@@ -11,7 +11,8 @@ from flask_login import login_required
 # from cuebutton import Cuebutton
 
 from apputils import standarduser_required, admin_required, redirect_url
-from apputils import calc_mixoutput, press_cuebutton, midifader_monitor
+from apputils import calc_mixoutput
+from midiutils import press_cuebutton, midifader_monitor, midi_commandlist
 
 import globs
 
@@ -183,6 +184,10 @@ def get_info (item:str) -> json:
         field  = request.args.get ("field") # Kleinbuchstaben
         rule = globs.room.layout.rule (subdir + field)
         return json.dumps (rule)
+
+    elif item == "commands":
+        # commands, die püer Midi getriggert werden
+        return json.dumps (midi_commandlist)
 
     return json.dumps("???")
 

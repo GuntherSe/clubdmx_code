@@ -7,24 +7,12 @@
 import os
 import os.path
 
-# from flask import Blueprint, render_template, request, json, redirect 
-from flask import url_for, flash, session, redirect
-# from wtforms import Form, StringField, IntegerField, SelectField, DecimalField
-# # from wtforms import BooleanField
-# from wtforms import validators
-# from flask_login import login_required, current_user
-
-import globs
+from flask import session, redirect
 
 from filedialog_util import list_dir
-# from csvfileclass import Csvfile
-# from mount import get_usbchoices
-# from apputils import dbbackup, dbrestore
-# from csv_views import evaluate_option
 from apputils import redirect_url
-# from startup import load_config
 
-
+import globs
 
 onoff_choices = [("0","aus"), ("1","ein")]
 
@@ -47,11 +35,11 @@ def dir_choices (subdir:str=None) ->list:
 
 
 def head_choices () ->list:
-    """ choices-Liste aus verwendeten Headnummern """
-
+    """ choices-Liste aus verwendeten Headnummern 
+    """
     ret = []
     heads = globs.patch.headlist () # ist bereits sortiert
-    # heads = sorted (heads)
+    heads = sorted (heads)
     for head in heads:
         ret.append ((head,head))
     return ret

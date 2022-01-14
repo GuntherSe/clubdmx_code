@@ -169,6 +169,9 @@ function saveCell () {
 // createSelectOptions:
 // Optionen für Select-Feld erzeugen
 function createSelectOptions (values, current) {
+  // values: Liste
+  // current: aktuelles Element
+  // return: HTML code für Listenauswahl
   let optionHTML = "<select id='cell_selector' class='form-control'>";
   //console.log ("Attribs: " + attribs);
   for (let att of values) {
@@ -277,13 +280,28 @@ function editableCsvFields () {
               });
             };
           });
-
+        } else if (layout.type == "command") {
+          $.get ("/getinfo/commands", function (data) {
+            var attribs = $.parseJSON (data);
+            // wieder wie layout.type == 'list
+            let optionHTML = createSelectOptions (attribs, current);
+            editcell.html (optionHTML);
+            $("#cell_selector").focus ();
+    
+            $("#cell_selector").focusout ( function () {
+              let result = $("#cell_selector").val ();
+              celldata.text = result;
+              editcell.html (result);
+              editcell = undefined;
+              $.post ('/csv/savecell', celldata);
+            });
+          });
         } else { // Text
           selectTextcell ();
         };
-    });
+      });
   
-  };
+    };
 
   });
 }

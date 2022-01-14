@@ -13,6 +13,8 @@ from flask_login import login_required, current_user
 import globs
 
 from apputils import redirect_url
+from common_views import check_clipboard
+from csvfileclass import Csvfile   
 from startup import load_config
 from formutils import onoff_choices, dir_choices # , head_choices
 
@@ -38,15 +40,18 @@ def config ():
     pages_choices = dir_choices ("pages")
 
     if globs.PYTHONANYWHERE == "false":
-        mididevices = globs.midi.list_devices ("input")
+        midibutton_choices = dir_choices ("midibutton")
+
+        midiindevices = globs.midi.list_devices ("input")
         midiin_choices = [("-1", "kein Midi-Input")]
-        for elem in mididevices:
+        for elem in midiindevices:
             midiin_choices.append ((str(elem[0]), elem[4])) # Namen
 
         midioutdevices = globs.midi.list_devices ("output")
         midiout_choices = [("-1", "kein Midi-Output")]
         for elem in midioutdevices:
             midiout_choices.append ((str (elem[0]), elem[4])) # Namen
+
 
     class Configform (Form):
         patch        = SelectField ("Patch", choices=patch_choices,
@@ -55,30 +60,6 @@ def config ():
         universes    = IntegerField ("Universes", default=cur["universes"])
         pages        = SelectField ("Cuelist-Tabelle", choices=pages_choices,
                         default=cur["pages"])
-    
-        if globs.PYTHONANYWHERE == "false":
-            midi_on      = SelectField ("Midi ein/aus", choices=onoff_choices,
-                            default=cur["midi_on"])
-            midi_input_1 = SelectField ("Midi Input 1", choices=midiin_choices,
-                            default=cur["midi_input_1"])
-            midi_input_2 = SelectField ("Midi Input 2", choices=midiin_choices,
-                            default=cur["midi_input_2"])
-            midi_input_3 = SelectField ("Midi Input 3", choices=midiin_choices,
-                            default=cur["midi_input_3"])
-            midi_input_4 = SelectField ("Midi Input 4", choices=midiin_choices,
-                            default=cur["midi_input_4"])
-            midi_output_1  = SelectField ("Midi Output 1", choices=midiout_choices,
-                            default=cur["midi_output_1"])
-            midi_output_2  = SelectField ("Midi Output 2", choices=midiout_choices,
-                            default=cur["midi_output_2"])
-            midi_output_3  = SelectField ("Midi Output 3", choices=midiout_choices,
-                            default=cur["midi_output_3"])
-            midi_output_4  = SelectField ("Midi Output 4", choices=midiout_choices,
-                            default=cur["midi_output_4"])
-            osc_input    = SelectField ("OSC Input ein/aus", choices=onoff_choices,
-                            default=cur["osc_input"])
-            osc_inputport = IntegerField ("OSC Input Port", 
-                            default=cur["osc_inputport"])
         stage         = SelectField ("Stage", choices=stage_choices,
                         default=cur["stage"])
         cuefaders     = SelectField ("Zusatz-Fader", choices=cuefader_choices,
@@ -100,6 +81,32 @@ def config ():
         exefaders     = SelectField ("Executer-Fader", 
                         choices=cuefader_choices,
                         default=cur["exefaders"])
+    
+        if globs.PYTHONANYWHERE == "false":
+            midi_on      = SelectField ("Midi ein/aus", choices=onoff_choices,
+                            default=cur["midi_on"])
+            midi_buttons = SelectField ("Zusatz-Buttons", choices=midibutton_choices,
+                        default=cur["midi_buttons"])
+            midi_input_1 = SelectField ("Midi Input 1", choices=midiin_choices,
+                            default=cur["midi_input_1"])
+            midi_input_2 = SelectField ("Midi Input 2", choices=midiin_choices,
+                            default=cur["midi_input_2"])
+            midi_input_3 = SelectField ("Midi Input 3", choices=midiin_choices,
+                            default=cur["midi_input_3"])
+            midi_input_4 = SelectField ("Midi Input 4", choices=midiin_choices,
+                            default=cur["midi_input_4"])
+            midi_output_1  = SelectField ("Midi Output 1", choices=midiout_choices,
+                            default=cur["midi_output_1"])
+            midi_output_2  = SelectField ("Midi Output 2", choices=midiout_choices,
+                            default=cur["midi_output_2"])
+            midi_output_3  = SelectField ("Midi Output 3", choices=midiout_choices,
+                            default=cur["midi_output_3"])
+            midi_output_4  = SelectField ("Midi Output 4", choices=midiout_choices,
+                            default=cur["midi_output_4"])
+            osc_input    = SelectField ("OSC Input ein/aus", choices=onoff_choices,
+                            default=cur["osc_input"])
+            osc_inputport = IntegerField ("OSC Input Port", 
+                            default=cur["osc_inputport"])
 
     configform = Configform (request.form)
 
@@ -117,14 +124,34 @@ def config ():
         datatab = session["datatab"]
     else:
         datatab = "room-tab"
+
+    # Zusatz-Midibuttons in Tabelle in Midi-Tab anzeigen
+    check_clipboard ()
+    fname = globs.cfg.get("midi_buttons")
+    filename = os.path.join (globs.room.midibuttonpath(),fname)
+    csvfile = Csvfile (filename)
+    if csvfile.changed():
+        changes = "true"
+    else:
+        changes = "false"
+
     
     # https://stackoverflow.com/questions/28627324/disable-cache-on-a-specific-page-using-flask
     response = make_response (render_template("data/dataindex.html", 
-                            confname = confname,
-                            confdata = cur,
-                            room = room,
-                            datatab = datatab,
-                            configform = configform))
+                    confname = confname,
+                    confdata = cur,
+                    room = room,
+                    datatab = datatab,
+                    configform = configform,
+                    # Tabellendaten:
+                    shortname = csvfile.shortname(),
+                    pluspath = csvfile.pluspath(),
+                    fieldnames = csvfile.fieldnames(),
+                    items = csvfile.to_dictlist(), 
+                    changes = changes,
+                    option  = "midibutton", 
+                    excludebuttons = ["uploadButton"] 
+                ))
     response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
     response.headers['Pragma'] = 'no-cache'
     return response

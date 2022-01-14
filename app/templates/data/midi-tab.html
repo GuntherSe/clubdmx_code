@@ -1,8 +1,10 @@
-{# Config-Tab #}
+{# Midi-Tab #}
 
 {% macro _help_id() -%}
 midi-overview
 {%- endmacro %}
+
+{% import "csvtable-macros.html" as tbl with context %}
 
 <div class="container-fluid">
   <h4 class="mt-4">Midi-Konfiguration</h4>
@@ -42,7 +44,7 @@ midi-overview
         </p>
         <p class="card-text">
           Beim nanoKONTROL kann der Led-Mode leider nicht auf 'extern' umgestellt
-          werden, daher funktioniert hier die LED-Anzeige nicht. Dieser Kontroller ist
+          werden, daher funktioniert hier die LED-Anzeige nicht. Dieses Gerät ist
           also nicht für MIDI-Output geeignet.
         </p>
 
@@ -62,6 +64,7 @@ midi-overview
           {% if config.PYTHONANYWHERE == "false" %}
           <div id="formBody" class="form-body">
             {{ render_bs_field (configform.midi_on )}} 
+            {{ render_bs_field (configform.midi_buttons )}} 
             {{ render_bs_field (configform.midi_input_1 )}} 
             {{ render_bs_field (configform.midi_input_2 )}} 
             {{ render_bs_field (configform.midi_input_3 )}} 
@@ -82,6 +85,13 @@ midi-overview
     
     </div>
 
+    <div class="col" id="rechts">
+      <div id="upload_point"></div>
+      <!-- Tabelle mit Buttons -->
+      {{ tbl.csv_nav() }}
+      {{ tbl.table() }}
+    </div>
+  
   </div>
 
 

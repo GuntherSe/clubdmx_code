@@ -43,6 +43,8 @@ def evaluate_option (option:str=None):
         globs.patch.reload ()
         make_fadertable ()
         make_cuebuttons ()
+    elif option == "midibutton":
+        print ("Midibuttons neu einlesen.")
     elif option == "cuebutton":
         make_cuebuttons ()
     elif option == "pages":
@@ -213,6 +215,10 @@ def open ():
             session["selected_cuelist"] = fileroot
             # session["open_requested"] = True
             return "ok"
+
+        if option == "midibutton":
+            flash (f"Midibuttons ausgewählt: {fileroot}")
+            return "ok"
             
     ret = {}
     ret["spath"] = request.args.get ("option")
@@ -262,8 +268,7 @@ def saveas ():
             ret = basecsv.backup (fullname)
             globs.cfg.open (fullname)
 
-        elif option == "cuefader":
-            # fadertabelle ausgewählt
+        elif option == "cuefader": # fadertabelle ausgewählt
             loc = args["location"]
             current = globs.cfg.get (loc) # "cuefaders")
             csvfile = Csvfile (os.path.join (globs.room.cuefaderpath(), current))
@@ -272,8 +277,7 @@ def saveas ():
             globs.cfg.save_data ()
             make_fadertable (loc) #   fileroot)
 
-        elif option == "cuebutton": 
-            # Cueinfotabelle ausgewählt
+        elif option == "cuebutton": # Cueinfotabelle ausgewählt
             loc = args["location"]
             current = globs.cfg.get(loc)
             csvfile = Csvfile (os.path.join (globs.room.cuebuttonpath(), current))
@@ -288,6 +292,13 @@ def saveas ():
             ret = basecsv.backup (fullname)
             globs.patch.open (fileroot) # False bei Fehler in Headfiles
             globs.cfg.set ("patch", fileroot)
+            globs.cfg.save_data()
+
+        elif option == "midibutton": # Tebelle midibuttons ausgewählt
+            current = globs.cfg.get ("midi_buttons")
+            basecsv = Csvfile (os.path.join (globs.room.midibuttonpath(), current))
+            ret = basecsv.backup (fullname)
+            globs.cfg.set ("midi_buttons", fileroot)
             globs.cfg.save_data()
 
         elif option == "stage":

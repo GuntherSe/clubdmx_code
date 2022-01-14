@@ -102,7 +102,7 @@ class Midi (MidiOutput, threading.Thread):
         if self.check_devicenum (num, "all"):
             # midi_device bereits zugewiesen:
             if newdev.device_id == num: # keine Änderung
-                return {"keine Änderung."}
+                return "keine Änderung."
 
             if newdev.midi_device: # midi_device vorhanden
                 newdev.clear ()
@@ -114,7 +114,8 @@ class Midi (MidiOutput, threading.Thread):
                 fadercount = len (newdev.faders)
                 newdev.fader_buffer = [0 for i in range (fadercount)]
                 newdev.fader_update = [0 for i in range (fadercount)]
-
+            else:
+                ret = "kein Midi-Input-Device vorhanden"
         else:
             self.clear (pos)
             ret = "Fehler beim Zuordnen von Midi-Device"

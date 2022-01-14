@@ -40,7 +40,7 @@ class Roombase:
     Config  etc. enthalten. 
     """
     subdirs = ["config", "cue", "cuebutton", "cuefader", "cuelist",
-               "head", "pages", "patch", "stage"]
+               "head", "midibutton", "pages", "patch", "stage"]
 
     def __init__(self, newpath=None):
 
@@ -100,6 +100,10 @@ class Roombase:
     def cuelistpath (self):
         """ Verzeichnis für Cuelist liefern """
         return os.path.join (self.PATH, "cuelist")
+
+    def midibuttonpath (self):
+        """ Verzeichnis für Midibutton liefern """
+        return os.path.join (self.PATH, "midibutton")
 
     def pagespath (self):
         """ Verzeichnis für Cuelist-Pages liefern """

@@ -21,6 +21,7 @@ from apputils import redirect_url
 # from filedialog_util import list_dir
 # from startup import load_config
 from formutils import onoff_choices, dir_choices, head_choices, leave_form
+from midiutils import command_choices
 
 forms = Blueprint ("forms", __name__, url_prefix="/forms", 
                      static_folder="static", template_folder="templates")
@@ -77,8 +78,18 @@ def create_field (F:Form, field:str, rule:dict):
                                             description=description,
                                             choices=choices, 
                                             validators=validat))
+
         elif fieldtype == "headattr":
             choices = []
+            # choices kommen von JS function attribChoices () in newline.html
+            setattr (F, field, SelectField (field, 
+                                            default=default,
+                                            description=description,
+                                            choices=choices, 
+                                            validate_choice=False))
+
+        elif fieldtype == "command":
+            choices = command_choices ()
             setattr (F, field, SelectField (field, 
                                             default=default,
                                             description=description,
@@ -139,7 +150,6 @@ def csvline ():
         elif "option" in rule and rule["option"] == "heads" \
                         and "headstring" in session:
             rule["default"] = session["headstring"]
-
 
         create_field (F, field, rule)
 

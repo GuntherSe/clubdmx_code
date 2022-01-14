@@ -171,6 +171,15 @@
       $(".roomRestoreSource").trigger ("click")  ;
     };
 
+    // Midibutton-Tabelle vorbereiten:
+    initMouseMode ();
+    csvSavediscardButtons ();
+    filedialogToPython (".openButton", "/csv/open", 
+      {"option":"midibutton"});
+    filedialogToPython (".saveasButton", "/csv/saveas",
+      {"option":"midibutton"});
+    activateUploadCsv ("#upload_point");
+
   });
 </script>
 {% endblock %}

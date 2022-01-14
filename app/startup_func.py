@@ -8,14 +8,12 @@ import globs
 
 import os
 import os.path
-# import time
 
-# from configclass  import Config
-# from roomclass import Room
 from cue import Cue
 from cuebutton import Cuebutton
 from cuelist import Cuelist
 from csvfileclass import Csvfile
+from midiutils import check_midicontroller
 from startup_levels import backup_currentlevels, restore_currentlevels
 from startup_levels import button_locations, fader_locations
 
@@ -32,17 +30,6 @@ def del_cuetables ():
     for count in range (len(globs.cltable)):
         globs.cltable[count].outcue.rem_cuemix()
     globs.cltable.clear ()
-
-
-# def del_midilists ():
-#     """ globale midiin_faders und midiin_buttons leeren
-#     """
-#     if globs.PYTHONANYWHERE == "false":
-#         num_controllers = len (globs.midiin)
-#         globs.midiin_faders   = [{} for i in range (num_controllers)]
-#         globs.midiin_buttons  = [{} for i in range (num_controllers)]    
-#         globs.midiout_buttons = [[] for i in range (num_controllers)]
-#         globs.midiout_faders  = [[] for i in range (num_controllers)]
 
 
 def check_levelrequest (with_savedlevels:bool) ->bool:
@@ -92,7 +79,7 @@ def make_fadertable (with_savedlevels:bool=False) :
         csvfile = Csvfile (fullname)
         content = csvfile.to_dictlist ()
         fieldnames = csvfile.fieldnames()
-        try:
+        try: 
             fileindex = fieldnames.index ("Filename") 
         except:
             print (f"'Filename' nicht in {filename}")
@@ -119,27 +106,12 @@ def make_fadertable (with_savedlevels:bool=False) :
 
             # nun Midi-Requests einlesen:
             if globs.PYTHONANYWHERE == "false":
-                num_devices = len (globs.midi.in_devices)
-                # Midiinput-Nummer, Zählung ab 1:
-                try: 
-                    incnr = int (content[count]["Midiinput"])
-                    if not (1 <= incnr <= num_devices):
-                        incnr = 0
-                except:
-                    incnr = 0
-                # Midioutput-Nummer, Zählung ab 1:
-                try: 
-                    outcnr = int (content[count]["Midioutput"])
-                    if not (1 <= outcnr <= num_devices):
-                        outcnr = 0
-                except:
-                    outcnr = 0
+                incnr = content[count]["Midiinput"]
+                outcnr = content[count]["Midioutput"]
+                fnr = content[count]["Midifader"]
+                incnr, outcnr, fnr = check_midicontroller (incnr,outcnr,fnr)
+                # Eintrag in Cue:
                 newcue.midioutput = outcnr -1 
-                # MidiFader-Nummer, Zählung ab 1:
-                try: 
-                    fnr = int (content[count]["Midifader"])
-                except:
-                    fnr = 0
                 newcue.midicontroller = fnr -1
                 # Midi-Input:
                 if incnr and fnr:
@@ -220,27 +192,12 @@ def make_cuebuttons (with_savedlevels:bool=False):
 
             # nun Midi-Requests einlesen:
             if globs.PYTHONANYWHERE == "false":
-                num_devices = len (globs.midi.in_devices)
-                # Midiinput-Nummer, Zählung ab 1:
-                try: 
-                    incnr = int (content[count]["Midiinput"])
-                    if not (1 <= incnr <= num_devices):
-                        incnr = 0
-                except:
-                    incnr = 0
-                # Midioutput-Nummer, Zählung ab 1:
-                try: 
-                    outcnr = int (content[count]["Midioutput"])
-                    if not (1 <= outcnr <= num_devices):
-                        outcnr = 0
-                except:
-                    outcnr = 0
+                incnr = content[count]["Midiinput"]
+                outcnr = content[count]["Midioutput"]
+                butnr = content[count]["Midibutton"]
+                incnr, outcnr, butnr = check_midicontroller (incnr,outcnr,butnr)
+                # Eintrag in Cue:
                 newbut.midioutput = outcnr - 1
-                # MidiButton-Nummer, Zählung ab 1:
-                try: 
-                    butnr = int (content[count]["Midibutton"])
-                except:
-                    butnr = 0
                 newbut.midicontroller = butnr - 1
                 # Midi-Input:
                 if incnr and butnr:
@@ -315,27 +272,12 @@ def make_cuelistpages (with_savedlevels:bool=False) :
 
         # nun Midi-Requests einlesen:
         if globs.PYTHONANYWHERE == "false":
-            num_devices = len (globs.midi.in_devices)
-            # Midiinput-Nummer, Zählung ab 1:
-            try: 
-                incnr = int (pagelist[count]["Midiinput"])
-                if not (1 <= incnr <= num_devices):
-                    incnr = 0
-            except:
-                incnr = 0
-            # Midioutput-Nummer, Zählung ab 1:
-            try: 
-                outcnr = int (pagelist[count]["Midioutput"])
-                if not (1 <= outcnr <= num_devices):
-                    outcnr = 0
-            except:
-                outcnr = 0
+            incnr =  pagelist[count]["Midiinput"]
+            outcnr = pagelist[count]["Midioutput"]
+            fnr =    pagelist[count]["Midifader"]
+            incnr, outcnr, fnr = check_midicontroller (incnr,outcnr,fnr)
+            # Eintrag in Cue:
             newcl.midioutput = outcnr -1
-            # MidiFader-Nummer, Zählung ab 1:
-            try: 
-                fnr = int (pagelist[count]["Midifader"])
-            except:
-                fnr = 0
             newcl.midicontroller = fnr -1
             # Midi-Input:
             if incnr and fnr:

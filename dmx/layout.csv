@@ -55,3 +55,9 @@ pages,Midiinput,int,,0 4,0,0: kein Midi-Input,,
 pages,Midioutput,int,,0 4,0,0: kein Midi-Output,,
 pages,Midifader,int,,,0,Fadernummer,,
 pages,Level,disabled,,,0,,,
+midibutton,Type,list,,Button Fader,Button,,,true
+midibutton,Midiinput,int,,0 4,0,0: kein Midi-Input,,
+midibutton,Midioutput,int,,0 4,0,0: kein Midi-Output,,
+midibutton,Controller,int,,1 127,,,,
+midibutton,Command,command,,,,,,true
+midibutton,Parameter,text,,,,,,

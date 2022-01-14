@@ -21,6 +21,7 @@ from cuelist import Cuelist
 from startup_func import del_cuetables
 from startup_func import make_cuebuttons, make_fadertable, make_cuelistpages
 from startup_levels import activate_startcue
+from midiutils import get_midicommandlist
 
 if os.environ.get ("PYTHONANYWHERE")  != "true":
     from midiinput import Midi
@@ -192,7 +193,7 @@ def load_config (with_savedlevels=False):
             globs.midiactive = True
             if Midi.paused:
                 Midi.resume ()
-            # MIDI-Input und -Output:
+            # MIDI-Input:
             for i in range (4): # max 4 Midi-Controller
                 num = str (1+i)
                 device = globs.cfg.get("midi_input_"+num)
@@ -235,11 +236,11 @@ def load_config (with_savedlevels=False):
         # suchen und Auswerten des Startcues erst nachdem
         # die Fadertabelle erzeugt ist.
 
-    # del_midilists ()
     globs.midi.clear_lists ()
     make_fadertable (with_savedlevels=with_savedlevels)
     make_cuebuttons (with_savedlevels=with_savedlevels)
     make_cuelistpages (with_savedlevels=with_savedlevels)
+    get_midicommandlist ()
 
     if start_with_cue == "1":
         activate_startcue ()
