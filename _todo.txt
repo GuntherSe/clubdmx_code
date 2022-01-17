@@ -1,12 +1,12 @@
 -- Topcue: 
    - Snapshot
    - editierbar machen
-   - clear Button über MIDI
+   - clear Button über MIDI ok 0.99
 
 -- Midi:
    - 4 in und 4 out Geräte ok 0.99
    - nur 1 Midi-Instanz ok 0.99
-   - Buttons: clear Topcue, Cuelist GO, Pause, next, prev
+   - Buttons: clear Topcue, Cuelist GO, Pause, Plus, Minus ok 0.99
 
 -- Cuelist: 
    - OSC Kommando abschicken
@@ -14,6 +14,7 @@
    - Detailansicht ok 0.98
    - Sprung-Buttons zwischen den Cuelist-Seiten 0k 0.98
    - Editor: Leertaste = GO, Up- und Down-Tasten bestimmen next Cue ok 0.99
+   - Status in Pythonanywhere anzeigen
 
 -- Stage Single: Eingabefeld für Headnr
 

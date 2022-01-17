@@ -143,6 +143,8 @@ def calc_mixoutput ():
     if len (globs.buttontable):
         globs.buttontable[0].calc_all_faders ()
     globs.topcue.contrib.mix_function ()
+    if len (globs.cltable):
+        globs.cltable[0].calc_all_cuelists ()
 
 
 def evaluate_osc (address, *arg):
@@ -187,7 +189,7 @@ def evaluate_osc (address, *arg):
         elif address == "/clear":
             # topcue clear
             globs.topcue.clear()
-            session.pop ("topcuecontent", None)
+            # session.pop ("topcuecontent", None)
         elif address == "/go":
             # args: cuelist-Nr in Pages-Seite [, next cue ]
             try:

@@ -49,7 +49,7 @@ cuelist,Waitout,decimal,,>=0,,,,
 cuelist,Text,text,,,,Beschreibung,,
 cuelist,Comment,text,,,,nächste Cue Info,,
 pages,Page,int,,,1,,,true
-pages,Text,text,,,,,,
+pages,Text,text,,,,,,true
 pages,Filename,file,cuelist,,,"wenn _neu, dann = Text",,true
 pages,Midiinput,int,,0 4,0,0: kein Midi-Input,,
 pages,Midioutput,int,,0 4,0,0: kein Midi-Output,,

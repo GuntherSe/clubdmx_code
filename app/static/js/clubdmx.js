@@ -712,4 +712,5 @@ $(document).ready (function() {
   filedialogToPython  (".topsavecue", "/cuechild/topsave/cue");
   modaldialogToPython  (".topsavefader", "/cuechild/topsave/fader");
   modaldialogToPython  (".topsavebutton", "/cuechild/topsave/button");
+  modaldialogToPython  (".topsavecuelist", "/cuechild/topsave/cuelist");
 });

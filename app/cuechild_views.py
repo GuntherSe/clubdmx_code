@@ -5,6 +5,7 @@
 - Topcue-Views
 """
 
+from glob import glob
 import os
 import os.path
 
@@ -43,7 +44,7 @@ def topclear ():
     locationreload = request.args.get ("reload")
     # Cue.contrib.pause ()
     globs.topcue.clear ()
-    session.pop ("topcuecontent", None)
+    # session.pop ("topcuecontent", None)
     # Cue.contrib.resume ()
     if locationreload == "false":
         return "ok"
@@ -89,42 +90,38 @@ def topsave (option:str):
       anschließend Fader bzw. Button erzeugen 
     """
     if request.method == 'POST':
-        # cuename ermitteln:
         cuepath = globs.room.cuepath ()
+
         if option == "fader":
             filename = request.form["name"]
-            filename = filename.replace ('+', '_') # kein '+' im filename
-            cuename = filename + "_fader"
         elif option == "button":
             filename = request.form["name"]
-            filename = filename.replace ('+', '_')
-            cuename = filename + "_button"
+        elif option == "cuelist":
+            filename = request.form["name"]
         else: # option == 'cue'
-            path = request.form["path"]
-            path = path.replace ('+', os.sep) # '+' in '/' umwandeln
             filename = request.form["filename"]
-            filename = filename.replace ('+', '_')
-            cuename = filename
 
         if len (filename): # Filename eingegeben:
             # neuen Cue anlegen 
-            fullname = os.path.join (cuepath, cuename)
+            filename = filename.replace ('+', '_') # '+' nicht im Namen!
+            fullname = os.path.join (cuepath, filename)
             csvfile = Csvfile (fullname)
             if os.path.isfile (csvfile.name()):
                 ret = globs.topcue.merge_to_csv (csvfile)
             else:
                 ret = globs.topcue.to_csv (csvfile)
-                evaluate_option ("cue")
+                # automatisches update von Cue
+                # evaluate_option ("cue")
             flash (ret["message"], category=ret["category"])
 
-            # Optionen 'fader' und 'button' auswerten:
+            # Option auswerten:
             if option == "fader":
                 faderpath = globs.room.cuefaderpath ()
                 faderfile = globs.cfg.get ("exefaders")
                 fullname = os.path.join (faderpath, faderfile)
                 csvfile.name (fullname)
 
-                if faderfile == "_neu":
+                if faderfile == "_neu": # default-Name festlegen
                     globs.cfg.set ("exefaders", "exefader")
                     globs.cfg.save_data ()
                     faderfile = "exefader"
@@ -132,11 +129,13 @@ def topsave (option:str):
                     dst = os.path.join (faderpath, "exefader")
                     csvfile.backup (dst)
                     csvfile.name (dst)
-                
-                newline = [{"Text":filename,"Filename":cuename,
-                            "Midiinput":"0", "Midifader":"0",
-                            "Level":"0.0"}]
-                csvfile.add_lines (newline)
+
+                newline = {} 
+                # defaults in newline eintragen:
+                globs.room.check_csv_line (newline, "cuefader")
+                newline["Filename"] = filename
+                newline["Text"] = filename
+                csvfile.add_lines ([newline])
                 make_fadertable (with_savedlevels=True)
                 flash (f"neuen Fader {filename} angelegt.", category="success")
 
@@ -146,7 +145,7 @@ def topsave (option:str):
                 fullname = os.path.join (buttonpath, buttonfile)
                 csvfile.name (fullname)
 
-                if buttonfile == "_neu":
+                if buttonfile == "_neu": # default-Name festlegen
                     globs.cfg.set ("exebuttons1", "exebuttons")
                     globs.cfg.save_data ()
                     buttonfile = "exebuttons"
@@ -155,14 +154,32 @@ def topsave (option:str):
                     csvfile.backup (dst)
                     csvfile.name (dst)
 
-                newline = [{"Text":filename,"Filename":cuename,
-                            "Type":"Schalter", "Group":"1",
-                            "Fadein":"3.0", "Fadeout":"3.0",
-                            "Midiinput":"0", "Midifader":"0",
-                            "Level":"0.0"}]
-                csvfile.add_lines (newline)
+                newline = {}
+                # defaults in newline eintragen:
+                globs.room.check_csv_line (newline, "cuebutton")
+                newline["Filename"] = filename
+                newline["Text"] = filename
+                csvfile.add_lines ([newline])
                 make_cuebuttons (with_savedlevels=True)
                 flash (f"neuen Button {filename} angelegt.", category="success")
+
+            elif option == "cuelist":
+                if "selected_cuelist" in session:
+                    clpath = globs.room.cuelistpath ()
+                    clfile = session["selected_cuelist"]
+                    fullname = os.path.join (clpath, clfile)
+                    csvfile.name (fullname)
+                    newline = {}
+                    # defaults in newline eintragen:
+                    globs.room.check_csv_line (newline, "cuelist")
+                    newline["Filename"] = filename
+                    # Id ist vom Typ Counter:
+                    nextid = csvfile.nextint ("Id")
+                    newline["Id"] = nextid
+                    csvfile.add_lines ([newline])
+                    flash (f"Cueliste '{clfile}' um Zeile {nextid} erweitert.")
+                else:
+                    flash ("Keine Cueliste in Arbeit, Cue abgespeichert.")
 
         else:
             flash ("Kein Dateiname angegeben.", category="info")
@@ -179,6 +196,15 @@ def topsave (option:str):
     elif option == "button":
         return render_template ("modaldialog.html", title="Neuen Button erzeugen",
                                                 text="Button-Bezeichnung:",
+                                                body="stringbody",
+                                                submit_text="erzeugen")
+    elif option == "cuelist":
+        if "selected_cuelist" in session:
+            title = "an Cuelist '" + session['selected_cuelist'] + "' anhängen"
+        else:
+            title = "keine Cueliste in Arbeit"
+        return render_template ("modaldialog.html", title=title,
+                                                text="Cue-Name:",
                                                 body="stringbody",
                                                 submit_text="erzeugen")
     else:

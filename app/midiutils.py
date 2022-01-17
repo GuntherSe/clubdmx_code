@@ -140,7 +140,6 @@ def midibutton_monitor (index:int, status:int):
     outnum = globs.buttontable[index].midioutput
     button = globs.buttontable[index].midicontroller
     if outnum != -1 and  button != -1 :
-        # led = int (globs.midiout_buttons[controller].index (button)) 
         if status: # status == 1
             globs.midi.led_on (outnum, button)
         else:
@@ -161,7 +160,6 @@ def midifader_monitor (table: str, index:int, level:int):
         outnum = globs.cltable[index].midioutput
         controller = globs.cltable[index].midicontroller
     globs.midi.level (outnum, controller, level)
-    # globs.midi.out_devices[outnum].level (controller, level)
 
 
 def get_midicommandlist ():
@@ -217,8 +215,6 @@ def eval_midicommand (device:int, ctrl:int, val:int):
             index = -1
         if line["Command"] == "TopcueClear" and val:
             globs.topcue.clear ()
-            # TODO session.pop ("topcuecontent", None) entfernen
-            # Anzeige von secondnav abhängig davon, ob content vorhanden
         elif line["Command"] == "CuelistGo" and val:
             if index in range (len (globs.cltable)):
                 globs.cltable[index].go ()

@@ -5,6 +5,7 @@ import os
 import globs
 
 from threading import Thread
+from datetime import datetime
 
 from flask import Flask #, json, request
 
@@ -82,12 +83,19 @@ def create_app (test_config=None):
     # print ("app.url_map: ", app.url_map)
 
     @app.context_processor
-    def topcue_content ():
-        """ topcue hat content ? """
+    def inject_topcue_content ():
+        """ Status des topcue in html-Seiten verfügbar machen 
+        """
         if globs.topcue.active ():
             return dict (topcue_content="true")
         else:
             return dict (topcue_content="false")
+
+    @app.context_processor
+    def inject_now ():
+        """ Datum in html verfügbar machen 
+        """
+        return {'now': datetime.utcnow() }
 
     # https://stackoverflow.com/questions/28627324/disable-cache-on-a-specific-page-using-flask
     # @app.after_request

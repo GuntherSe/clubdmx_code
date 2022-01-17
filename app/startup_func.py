@@ -263,9 +263,20 @@ def make_cuelistpages (with_savedlevels:bool=False) :
         # globs.fadertable.append (newcl) # Konstruktor
         new_cltable.append (newcl)
         fadernum = fadernum + 1 
+        # Filename != '_neu':
         filename = pagelist[count]["Filename"]
-        if filename == "":
-            filename = "_neu"
+        if filename == "" or filename == "_neu":
+            filename = pagelist[count]["Text"]
+            colnum = fieldnames.index ("Filename") +1
+            csvfile.write_cell (count+1,colnum, filename)
+        # Cueliste existiert? Evtl neu erzeugen:
+        clname = os.path.join (globs.room.cuelistpath(), filename)
+        clfile = Csvfile (clname)
+        if not clfile.exists ():
+            newclname = os.path.join (globs.room.cuelistpath(), "_neu")
+            newclfile = Csvfile (newclname)
+            newclfile.backup (clname)
+
         newcl.open (filename)
         newcl.id = newcl.location + str (count)
         newcl.text = pagelist[count]["Text"]

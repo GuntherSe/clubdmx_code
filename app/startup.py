@@ -187,7 +187,7 @@ def load_config (with_savedlevels=False):
     globs.ola.set_ola_ip (cfgdata)
 
     if globs.PYTHONANYWHERE == "false":
-    # MIDI auswerten
+        # MIDI auswerten
         cfgdata = globs.cfg.get ("midi_on") 
         if cfgdata == "1": 
             globs.midiactive = True
@@ -214,7 +214,7 @@ def load_config (with_savedlevels=False):
             globs.midiactive = False
             if Midi.paused == False:
                 Midi.pause ()
-    # OSC Input:
+        # OSC Input:
         cfgdata = globs.cfg.get ("osc_input")
         if cfgdata == "1":
             cfgdata = globs.cfg.get ("osc_inputport")
@@ -228,6 +228,9 @@ def load_config (with_savedlevels=False):
         else:
             globs.oscinput.pause ()
 
+        globs.midi.clear_lists ()
+        get_midicommandlist ()
+
     # start mit startcue?
     start_with_cue = globs.cfg.get ("start_with_cue")
     if start_with_cue == "1":
@@ -236,11 +239,9 @@ def load_config (with_savedlevels=False):
         # suchen und Auswerten des Startcues erst nachdem
         # die Fadertabelle erzeugt ist.
 
-    globs.midi.clear_lists ()
     make_fadertable (with_savedlevels=with_savedlevels)
     make_cuebuttons (with_savedlevels=with_savedlevels)
     make_cuelistpages (with_savedlevels=with_savedlevels)
-    get_midicommandlist ()
 
     if start_with_cue == "1":
         activate_startcue ()

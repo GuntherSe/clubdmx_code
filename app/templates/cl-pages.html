@@ -4,6 +4,7 @@
 {% import "csvtable-macros.html" as tbl with context %}
 {% import "base-macros.html" as base with context %}
 {% import "cl-macros.html" as cl with context %}
+{% import "index-macros.html" as idx %}
 
 {% macro cl_fadertable (header, d, filebuttons="cuelist") %}
 <div class="container">
@@ -59,8 +60,14 @@
 <div id="showCueModal"></div>
 
 <div>
-  <!-- Cuelist -->
-  {{ cl_fadertable ("Page", data) }}
+  {% if data["found_data"] == "false" %}
+    <!-- neue Pages-Seite erzeugen -->
+    {{ idx.button_elem_js ("Neue Cueliste erzeugen", 
+      idclass="create-cl", cols="4" ) }}
+  {% else %}
+    <!-- Cuelist -->
+    {{ cl_fadertable ("Page", data) }}
+  {% endif %}
 </div>
 {% endblock %}
 
@@ -100,6 +107,7 @@
     // Buttons aktivieren:
     activateCuelistbuttons (); // Bedienbuttons: GO, PAUSE etc.
     activateCuelistDetails (); // Button 'ansehen' 
+    modaldialogToPython (".create-cl", "/cuelist/newcl");
 
 
   });     // ende document ready

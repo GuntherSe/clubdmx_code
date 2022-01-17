@@ -329,6 +329,7 @@ class Cuelistbase ():
         keine negativen Werte, str als float umrechenbar
         """
         strval = self.cuedict[row][col]
+        strval = strval.strip ()
         if strval == "":
             if empty_allowed: 
                 self.cuedict[row][col] = -1.0

@@ -25,7 +25,7 @@ csvview = Blueprint ("csvview", __name__, url_prefix="/csv",
                      static_folder="static", template_folder="templates")
 
 # --- evaluate_option ---------------------------------------------------------
-def evaluate_option (option:str=None):
+def evaluate_option (option:str):
     """ beim Ändern von diversen Tabellen globals aktualisieren 
     option: Verzeichnis der csv-Tabellen
     """
@@ -50,8 +50,6 @@ def evaluate_option (option:str=None):
     elif option == "pages":
         make_cuelistpages ()
     # cuelist: automatisches Update (level==0, Pause oder fading-done)
-    # elif option == "cuelist":
-    #     make_cuelistpages ()
     elif option == "layout":
         globs.room.layout.__init__ ("layout")
 

@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 """ Views zu class Cuelist """
 
+import csv
 import os
 import os.path
 
@@ -9,13 +10,14 @@ from flask import Blueprint, render_template, request, json
 from flask import flash, session
 from flask_login import login_required
 from apputils import standarduser_required, admin_required, redirect_url
+from apputils import calc_mixoutput
 from common_views import check_clipboard
 
 import globs
 
-# from cue import Cue
 from csvfileclass import Csvfile   
 from cuelist import Cuelist
+from startup_func import make_cuelistpages
 # from room_views import new
 # from startup_levels import cuelist_locations
 # from cuebutton import Cuebutton
@@ -39,6 +41,16 @@ def get_cldata () -> dict:
     fname = globs.cfg.get("pages")
     filename = os.path.join (globs.room.pagespath(),fname)
     csvfile = Csvfile (filename)
+
+    if fname == "_neu" or not csvfile.exists (): # Pages-Tabelle nicht gefunden
+        csvfile.name (os.path.join (globs.room.pagespath(),"_neu"))
+        newname = os.path.join (globs.room.pagespath(),"pages")
+        csvfile.backup (newname) # 'pages.csv' erzeugen,  default Tabelle
+        csvfile.name (newname)
+        globs.cfg.set ("pages", "pages")
+        globs.cfg.save_data ()
+        fname = "pages"
+
     # ft = list (csvfile.fieldnames())
     data["shortname"]  = fname
     data["pluspath"]   = csvfile.pluspath ()
@@ -58,15 +70,6 @@ def get_cldata () -> dict:
     data["found_data"] = found_data
     return data
 
-
-def reload_cuelist (args:dict):
-    """ cueliste neu laden:
-    wenn Änderungen gepeichert wurden oder pages-Seite geändert wurde
-    siehe evaluate_option in csv_views.py
-    filename: geänderte page
-    row_num: Filename in Zeile row_num geändert, Zählung ab 1
-    """
-    pass
 
 # --- cuelist Viewfunktionen ------------------------------------------------
 
@@ -168,11 +171,58 @@ def editor () ->json:
                             excludebuttons = excludebuttons )
   
 
+@clview.route ("/newcl", methods = ["GET","POST"])
+@standarduser_required
+def newcl ():
+    """ neue Cueliste erzeugen 
+    
+    Namen der neuen Cueliste mit Modaldialog abfragen = 'newtext'
+    neue Zeile in pages-Tabelle
+    Cueliste mit Namen 'newtext' verwenden, evtl neu erzeugen
+    """
+    if request.method == 'POST':
+        newtext = request.form ["name"]
+
+        if newtext and newtext != "undefined":
+            # page-Tabelle erweitern:
+            filename = globs.cfg.get("pages")
+            fullname = os.path.join (globs.room.pagespath() , filename)
+            pagefile = Csvfile (fullname)
+            fieldnames = pagefile.fieldnames ()
+            newline = {}
+            # Default-Werte in newline einfügen:
+            globs.room.check_csv_line (newline, "pages")
+            newline["Text"] = newtext
+            newline["Filename"] = newtext
+            pagefile.add_lines ( [newline] )
+            # Cueliste prüfen, evtl neu erzeugen:
+            clname = os.path.join (globs.room.cuelistpath(), newtext)
+            clfile = Csvfile (clname)
+            if not clfile.exists ():
+                newclname = os.path.join (globs.room.cuelistpath(), "_neu")
+                newclfile = Csvfile (newclname)
+                newclfile.backup (clname)
+            make_cuelistpages ()
+            return "ok"
+        else:
+            flash ("kein Name angegeben.", category="danger")
+            return "ok"
+    return render_template ("modaldialog.html", title="Cueliste erzeugen",
+                                                text="Name für neue Cueliste:",
+                                                body="stringbody",
+                                                submit_text="erzeugen")
+
+
 # --- Hilfsfunktionen -------------------------------------------------------
 
 @clview.route ("/allstatus")
 def allstatus () ->json:
-    """ Status aller Cuelisten"""
+    """ Status aller Cuelisten
+    """
+    if globs.PYTHONANYWHERE == "true":
+        # keine threads, daher aktuelle Berechnungen machen:
+        calc_mixoutput ()
+
     ret = {}
     num_cl = len (globs.cltable)
     levels = [int (globs.cltable[i].level *255) for i in range (num_cl)]
@@ -188,6 +238,10 @@ def status (index:str) ->json:
     
     index: index in Cuelist.instances
     """
+    if globs.PYTHONANYWHERE == "true":
+        # keine threads, daher aktuelle Berechnungen machen:
+        calc_mixoutput ()
+
     ret = {}
     idx = int (index)
     if idx in range (len (globs.cltable)):
