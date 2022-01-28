@@ -21,10 +21,10 @@ from cuelist import Cuelist
 from startup_func import del_cuetables
 from startup_func import make_cuebuttons, make_fadertable, make_cuelistpages
 from startup_levels import activate_startcue
-from midiutils import get_midicommandlist
+from midiutils import eval_midiinput, get_midicommandlist
 
 if os.environ.get ("PYTHONANYWHERE")  != "true":
-    from midiinput import Midi
+    from mido_input import Midi
 
 current_room = ""
 
@@ -190,6 +190,7 @@ def load_config (with_savedlevels=False):
         # MIDI auswerten
         cfgdata = globs.cfg.get ("midi_on") 
         if cfgdata == "1": 
+            # globs.midi.reset_pygame ()
             globs.midiactive = True
             if Midi.paused:
                 Midi.resume ()
@@ -202,14 +203,21 @@ def load_config (with_savedlevels=False):
                     devnum = int(device)
                 except:
                     devnum = -1 # kein Midi
-                globs.midi.set_indevice (i, devnum)
+                ret = globs.midi.set_indevice (i, devnum)
+                if ret["category"] != "success":
+                    globs.midi.set_indevice (i, -1)
+                    globs.cfg.set ("midi_input_"+num, -1)
             # MIDI-Output:
                 device = globs.cfg.get ("midi_output_"+num)
                 try:
                     devnum = int(device)
                 except:
                     devnum = -1 # kein Midi
-                globs.midi.set_outdevice (i, int(device))
+                ret = globs.midi.set_outdevice (i, devnum)
+                if ret["category"] != "success":
+                    globs.midi.set_outdevice (i, -1)
+                    globs.cfg.set ("midi_output_"+num, -1)
+            globs.midi.set_eval_function (eval_midiinput)
         else:
             globs.midiactive = False
             if Midi.paused == False:

@@ -42,14 +42,14 @@ config,value,text,,,,,,true
 cuelist,Id,decimal,counter,>=0,,,,true
 cuelist,Filename,file,cue,,,,,
 cuelist,Fadein,decimal,,>=0,0,,,true
-cuelist,Stay,decimal,,>=0, ,leer = warten auf GO,,
+cuelist,Stay,decimal,,>=0,,leer = warten auf GO,,
 cuelist,Fadeout,decimal,,>=0,,"wenn leer, dann Crossfade",,
 cuelist,Waitin,decimal,,>=0,,,,
 cuelist,Waitout,decimal,,>=0,,,,
 cuelist,Text,text,,,,Beschreibung,,
 cuelist,Comment,text,,,,nächste Cue Info,,
 pages,Page,int,,,1,,,true
-pages,Text,text,,,,,,
+pages,Text,text,,,,,,true
 pages,Filename,file,cuelist,,,"wenn _neu, dann = Text",,true
 pages,Midiinput,int,,0 4,0,0: kein Midi-Input,,
 pages,Midioutput,int,,0 4,0,0: kein Midi-Output,,

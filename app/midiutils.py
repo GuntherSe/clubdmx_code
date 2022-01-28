@@ -42,7 +42,7 @@ def check_midicontroller (incnt:str, outcnt:str, controller:str) ->list:
     return: [incnt,outcnt,controller] 
         0 bedeutet ungültiger Wert
     """
-    num_devices = len (globs.midi.in_devices)
+    num_devices = len (globs.midi.in_ports)
     # Midiinput-Nummer, Zählung ab 1:
     try: 
         incnr = int (incnt)
@@ -126,7 +126,7 @@ def eval_midiinput (*data):
                         press_cuebutton (index)
         # keine Werte zwischen SHIFT und 2*SHIFT
         else: # Zusatz
-            print (f"Special Midibutton: {data[2]}, {data[3]}")
+            print (f"Special Midibutton: {data}")
             eval_midicommand (data[0], data[2], data[3])
 
 
@@ -204,8 +204,11 @@ def eval_midicommand (device:int, ctrl:int, val:int):
     ctrl: Controller-Nummer ab 0
     val: Controller-Wert, 0 <= val <= 127. Nur Drücken auswerten, 
          Loslassen nicht auswerten
+    mit mido-Modul kein Debuggen möglich? 
+    Leider mit mido.port.callback nicht, daher Midi-Input mit Thread
     """
     key = str(device) + '-' + str(ctrl)
+    # print ("key: ", key, ", val: ", val)
     if key in midi_commanddict:
         line = midi_commanddict[key]
         if len (line["Parameter"]):

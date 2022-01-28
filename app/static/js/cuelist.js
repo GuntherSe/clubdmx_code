@@ -82,7 +82,7 @@ function periodic_allcueliststatus () {
 
     },
     complete: function () {
-      setTimeout (periodic_allcueliststatus, 200);
+      setTimeout (periodic_allcueliststatus, 500);
     }
   }); // ende $.ajax
 }
@@ -97,39 +97,12 @@ function periodic_allcueliststatus () {
 function activateCuelistDetails () {
   // Button "Editor"  
   $("button.cuelistview").on ("click", function ()  {
-    // event.preventDefault ();
-    // event.stopPropagation ();
 
     var filename = $(this).attr ("name");
     var index = $(this).attr ("index");
-    //$.get ("/cuelist/editor", {name:filename, index:index});
     let url = "/cuelist/editor?filename=" + filename + "&index=" + index;
     location.href = url;
     return false;
-    // $.get({
-    //   url: "/cuelist/details", 
-    //   data: {filename:filename},
-    //   cache: false })
-    //   .then ( function(data){
-    //     modaldata = $.parseJSON(data);
-    //     // console.log ("modaldata: " + modaldata);
-    //     $("#dialogModal").html (modaldata);
-    //     $("#viewModal").modal();
-
-    //     // Editierbar machen:
-    //     initCsvtableMouse ();
-
-    //     $("#viewModal").on ("hide.bs.modal"), function () {
-    //         if (fileDialogParams.select=='true') {
-    //             saveCell ();
-    //         };
-    //     };
-    //     //$("#fileselect").show ();
-    //     $("#viewModal").on ("hidden.bs.modal", function () {
-    //       postSelectedRows ( $() ); // selektierte Reihen löschen
-    //       location.reload ();
-    //     });
-    //   });
   }); // ende $ cuelistview
 
 };

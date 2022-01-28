@@ -306,7 +306,7 @@ class Cuelistbase ():
         Damit wird beim __init__ ein Einfaden des ersten Cues ausgelöst.
         """
         # current Cue:
-        self.currentpos = -1
+        self.currentpos = 0 #-1
         self.currentid = 0.0 
         fname = "_neu"
         self.currentcue.open (fname)
@@ -329,7 +329,8 @@ class Cuelistbase ():
         keine negativen Werte, str als float umrechenbar
         """
         strval = self.cuedict[row][col]
-        strval = strval.strip ()
+        if isinstance (strval, str):
+            strval = strval.strip ()
         if strval == "":
             if empty_allowed: 
                 self.cuedict[row][col] = -1.0

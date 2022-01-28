@@ -5,7 +5,7 @@
 
 import pygame
 import pygame.midi
-# import time
+# from time  import sleep
 
 import midi_devices as mdev
 
@@ -31,10 +31,11 @@ class MidiDevice ():
 
     def clear (self):
         """ Mididevice rücksetzen """
-        self.device_id = -1
-        self.name = mdev.NO_MIDI_DEVICE
         if self.midi_device:
             self.midi_device.close ()
+            # self.midi_device.abort ()
+        self.device_id = -1
+        self.name = mdev.NO_MIDI_DEVICE
         self.midi_device = None
         self.buttons.clear ()
         self.faders.clear ()
@@ -60,7 +61,7 @@ class MidiDevice ():
                 else:
                     self.midi_device = pygame.midi.Output (self.device_id)
 
-                if self.name in mdev.midi_device_dict:
+                if self.name in mdev.midi_device_dict.keys():
                     self.buttons = mdev.midi_device_dict [self.name][1]
                     self.faders  = mdev.midi_device_dict [self.name][0]
                 else:
@@ -187,7 +188,7 @@ class MidiOutput ():
                 
         else:
             self.clear (pos)
-            ret = "Fehler beim Zuordnen von Midi-Device"
+            ret = f"Kein Zuordnen von Midi-Output {num}"
         return ret
 
 
@@ -297,7 +298,7 @@ Kommandos: x = Exit
 
             else:
                 try:
-                    ret = mididev.set_device (int(cmd[0]), int(cmd[1]))
+                    ret = mididev.set_outdevice (int(cmd[0]), int(cmd[1]))
                     print (ret)
                 except:
                     pass

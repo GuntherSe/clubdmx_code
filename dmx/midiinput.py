@@ -70,6 +70,18 @@ class Midi (MidiOutput, threading.Thread):
         """ Eval-Funktion zuweisen """
         self.eval = newfunc
 
+    def reset_pygame (self):
+        """ pygame reset und Geräte freigeben
+        """
+        self.pause ()
+        if  (pygame.midi.get_init ()):
+            pygame.midi.quit ()
+            time.sleep (0.1)
+        pygame.midi.init ()
+        time.sleep (0.1)
+        self.resume ()
+
+
     def clear (self, pos:int):
         """ self.in_devices[pos] zurücksetzen
         """
@@ -118,7 +130,7 @@ class Midi (MidiOutput, threading.Thread):
                 ret = "kein Midi-Input-Device vorhanden"
         else:
             self.clear (pos)
-            ret = "Fehler beim Zuordnen von Midi-Device"
+            ret = f"Kein Zuordnen von Midi-Input {num}."
         return ret
 
 
@@ -126,10 +138,13 @@ class Midi (MidiOutput, threading.Thread):
         """ midi-input mittels eval weiterverarbeiten
         eval: print oder andere eval-Funktion
         """
+        # if not (pygame.midi.get_init ()):
+        #     return
         for i in range (len (self.in_devices)): # alle MidiInputs
             device = self.in_devices[i]
 
-            if device.midi_device and device.device_id != -1:
+            if pygame.midi.get_init () and \
+                device.midi_device and device.device_id != -1:
                 if device.midi_device.poll():
                     msg = device.midi_device.read(100) # mehrere messages einlesen, sonst träge
                     if TEST:
@@ -168,8 +183,7 @@ Kommandos: x = Exit
            a = zeige alle MIDI-Geräte
            i = zeige alle MIDI-input-Geräte
            o = zeige alle MIDI-output-Geräte
-           <num> = verwende MIDI Input <num>
-           <pos> <num> = verwende MIDI Output <num> an Gerät <pos>
+           <pos> <num> = verwende MIDI Input <num> an Gerät <pos>
            k <pos> = verwende kein MIDI an Gerät <pos>
 """
 
@@ -209,7 +223,7 @@ Kommandos: x = Exit
 
             else:
                 try:
-                    ret = mididev.set_device (int(cmd[0]), int(cmd[1]))
+                    ret = mididev.set_indevice (int(cmd[0]), int(cmd[1]))
                     print (ret)
                 except:
                     pass

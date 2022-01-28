@@ -14,7 +14,7 @@
    - Detailansicht ok 0.98
    - Sprung-Buttons zwischen den Cuelist-Seiten 0k 0.98
    - Editor: Leertaste = GO, Up- und Down-Tasten bestimmen next Cue ok 0.99
-   - Status in Pythonanywhere anzeigen
+   - Status in Pythonanywhere anzeigen ok 1.0
 
 -- Stage Single: Eingabefeld für Headnr
 
@@ -41,7 +41,9 @@
    ok: 'Administrator' mit Passwort 'ClubAdmin2021'
    'Standard' mit Passwort 'Standard2021'
 
--- Room: env-Variable CLUBDMX_ROOMPATH berücksichtigen ok 0.96
+-- Room: 
+   - env-Variable CLUBDMX_ROOMPATH berücksichtigen ok 0.96
+   - verify: Tabellenheader prüfen und evtl ändern.
 
 -- Gruppen (Geräte) ok 0.99
 
@@ -51,7 +53,7 @@
 
 -- html-Tabelle in CSV-Tabelle speichern
 
-- Startup-Log Datei (txt)
+-- Startup-Log Datei (txt)
 
 -- Feldnamen in Kleinbuchstaben, Anzeige in Tabelle 
 mit Anfangs-Großbuchstaben: 

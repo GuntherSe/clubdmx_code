@@ -45,12 +45,12 @@ def config ():
         midiindevices = globs.midi.list_devices ("input")
         midiin_choices = [("-1", "kein Midi-Input")]
         for elem in midiindevices:
-            midiin_choices.append ((str(elem[0]), elem[4])) # Namen
+            midiin_choices.append ((str(elem[0]), elem[3])) # Namen
 
         midioutdevices = globs.midi.list_devices ("output")
         midiout_choices = [("-1", "kein Midi-Output")]
         for elem in midioutdevices:
-            midiout_choices.append ((str (elem[0]), elem[4])) # Namen
+            midiout_choices.append ((str (elem[0]), elem[3])) # Namen
 
 
     class Configform (Form):

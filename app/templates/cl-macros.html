@@ -14,12 +14,13 @@
       <td id="currenttext-{{ index }}" index="{{ index }}"
           class="col-7 text-center ml-3"></td>
       <td class="col-3">
-          <div id="fadeout-{{ index }}" class="progress">
+        <div id="fadeout-{{ index }}" class="progress">
           <div id="fadeout-indicator-{{ index }}" class="progress-bar bg-info" 
-              role="progressbar" aria-valuenow="0" style="transition:400ms;"
+              role="progressbar" aria-valuenow="0" 
               aria-valuemin="0" aria-valuemax="100">
           </div>
-          </div>
+              {# style="transition:400ms;" #}
+        </div>
       </td>
     </tr>
     <tr class="row">
@@ -30,12 +31,12 @@
       <td id="nexttext-{{ index }}" index="{{ index }}"
           class="col-7 text-center ml-3"></td>
       <td class="col-3">
-          <div id="fadein-{{ index }}" class="progress">
+        <div id="fadein-{{ index }}" class="progress">
           <div id="fadein-indicator-{{ index }}" class="progress-bar bg-success" 
-              role="progressbar" aria-valuenow="0" style="transition:400ms;"
+              role="progressbar" aria-valuenow="0" 
               aria-valuemin="0" aria-valuemax="100">
           </div>
-          </div>
+        </div>
       </td>
     </tr>
   </tbody>

@@ -44,6 +44,7 @@ Kontrol2_buttons = [
 
 
 midi_device_dict = {"nanoKONTROL": [Kontrol_faders, Kontrol_buttons],
-                    "nanoKONTROL MIDI 1": [Kontrol_faders, Kontrol_buttons],
-                    "nanoKONTROL2": [Kontrol2_faders, Kontrol2_buttons]}
+                    # "nanoKONTROL MIDI 1": [Kontrol_faders, Kontrol_buttons],
+                    "nanoKONTROL2": [Kontrol2_faders, Kontrol2_buttons] } #,
+                    # "nanoKONTROL2 MIDI 1": [Kontrol2_faders, Kontrol2_buttons]}
 
