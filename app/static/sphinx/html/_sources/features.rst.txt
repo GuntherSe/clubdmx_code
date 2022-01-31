@@ -37,6 +37,7 @@ Wie sind also hier in ClubDMX die Möglichkeiten für Lichtszenen?
   * Cues mit Button.
   * Cue mit Top-Priorität zur Bedienung der einzelnen Geräte und
     Erzeugung von weiteren Cues. Siehe :ref:`topcuelabel`
+  * Cueliste als Sammlung von Cues, mit In-, Out und Wartezeiten.
 
 
 Daten in CSV-Dateien
@@ -60,7 +61,8 @@ MIDI
 
 Außer der Webseite kann ClubDMX auch über MIDI bedient werden. Vorzugsweise über 
 ein Korg NanoKontrol-2. Die Buttons und Fader des NanoKontrol2 können mit den 
-Buttons und Fadern verbunden werden. 
+Buttons und Fadern verbunden werden. Bis zu vier Midi-Geräte können als Input
+und/oder Output gleichzeitig verwendet werden.
 
 OSC Input
 ---------

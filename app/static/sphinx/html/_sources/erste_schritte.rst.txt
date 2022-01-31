@@ -13,7 +13,7 @@ installiertes ClubDMX zum Leben zu erwecken.
 
 - Patch nach vorhandener Hardware erstellen:
 
-   Patch  *_neu* speichern als  \<neuer Patchname\>
+   Patch *_neu* speichern als \<neuer Patchname\>
 
    ``neue Zeile(n)`` erstellt einen oder mehrere neue Heads. 
    Im Formular die entsprechenden Daten eingeben.
@@ -22,7 +22,7 @@ installiertes ClubDMX zum Leben zu erwecken.
 
 - Config:
 
-   Config  *_neu* speichern als \<neuer Configname\>
+   Config *_neu* speichern als \<neuer Configname\>
 
    Falls ClubDMX und OLA am selben Rechner laufen, dann ist die OLA-Adresse die 
    Default-Adresse ``127.0.0.1``. Falls nicht, dann 

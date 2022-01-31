@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Entwicklungsschritte &#8212; ClubDMX Doku 0.9 Dokumentation</title>
+    <title>Entwicklungsschritte &#8212; ClubDMX Doku 1.0 Dokumentation</title>
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -238,6 +238,28 @@ angezeigte Stage kann davon abweichen: Die angezeigte Stage wird in einer
 Session-Variablen gespeichert.</p></li>
 </ul>
 </li>
+<li><p>Version 1.0</p>
+<p>Neben Stage, Fader und Button kommt eine weitere Bedieneinheit hinzu, die
+<strong>Cueliste.</strong>
+Die Komponenten der Cueliste sind:</p>
+<ul class="simple">
+<li><p>Page. Hier werden Cuelisten angezeigt und bedient. Level, Go, Pause und
+Auswahl des nächsten Cues.</p></li>
+<li><p>Page-Setup. Hier werden neue Cuelisten angelegt oder bestehende
+modifiziert, d.h. die Anzeigenamen und die Midi-Bedienung definiert.</p></li>
+<li><p>Cuelist-Editor. Hier werden die Zeilen einer Cueliste angelegt und die
+Parameter eingestellt.</p></li>
+</ul>
+<p>Weitere Neuerungen:</p>
+<ul class="simple">
+<li><p>Stage: Geräte können zu <strong>Gruppen</strong> zusammengefasst werden. Mit dem
+Gruppensymbol werden alle Geräte der Gruppe selektiert.</p></li>
+<li><p>Midi: 4 Midi-Inputs, 4 Midi-Outputs. Midi-verarbeitbar sind neben Fadern
+und Buttons auch die Cuelisten: Level, Tasten (Go, Pause, Cue-Auswahl).
+Der Clear-Button (=Topcue leeren) ist über Midi bedienbar.</p></li>
+<li><p>Edit/Select Umschalten erfolgt über Javascript, kein Reload der Seite nötig.</p></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -325,7 +347,7 @@ Session-Variablen gespeichert.</p></li>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2021, Gunther Seiser.
+      &copy;2022, Gunther Seiser.
       
       |
       Powered by <a href="http://sphinx-doc.org/">Sphinx 3.4.3</a>

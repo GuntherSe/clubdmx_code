@@ -317,8 +317,8 @@ Anmerkung: Am Raspberry werden Environment-Variablen in der Datei
 ``export CLUBDMX_ROOMPATH=”/home/pi/Documents/rooms”``
 
 
-Troubles schießen
------------------
+Troubles?
+---------
 
 Die Installation ist - beginnend bei einer leeren SD-Karte - nun doch ein 
 wenig lang. Daher wird vielleicht der eine oder andere Fehler auftauchen. 

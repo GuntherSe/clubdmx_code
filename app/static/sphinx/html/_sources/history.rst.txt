@@ -235,6 +235,34 @@ Die Entwicklungsschritte
   - Stage: In der Config (Bedienelemente) wird eine Default-Stage angegeben. Die 
     angezeigte Stage kann davon abweichen: Die angezeigte Stage wird in einer
     Session-Variablen gespeichert.
+
+* Version 1.0
+  
+  Neben Stage, Fader und Button kommt eine weitere Bedieneinheit hinzu, die 
+  **Cueliste.** 
+  Die Komponenten der Cueliste sind:
+
+  - Page. Hier werden Cuelisten angezeigt und bedient. Level, Go, Pause und 
+    Auswahl des nächsten Cues.
+  
+  - Page-Setup. Hier werden neue Cuelisten angelegt oder bestehende
+    modifiziert, d.h. die Anzeigenamen und die Midi-Bedienung definiert.
+
+  - Cuelist-Editor. Hier werden die Zeilen einer Cueliste angelegt und die 
+    Parameter eingestellt.
+
+  Weitere Neuerungen:
+
+  - Stage: Geräte können zu **Gruppen** zusammengefasst werden. Mit dem 
+    Gruppensymbol werden alle Geräte der Gruppe selektiert.
+
+  - Midi: 4 Midi-Inputs, 4 Midi-Outputs. Midi-verarbeitbar sind neben Fadern 
+    und Buttons auch die Cuelisten: Level, Tasten (Go, Pause, Cue-Auswahl). 
+    Der Clear-Button (=Topcue leeren) ist über Midi bedienbar.
+
+  - Edit/Select Umschalten erfolgt über Javascript, kein Reload der Seite nötig.
+  
+  
  
   
  

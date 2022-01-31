@@ -229,7 +229,7 @@ den dritten Button aus der oberen Exec-Zeile betätigt:
   * * * * * /home/pi/clubdmx_code/sendosc.sh --address=/exebutton1/3
   
 Die unterstützten OSC-Befehle finden sich auf der ClubDMX Webseite und auch 
-hier in der Doku im Kapitel :ref:`navigation_label`. 
+hier in der Doku im Kapitel :ref:`osc_commands`. 
 
 Mit dem Linux-Befehl ``crontab -e`` wird die Crontab editiert, mit dem
 Befehl ``crontab -l`` wird sie angezeigt und mit ``crontab -r`` wird sie 

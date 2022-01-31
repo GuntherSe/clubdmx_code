@@ -17,10 +17,9 @@
 # -----------------------------------------------------
 
 # Konfiguration über Environment-Varialben oder Default-Werte:
-codepath="${CLUBDMX_CODEPATH:-/home/pi/clubdmx_code}"
-roompath="${CLUBDMX_ROOMPATH:-/home/pi/clubdmx_rooms}"
-gunicornstart="${GUNICORNSTART:-/home/pi/.local/bin/gunicorn --daemon}"
-
+codepath="${CLUBDMX_CODEPATH:-$HOME/clubdmx_code}"
+roompath="${CLUBDMX_ROOMPATH:-$HOME/clubdmx_rooms}"
+gunicornstart="${GUNICORNSTART:-$HOME/.local/bin/gunicorn --daemon}"
 
 cd $codepath
 export PYTHONPATH="${PWD}/app:${PWD}/dmx"

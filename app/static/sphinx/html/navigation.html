@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ClubDMX benützen &#8212; ClubDMX Doku 0.9 Dokumentation</title>
+    <title>ClubDMX benützen &#8212; ClubDMX Doku 1.0 Dokumentation</title>
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -219,11 +219,12 @@ durchgeführt werden dürfen, ist noch in Arbeit. Den aktuellen Stand zu den
 Benutzer-Rollen siehe <a class="reference internal" href="benutzer.html#benutzer-label"><span class="std std-ref">Benutzer</span></a> .</p>
 </div>
 <div class="section" id="osc-input">
-<h2>OSC Input<a class="headerlink" href="#osc-input" title="Link zu dieser Überschrift">¶</a></h2>
+<span id="osc-commands"></span><h2>OSC Input<a class="headerlink" href="#osc-input" title="Link zu dieser Überschrift">¶</a></h2>
 <p>Dieses Modul ermöglicht die Verbindung mit externen Programmen wie zum Beispiel
 <a class="reference external" href="https://troikatronix.com/">Isadora</a> . Über
 <a class="reference external" href="https://de.wikipedia.org/wiki/Open_Sound_Control">OSC</a> können
-folgende Aktionen in ClubDMX ausgeführt werden:</p>
+folgende Aktionen in ClubDMX ausgeführt werden.</p>
+<p><strong>Allgemeine Aktionen</strong></p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">/head</span> <span class="pre">&lt;attribut&gt;</span> <span class="pre">&lt;headnr&gt;</span> <span class="pre">&lt;level&gt;</span></code> ermöglicht de Zugriff auf sämtliche
 Geräte und deren Attribute.</p>
@@ -235,20 +236,39 @@ Geräte und deren Attribute.</p>
 </div>
 </li>
 <li><p><code class="docutils literal notranslate"><span class="pre">/clear</span></code> leert den <a class="reference internal" href="grundlagen.html#topcuelabel"><span class="std std-ref">Topcue</span></a> .</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">/fader/&lt;nummer&gt;</span> <span class="pre">&lt;level&gt;</span></code> ändert den Level eines Faders.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">/exefader/&lt;nummer&gt;</span> <span class="pre">&lt;level&gt;</span></code> ändert den Level eines Faders aus der
+</ul>
+<p><strong>Fader-Aktionen</strong></p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">/fader</span> <span class="pre">&lt;nummer&gt;</span> <span class="pre">&lt;level&gt;</span></code> ändert den Level eines Faders.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/exefader</span> <span class="pre">&lt;nummer&gt;</span> <span class="pre">&lt;level&gt;</span></code> ändert den Level eines Faders aus der
 Exec-Seite.</p>
 <div class="line-block">
 <div class="line"><code class="docutils literal notranslate"><span class="pre">&lt;nummer&gt;</span></code> ist eine Ganzzahl entsprechend der Fadertabelle.</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">&lt;level&gt;</span></code> ist eine Gleitzahl im Bereich zwischen 0 und 1.</div>
 </div>
 </li>
-<li><p><code class="docutils literal notranslate"><span class="pre">/button/&lt;nummer&gt;</span></code> betätigt einen Button.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">/exebutton1/&lt;nummer&gt;</span></code> betätigt einen Button aus der oberen Reihe
+</ul>
+<p><strong>Button-Aktionen</strong></p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">/button</span> <span class="pre">&lt;nummer&gt;</span></code> betätigt einen Button.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/exebutton1</span> <span class="pre">&lt;nummer&gt;</span></code> betätigt einen Button aus der oberen Reihe
 der Exec-Seite.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">/exebutton2/&lt;nummer&gt;</span></code> betätigt einen Button aus der unteren Reihe
+<li><p><code class="docutils literal notranslate"><span class="pre">/exebutton2</span> <span class="pre">&lt;nummer&gt;</span></code> betätigt einen Button aus der unteren Reihe
 der Exec-Seite.</p>
 <p><code class="docutils literal notranslate"><span class="pre">&lt;nummer&gt;</span></code> ist eine Ganzzahl entsprechend der Buttontabelle.</p>
+</li>
+</ul>
+<p><strong>Cuelist-Aktionen</strong></p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">/cuelistfader</span> <span class="pre">&lt;nummer&gt;</span> <span class="pre">&lt;level&gt;</span></code> ändert den Level eines Cuelist-Faders.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/go</span> <span class="pre">&lt;nummer&gt;</span></code> ist ein GO in Cueliste.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/go</span> <span class="pre">&lt;nummer&gt;</span> <span class="pre">&lt;cuenummer&gt;</span></code> ist ein GO in Cueliste.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/pause</span> <span class="pre">&lt;nummer&gt;</span></code> pausiert die Cueliste.</p>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">&lt;nummer&gt;</span></code> ist die Zeilennummer in der Cuelist-Page.</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">&lt;cuenummer&gt;</span></code> ist die Nummer des nächsten Cues.</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">&lt;level&gt;</span></code> ist eine Gleitzahl im Bereich zwischen 0 und 1.</div>
+</div>
 </li>
 </ul>
 </div>
@@ -343,7 +363,7 @@ der Exec-Seite.</p>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2021, Gunther Seiser.
+      &copy;2022, Gunther Seiser.
       
       |
       Powered by <a href="http://sphinx-doc.org/">Sphinx 3.4.3</a>

@@ -23,7 +23,7 @@ mehreren Webseiten. Die erste Wahl ist die Stage mit beweglichen und
 selektierbaren Elementen. Als Idee dahinter ist, die **Geräte (= Heads)** 
 wie in einem Grundriss eines Raumplanes zu positionieren. Damit können
 die Geräte auf dem Bildschirm so angeordnet werden, wie sie sich im reellen
-Raum befinden.
+Raum befinden. 
 
 .. image:: _static/stage_page.jpg
 
@@ -213,13 +213,17 @@ Die genaue Kategorisierung, welche Aktionen mit welcher Rolle
 durchgeführt werden dürfen, ist noch in Arbeit. Den aktuellen Stand zu den
 Benutzer-Rollen siehe :ref:`benutzer_label` .
 
+.. _osc_commands:
+
 OSC Input
 ---------
 
 Dieses Modul ermöglicht die Verbindung mit externen Programmen wie zum Beispiel 
 `Isadora <https://troikatronix.com/>`_ . Über 
 `OSC <https://de.wikipedia.org/wiki/Open_Sound_Control>`_ können 
-folgende Aktionen in ClubDMX ausgeführt werden:
+folgende Aktionen in ClubDMX ausgeführt werden.
+
+**Allgemeine Aktionen**
  
 * ``/head <attribut> <headnr> <level>`` ermöglicht de Zugriff auf sämtliche
   Geräte und deren Attribute.
@@ -231,22 +235,40 @@ folgende Aktionen in ClubDMX ausgeführt werden:
 
 * ``/clear`` leert den :ref:`topcuelabel` .
 
-* ``/fader/<nummer> <level>`` ändert den Level eines Faders.
+**Fader-Aktionen**
 
-* ``/exefader/<nummer> <level>`` ändert den Level eines Faders aus der
+* ``/fader <nummer> <level>`` ändert den Level eines Faders.
+
+* ``/exefader <nummer> <level>`` ändert den Level eines Faders aus der
   Exec-Seite.
   
   | ``<nummer>`` ist eine Ganzzahl entsprechend der Fadertabelle.
   | ``<level>`` ist eine Gleitzahl im Bereich zwischen 0 und 1.
 
-* ``/button/<nummer>`` betätigt einen Button.
+**Button-Aktionen**
+
+* ``/button <nummer>`` betätigt einen Button.
   
-* ``/exebutton1/<nummer>`` betätigt einen Button aus der oberen Reihe 
+* ``/exebutton1 <nummer>`` betätigt einen Button aus der oberen Reihe 
   der Exec-Seite.
   
-* ``/exebutton2/<nummer>`` betätigt einen Button aus der unteren Reihe 
+* ``/exebutton2 <nummer>`` betätigt einen Button aus der unteren Reihe 
   der Exec-Seite.
 
   ``<nummer>`` ist eine Ganzzahl entsprechend der Buttontabelle.
+
+**Cuelist-Aktionen**
+
+* ``/cuelistfader <nummer> <level>`` ändert den Level eines Cuelist-Faders.
+
+* ``/go <nummer>`` ist ein GO in Cueliste.
+
+* ``/go <nummer> <cuenummer>`` ist ein GO in Cueliste.
+
+* ``/pause <nummer>`` pausiert die Cueliste.
+
+  | ``<nummer>`` ist die Zeilennummer in der Cuelist-Page.
+  | ``<cuenummer>`` ist die Nummer des nächsten Cues.
+  | ``<level>`` ist eine Gleitzahl im Bereich zwischen 0 und 1.
 
 
