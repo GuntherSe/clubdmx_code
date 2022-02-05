@@ -14,9 +14,9 @@ import time
 import os
 import os.path
 import threading
-import csv
+# import csv
 
-from csvfileclass import Csvfile
+# from csvfileclass import Csvfile
 
 from patch import Patch
 from ola import OscOla
@@ -70,7 +70,7 @@ class Cuelist (Cuelistbase):
         id: ID des Cues
         tm: aktuelle Zeit
         direction: 'in' oder 'out'
-        return: {in:float zw. 0 und 1, out: Float zw. 0 und 1}
+        return: {in:float zw. 0 und 1, out: Float zw. 0 und 1, xfade:bool}
         """
         infactor = 0.0 # default
         outfactor = 1.0 # default 
@@ -137,6 +137,7 @@ class Cuelist (Cuelistbase):
             self.is_fading_out = self.is_fading_in
             curfactor["out"] = 1 - nextfactor["in"]
 
+        # print (f"cur: {curfactor}, next: {nextfactor}")
         # Übergänge berechnen:
         # 1. items, die in nextcue vorkommen:
         if self.is_fading_in:
@@ -216,6 +217,7 @@ class Cuelist (Cuelistbase):
 
         cuenr: nächste Cuenr oder '-1' -> go back
         """
+        # print ("------------------ GO")
         if self.is_fading_in: # aktueller Fade noch nicht abgeschlossen
             # print ("GO between...")
             self.output_to_current ()
@@ -290,12 +292,11 @@ class Cuelist (Cuelistbase):
         Nach dem Fade ausführen, um überzählige Null-Items zu entfernen
         Contrib aktualisieren
         """
-        self.outcue.content[:] = [item for item in self.currentcue.content]
-        outkeys = [line[0]+'-'+line[1] for line in self.outcue.content]
+        # self.outcue.content[:] = [item for item in self.currentcue.content]
+        outkeys = [line[0]+'-'+line[1] for line in self.currentcue.content]
         for key in Cue.contrib.contribs[self.outcue.count].copy().keys():
             if key != "faderlevel" and key not in outkeys:
                 Cue.contrib.remove_key (self.outcue.count, key)
-
         # self.outcue.content[:] = [item for item in self.outcue.content \
         #     if item[0]+item[1] in self.currentkeys]
 
@@ -307,7 +308,7 @@ if __name__ == "__main__":
     import pprint # pretty print
 
 
-    os.chdir ("C:\\Users\\Gunther\\OneDrive\\Programmierung\\clubdmx_rooms\\test")
+    os.chdir ("C:\\Users\\Gunther\\OneDrive\\Programmierung\\clubdmx_rooms\\develop")
     print ("ich bin hier: ", os.getcwd())
     patch = Patch()
     patch.set_path (os.getcwd())

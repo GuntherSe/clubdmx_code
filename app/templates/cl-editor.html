@@ -62,9 +62,24 @@
       editcell = $(this);
       let celldata = get_celldata (editcell);
 
+      if (celldata.text == "Filename") {
+        // Spalte editieren deaktiviert
+        return;
+      } else if (celldata.text == "Id") {
+        // sortieren nach Id:
+        console.log ("sortiere nach Id");
+        let name = $("#csvtable").attr ("file");
+        let pluspath = $("#csvtable").attr ("pluspath");
+        let args = {name:name, pluspath:pluspath, field:"Id"};
+        $.get ("/csv/sort", args, function () {
+          location.reload ();
+        });
+        return;
+      };
+
       let args = {field:celldata.text};
 
-      console.log ("Spalte "+args.field+" editieren.");
+      // console.log ("Spalte "+args.field+" editieren.");
       // siehe modaldialogToPython:
       $.get ("/cuelist/coledit", args, function (data) {
         $("#dialogModal").html (data);

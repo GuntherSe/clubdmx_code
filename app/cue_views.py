@@ -99,11 +99,15 @@ def cueedit ():
 def cuetopage () ->json: 
     """ liefert Infos zum Cue 'filename'
 
-    return: Seitenaufruf mit Cue-Daten für Modal-Anzeige
+    return: Seitenaufruf mit Cue-Daten 
     """
     history = request.args.get ("history") # für Rücksprung
+    index = request.args.get ("index") # für Rücksprung bei Culist-Editor
     if history:
-        session["history"] = history
+        if index:
+            session["history"] = history +  "&index=" + index
+        else:   
+            session["history"] = history
     filename = request.args.get ("filename")
     fullname = os.path.join (globs.room.cuepath (), filename)
     csvfile = Csvfile (fullname)

@@ -206,7 +206,6 @@ class Cuelistbase ():
 
         # ersten Cue starten:
         self.is_fading_in = True
-        # self.is_loaded = True
         self.start_tm = time.time ()
         # self.go ()
 

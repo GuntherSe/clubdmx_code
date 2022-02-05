@@ -437,3 +437,19 @@ def rename ():
                                 title = f"{subdir}-Datei umbenennen")
 
 
+@csvview.route ("/sort")
+def sort ():
+    """ csv File nach Feld sortieren
+    
+    siehe cl-editor.html
+    """
+    fname = request.args.get ("name")
+    pluspath = request.args.get ("pluspath")
+    pluspath = pluspath.replace ('+', os.sep)
+    fullname = os.path.join (pluspath, fname)
+    csvfile = Csvfile (fullname)
+    field = request.args.get ("field")
+
+    ret = csvfile.sort (field)
+    flash (ret["message"], category=ret["category"])
+    return "ok"

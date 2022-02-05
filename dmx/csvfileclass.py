@@ -10,6 +10,7 @@ import math
 from urllib.parse import unquote
 
 from csvnameclass import Csvname
+from sort import natural_keys
 
 class Csvfile (Csvname):
     """ Klasse zur Behandlung von Änderungen in CSV-Files:
@@ -402,6 +403,36 @@ Backup, Sichern
             return '1'
 
 
+    def sort (self, field:str) -> dict:
+        """ CSV-Date nach Feld 'field' sortieren
+        
+        field: Feldname
+        return: {message:str, category:str}
+        """
+        ret = {}
+        content = self.to_list ()
+        content.pop (0) # fieldnames
+        if field in self._fieldnames:
+            num = self._fieldnames.index (field)
+            sortlist = sorted (content, key=lambda x: natural_keys (x[num]))
+
+            self.backup ()
+            fname = self.name()
+            with open (fname, 'w',encoding='utf-8', newline='') as pf:
+                writer = csv.writer (pf)
+                writer.writerow (self._fieldnames)
+                writer.writerows (sortlist)
+
+            ret["message"]  = f"{self.shortname()} nach {field} sortiert."
+            ret["category"] = "success"
+        else:  
+            ret["message"]  = f"{field} ist nicht in Feldnamen."
+            ret["category"] = "error"
+
+        return ret
+
+
+
 # -------------------------------------------------------------------------
 # Modul Test:
 
@@ -414,6 +445,8 @@ if __name__ == '__main__':
                6 = Test add_lines
                7 = Test remove_lines
                8 = Test find
+               9 = Test sort (Name)
+              10 = Test sort (Nummer)
     """
     testfile = "C:\\temp\\jazzitbar.csv"
     print (infotxt)
@@ -444,7 +477,8 @@ if __name__ == '__main__':
 
             elif i == '7':
                 csvfile = Csvfile (testfile)
-                res   = csvfile.remove_lines ([])
+                pos = input ("Zeilennummer (Zählung ab 1): ")
+                res   = csvfile.remove_lines ([int(pos) - 1])
                 if res:
                     print (res)
 
@@ -456,6 +490,15 @@ if __name__ == '__main__':
                 search2 = {"Text":"ellgrün","Filename":"hellgrün"}
                 found = csvfile.find (search2)
                 print ("gefunden 2: ", found)
+
+            elif i == '9':
+                csvfile = Csvfile (testfile)
+                ret = csvfile.sort ("Text")
+                print (ret)
+            elif i == '10':
+                csvfile = Csvfile (testfile)
+                ret = csvfile.sort ("Nummer")
+                print (ret)
 
             else:
                 pass

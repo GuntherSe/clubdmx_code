@@ -15,6 +15,7 @@
    - Sprung-Buttons zwischen den Cuelist-Seiten 0k 0.98
    - Editor: Leertaste = GO, Up- und Down-Tasten bestimmen next Cue ok 0.99
    - Status in Pythonanywhere anzeigen ok 1.0
+   - nach Id sortieren ok 1.0
 
 -- Stage Single: Eingabefeld für Headnr
 
@@ -23,6 +24,7 @@
 -- Sessions permanent für 365 Tage (noch zu testen)
 
 -- Bug:
+   - Cuelist-Editor: Nach Cue editieren beim Rücksprung index merken ok 1.0
    - Datenbank edit: reload beim Seitenaufruf fehlerhaft?
    - Datenbank edit: Backbutton fehlerhaft?
    - Cueliste editieren: Zeilen verschieben -> Idlist neu laden ok
