@@ -19,7 +19,7 @@
 # Konfiguration über Environment-Varialben oder Default-Werte:
 codepath="${CLUBDMX_CODEPATH:-$HOME/clubdmx_code}"
 roompath="${CLUBDMX_ROOMPATH:-$HOME/clubdmx_rooms}"
-gunicornstart="${GUNICORNSTART:-$HOME/.local/bin/gunicorn --daemon}"
+gunicornstart="${GUNICORNSTART:-$HOME/.local/bin/gunicorn}"
 
 cd $codepath
 export PYTHONPATH="${PWD}/app:${PWD}/dmx"
@@ -28,12 +28,17 @@ case "$1" in
   start)
     echo "Starte ClubDMX "
     touch test1running
-
-    $gunicornstart  -b 0.0.0.0:5000  wsgi:app
+    $gunicornstart  --daemon -b 0.0.0.0:5000  wsgi:app
     # Anmerkung: mit pgrep -fl wsgi.py erhält man die PID
-	
     ;;
     
+  service)
+    # für den Start als Service
+    echo "Starte ClubDMX als Service"
+    touch test1running
+    $gunicornstart --bind unix:clubdmx.sock -m 007 wsgi:app
+    ;;
+
   stop)
     echo "Stoppe ClubDMX"
     rm test1running 2> /dev/null
@@ -74,7 +79,7 @@ case "$1" in
       python3 dmx/rooms_check.py $roompath
 
       echo "ClubDMX mit Rückmeldungen starten."
-      gunicorn -b 0.0.0.0:5000  wsgi:app
+      $gunicornstart -b 0.0.0.0:5000  wsgi:app
     
     else
       echo "$ZIPFILE nicht gefunden. Update konnte nicht durchgeführt werden."

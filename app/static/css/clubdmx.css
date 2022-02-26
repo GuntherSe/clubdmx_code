@@ -37,6 +37,12 @@
   border-radius: 5px;
 }
 
+.slidercontainer {
+  overflow-x: auto;
+  flex-wrap: nowrap;
+  width: 100%;
+}
+
 .sliderelement {
   /* siehe attribslider.html */
   margin-bottom: 20px; 

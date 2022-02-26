@@ -53,7 +53,7 @@ class Roombase:
         # Raum-Layout
         self.layout = Layout ("layout")
         
-        # ist PATH korrekt angelegt?
+        # ist PATH korrekt angelegt, alle subdirs vorhanden?
         self.check()
 
 

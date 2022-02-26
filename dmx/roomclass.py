@@ -5,15 +5,24 @@ import os
 import os.path
 import shutil # fürs kopieren
 import tempfile
+import csv
 from csvnameclass import Csvname
+from csvfileclass import dict_to_list
 
 from roombaseclass import Roombase
 from csvfileclass import Csvfile
+
+# Liste aller Files in einem Directory:
+# siehe: https://stackoverflow.com/questions/3207219/how-do-i-list-all-files-of-a-directory
+def listfiles (spath:str) -> list:
+    return [f for f in os.listdir (spath) \
+        if os.path.isfile (os.path.join (spath, f))]
 
 class Room (Roombase):
     """ Die erweiterte Raum-Klasse """
     def __init__ (self, newpath=None):
         Roombase.__init__ (self, newpath)
+        self.check_fields ()
         
 
     def used_cues (self) -> list:
@@ -261,6 +270,45 @@ class Room (Roombase):
                 line[key] = defaults[key]
     
 
+    def check_fields (self):
+        """ prüfen, ob in den Tabellen alle Felder existieren.
+        
+        alle Subdirs und hier alle csv-Dateien prüfen 
+        Felder ergänzen oder entfernen
+        """
+        for subdir in self.subdirs:
+            subpath = os.path.join (self.PATH, subdir)
+            # os.chdir (subpath)
+            newcsv = Csvfile (os.path.join (subpath, "_neu") )
+            fieldnames = newcsv.fieldnames () # die müssen enthalten sein
+            fnset = set (fieldnames)
+            dir_content = listfiles (subpath)
+            for fname in dir_content: # alle Files prüfen
+                # print (f"File: {fname}")
+                # newcontent = []
+                curfile = Csvfile (os.path.join (subpath, fname))
+                curfields = curfile.fieldnames ()
+                # alle Feldnamen enthalten?
+                # https://stackoverflow.com/questions/1388818/how-can-i-compare-two-lists-in-python-and-return-matches
+                if not fnset.intersection (curfields) == fnset:
+                    print (f"NOT match: {subdir} / {fname}")
+                    curfile.backup () # ccsv File erzeugen
+                    newcontent = []
+                    fullname = curfile.name ()
+                    cur_content = curfile.to_dictlist ()
+                    for line in cur_content: # Defaults ergänzen
+                        self.check_csv_line (line, subdir)
+                        # content neu:
+                        newcontent.append (dict_to_list (line, fieldnames))
+                    
+                    # print (newcontent)
+                    with open (fullname, 'w',encoding='utf-8', newline='') as pf:
+                        writer = csv.writer (pf)
+                        writer.writerow (fieldnames)
+                        writer.writerows (newcontent)
+
+
+
 
 # --- Modul Test ----------------------------------------------
 if __name__ == "__main__":
@@ -272,7 +320,7 @@ if __name__ == "__main__":
     # head = "c:\Users\Gunther\OneDrive\Programmierung"
     datadir = os.path.join (head, "clubdmx_rooms")
     print (f"Datadir: {datadir}")
-    room.set_path (os.path.join (datadir, "test"))
+    room.set_path (os.path.join (datadir, "develop"))
     clip = {'Filename': 'Wand.csv', 'Level': '0', 'Midifader': '7', 'Midiinput': '1', 'Text': 'Wand'}
     
     infotxt = """
@@ -286,6 +334,7 @@ if __name__ == "__main__":
                6 = erzeuge ZIP-Archiv
                7 = entpacke ZIP-Archiv
                8 = clip mit Defaults ergänzen
+               9 = check_fields
     """
     print (infotxt)
     try:
@@ -324,6 +373,8 @@ if __name__ == "__main__":
                 print ("clip: ", clip)
                 room.check_csv_line (clip, "cuebutton")
                 print ("clip neu: ", clip)
+            elif i == '9':
+                room.check_fields ()
             else:
                 pass
     finally:

@@ -2,6 +2,7 @@
 
 {% import "csvtable-macros.html" as tbl with context %}
 {% import "base-macros.html" as base with context %}
+{% import "index-macros.html" as idx %}
 
 {% macro position (left, top, width, height) %}
 style="left:{{ left }}; top:{{ top }}; width:{{ width }}; height:{{ height }};"
@@ -18,6 +19,37 @@ style="left:{{ left }}; top:{{ top }}; width:{{ width }}; height:{{ height }};"
       endpoint = url_for ('data.dataedit_stage', 
                  history=url_for('stage.show')) )
   }}
+{% endblock %}
+
+{% block workspace %}
+<div class="row">
+  <div class="col col-9"></div>
+  <div class="col col-1"></div>
+  <div class="col col-1">
+    {{ base.svg_button_js ("#svg-arrow-up", "scroll-up", size="1.5em") }}
+   </div>
+   <div class="col col-1"></div>
+</div>
+
+<div class="row">
+  <div class="col col-9"></div>
+  <div class="col col-1">
+    {{ base.svg_button_js ("#svg-arrow-left", "scroll-left", size="1.5em") }}
+  </div>
+  <div class="col col-1"></div>
+  <div class="col col-1">
+    {{ base.svg_button_js ("#svg-arrow-right", "scroll-right", size="1.5em") }}
+  </div>
+</div>
+
+<div class="row">
+  <div class="col col-9"></div>
+  <div class="col col-1"></div>
+  <div class="col col-1">
+    {{ base.svg_button_js ("#svg-arrow-down", "scroll-down", size="1.5em") }}
+  </div>
+  <div class="col col-1"></div>
+</div>
 {% endblock %}
 
 {% block css %}
@@ -78,6 +110,35 @@ style="left:{{ left }}; top:{{ top }}; width:{{ width }}; height:{{ height }};"
       // selectableStageElements ();
       periodic_attribstatus ();
       csvSavediscardButtons ();
+      $(".scroll-down").on ("click", function (){
+        var stagetop = $("#csvtable").scrollTop ();
+        var height = $("#csvtable").height ();
+        $("#csvtable").scrollTop (stagetop + height/2);
+      });
+      $(".scroll-up").on ("click", function (){
+        var stagetop = $("#csvtable").scrollTop ();
+        var height = $("#csvtable").height ();
+        if (stagetop >= height/2) {
+          $("#csvtable").scrollTop (stagetop - height/2);
+        } else {
+          $("#csvtable").scrollTop (0);
+        };
+      });
+      $(".scroll-left").on ("click", function (){
+        var stageleft = $("#csvtable").scrollLeft ();
+        var width = $("#csvtable").width ();
+        if (stageleft >= width/2) {
+          $("#csvtable").scrollLeft (stageleft - width/2);
+        } else {
+          $("#csvtable").scrollLeft (0);
+        };
+      });
+      $(".scroll-right").on ("click", function (){
+        var stageleft = $("#csvtable").scrollLeft ();
+        var width = $("#csvtable").width ();
+        $("#csvtable").scrollLeft (stageleft + width/2);
+      });
+      
     });  
 
   </script>

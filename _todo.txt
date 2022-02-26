@@ -17,7 +17,9 @@
    - Status in Pythonanywhere anzeigen ok 1.0
    - nach Id sortieren ok 1.0
 
--- Stage Single: Eingabefeld für Headnr
+-- Stage 
+   - Single: Eingabefeld für Headnr
+   - Bug: draggable: beim Speichern viewport berücksichtigen ok 1.0
 
 -- edit/select Umschalten ohne reload, dh. mit Javascript ok 0.98
 
@@ -45,7 +47,7 @@
 
 -- Room: 
    - env-Variable CLUBDMX_ROOMPATH berücksichtigen ok 0.96
-   - verify: Tabellenheader prüfen und evtl ändern.
+   - check_fields: Tabellenheader prüfen und evtl ändern ok 1.0
 
 -- Gruppen (Geräte) ok 0.99
 

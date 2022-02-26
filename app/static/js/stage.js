@@ -10,7 +10,7 @@ function resizeStage () {
   if ($("#secondNav").css ("display")=="none") {
     navheight = $("#primaryNav").outerHeight () ;
   } else {
-    navheight = $("#nav-container").outerHeight (); 
+    navheight = $("#nav-container").outerHeight () + 2; 
   };
   var stbuttonheight = $(".stage-buttons").outerHeight();
   var resizeheight = bodyheight - headerheight - navheight - stbuttonheight -20;
@@ -133,6 +133,7 @@ function selectableStageElements () {
   var delta_w, delta_h, start_w, start_h;
   var stageleft, stagetop; 
   var newwidth, newheight, tmpw, tmph;
+  var rownum; // Identifizierung des Verschiebe-Elements (bei mehreren Elementen)
   if (! selectableStageEnabled ) {
     selectableStageEnabled = true;
     selectableCsvInit ();
@@ -157,7 +158,7 @@ function selectableStageElements () {
             // console.log ("ParseW: "+this.style.width+", H: "+this.style.height);
             start_w = $(this).outerWidth(true);
             start_h = $(this).outerHeight(true);
-            console.log ("StartW: "+start_w+", H: "+start_h);
+            // console.log ("StartW: "+start_w+", H: "+start_h);
           },
           resize: function () {
             // Größe berechnen:
@@ -201,38 +202,45 @@ function selectableStageElements () {
             // stageleft = stage.left;
             stagetop = $("#csvtable").scrollTop ();
             stageleft = $("#csvtable").scrollLeft ();
-            // console.log ("Stage Scrolltop:"+stagetop);
+            // console.log ("Stage:"+stagetop+", "+stageleft);
             delta_x = 0;
             delta_y = 0;
             tmppos = $(this).position ();
             start_x = tmppos.left;
             start_y = tmppos.top;
-            // console.log ("Start L: "+start_x+", T: "+start_y);
+            console.log ("Start L: "+start_x+", T: "+start_y);
+            rownum = $(this).attr ("row_num");
           },
           drag: function () {
             // Verschiebung berechnen:
             var newleft, newtop;
             var dleft, dtop; //dragged element
+
+            stagetop = $("#csvtable").scrollTop ();
+            stageleft = $("#csvtable").scrollLeft ();
+            // console.log ("Stage:"+stagetop+", "+stageleft);
+
             tmppos = $(this).position ();
             dleft = tmppos.left;
             dtop  = tmppos.top;
             // console.log ("Drag-L: "+dleft+" T: "+dtop 
             //   +" offL:"+doffleft+" offT:"+dofftop);
-            delta_x = dleft - start_x;
-            delta_y = dtop - start_y;
+            delta_x = Math.round (dleft - start_x) ;
+            delta_y = Math.round (dtop - start_y) ;
             start_x = dleft;
             start_y = dtop;
             // console.log ("delta: "+delta_x+" "+delta_y);
 
             // verschieben:
             $(".highlight").each ( function () {
-              tmppos = $(this).position ();
-              newleft = tmppos.left + delta_x + stageleft;
-              newtop  = tmppos.top + delta_y + stagetop;
-              // console.log ("Each L:"+newleft+" T:"+newtop+" offL:"+offleft
-              //   +" offT:"+offtop);
-
-              $(this).css ({"left": newleft, "top": newtop});
+              if ($(this).attr ("row_num") != rownum) {
+                // die anderen Elemente verschieben:
+                tmppos = $(this).position ();
+                newleft = tmppos.left + delta_x + stageleft;
+                newtop  = tmppos.top  + delta_y + stagetop;
+                // console.log ("Each L:"+newleft+" T:"+newtop );
+                $(this).css ({"left": newleft, "top": newtop});
+              };
             }) ;
 
           },
@@ -243,13 +251,13 @@ function selectableStageElements () {
             $(".highlight").each (function (index) {
               tmppos = $(this).position ();
               item = {};
-              item ["Left"] = Math.round (tmppos.left);
-              item ["Top"]  = Math.round (tmppos.top);
+              item ["Left"] = Math.round (tmppos.left+stageleft);
+              item ["Top"]  = Math.round (tmppos.top+stagetop);
               item ["row_num"] = $(this).attr ("row_num");
               data[index.toString()] = item;
 
-              // console.log ("Data:" + data["Left"] + ","+ data["Top"] 
-              //   + "," + data["row_num"]);
+              // console.log ("Data:" + item["Left"] + ","+ item["Top"] 
+              //   + "," + item["row_num"]);
             });
             $.get ("/stage/update_item", {"data":JSON.stringify (data)});
             // Buttons anzeigen:

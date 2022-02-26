@@ -46,6 +46,8 @@ def change ():
 
         newpath = newpath.replace ('+', os.sep) # '+' in '/' umwandeln
         globs.room.set_path (newpath)
+        # Raum prüfen:
+        globs.room.check_fields ()
         globs.cfgbase.set ("room", newpath)
         globs.cfgbase.set ("config", "_neu")
         globs.cfgbase.save_data ()

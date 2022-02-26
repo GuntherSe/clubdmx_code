@@ -19,6 +19,17 @@
   </a>
 {%- endmacro %}
 
+{# Button mit svg, ohne Text #}
+{% macro svg_button_js (svgid, idclass, size="") -%}
+  <a href="#" class="{{ idclass }}">
+    {% if size=="" %}
+      {{ svg_icon (svgid, size="1.2em") }}
+    {% else %}
+      {{ svg_icon (svgid, size) }}
+    {% endif %}
+  </a>
+{%- endmacro %}
+
 {# Subzeile im Header #}
 {% macro subtitle_with_button (titletext, svgid, endpoint) -%}
 <div class="d-flex flex-row">

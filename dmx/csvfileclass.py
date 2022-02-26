@@ -12,6 +12,29 @@ from urllib.parse import unquote
 from csvnameclass import Csvname
 from sort import natural_keys
 
+def dict_to_list (data:dict, fieldnames:list) ->list:
+    """ Data-Dict in Liste umwandeln 
+    
+    data: Dict
+    fieldnames: Felder, die in Liste übernommen werden sollen, Reihenfolge
+    """
+    # Hilfsfunktion zur Erzeugung einer neuen Zeile:
+    newline = []
+    # data-dict -> neue Zeile
+    for field in fieldnames:
+        if field in data:
+            try:
+                content = unquote (data[field])
+            except:
+                content = data[field]
+            newline.append (content)
+        else:
+            newline.append ('')
+    return newline
+
+
+
+
 class Csvfile (Csvname):
     """ Klasse zur Behandlung von Änderungen in CSV-Files:
 suche nach fname.ccsv, fname.csv
@@ -149,21 +172,6 @@ Backup, Sichern
         - csv-File einlesen, list an pos einfügen, speichern
         - keys, die nicht in fieldnames sind, werden ignorert
         """
-        def dict_to_list (data:dict) ->list:
-            # Hilfsfunktion zur Erzeugung einer neuen Zeile:
-            newline = []
-            # data-dict -> neue Zeile
-            for field in self._fieldnames:
-                if field in data:
-                    try:
-                        content = unquote (data[field])
-                    except:
-                        content = data[field]
-                    newline.append (content)
-                else:
-                    newline.append ('')
-            return newline
-
         ret = {} 
         self.backup()
 
@@ -173,11 +181,11 @@ Backup, Sichern
 
         if pos and pos < nlines:
             for dline in reversed (data):
-                newline = dict_to_list (dline)
+                newline = dict_to_list (dline, self._fieldnames)
                 lines.insert (pos, newline)
         else:
             for dline in data:
-                newline = dict_to_list (dline)
+                newline = dict_to_list (dline, self._fieldnames)
                 lines.append (newline)
 
         # File schreiben:
