@@ -123,6 +123,8 @@ class Room (Roombase):
                     check = c.save_changes ()
                     if not check:
                         fail = fail + 1
+                    else:
+                        self.logger.info (f"Änderungen gesichert: {fullname}")
 
         if fail:
             ret["category"] = "danger"
@@ -165,6 +167,8 @@ class Room (Roombase):
                     check = c.discard_changes ()
                     if not check:
                         fail = fail + 1
+                    else:
+                        self.logger.info (f"Änderungen verworfen: {fullname}")
 
         if fail:
             ret["category"] = "danger"
@@ -291,7 +295,8 @@ class Room (Roombase):
                 # alle Feldnamen enthalten?
                 # https://stackoverflow.com/questions/1388818/how-can-i-compare-two-lists-in-python-and-return-matches
                 if not fnset.intersection (curfields) == fnset:
-                    print (f"NOT match: {subdir} / {fname}")
+                    msg = f"Datenbankfehler in den Feldnamen: {subdir} / {fname}"
+                    self.logger.warning (msg)
                     curfile.backup () # ccsv File erzeugen
                     newcontent = []
                     fullname = curfile.name ()

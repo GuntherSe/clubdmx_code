@@ -8,6 +8,7 @@ import globs
 
 import os
 import os.path
+import logging
 
 from cue import Cue
 from cuebutton import Cuebutton
@@ -16,6 +17,9 @@ from csvfileclass import Csvfile
 from midiutils import check_midicontroller
 from startup_levels import backup_currentlevels, restore_currentlevels
 from startup_levels import button_locations, fader_locations
+
+logger = logging.getLogger ("logger."+__name__)
+logger.setLevel(logging.DEBUG)
 
 def del_cuetables ():
     """ fadertable, buttontable, cltable löschen 
@@ -82,14 +86,14 @@ def make_fadertable (with_savedlevels:bool=False) :
         try: 
             fileindex = fieldnames.index ("Filename") 
         except:
-            print (f"'Filename' nicht in {filename}")
+            logger.error (f"'Filename' nicht in {filename}")
             continue
         
         if csvlevels_requested: 
             try: # nur zur Fehler-Ausgabe
                 levelindex = fieldnames.index ("Level")
             except:
-                print (f"'Level' nicht in {filename}")
+                logger.error (f"'Level' nicht in {filename}")
 
 
         for count in range (len (content)):
@@ -162,14 +166,14 @@ def make_cuebuttons (with_savedlevels:bool=False):
         try: # nur zur Fehler-Ausgabe
             fileindex = fieldnames.index ("Filename") 
         except:
-            print (f"Feld 'Filename' nicht in {filename}")
+            logger.error (f"Feld 'Filename' nicht in {filename}")
             continue
         
         if csvlevels_requested: 
             try: # nur zur Fehler-Ausgabe
                 levelindex = fieldnames.index ("Level")
             except:
-                print (f"Feld 'Level' nicht in {filename}")
+                logger.error (f"Feld 'Level' nicht in {filename}")
 
         for count in range (len (content)):
             newbut = Cuebutton(globs.patch) # Konstruktor
@@ -248,14 +252,14 @@ def make_cuelistpages (with_savedlevels:bool=False) :
     try: # Filename muss vorhanden sein
         fileindex = fieldnames.index ("Filename") 
     except:
-        print (f"'Filename' nicht in {filename}")
+        logger.error (f"'Filename' nicht in {filename}")
         return
     
     if csvlevels_requested: 
         try: # nur zur Fehler-Ausgabe
             levelindex = fieldnames.index ("Level")
         except:
-            print (f"'Level' nicht in {filename}")
+            logger.error (f"'Level' nicht in {filename}")
 
 
     for count in range (len (pagelist)):

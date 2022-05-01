@@ -1,0 +1,70 @@
+<!-- heads.html -->
+{% extends 'base.html' %}
+
+{#% import "base-macros.html" as base with context %#}
+
+{% block header %}
+  <h2> {% block title %} Logfiles {% endblock %} </h2>
+{% endblock %}
+
+{% block subtitle %}
+{% endblock %}
+
+{% block css %}
+<style>
+</style>
+{% endblock %}
+
+{% block content %}
+  <div id="dataPath" logdir="{{ logdir }}"></div>
+  <!-- <div class="post_msg" id="message"></div> -->
+  <!-- <div id="center" class="row container"></div> -->
+  <div class="row">
+    <div class="col col-4" id="explore"></div>
+    <div class="col col-8" id="rechts"></div>
+  </div>  
+{% endblock %}
+
+{% block javascript %}
+  <script>
+    var visibleLogfile = "";
+    var dataPath, dataName;
+
+
+    function  loadLogfile (insert_id) {
+      var args = {name:visibleLogfile, path:dataPath};
+      $.get({
+          url: "/getlogfile",
+          data: args,
+          cache: false
+      }).then(function(data){
+        //var pdata = $.parseJSON(data);
+        var pdata = JSON.parse (data);
+        $(insert_id).html (pdata);
+        
+      }); // ende then
+    }; // ende loadLogfile          
+
+    function showDir (insert_id) {
+      fileDialogParams.insert_str = insert_id;
+      fileDialogParams.basedir = dataPath;
+      fileExplore (fileDialogParams);
+    };
+      
+    // Neudefinition für explore:
+    function activateFileSelector () {
+      visibleLogfile = fileDialogParams.filepath + '+' 
+                     + fileDialogParams.result;
+      loadLogfile (insert_id="#rechts");
+    };        
+      
+
+    $('document').ready (function () {
+
+      dataPath = $("#dataPath").attr ("logdir");
+      showDir ("explore");
+      loadLogfile (insert_id="#rechts");
+    });
+  </script>
+
+{% endblock %}

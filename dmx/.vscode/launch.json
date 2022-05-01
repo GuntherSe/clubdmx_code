@@ -28,7 +28,8 @@
             "program": "${file}",
             // "console": "externalTerminal",
             "console": "integratedTerminal",
-            "args": ["--port=8800", "--value=1 2 3"]
+            // "args": ["--port=8800", "--value=1 2 3"]
+            // "args": ["C:\\Users\\Gunther\\OneDrive\\Programmierung\\clubdmx_roomsbak"]
             // Kommandozeilen-Argumente
         }
     ]

@@ -1,7 +1,7 @@
 .. ClubDMX Doku documentation master file, created by
    sphinx-quickstart on Sun Nov  8 17:21:01 2020.
    You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+   contain the root `toctree` directive .
 
 Willkommen zur ClubDMX Doku!
 ============================
@@ -16,7 +16,7 @@ Version |release|
    features
    erste_schritte
    einrichten
-   navigation
+   arbeiten 
    benutzer
    patch
    grundlagen

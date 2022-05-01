@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.11) (preloaded format=pdflatex 2021.1.1)  28 JAN 2022 09:40
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.11) (preloaded format=pdflatex 2021.1.1)  16 APR 2022 19:35
 entering extended mode
 **./clubdmxdoku.tex
 (clubdmxdoku.tex
@@ -676,7 +676,7 @@ Kapitel 2.
 [5] [6]
 Kapitel 3.
 LaTeX Font Info:    Trying to load font information for T1+pcr on input line 23
-3.
+7.
 ("C:\Program Files\MiKTeX 2.9\tex/latex/psnfss\t1pcr.fd"
 File: t1pcr.fd 2001/06/04 font definitions for T1/pcr.
 ) [7
@@ -686,7 +686,7 @@ Kapitel 4.
 <basic_setup.jpg, id=349, 469.00218pt x 191.21437pt>
 File: basic_setup.jpg Graphic file (type jpg)
 <use basic_setup.jpg>
-Package pdftex.def Info: basic_setup.jpg  used on input line 324.
+Package pdftex.def Info: basic_setup.jpg  used on input line 328.
 (pdftex.def)             Requested size: 469.00104pt x 191.2139pt.
 [9
 
@@ -694,73 +694,73 @@ Package pdftex.def Info: basic_setup.jpg  used on input line 324.
 <ext_setup.jpg, id=355, 516.42938pt x 318.43968pt>
 File: ext_setup.jpg Graphic file (type jpg)
 <use ext_setup.jpg>
-Package pdftex.def Info: ext_setup.jpg  used on input line 334.
+Package pdftex.def Info: ext_setup.jpg  used on input line 338.
 (pdftex.def)             Requested size: 469.77023pt x 289.65909pt.
 <setup_room_page.jpg, id=356, 585.68813pt x 443.40656pt>
 File: setup_room_page.jpg Graphic file (type jpg)
 <use setup_room_page.jpg>
-Package pdftex.def Info: setup_room_page.jpg  used on input line 365.
+Package pdftex.def Info: setup_room_page.jpg  used on input line 369.
 (pdftex.def)             Requested size: 469.77548pt x 355.65941pt.
  [10 <./ext_setup.jpg>]
 <setup_config_page.jpg, id=363, 598.48593pt x 421.575pt>
 File: setup_config_page.jpg Graphic file (type jpg)
 <use setup_config_page.jpg>
-Package pdftex.def Info: setup_config_page.jpg  used on input line 382.
+Package pdftex.def Info: setup_config_page.jpg  used on input line 386.
 (pdftex.def)             Requested size: 469.76683pt x 330.90494pt.
  [11 <./setup_room_page.jpg>]
 <setup_elements_page.jpg, id=372, 758.08218pt x 618.05907pt>
 File: setup_elements_page.jpg Graphic file (type jpg)
 <use setup_elements_page.jpg>
-Package pdftex.def Info: setup_elements_page.jpg  used on input line 390.
+Package pdftex.def Info: setup_elements_page.jpg  used on input line 394.
 (pdftex.def)             Requested size: 469.76317pt x 383.00404pt.
 
 [12 <./setup_config_page.jpg>]
 <setup_midi_page.jpg, id=377, 611.28375pt x 375.65344pt>
 File: setup_midi_page.jpg Graphic file (type jpg)
 <use setup_midi_page.jpg>
-Package pdftex.def Info: setup_midi_page.jpg  used on input line 396.
+Package pdftex.def Info: setup_midi_page.jpg  used on input line 400.
 (pdftex.def)             Requested size: 469.74788pt x 288.69803pt.
  [13 <./setup_elements_page.jpg>]
 <setup_data_page.jpg, id=382, 609.77812pt x 345.54094pt>
 File: setup_data_page.jpg Graphic file (type jpg)
 <use setup_data_page.jpg>
-Package pdftex.def Info: setup_data_page.jpg  used on input line 416.
+Package pdftex.def Info: setup_data_page.jpg  used on input line 420.
 (pdftex.def)             Requested size: 469.77252pt x 266.19914pt.
  [14 <./setup_midi_page.jpg>]
 <stage_page.jpg, id=388, 776.14969pt x 554.07pt>
 File: stage_page.jpg Graphic file (type jpg)
 <use stage_page.jpg>
-Package pdftex.def Info: stage_page.jpg  used on input line 430.
+Package pdftex.def Info: stage_page.jpg  used on input line 434.
 (pdftex.def)             Requested size: 469.76743pt x 335.34442pt.
  [15 <./setup_data_page.jpg>]
 <fader_page.jpg, id=394, 780.66656pt x 593.96906pt>
 File: fader_page.jpg Graphic file (type jpg)
 <use fader_page.jpg>
-Package pdftex.def Info: fader_page.jpg  used on input line 442.
+Package pdftex.def Info: fader_page.jpg  used on input line 446.
 (pdftex.def)             Requested size: 469.7496pt x 357.42645pt.
  [16 <./stage_page.jpg>]
 <fader_setup_page.jpg, id=399, 779.91376pt x 527.72156pt>
 File: fader_setup_page.jpg Graphic file (type jpg)
 <use fader_setup_page.jpg>
-Package pdftex.def Info: fader_setup_page.jpg  used on input line 451.
+Package pdftex.def Info: fader_setup_page.jpg  used on input line 455.
 (pdftex.def)             Requested size: 469.74886pt x 317.85129pt.
  [17 <./fader_page.jpg>]
 <button_page.jpg, id=404, 794.97pt x 590.95781pt>
 File: button_page.jpg Graphic file (type jpg)
 <use button_page.jpg>
-Package pdftex.def Info: button_page.jpg  used on input line 460.
+Package pdftex.def Info: button_page.jpg  used on input line 464.
 (pdftex.def)             Requested size: 469.76819pt x 349.21213pt.
  [18 <./fader_setup_page.jpg>]
 <button_setup_page.jpg, id=409, 794.97pt x 620.3175pt>
 File: button_setup_page.jpg Graphic file (type jpg)
 <use button_setup_page.jpg>
-Package pdftex.def Info: button_setup_page.jpg  used on input line 470.
+Package pdftex.def Info: button_setup_page.jpg  used on input line 474.
 (pdftex.def)             Requested size: 469.76819pt x 366.55208pt.
  [19 <./button_page.jpg>]
 <exec_page.jpg, id=416, 793.46437pt x 510.40688pt>
 File: exec_page.jpg Graphic file (type jpg)
 <use exec_page.jpg>
-Package pdftex.def Info: exec_page.jpg  used on input line 479.
+Package pdftex.def Info: exec_page.jpg  used on input line 483.
 (pdftex.def)             Requested size: 469.7623pt x 302.18884pt.
  [20 <./button_setup_page.jpg>] [21 <./exec_page.jpg>] [22
 
@@ -769,28 +769,28 @@ Kapitel 5.
 <favicon-16x16.png, id=433, 16.06pt x 16.06pt>
 File: favicon-16x16.png Graphic file (type png)
 <use favicon-16x16.png>
-Package pdftex.def Info: favicon-16x16.png  used on input line 513.
+Package pdftex.def Info: favicon-16x16.png  used on input line 517.
 (pdftex.def)             Requested size: 16.05995pt x 16.05995pt.
 File: stage_page.jpg Graphic file (type jpg)
 <use stage_page.jpg>
-Package pdftex.def Info: stage_page.jpg  used on input line 540.
+Package pdftex.def Info: stage_page.jpg  used on input line 544.
 (pdftex.def)             Requested size: 469.76743pt x 335.34442pt.
 [23 <./favicon-16x16.png>]
 <stage_kompakt.jpg, id=440, 280.79906pt x 502.12593pt>
 File: stage_kompakt.jpg Graphic file (type jpg)
 <use stage_kompakt.jpg>
-Package pdftex.def Info: stage_kompakt.jpg  used on input line 547.
+Package pdftex.def Info: stage_kompakt.jpg  used on input line 551.
 (pdftex.def)             Requested size: 280.79837pt x 502.12471pt.
  [24]
 <single_page.jpg, id=446, 315.42844pt x 532.23843pt>
 File: single_page.jpg Graphic file (type jpg)
 <use single_page.jpg>
-Package pdftex.def Info: single_page.jpg  used on input line 556.
+Package pdftex.def Info: single_page.jpg  used on input line 560.
 (pdftex.def)             Requested size: 315.42766pt x 532.23712pt.
  [25 <./stage_kompakt.jpg>] [26 <./single_page.jpg>]
 File: exec_page.jpg Graphic file (type jpg)
 <use exec_page.jpg>
-Package pdftex.def Info: exec_page.jpg  used on input line 571.
+Package pdftex.def Info: exec_page.jpg  used on input line 575.
 (pdftex.def)             Requested size: 469.7623pt x 302.18884pt.
  [27] [28] [29] [30]
 Kapitel 6.
@@ -804,7 +804,7 @@ Kapitel 7.
 <patch_new.jpg, id=496, 358.33875pt x 508.14844pt>
 File: patch_new.jpg Graphic file (type jpg)
 <use patch_new.jpg>
-Package pdftex.def Info: patch_new.jpg  used on input line 915.
+Package pdftex.def Info: patch_new.jpg  used on input line 951.
 (pdftex.def)             Requested size: 358.33788pt x 508.14719pt.
  [34 <./patch_new.jpg>]
 Kapitel 8.
@@ -814,18 +814,18 @@ Kapitel 8.
 <topcue1.jpg, id=510, 770.88pt x 624.83438pt>
 File: topcue1.jpg Graphic file (type jpg)
 <use topcue1.jpg>
-Package pdftex.def Info: topcue1.jpg  used on input line 1065.
+Package pdftex.def Info: topcue1.jpg  used on input line 1101.
 (pdftex.def)             Requested size: 469.75385pt x 380.76704pt.
  [37 <./topcue1.jpg>]
 <topcue2.jpg, id=515, 619.56468pt x 160.34906pt>
 File: topcue2.jpg Graphic file (type jpg)
 <use topcue2.jpg>
-Package pdftex.def Info: topcue2.jpg  used on input line 1079.
+Package pdftex.def Info: topcue2.jpg  used on input line 1115.
 (pdftex.def)             Requested size: 469.74904pt x 121.58028pt.
  [38 <./topcue2.jpg>]
 Kapitel 9.
 LaTeX Font Info:    Font shape `T1/pcr/m/it' in size <9> not available
-(Font)              Font shape `T1/pcr/m/sl' tried instead on input line 1108.
+(Font)              Font shape `T1/pcr/m/sl' tried instead on input line 1146.
 [39
 
 ] [40] [41]
@@ -835,7 +835,7 @@ LaTeX Font Info:    Trying to load font information for TS1+pcr on input line 1
 File: ts1pcr.fd 2001/06/04 font definitions for TS1/pcr.
 )
 LaTeX Font Info:    Font shape `TS1/pcr/m/it' in size <9> not available
-(Font)              Font shape `TS1/pcr/m/sl' tried instead on input line 1322.
+(Font)              Font shape `TS1/pcr/m/sl' tried instead on input line 1360.
 
 
 [42] [43] [44] [45] [46
@@ -848,29 +848,28 @@ Kapitel 11.
 
 ] (clubdmxdoku.aux)
 Package rerunfilecheck Info: File `clubdmxdoku.out' has not changed.
-(rerunfilecheck)             Checksum: 94B472E423F04E226D70E3B3FFCE523F;6740.
+(rerunfilecheck)             Checksum: 988D4BE06B583478E7FECB5EB17DACA3;6760.
  ) 
 Here is how much of TeX's memory you used:
- 13990 strings out of 479663
- 200410 string characters out of 2873756
- 533965 words of memory out of 3000000
- 30627 multiletter control sequences out of 15000+200000
+ 13991 strings out of 479663
+ 200413 string characters out of 2873756
+ 534011 words of memory out of 3000000
+ 30628 multiletter control sequences out of 15000+200000
  452140 words of font info for 88 fonts, out of 3000000 for 9000
  1142 hyphenation exceptions out of 8191
  80i,12n,85p,445b,574s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Program Files/MiKTeX 2.9/fonts/enc/dvips/base/8r.enc}<C:/Program Files/Mi
-KTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi5.pfb><C:/Program Files/MiKTeX 2.9/
-fonts/type1/public/amsfonts/cm/cmsy5.pfb><C:/Program Files/MiKTeX 2.9/fonts/typ
-e1/urw/courier/ucrb8a.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/courier/
-ucrr8a.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/courier/ucrro8a.pfb><C:
-/Program Files/MiKTeX 2.9/fonts/type1/urw/helvetic/uhvb8a.pfb><C:/Program Files
-/MiKTeX 2.9/fonts/type1/urw/helvetic/uhvbo8a.pfb><C:/Program Files/MiKTeX 2.9/f
-onts/type1/urw/helvetic/uhvr8a.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw
-/times/utmb8a.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/times/utmr8a.pfb
-><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/times/utmri8a.pfb>
-Output written on clubdmxdoku.pdf (55 pages, 1559644 bytes).
+KTeX 2.9/fonts/type1/urw/courier/ucrb8a.pfb><C:/Program Files/MiKTeX 2.9/fonts/
+type1/urw/courier/ucrr8a.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/couri
+er/ucrro8a.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/helvetic/uhvb8a.pfb
+><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/helvetic/uhvbo8a.pfb><C:/Program 
+Files/MiKTeX 2.9/fonts/type1/urw/helvetic/uhvr8a.pfb><C:/Program Files/MiKTeX 2
+.9/fonts/type1/urw/times/utmb8a.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/ur
+w/times/utmr8a.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/times/utmri8a.p
+fb>
+Output written on clubdmxdoku.pdf (55 pages, 1543877 bytes).
 PDF statistics:
- 656 PDF objects out of 1000 (max. 8388607)
+ 648 PDF objects out of 1000 (max. 8388607)
  111 named destinations out of 1000 (max. 500000)
  556 words of extra memory for PDF output out of 10000 (max. 10000000)
 

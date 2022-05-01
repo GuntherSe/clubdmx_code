@@ -11,6 +11,7 @@ import globs
 
 import os
 import os.path
+import logging
 
 from configclass  import Config
 from roomclass import Room
@@ -28,6 +29,8 @@ if os.environ.get ("PYTHONANYWHERE")  != "true":
 
 current_room = ""
 
+logger = logging.getLogger ("clubdmx")
+
 def get_roompath ():
     """ Basis Raumpfad ermitteln:
 
@@ -44,9 +47,8 @@ def get_roompath ():
     # Roombase kann mit Environment-Variablen verändert werden, daher:
     # roompath aus roombase und zuletzt verwendeten Raum erzeugen
     if roombase:
-        # print (f"Roombase: {roombase}")
+        logger.info (f"Roombase: {roombase}")
         if roompath:
-            # print (f"Roompath: {roompath}")
             root, subdir = os.path.split (roompath)
             roompath = os.path.join (roombase, subdir)
         else:
@@ -54,15 +56,16 @@ def get_roompath ():
     else:
         # if roompath: nichts zu tun
         if not roompath:
-            print ("Raumverzeichnis nicht definiert. clubdmx_rooms wird verwendet.")
+            logger.info ("Raumverzeichnis nicht definiert. clubdmx_rooms wird verwendet.")
             root, codedir = os.path.split (globs.basedir)
             # root: eine Ebene über codepath
             # clubdmx_rooms liegt im selben Ordner wie clubdmx_code
             roompath = os.path.join (root, "clubdmx_rooms", "_neu")
     # nun ist der String 'roompath' erzeugt.
+    logger.info (f"Roompath: {roompath}")
     
     if not os.path.isdir (roompath):
-        print (f"Roompath nicht vorhanden, erzeuge {roompath} ")
+        logger.warning (f"Roompath nicht vorhanden, erzeuge {roompath} ")
         os.makedirs (roompath)
     globs.cfgbase.set ("room", roompath)
     globs.cfgbase.save_data ()
@@ -74,7 +77,12 @@ def check_csvfile (name:str, subdir:str) -> bool:
     global current_room    
     fullname = os.path.join (current_room, subdir, name)
     csvfile = Csvfile (fullname)
-    return csvfile.exists ()
+    found = csvfile.exists ()
+    if found:
+        logger.info (f"{subdir}/{name} vorhanden.") 
+    else:
+        logger.warning (f"{subdir}/{name} nicht vorhanden.") 
+    return found
 
 
 def check_config (fullname:str) -> dict:
@@ -99,7 +107,7 @@ def check_config (fullname:str) -> dict:
         head, tail = os.path.split (fullname)
         tmpname = os.path.join (head, "tempcheck" )
         checkcsv.backup (tmpname)
-        tmpconfig = Config (tmpname)
+        tmpconfig = Config (fullname)
     else:
         config_exist = False
 
@@ -174,7 +182,7 @@ def load_config (with_savedlevels=False):
     
     ret = check_config (fullname)
     # nun sind alle keys vorhanden und alle Files existieren
-    print (ret["message"])
+    logger.info (ret["message"])
     globs.cfg.open (fullname)
 
     cfgdata = globs.cfg.get("patch")
@@ -231,7 +239,7 @@ def load_config (with_savedlevels=False):
             except:
                 port = 8800
             ret = globs.oscinput.set_port (port)
-            print (ret["message"])
+            logger.info (ret["message"])
             globs.oscinput.resume ()
         else:
             globs.oscinput.pause ()

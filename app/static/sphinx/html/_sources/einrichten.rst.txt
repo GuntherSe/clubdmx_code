@@ -24,7 +24,7 @@ installiert und verwendet.
 
 Der große Vorteil von OLA besteht darin, dass damit eine ganze Palette
 von Ethernet Protokollen und USB/Serial/Netzwerk Geräten zur 
-Anbindung zur Verfügung stehen.
+Ansteuerung zur Verfügung stehen.
 
 
 Ein einfacher Hardware-Aufbau mit einem Raspberry PI sieht so aus:
@@ -60,7 +60,7 @@ Raum einrichten
 
 Die Einrichtung eines Raumes erzeugt im Raum-Verzeichnis (``clubdmx_rooms``)
 einen neuen Ordner. Hier werden alle projektspezifischen Daten gespeichert: 
-Patch, Cues, Fader, Buttons, Stage.
+Patch, Cues, Fader, Buttons, Stage etc.
 
 Es gibt einige Möglichkeiten zur Erzeugung eines neuen Raums. 
     
@@ -204,7 +204,7 @@ Exec-Seite, siehe also Fader_ und   Buttons_ .
 
 
 Weitere Informationen zur Einrichtung findest du im Kapitel 
-:ref:`navigation_label`, da gibt es Details zu den einzelnen Tabs.
+:ref:`arbeiten_label`, da gibt es Details zu den einzelnen Tabs.
 
 
 .. _crontab_label:

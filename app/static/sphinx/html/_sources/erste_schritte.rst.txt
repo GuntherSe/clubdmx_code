@@ -46,7 +46,7 @@ installiertes ClubDMX zum Leben zu erwecken.
    Stage *_neu* speichern als \<neuer Stagename\>
 
    ``Import Patch`` legt für jeden in der Stage noch nicht vorhandenen Head
-   ein Symbol an, mit Headnummer, Name und Kommentar aus Patch.
+   ein Symbol an, mit Headnummer, Name und Kommentar aus dem Patch.
 
 - Heads verwenden, um Cues, Fader und Buttons zu erzeugen.
 

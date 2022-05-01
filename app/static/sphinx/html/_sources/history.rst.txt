@@ -256,11 +256,16 @@ Die Entwicklungsschritte
   - Stage: Geräte können zu **Gruppen** zusammengefasst werden. Mit dem 
     Gruppensymbol werden alle Geräte der Gruppe selektiert.
 
-  - Midi: 4 Midi-Inputs, 4 Midi-Outputs. Midi-verarbeitbar sind neben Fadern 
+  - Midi: 4 Midi-Inputs, 4 Midi-Outputs. Mit Midi verwendbar sind neben Fadern 
     und Buttons auch die Cuelisten: Level, Tasten (Go, Pause, Cue-Auswahl). 
-    Der Clear-Button (=Topcue leeren) ist über Midi bedienbar.
+    Der Clear-Button (=Topcue leeren) ist ebenfalls über Midi bedienbar.
 
   - Edit/Select Umschalten erfolgt über Javascript, kein Reload der Seite nötig.
+
+  - Der Zugriff auf ClubDMX erfolgt über den Proxy-Server NGINX. Damit entfällt
+    die Angabe des Ports beim Browser-Aufruf. 
+
+
   
   
  

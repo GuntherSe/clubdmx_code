@@ -1,0 +1,5 @@
+Attrib,Addr,Type,Default,Size
+Intensity,v,HTP,255,8
+Red,0,vLTP,0,8
+Green,1,vLTP,0,8
+Blue,2,vLTP,0,8

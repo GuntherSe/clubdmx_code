@@ -8,6 +8,8 @@
 import sys
 import os
 import os.path
+
+# Pfade:
 thispath  = os.path.dirname(os.path.realpath(__file__))
 
 app_path = os.path.join (thispath, "app")
@@ -16,12 +18,22 @@ dmx_path = os.path.join (thispath, "dmx")
 sys.path.insert (1, app_path)
 sys.path.insert (1, dmx_path)
 
-# os.environ["PYTHONANYWHERE"] = "true"
-
 from app import create_app, db
 from auth.models import User
 
+import logging
+from loggingbase import Logbase
+# import logging.config
+# from logging.handlers import RotatingFileHandler
 
+# Logging:
+baselogger = Logbase ()
+logger = logging.getLogger ("clubdmx")
+file_handler = baselogger.filehandler ("clubdmx.log")
+logger.addHandler (file_handler)
+logger.info ("------------> Ich starte ClubDMX.")
+
+# Die Flask App:
 app = create_app ()
 
 

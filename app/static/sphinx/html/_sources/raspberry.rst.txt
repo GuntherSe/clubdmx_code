@@ -13,6 +13,8 @@ Installation von OLA und Installation von ClubDMX.
 Raspberry Buster neu installieren
 ---------------------------------
 
+Das aktuelle Raspberry OS hat den Namen **BULLSEYE**.
+
 * Programm Imager von `<https://www.raspberrypi.org/downloads/>`_
   
 * Image erzeugen
@@ -24,21 +26,21 @@ Raspberry Buster neu installieren
 ::
 
   sudo raspi-config
-  2 Network Options
-  # -> N1 Hostname: Pi-Name eintragen (optional)
+  1 System Options
+  # -> S4 Hostname: Pi-Name eintragen (optional)
 
-  3 Boot Options
-  # -> B2 Wait for Network on Boot 
+  1 System Options
+  # -> S6 Wait for Network on Boot 
   # (sonst ist OLA nicht mit allen Plugins ausgestattet)
+
+  3 Interfacing Options
+  # -> I2 SSH enable (wichtig)
+
+  3 Interfacing Options
+  # -> I3 VNC enable (optional)
 
   4 Localisation Options
   # -> Ländercode + Utf-8, auch Ländercode für Wlan (wichtig) 
-
-  5 Interfacing Options
-  # -> P2 SSH enable (wichtig)
-
-  5 Interfacing Options
-  # -> P3 VNC enable (optional)
 
   
 OLA installieren
@@ -91,9 +93,9 @@ sind auch in
   git config --global --unset http.proxy
 
   sudo apt-get install autoconf libtool bison flex uuid-dev libcppunit-dev
-  sudo apt-get install libmicrohttpd-dev protobuf-compiler libprotobuf-dev python-protobuf
+  sudo apt-get install libmicrohttpd-dev protobuf-compiler libprotobuf-dev 
   sudo apt-get install libftdi-dev liblo-dev libavahi-client-dev libprotoc-dev
-  sudo apt-get install libusb-1.0.0-dev libcurses5-dev pkg-config liblo
+  sudo apt-get install libusb-1.0.0-dev pkg-config 
   autoreconf -i 
   ./configure 
   # optionally: ./configure --enable-rdm-tests --enable-python-libs
@@ -158,7 +160,7 @@ Damit ist nach einem Neustart der Eurolite Adapter verfügbar.
 OLA für ClubDMX vorbereiten
 ---------------------------
 
-Weiter im Browser, auf Seite *127.0.0.1:9090*.
+Weiter im Browser, auf die Adresse *127.0.0.1:9090*.
 
 ClubDMX kommuniziert mit OLA über OSC, daher muss in OLA in jedem Universum
 ein OSC-Input eingetragen werden. 
@@ -265,36 +267,70 @@ Die letzten Schritte sind schnell erledigt:
   chmod +x *.sh
   ./app_start.sh start
 
+Nun ist ClubDMX im Browser unter der Adresse *127.0.0.1:5000* erreichbar. 
 
-**Autostart einrichten**
+**Start über NGINX einrichten**
 
-Damit ist die ClubDMX installiert. Nun muss noch Autostart 
-konfiguriert werden. Hier ist eine Unterscheidung zu treffen, je nachdem
-der Raspberry in der Konsole  (wird in der Regel für ClubDMX die richtige
-Wahl sein) oder mit grafischer Benutzeroberfläche startet (auch dafür wird es
-Gründe geben).
+Im aktuellen Entwicklungsstand wird ClubDMX über NGINX aufgerufen. 
+NGINX ist ein Proxy-Server. Mit diesem Server kann ClubDMX im Browser ohne 
+Port-Angabe aufgerufen werden. Also 127.0.0.1 statt 127.0.0.1:5000.
+ClubDMX wird nun als Service gestartet. Damit gibt es auch keine Unterschiede 
+zwischen GUI und Kommandozeilen-Start des Raspberry Pi.
 
-*Konsolen-Start:*
+NGINX muss erst installiert werden:
 
-``sudo nano /etc/rc.local``
+``sudo apt-get install nginx``
 
-hier eintragen vor der letzten Zeile (*exit 0*):
+Kontrolle: Im Browser die Adresse 127.0.0.1 eingeben. 
+Die Nginx Default-Seite sollte sich zeigen.
 
-::
+Vier Schritte sind nötig zur Installation von ClubDMX als Service und der
+Einrichtung von NGINX.
 
-  # clubdmx app:
-  su pi -c "/home/pi/clubdmx_code/app_start.sh start" &
+* Die systemd-Datei erstellen:
+  
+  ``sudo cp ~/clubdmx_code/etc/clubdmx.service /etc/systemd/system``
 
-*Desktop-Start*
+  Anmerkung: Hier müssen die Pfade angepasst werden, wenn ClubDMX 
+  in einem anderen Verzeichnis installiert wurde.
 
-Wenn der Pi im Desktop-Modus laufen soll, dann muss ClubDMX anders gestartet 
-werden. Daher den Start von ClubDMX nicht in ``/etc/rc.local`` machen, sondern so:
+* Den Dienst starten:
+  
+  :: 
+  
+    sudo systemctl start clubdmx
+    sudo systemctl enable clubdmx
 
-::
+  Der Status kann überprüft werden:
+  ``sudo systemctl status clubdmx``
 
-  sudo nano /etc/xdg/lxsession/LXDE-pi/autostart
-  # hier eintragen vor der letzten Zeile (= @screensaver…):
-  @/home/pi/clubdmx_code/app_start.sh start
+* NGINX einrichten:
+  
+  ::
+
+    sudo cp ~/clubdmx_code/etc/nginx_clubdmx.txt /etc/nginx/sites-available/clubdmx
+    sudo ln -s /etc/nginx/sites-available/clubdmx /etc/nginx/sites-enabled
+    sudo rm /etc/nginx/sites-enabled/default
+
+* NGINX testen und neu starten:
+  
+  ::
+
+    sudo nginx -t
+    sudo systemctl restart nginx
+
+Nun ist ClubDMX über NGINX erreichbar und kann im lokalen Netzwerk über
+die Adresse des Pi aufgerufen werden.
+
+Bei Fehlern  gibt es hier Kontrollen:
+
+``sudo less /var/log/nginx/error.log`` überprüft die Nginx-Fehlerprotokolle.
+
+``sudo less /var/log/nginx/access.log`` überprüft die Nginx-Zugriffsprotokolle.
+
+``sudo journalctl -u nginx`` überprüft die Nginx-Prozessprotokolle.
+
+``sudo journalctl -u clubdmx`` überprüft die Gunicorn-Protokolle von ClubDMX.
 
 
 ````

@@ -1,0 +1,4 @@
+Attrib,Addr,Type,Default,Size
+Intensity,0,HTP,255,8
+Strobe,1,LTP,0,8
+DimMode,2,LTP,0,8

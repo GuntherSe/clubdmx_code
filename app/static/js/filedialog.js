@@ -221,6 +221,8 @@ function fileExplore (par){
     });
 
 }  // ende explore
+
+// activateFileSelector() wird zur Anzeige des ausgewählten Files verwendet.
 // kann für explore umdefiniert werden:
 function activateFileSelector () {}
 

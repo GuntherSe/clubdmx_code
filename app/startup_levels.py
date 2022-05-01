@@ -4,11 +4,13 @@
 """ 
   Startup: Level Funktionen
 """
+from cmath import log
 import globs
 
 import os
 import os.path
 import time
+import logging
 
 from csvfileclass import Csvfile
 
@@ -16,6 +18,9 @@ from csvfileclass import Csvfile
 button_locations = ["cuebuttons", "exebuttons1", "exebuttons2"]
 fader_locations  = ["cuefaders", "exefaders"]
 cuelist_locations = ["pages"]
+
+logger = logging.getLogger ("logger."+__name__)
+logger.setLevel(logging.DEBUG)
 
 
 def activate_startcue ():
@@ -26,7 +31,7 @@ def activate_startcue ():
     fullname = os.path.join (globs.room.cuepath (), startcue)
     csvfile = Csvfile (fullname)
     if not csvfile.exists ():
-        print ("Startcue nicht gefunden.")
+        logger.error ("Startcue nicht gefunden.")
         return
 
     # in Fadertabelle Zeile mit Filename 'startcue' suchen
@@ -42,7 +47,7 @@ def activate_startcue ():
                 found = True
                 item.go ()
     if not found:
-        print ("Startcue weder in Fadertabelle noch in Buttontabelle.")
+        logger.error ("Startcue weder in Fadertabelle noch in Buttontabelle.")
     # optional:             
     #     # startcue nicht gefunden, neuer Eintrag in Fadertabelle:
     #     globs.fadertable.append ( Cue(globs.patch)) # Konstruktor

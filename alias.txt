@@ -1,0 +1,3 @@
+Diese Zeile am Ende von .bashrc anfügen:
+
+alias clubdmx='/home/pi/clubdmx_code/app_start.bash'

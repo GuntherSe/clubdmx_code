@@ -1,0 +1,4 @@
+Attrib,Addr,Type,Default,Size
+Red,0,HTP,0,8
+Green,1,HTP,0,8
+Blue,2,HTP,0,8

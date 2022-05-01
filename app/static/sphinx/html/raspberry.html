@@ -55,6 +55,7 @@ eine Anleitung zur Neu-Installation von Raspbian Buster als Betriebssystem,
 Installation von OLA und Installation von ClubDMX.</p>
 <div class="section" id="raspberry-buster-neu-installieren">
 <span id="buster"></span><h2>Raspberry Buster neu installieren<a class="headerlink" href="#raspberry-buster-neu-installieren" title="Link zu dieser Überschrift">¶</a></h2>
+<p>Das aktuelle Raspberry OS hat den Namen <strong>BULLSEYE</strong>.</p>
 <ul class="simple">
 <li><p>Programm Imager von <a class="reference external" href="https://www.raspberrypi.org/downloads/">https://www.raspberrypi.org/downloads/</a></p></li>
 <li><p>Image erzeugen</p></li>
@@ -62,21 +63,21 @@ Installation von OLA und Installation von ClubDMX.</p>
 <li><p>Raspi-Config:</p></li>
 </ul>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">raspi</span><span class="o">-</span><span class="n">config</span>
-<span class="mi">2</span> <span class="n">Network</span> <span class="n">Options</span>
-<span class="c1"># -&gt; N1 Hostname: Pi-Name eintragen (optional)</span>
+<span class="mi">1</span> <span class="n">System</span> <span class="n">Options</span>
+<span class="c1"># -&gt; S4 Hostname: Pi-Name eintragen (optional)</span>
 
-<span class="mi">3</span> <span class="n">Boot</span> <span class="n">Options</span>
-<span class="c1"># -&gt; B2 Wait for Network on Boot</span>
+<span class="mi">1</span> <span class="n">System</span> <span class="n">Options</span>
+<span class="c1"># -&gt; S6 Wait for Network on Boot</span>
 <span class="c1"># (sonst ist OLA nicht mit allen Plugins ausgestattet)</span>
+
+<span class="mi">3</span> <span class="n">Interfacing</span> <span class="n">Options</span>
+<span class="c1"># -&gt; I2 SSH enable (wichtig)</span>
+
+<span class="mi">3</span> <span class="n">Interfacing</span> <span class="n">Options</span>
+<span class="c1"># -&gt; I3 VNC enable (optional)</span>
 
 <span class="mi">4</span> <span class="n">Localisation</span> <span class="n">Options</span>
 <span class="c1"># -&gt; Ländercode + Utf-8, auch Ländercode für Wlan (wichtig)</span>
-
-<span class="mi">5</span> <span class="n">Interfacing</span> <span class="n">Options</span>
-<span class="c1"># -&gt; P2 SSH enable (wichtig)</span>
-
-<span class="mi">5</span> <span class="n">Interfacing</span> <span class="n">Options</span>
-<span class="c1"># -&gt; P3 VNC enable (optional)</span>
 </pre></div>
 </div>
 </div>
@@ -114,9 +115,9 @@ sind auch in
 <span class="n">git</span> <span class="n">config</span> <span class="o">--</span><span class="k">global</span> <span class="o">--</span><span class="n">unset</span> <span class="n">http</span><span class="o">.</span><span class="n">proxy</span>
 
 <span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">autoconf</span> <span class="n">libtool</span> <span class="n">bison</span> <span class="n">flex</span> <span class="n">uuid</span><span class="o">-</span><span class="n">dev</span> <span class="n">libcppunit</span><span class="o">-</span><span class="n">dev</span>
-<span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">libmicrohttpd</span><span class="o">-</span><span class="n">dev</span> <span class="n">protobuf</span><span class="o">-</span><span class="n">compiler</span> <span class="n">libprotobuf</span><span class="o">-</span><span class="n">dev</span> <span class="n">python</span><span class="o">-</span><span class="n">protobuf</span>
+<span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">libmicrohttpd</span><span class="o">-</span><span class="n">dev</span> <span class="n">protobuf</span><span class="o">-</span><span class="n">compiler</span> <span class="n">libprotobuf</span><span class="o">-</span><span class="n">dev</span>
 <span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">libftdi</span><span class="o">-</span><span class="n">dev</span> <span class="n">liblo</span><span class="o">-</span><span class="n">dev</span> <span class="n">libavahi</span><span class="o">-</span><span class="n">client</span><span class="o">-</span><span class="n">dev</span> <span class="n">libprotoc</span><span class="o">-</span><span class="n">dev</span>
-<span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">libusb</span><span class="o">-</span><span class="mf">1.0</span><span class="o">.</span><span class="mi">0</span><span class="o">-</span><span class="n">dev</span> <span class="n">libcurses5</span><span class="o">-</span><span class="n">dev</span> <span class="n">pkg</span><span class="o">-</span><span class="n">config</span> <span class="n">liblo</span>
+<span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">libusb</span><span class="o">-</span><span class="mf">1.0</span><span class="o">.</span><span class="mi">0</span><span class="o">-</span><span class="n">dev</span> <span class="n">pkg</span><span class="o">-</span><span class="n">config</span>
 <span class="n">autoreconf</span> <span class="o">-</span><span class="n">i</span>
 <span class="o">./</span><span class="n">configure</span>
 <span class="c1"># optionally: ./configure --enable-rdm-tests --enable-python-libs</span>
@@ -165,7 +166,7 @@ einfügen.</p>
 </div>
 <div class="section" id="ola-fur-clubdmx-vorbereiten">
 <h2>OLA für ClubDMX vorbereiten<a class="headerlink" href="#ola-fur-clubdmx-vorbereiten" title="Link zu dieser Überschrift">¶</a></h2>
-<p>Weiter im Browser, auf Seite <em>127.0.0.1:9090</em>.</p>
+<p>Weiter im Browser, auf die Adresse <em>127.0.0.1:9090</em>.</p>
 <p>ClubDMX kommuniziert mit OLA über OSC, daher muss in OLA in jedem Universum
 ein OSC-Input eingetragen werden.</p>
 <p>Ein oder mehrere Universen anlegen:</p>
@@ -236,27 +237,54 @@ anderen Zwecke verwendet.</p>
 <span class="o">./</span><span class="n">app_start</span><span class="o">.</span><span class="n">sh</span> <span class="n">start</span>
 </pre></div>
 </div>
-<p><strong>Autostart einrichten</strong></p>
-<p>Damit ist die ClubDMX installiert. Nun muss noch Autostart
-konfiguriert werden. Hier ist eine Unterscheidung zu treffen, je nachdem
-der Raspberry in der Konsole  (wird in der Regel für ClubDMX die richtige
-Wahl sein) oder mit grafischer Benutzeroberfläche startet (auch dafür wird es
-Gründe geben).</p>
-<p><em>Konsolen-Start:</em></p>
-<p><code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">nano</span> <span class="pre">/etc/rc.local</span></code></p>
-<p>hier eintragen vor der letzten Zeile (<em>exit 0</em>):</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># clubdmx app:</span>
-<span class="n">su</span> <span class="n">pi</span> <span class="o">-</span><span class="n">c</span> <span class="s2">&quot;/home/pi/clubdmx_code/app_start.sh start&quot;</span> <span class="o">&amp;</span>
+<p>Nun ist ClubDMX im Browser unter der Adresse <em>127.0.0.1:5000</em> erreichbar.</p>
+<p><strong>Start über NGINX einrichten</strong></p>
+<p>Im aktuellen Entwicklungsstand wird ClubDMX über NGINX aufgerufen.
+NGINX ist ein Proxy-Server. Mit diesem Server kann ClubDMX im Browser ohne
+Port-Angabe aufgerufen werden. Also 127.0.0.1 statt 127.0.0.1:5000.
+ClubDMX wird nun als Service gestartet. Damit gibt es auch keine Unterschiede
+zwischen GUI und Kommandozeilen-Start des Raspberry Pi.</p>
+<p>NGINX muss erst installiert werden:</p>
+<p><code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">nginx</span></code></p>
+<p>Kontrolle: Im Browser die Adresse 127.0.0.1 eingeben.
+Die Nginx Default-Seite sollte sich zeigen.</p>
+<p>Vier Schritte sind nötig zur Installation von ClubDMX als Service und der
+Einrichtung von NGINX.</p>
+<ul>
+<li><p>Die systemd-Datei erstellen:</p>
+<p><code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">cp</span> <span class="pre">~/clubdmx_code/etc/clubdmx.service</span> <span class="pre">/etc/systemd/system</span></code></p>
+<p>Anmerkung: Hier müssen die Pfade angepasst werden, wenn ClubDMX
+in einem anderen Verzeichnis installiert wurde.</p>
+</li>
+<li><p>Den Dienst starten:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">systemctl</span> <span class="n">start</span> <span class="n">clubdmx</span>
+<span class="n">sudo</span> <span class="n">systemctl</span> <span class="n">enable</span> <span class="n">clubdmx</span>
 </pre></div>
 </div>
-<p><em>Desktop-Start</em></p>
-<p>Wenn der Pi im Desktop-Modus laufen soll, dann muss ClubDMX anders gestartet
-werden. Daher den Start von ClubDMX nicht in <code class="docutils literal notranslate"><span class="pre">/etc/rc.local</span></code> machen, sondern so:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">nano</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">xdg</span><span class="o">/</span><span class="n">lxsession</span><span class="o">/</span><span class="n">LXDE</span><span class="o">-</span><span class="n">pi</span><span class="o">/</span><span class="n">autostart</span>
-<span class="c1"># hier eintragen vor der letzten Zeile (= @screensaver…):</span>
-<span class="o">@/</span><span class="n">home</span><span class="o">/</span><span class="n">pi</span><span class="o">/</span><span class="n">clubdmx_code</span><span class="o">/</span><span class="n">app_start</span><span class="o">.</span><span class="n">sh</span> <span class="n">start</span>
+<p>Der Status kann überprüft werden:
+<code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">systemctl</span> <span class="pre">status</span> <span class="pre">clubdmx</span></code></p>
+</li>
+<li><p>NGINX einrichten:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">cp</span> <span class="o">~/</span><span class="n">clubdmx_code</span><span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">nginx_clubdmx</span><span class="o">.</span><span class="n">txt</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">nginx</span><span class="o">/</span><span class="n">sites</span><span class="o">-</span><span class="n">available</span><span class="o">/</span><span class="n">clubdmx</span>
+<span class="n">sudo</span> <span class="n">ln</span> <span class="o">-</span><span class="n">s</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">nginx</span><span class="o">/</span><span class="n">sites</span><span class="o">-</span><span class="n">available</span><span class="o">/</span><span class="n">clubdmx</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">nginx</span><span class="o">/</span><span class="n">sites</span><span class="o">-</span><span class="n">enabled</span>
+<span class="n">sudo</span> <span class="n">rm</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">nginx</span><span class="o">/</span><span class="n">sites</span><span class="o">-</span><span class="n">enabled</span><span class="o">/</span><span class="n">default</span>
 </pre></div>
 </div>
+</li>
+<li><p>NGINX testen und neu starten:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">nginx</span> <span class="o">-</span><span class="n">t</span>
+<span class="n">sudo</span> <span class="n">systemctl</span> <span class="n">restart</span> <span class="n">nginx</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>Nun ist ClubDMX über NGINX erreichbar und kann im lokalen Netzwerk über
+die Adresse des Pi aufgerufen werden.</p>
+<p>Bei Fehlern  gibt es hier Kontrollen:</p>
+<p><code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">less</span> <span class="pre">/var/log/nginx/error.log</span></code> überprüft die Nginx-Fehlerprotokolle.</p>
+<p><code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">less</span> <span class="pre">/var/log/nginx/access.log</span></code> überprüft die Nginx-Zugriffsprotokolle.</p>
+<p><code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">journalctl</span> <span class="pre">-u</span> <span class="pre">nginx</span></code> überprüft die Nginx-Prozessprotokolle.</p>
+<p><code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">journalctl</span> <span class="pre">-u</span> <span class="pre">clubdmx</span></code> überprüft die Gunicorn-Protokolle von ClubDMX.</p>
 <hr class="docutils" />
 <p><strong>Anmerkungen</strong></p>
 <p>Die Verzeichnisse für Code und Räume können beliebig positioniert werden.

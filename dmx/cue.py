@@ -11,14 +11,17 @@ Für alle Attribute wird ein dict geführt: content
       
 """
 
+from asyncio.log import logger
 import os
 import os.path
 import time
 import csv
 
-
 from contribclass import Contrib
 from csvfileclass import Csvfile
+
+import logging
+from loggingbase import Logbase
 
 class Cue ():
     # global: 
@@ -26,6 +29,12 @@ class Cue ():
     contrib = Contrib()
     init_done = 0
     
+    # ein logger für alle Cue-Instanzen:
+    baselogger = Logbase ()
+    logger = logging.getLogger (__name__)
+    file_handler = baselogger.filehandler ("cue.log")
+    logger.addHandler (file_handler)
+
     def __init__(self, patch):
         if Cue.init_done == 0: # nur 1x ausführen
             if Cue.CUEPATH == "":
@@ -197,14 +206,18 @@ class Cue ():
         """
         ret = True
         headlist = self.patch.headlist()
+        cuename = self.file.shortname ()
         for row in self.content:
             # HeadNr:
             if row[0] not in headlist:
-                print ("Head {}: nicht im Patch".format (row[0]))
+                # msg = "Head {}: nicht im Patch".format (row[0])
+                self.logger.warning (f"Cue {cuename}: Head {row[0]} nicht im Patch.")
                 ret = False
             # Attr:
             if row[1] not in self.patch.attriblist(row[0]):
-                print ("Head {}: Attribut {} nicht vorhanden".format (row[0], row[1]))
+                msg = f"Cue {cuename}: Attribut {row[1]} für Head {row[0]}" + \
+                      " ist nicht vorhanden"
+                self.logger.warning (msg)
                 ret = False
             # Level:
             if not len (row[2]): # leeres Feld
@@ -215,10 +228,10 @@ class Cue ():
                 level = row[2]
             if level < 0:
                 row[2] = 0
-                print ("Head {}: Level auf 0 gesetzt".format (row[0]))
+                self.logger.warning (f"{cuename}: Head {row[0]} Level auf 0 gesetzt")
                 ret = False
             elif level > 255:
-                print ("Head {}: Level auf 255 gesetzt".format (row[0]))
+                self.logger.warning (f"{cuename}: Head {row[0]} Level auf 255 gesetzt")
                 row[2] = 255
                 ret = False
         return ret
@@ -304,7 +317,7 @@ class Cue ():
                 found = z
         if found != -1:
             rem = self.content.pop (found)
-            print (rem)
+            logger.debug (rem)
         # print (self.content)
 
 

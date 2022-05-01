@@ -1,0 +1,26 @@
+{# -- logfile.html --
+Parameter zur Erzeugung eines logfiles als html-Tabelle:
+    shortname
+    fullname
+#}
+
+{% if  shortname|length > 1 %}
+  
+  {% if shortname != "undefined" %}
+    <div class="alert alert-info">{{ shortname }}</div>
+    <div id="upload_point"></div>
+  {% endif %}
+  {# das logfile: #}
+  {% for line in lines %}
+    <p>{{ line }}</p>
+  {% endfor %}
+{% else %} {# shortname|length #}
+  <table class='table table-bordered table-hover'>
+    <tr>
+      <th scope='col'>Achtung:</th>
+    </tr>
+    <tr>
+      <td scope='col'>Kein Dateiname definiert.</td>
+    </tr>
+  </table>
+{% endif %}

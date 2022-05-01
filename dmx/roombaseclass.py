@@ -10,6 +10,8 @@ from pathlib import Path
 import mount
 from layout import Layout
 
+import logging
+from loggingbase import Logbase
 
 
 # https://stackoverflow.com/questions/1868714/how-do-i-copy-an-entire-directory-of-files-into-an-existing-directory-using-pyth/31039095
@@ -42,6 +44,12 @@ class Roombase:
     subdirs = ["config", "cue", "cuebutton", "cuefader", "cuelist",
                "head", "midibutton", "pages", "patch", "stage"]
 
+    # ein logger für alle Roombase-Instanzen:
+    baselogger = Logbase ()
+    logger = logging.getLogger (__name__)
+    file_handler = baselogger.filehandler ("room.log")
+    logger.addHandler (file_handler)
+    
     def __init__(self, newpath=None):
 
         self.codepath = os.path.dirname(os.path.realpath(__file__))
@@ -134,6 +142,7 @@ class Roombase:
                 message = f"Raum check, Fehler: {err}"
                 ret["message"] = message
                 ret["category"]="danger"
+                self.logger.error (message)
                 # raise OSError (message)
                 return ret
 
@@ -153,6 +162,7 @@ class Roombase:
                         message = f"Raum check, Fehler: {err}"
                         ret["message"] = message
                         ret["category"]="danger"
+                        self.logger.error (message)
                         # raise OSError (message)
                         return ret
 
@@ -169,6 +179,7 @@ class Roombase:
 
         ret["category"]= "success"
         ret["message"] = "check ok"
+        self.logger.info ("Room check Path ok.")
         return ret
 
     def rename (self, newname:str):
@@ -184,8 +195,10 @@ class Roombase:
             # path, src = os.path.split (self.PATH)    
             dst = os.path.join (self.rootpath(), newname)
             if os.path.isdir (dst): # existiert bereits
+                message = f"Raum existiert bereits: {newname}"
                 ret["category"]="danger"
-                ret["message"] = f"Raum existiert bereits: {newname}"
+                ret["message"] = message
+                self.logger.error (message)
                 return ret
             # os.chdir (path)
 
@@ -417,7 +430,8 @@ if __name__ == '__main__':
     # head = "c:\Users\Gunther\OneDrive\Programmierung"
 
     datadir = os.path.join (head, "clubdmx_rooms")
-    print (f"Datadir: {datadir}")
+    # print (f"Datadir: {datadir}")
+    room.logger.info (f"Datadir: {datadir}")
 
     infotxt = """
 ---- Roombase Class Test -----

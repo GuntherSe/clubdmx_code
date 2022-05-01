@@ -27,8 +27,8 @@
 
 -- Bug:
    - Cuelist-Editor: Nach Cue editieren beim Rücksprung index merken ok 1.0
-   - Datenbank edit: reload beim Seitenaufruf fehlerhaft?
-   - Datenbank edit: Backbutton fehlerhaft?
+   - Datenbank edit: reload beim Seitenaufruf fehlerhaft -> Bug behoben ok 1.0
+   - Datenbank edit: Backbutton fehlerhaft? 
    - Cueliste editieren: Zeilen verschieben -> Idlist neu laden ok
    - Cueliste Id editieren ->  Idlist neu laden ok
    - Beim Löschen von Fader: Contrib Löschen ok
@@ -57,7 +57,7 @@
 
 -- html-Tabelle in CSV-Tabelle speichern
 
--- Startup-Log Datei (txt)
+-- Startup-Log Datei (Text): ok 1.0
 
 -- Feldnamen in Kleinbuchstaben, Anzeige in Tabelle 
 mit Anfangs-Großbuchstaben: 

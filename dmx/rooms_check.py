@@ -5,6 +5,10 @@
 aus allen Stage-Files
 - Datenverzeichnis ermitteln
 - alle Räume = subdirs untersuchen
+
+Kommt zum Einsatz, wenn in der Datenstruktur Änderungen vorgenommen werden, 
+die Auswirkungen auf bestehende Projekte haben. Ist nicht im täglichen Einsatz 
+der App eingebunden.
 """
 import os
 import os.path
@@ -25,7 +29,7 @@ def checkstage (path:str):
         chk = fullname.lower()
         if chk.endswith (".csv") or chk.endswith (".ccsv"): # .csv oder .ccsv
             csvfile = Csvfile (fullname)
-            print (csvfile.name())
+            print (f"check: {csvfile.name()}")
             count = count + 1
             csvcontent = csvfile.to_list ()
             fieldnames = csvfile.fieldnames ()

@@ -76,7 +76,7 @@
 
 
 \title{ClubDMX Doku}
-\date{28.01.2022}
+\date{16.04.2022}
 \release{1.0}
 \author{Gunther Seiser}
 \newcommand{\sphinxlogo}{\vbox{}}
@@ -184,6 +184,9 @@ Cues mit Button.
 Cue mit Top\sphinxhyphen{}Priorität zur Bedienung der einzelnen Geräte und
 Erzeugung von weiteren Cues. Siehe {\hyperref[\detokenize{grundlagen:topcuelabel}]{\sphinxcrossref{\DUrole{std,std-ref}{Topcue}}}}
 
+\item {} 
+Cueliste als Sammlung von Cues, mit In\sphinxhyphen{}, Out und Wartezeiten.
+
 \end{itemize}
 
 \end{description}
@@ -208,7 +211,8 @@ DMX\sphinxhyphen{}Geäte möglich.
 \label{\detokenize{features:midi}}
 Außer der Webseite kann ClubDMX auch über MIDI bedient werden. Vorzugsweise über
 ein Korg NanoKontrol\sphinxhyphen{}2. Die Buttons und Fader des NanoKontrol2 können mit den
-Buttons und Fadern verbunden werden.
+Buttons und Fadern verbunden werden. Bis zu vier Midi\sphinxhyphen{}Geräte können als Input
+und/oder Output gleichzeitig verwendet werden.
 
 
 \section{OSC Input}
@@ -238,7 +242,7 @@ Anmelden
 Patch nach vorhandener Hardware erstellen:
 \begin{quote}
 
-Patch  \sphinxstyleemphasis{\_neu} speichern als  \textless{}neuer Patchname\textgreater{}
+Patch \sphinxstyleemphasis{\_neu} speichern als \textless{}neuer Patchname\textgreater{}
 
 \sphinxcode{\sphinxupquote{neue Zeile(n)}} erstellt einen oder mehrere neue Heads.
 Im Formular die entsprechenden Daten eingeben.
@@ -250,7 +254,7 @@ Für weitere Hinweise siehe {\hyperref[\detokenize{patch:neupatchlabel}]{\sphinx
 Config:
 \begin{quote}
 
-Config  \sphinxstyleemphasis{\_neu} speichern als \textless{}neuer Configname\textgreater{}
+Config \sphinxstyleemphasis{\_neu} speichern als \textless{}neuer Configname\textgreater{}
 
 Falls ClubDMX und OLA am selben Rechner laufen, dann ist die OLA\sphinxhyphen{}Adresse die
 Default\sphinxhyphen{}Adresse \sphinxcode{\sphinxupquote{127.0.0.1}}. Falls nicht, dann
@@ -280,7 +284,7 @@ Stage:
 Stage \sphinxstyleemphasis{\_neu} speichern als \textless{}neuer Stagename\textgreater{}
 
 \sphinxcode{\sphinxupquote{Import Patch}} legt für jeden in der Stage noch nicht vorhandenen Head
-ein Symbol an, mit Headnummer, Name und Kommentar aus Patch.
+ein Symbol an, mit Headnummer, Name und Kommentar aus dem Patch.
 \end{quote}
 
 \item {} 
@@ -317,7 +321,7 @@ installiert und verwendet.
 
 Der große Vorteil von OLA besteht darin, dass damit eine ganze Palette
 von Ethernet Protokollen und USB/Serial/Netzwerk Geräten zur
-Anbindung zur Verfügung stehen.
+Ansteuerung zur Verfügung stehen.
 
 Ein einfacher Hardware\sphinxhyphen{}Aufbau mit einem Raspberry PI sieht so aus:
 
@@ -348,7 +352,7 @@ können auch andere Verzeichnisse festgelegt werden.
 \label{\detokenize{einrichten:raum-einrichten}}\label{\detokenize{einrichten:roomsetup}}
 Die Einrichtung eines Raumes erzeugt im Raum\sphinxhyphen{}Verzeichnis (\sphinxcode{\sphinxupquote{clubdmx\_rooms}})
 einen neuen Ordner. Hier werden alle projektspezifischen Daten gespeichert:
-Patch, Cues, Fader, Buttons, Stage.
+Patch, Cues, Fader, Buttons, Stage etc.
 
 Es gibt einige Möglichkeiten zur Erzeugung eines neuen Raums.
 \begin{quote}
@@ -479,7 +483,7 @@ Exec\sphinxhyphen{}Seite, siehe also {\hyperref[\detokenize{einrichten:fader}]{\
 \noindent\sphinxincludegraphics{{exec_page}.jpg}
 
 Weitere Informationen zur Einrichtung findest du im Kapitel
-{\hyperref[\detokenize{navigation:navigation-label}]{\sphinxcrossref{\DUrole{std,std-ref}{ClubDMX benützen}}}}, da gibt es Details zu den einzelnen Tabs.
+{\hyperref[\detokenize{arbeiten:arbeiten-label}]{\sphinxcrossref{\DUrole{std,std-ref}{Mit ClubDMX arbeiten}}}}, da gibt es Details zu den einzelnen Tabs.
 
 
 \section{Einrichten von zeitabhängiger Steuerung mit Crontab (in Linux)}
@@ -501,15 +505,15 @@ den dritten Button aus der oberen Exec\sphinxhyphen{}Zeile betätigt:
 \end{sphinxVerbatim}
 
 Die unterstützten OSC\sphinxhyphen{}Befehle finden sich auf der ClubDMX Webseite und auch
-hier in der Doku im Kapitel {\hyperref[\detokenize{navigation:navigation-label}]{\sphinxcrossref{\DUrole{std,std-ref}{ClubDMX benützen}}}}.
+hier in der Doku im Kapitel {\hyperref[\detokenize{arbeiten:osc-commands}]{\sphinxcrossref{\DUrole{std,std-ref}{OSC Input}}}}.
 
 Mit dem Linux\sphinxhyphen{}Befehl \sphinxcode{\sphinxupquote{crontab \sphinxhyphen{}e}} wird die Crontab editiert, mit dem
 Befehl \sphinxcode{\sphinxupquote{crontab \sphinxhyphen{}l}} wird sie angezeigt und mit \sphinxcode{\sphinxupquote{crontab \sphinxhyphen{}r}} wird sie
 gelöscht.
 
 
-\chapter{ClubDMX benützen}
-\label{\detokenize{navigation:clubdmx-benutzen}}\label{\detokenize{navigation:navigation-label}}\label{\detokenize{navigation::doc}}
+\chapter{Mit ClubDMX arbeiten}
+\label{\detokenize{arbeiten:mit-clubdmx-arbeiten}}\label{\detokenize{arbeiten:arbeiten-label}}\label{\detokenize{arbeiten::doc}}
 Über die Startseite (erreichbar über das Symbol \sphinxincludegraphics{{favicon-16x16}.png}) können die
 wichtigsten Module aufgerufen werden, über die Navigationsleiste
 können alle Module aufgerufen werden.
@@ -518,7 +522,7 @@ Hier ist eine Übersicht über die Navigation:
 
 
 \section{Stage}
-\label{\detokenize{navigation:stage}}\begin{itemize}
+\label{\detokenize{arbeiten:stage}}\begin{itemize}
 \item {} 
 Stage
 
@@ -557,7 +561,7 @@ bedienbar machen.
 
 
 \section{Exec}
-\label{\detokenize{navigation:exec}}
+\label{\detokenize{arbeiten:exec}}
 Die Exec\sphinxhyphen{}Seite enthält Buttons und Fader. Sie kann so konfiguriert werden,
 dass sie einen Button\sphinxhyphen{}Bereich, einen Fader\sphinxhyphen{}Bereich und einen weiteren
 Button\sphinxhyphen{}Bereich anzeigt. Jeder dieser Bereiche kann auch leer sein.
@@ -572,7 +576,7 @@ Button\sphinxhyphen{}Seite. Genaueres dazu findest du unter {\hyperref[\detokeni
 
 
 \section{Fader}
-\label{\detokenize{navigation:fader}}
+\label{\detokenize{arbeiten:fader}}
 Die Fader\sphinxhyphen{}Seite war der Startpunkt für die Arbeiten zu ClubDMX, diese Seite
 war das erste Ziel: Lichtszenen (Cues) über einen
 Webseiten\sphinxhyphen{}Fader zu bedienen.
@@ -592,7 +596,7 @@ zuzuorden.
 
 
 \section{Button}
-\label{\detokenize{navigation:button}}
+\label{\detokenize{arbeiten:button}}
 Ganz gleich wie die Fader\sphinxhyphen{}Seite ist die Button\sphinxhyphen{}Seite für die einfache
 Bedienung konzipiert: Hier können Szenen (Cues) über die Webseite ein\sphinxhyphen{} oder
 ausgeschalten werden.
@@ -645,7 +649,7 @@ eigetragen.
 
 
 \section{Einrichtung}
-\label{\detokenize{navigation:einrichtung}}
+\label{\detokenize{arbeiten:einrichtung}}
 Die Einrichtung von ClubDMX ist schon recht vielseitig, meine Hoffnung ist,
 dass sie trotzdem noch übersichtlich ist, um sich schnell zurecht zu finden.
 \begin{itemize}
@@ -720,7 +724,7 @@ Kapitel {\hyperref[\detokenize{einrichten:einrichten-label}]{\sphinxcrossref{\DU
 
 
 \section{Info}
-\label{\detokenize{navigation:info}}
+\label{\detokenize{arbeiten:info}}
 Information zur Software und den aktuellen DMX\sphinxhyphen{}Output
 \begin{itemize}
 \item {} 
@@ -740,7 +744,7 @@ zu Grundlagen der Lichtsteuerung.
 
 
 \section{Benutzer\sphinxhyphen{}Datenbank}
-\label{\detokenize{navigation:benutzer-datenbank}}
+\label{\detokenize{arbeiten:benutzer-datenbank}}
 Die Benützung von ClubDMX ist nur mit einem Login möglich.
 Es gibt verschiedene Rollen der Berechtigung, zur Zeit sind das
 Basic, Standard und Admin.
@@ -751,11 +755,13 @@ Benutzer\sphinxhyphen{}Rollen siehe {\hyperref[\detokenize{benutzer:benutzer-lab
 
 
 \section{OSC Input}
-\label{\detokenize{navigation:osc-input}}
+\label{\detokenize{arbeiten:osc-input}}\label{\detokenize{arbeiten:osc-commands}}
 Dieses Modul ermöglicht die Verbindung mit externen Programmen wie zum Beispiel
 \sphinxhref{https://troikatronix.com/}{Isadora} . Über
 \sphinxhref{https://de.wikipedia.org/wiki/Open\_Sound\_Control}{OSC} können
-folgende Aktionen in ClubDMX ausgeführt werden:
+folgende Aktionen in ClubDMX ausgeführt werden.
+
+\sphinxstylestrong{Allgemeine Aktionen}
 \begin{itemize}
 \item {} 
 \sphinxcode{\sphinxupquote{/head \textless{}attribut\textgreater{} \textless{}headnr\textgreater{} \textless{}level\textgreater{}}} ermöglicht de Zugriff auf sämtliche
@@ -771,11 +777,15 @@ Geräte und deren Attribute.
 \item {} 
 \sphinxcode{\sphinxupquote{/clear}} leert den {\hyperref[\detokenize{grundlagen:topcuelabel}]{\sphinxcrossref{\DUrole{std,std-ref}{Topcue}}}} .
 
+\end{itemize}
+
+\sphinxstylestrong{Fader\sphinxhyphen{}Aktionen}
+\begin{itemize}
 \item {} 
-\sphinxcode{\sphinxupquote{/fader/\textless{}nummer\textgreater{} \textless{}level\textgreater{}}} ändert den Level eines Faders.
+\sphinxcode{\sphinxupquote{/fader \textless{}nummer\textgreater{} \textless{}level\textgreater{}}} ändert den Level eines Faders.
 
 \item {} 
-\sphinxcode{\sphinxupquote{/exefader/\textless{}nummer\textgreater{} \textless{}level\textgreater{}}} ändert den Level eines Faders aus der
+\sphinxcode{\sphinxupquote{/exefader \textless{}nummer\textgreater{} \textless{}level\textgreater{}}} ändert den Level eines Faders aus der
 Exec\sphinxhyphen{}Seite.
 
 \begin{DUlineblock}{0em}
@@ -783,18 +793,44 @@ Exec\sphinxhyphen{}Seite.
 \item[] \sphinxcode{\sphinxupquote{\textless{}level\textgreater{}}} ist eine Gleitzahl im Bereich zwischen 0 und 1.
 \end{DUlineblock}
 
+\end{itemize}
+
+\sphinxstylestrong{Button\sphinxhyphen{}Aktionen}
+\begin{itemize}
 \item {} 
-\sphinxcode{\sphinxupquote{/button/\textless{}nummer\textgreater{}}} betätigt einen Button.
+\sphinxcode{\sphinxupquote{/button \textless{}nummer\textgreater{}}} betätigt einen Button.
 
 \item {} 
-\sphinxcode{\sphinxupquote{/exebutton1/\textless{}nummer\textgreater{}}} betätigt einen Button aus der oberen Reihe
+\sphinxcode{\sphinxupquote{/exebutton1 \textless{}nummer\textgreater{}}} betätigt einen Button aus der oberen Reihe
 der Exec\sphinxhyphen{}Seite.
 
 \item {} 
-\sphinxcode{\sphinxupquote{/exebutton2/\textless{}nummer\textgreater{}}} betätigt einen Button aus der unteren Reihe
+\sphinxcode{\sphinxupquote{/exebutton2 \textless{}nummer\textgreater{}}} betätigt einen Button aus der unteren Reihe
 der Exec\sphinxhyphen{}Seite.
 
 \sphinxcode{\sphinxupquote{\textless{}nummer\textgreater{}}} ist eine Ganzzahl entsprechend der Buttontabelle.
+
+\end{itemize}
+
+\sphinxstylestrong{Cuelist\sphinxhyphen{}Aktionen}
+\begin{itemize}
+\item {} 
+\sphinxcode{\sphinxupquote{/cuelistfader \textless{}nummer\textgreater{} \textless{}level\textgreater{}}} ändert den Level eines Cuelist\sphinxhyphen{}Faders.
+
+\item {} 
+\sphinxcode{\sphinxupquote{/go \textless{}nummer\textgreater{}}} ist ein GO in Cueliste.
+
+\item {} 
+\sphinxcode{\sphinxupquote{/go \textless{}nummer\textgreater{} \textless{}cuenummer\textgreater{}}} ist ein GO in Cueliste.
+
+\item {} 
+\sphinxcode{\sphinxupquote{/pause \textless{}nummer\textgreater{}}} pausiert die Cueliste.
+
+\begin{DUlineblock}{0em}
+\item[] \sphinxcode{\sphinxupquote{\textless{}nummer\textgreater{}}} ist die Zeilennummer in der Cuelist\sphinxhyphen{}Page.
+\item[] \sphinxcode{\sphinxupquote{\textless{}cuenummer\textgreater{}}} ist die Nummer des nächsten Cues.
+\item[] \sphinxcode{\sphinxupquote{\textless{}level\textgreater{}}} ist eine Gleitzahl im Bereich zwischen 0 und 1.
+\end{DUlineblock}
 
 \end{itemize}
 
@@ -1087,7 +1123,9 @@ Installation von OLA und Installation von ClubDMX.
 
 
 \section{Raspberry Buster neu installieren}
-\label{\detokenize{raspberry:raspberry-buster-neu-installieren}}\label{\detokenize{raspberry:buster}}\begin{itemize}
+\label{\detokenize{raspberry:raspberry-buster-neu-installieren}}\label{\detokenize{raspberry:buster}}
+Das aktuelle Raspberry OS hat den Namen \sphinxstylestrong{BULLSEYE}.
+\begin{itemize}
 \item {} 
 Programm Imager von \sphinxurl{https://www.raspberrypi.org/downloads/}
 
@@ -1104,21 +1142,21 @@ Raspi\sphinxhyphen{}Config:
 
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
 \PYG{n}{sudo} \PYG{n}{raspi}\PYG{o}{\PYGZhy{}}\PYG{n}{config}
-\PYG{l+m+mi}{2} \PYG{n}{Network} \PYG{n}{Options}
-\PYG{c+c1}{\PYGZsh{} \PYGZhy{}\PYGZgt{} N1 Hostname: Pi\PYGZhy{}Name eintragen (optional)}
+\PYG{l+m+mi}{1} \PYG{n}{System} \PYG{n}{Options}
+\PYG{c+c1}{\PYGZsh{} \PYGZhy{}\PYGZgt{} S4 Hostname: Pi\PYGZhy{}Name eintragen (optional)}
 
-\PYG{l+m+mi}{3} \PYG{n}{Boot} \PYG{n}{Options}
-\PYG{c+c1}{\PYGZsh{} \PYGZhy{}\PYGZgt{} B2 Wait for Network on Boot}
+\PYG{l+m+mi}{1} \PYG{n}{System} \PYG{n}{Options}
+\PYG{c+c1}{\PYGZsh{} \PYGZhy{}\PYGZgt{} S6 Wait for Network on Boot}
 \PYG{c+c1}{\PYGZsh{} (sonst ist OLA nicht mit allen Plugins ausgestattet)}
+
+\PYG{l+m+mi}{3} \PYG{n}{Interfacing} \PYG{n}{Options}
+\PYG{c+c1}{\PYGZsh{} \PYGZhy{}\PYGZgt{} I2 SSH enable (wichtig)}
+
+\PYG{l+m+mi}{3} \PYG{n}{Interfacing} \PYG{n}{Options}
+\PYG{c+c1}{\PYGZsh{} \PYGZhy{}\PYGZgt{} I3 VNC enable (optional)}
 
 \PYG{l+m+mi}{4} \PYG{n}{Localisation} \PYG{n}{Options}
 \PYG{c+c1}{\PYGZsh{} \PYGZhy{}\PYGZgt{} Ländercode + Utf\PYGZhy{}8, auch Ländercode für Wlan (wichtig)}
-
-\PYG{l+m+mi}{5} \PYG{n}{Interfacing} \PYG{n}{Options}
-\PYG{c+c1}{\PYGZsh{} \PYGZhy{}\PYGZgt{} P2 SSH enable (wichtig)}
-
-\PYG{l+m+mi}{5} \PYG{n}{Interfacing} \PYG{n}{Options}
-\PYG{c+c1}{\PYGZsh{} \PYGZhy{}\PYGZgt{} P3 VNC enable (optional)}
 \end{sphinxVerbatim}
 
 
@@ -1168,9 +1206,9 @@ sind auch in
 \PYG{n}{git} \PYG{n}{config} \PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{k}{global} \PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{unset} \PYG{n}{http}\PYG{o}{.}\PYG{n}{proxy}
 
 \PYG{n}{sudo} \PYG{n}{apt}\PYG{o}{\PYGZhy{}}\PYG{n}{get} \PYG{n}{install} \PYG{n}{autoconf} \PYG{n}{libtool} \PYG{n}{bison} \PYG{n}{flex} \PYG{n}{uuid}\PYG{o}{\PYGZhy{}}\PYG{n}{dev} \PYG{n}{libcppunit}\PYG{o}{\PYGZhy{}}\PYG{n}{dev}
-\PYG{n}{sudo} \PYG{n}{apt}\PYG{o}{\PYGZhy{}}\PYG{n}{get} \PYG{n}{install} \PYG{n}{libmicrohttpd}\PYG{o}{\PYGZhy{}}\PYG{n}{dev} \PYG{n}{protobuf}\PYG{o}{\PYGZhy{}}\PYG{n}{compiler} \PYG{n}{libprotobuf}\PYG{o}{\PYGZhy{}}\PYG{n}{dev} \PYG{n}{python}\PYG{o}{\PYGZhy{}}\PYG{n}{protobuf}
+\PYG{n}{sudo} \PYG{n}{apt}\PYG{o}{\PYGZhy{}}\PYG{n}{get} \PYG{n}{install} \PYG{n}{libmicrohttpd}\PYG{o}{\PYGZhy{}}\PYG{n}{dev} \PYG{n}{protobuf}\PYG{o}{\PYGZhy{}}\PYG{n}{compiler} \PYG{n}{libprotobuf}\PYG{o}{\PYGZhy{}}\PYG{n}{dev}
 \PYG{n}{sudo} \PYG{n}{apt}\PYG{o}{\PYGZhy{}}\PYG{n}{get} \PYG{n}{install} \PYG{n}{libftdi}\PYG{o}{\PYGZhy{}}\PYG{n}{dev} \PYG{n}{liblo}\PYG{o}{\PYGZhy{}}\PYG{n}{dev} \PYG{n}{libavahi}\PYG{o}{\PYGZhy{}}\PYG{n}{client}\PYG{o}{\PYGZhy{}}\PYG{n}{dev} \PYG{n}{libprotoc}\PYG{o}{\PYGZhy{}}\PYG{n}{dev}
-\PYG{n}{sudo} \PYG{n}{apt}\PYG{o}{\PYGZhy{}}\PYG{n}{get} \PYG{n}{install} \PYG{n}{libusb}\PYG{o}{\PYGZhy{}}\PYG{l+m+mf}{1.0}\PYG{o}{.}\PYG{l+m+mi}{0}\PYG{o}{\PYGZhy{}}\PYG{n}{dev} \PYG{n}{libcurses5}\PYG{o}{\PYGZhy{}}\PYG{n}{dev} \PYG{n}{pkg}\PYG{o}{\PYGZhy{}}\PYG{n}{config} \PYG{n}{liblo}
+\PYG{n}{sudo} \PYG{n}{apt}\PYG{o}{\PYGZhy{}}\PYG{n}{get} \PYG{n}{install} \PYG{n}{libusb}\PYG{o}{\PYGZhy{}}\PYG{l+m+mf}{1.0}\PYG{o}{.}\PYG{l+m+mi}{0}\PYG{o}{\PYGZhy{}}\PYG{n}{dev} \PYG{n}{pkg}\PYG{o}{\PYGZhy{}}\PYG{n}{config}
 \PYG{n}{autoreconf} \PYG{o}{\PYGZhy{}}\PYG{n}{i}
 \PYG{o}{.}\PYG{o}{/}\PYG{n}{configure}
 \PYG{c+c1}{\PYGZsh{} optionally: ./configure \PYGZhy{}\PYGZhy{}enable\PYGZhy{}rdm\PYGZhy{}tests \PYGZhy{}\PYGZhy{}enable\PYGZhy{}python\PYGZhy{}libs}
@@ -1234,7 +1272,7 @@ Damit ist nach einem Neustart der Eurolite Adapter verfügbar.
 
 \section{OLA für ClubDMX vorbereiten}
 \label{\detokenize{raspberry:ola-fur-clubdmx-vorbereiten}}
-Weiter im Browser, auf Seite \sphinxstyleemphasis{127.0.0.1:9090}.
+Weiter im Browser, auf die Adresse \sphinxstyleemphasis{127.0.0.1:9090}.
 
 ClubDMX kommuniziert mit OLA über OSC, daher muss in OLA in jedem Universum
 ein OSC\sphinxhyphen{}Input eingetragen werden.
@@ -1333,35 +1371,76 @@ Die letzten Schritte sind schnell erledigt:
 \PYG{o}{.}\PYG{o}{/}\PYG{n}{app\PYGZus{}start}\PYG{o}{.}\PYG{n}{sh} \PYG{n}{start}
 \end{sphinxVerbatim}
 
-\sphinxstylestrong{Autostart einrichten}
+Nun ist ClubDMX im Browser unter der Adresse \sphinxstyleemphasis{127.0.0.1:5000} erreichbar.
 
-Damit ist die ClubDMX installiert. Nun muss noch Autostart
-konfiguriert werden. Hier ist eine Unterscheidung zu treffen, je nachdem
-der Raspberry in der Konsole  (wird in der Regel für ClubDMX die richtige
-Wahl sein) oder mit grafischer Benutzeroberfläche startet (auch dafür wird es
-Gründe geben).
+\sphinxstylestrong{Start über NGINX einrichten}
 
-\sphinxstyleemphasis{Konsolen\sphinxhyphen{}Start:}
+Im aktuellen Entwicklungsstand wird ClubDMX über NGINX aufgerufen.
+NGINX ist ein Proxy\sphinxhyphen{}Server. Mit diesem Server kann ClubDMX im Browser ohne
+Port\sphinxhyphen{}Angabe aufgerufen werden. Also 127.0.0.1 statt 127.0.0.1:5000.
+ClubDMX wird nun als Service gestartet. Damit gibt es auch keine Unterschiede
+zwischen GUI und Kommandozeilen\sphinxhyphen{}Start des Raspberry Pi.
 
-\sphinxcode{\sphinxupquote{sudo nano /etc/rc.local}}
+NGINX muss erst installiert werden:
 
-hier eintragen vor der letzten Zeile (\sphinxstyleemphasis{exit 0}):
+\sphinxcode{\sphinxupquote{sudo apt\sphinxhyphen{}get install nginx}}
+
+Kontrolle: Im Browser die Adresse 127.0.0.1 eingeben.
+Die Nginx Default\sphinxhyphen{}Seite sollte sich zeigen.
+
+Vier Schritte sind nötig zur Installation von ClubDMX als Service und der
+Einrichtung von NGINX.
+\begin{itemize}
+\item {} 
+Die systemd\sphinxhyphen{}Datei erstellen:
+
+\sphinxcode{\sphinxupquote{sudo cp \textasciitilde{}/clubdmx\_code/etc/clubdmx.service /etc/systemd/system}}
+
+Anmerkung: Hier müssen die Pfade angepasst werden, wenn ClubDMX
+in einem anderen Verzeichnis installiert wurde.
+
+\item {} 
+Den Dienst starten:
 
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\PYG{c+c1}{\PYGZsh{} clubdmx app:}
-\PYG{n}{su} \PYG{n}{pi} \PYG{o}{\PYGZhy{}}\PYG{n}{c} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{/home/pi/clubdmx\PYGZus{}code/app\PYGZus{}start.sh start}\PYG{l+s+s2}{\PYGZdq{}} \PYG{o}{\PYGZam{}}
+\PYG{n}{sudo} \PYG{n}{systemctl} \PYG{n}{start} \PYG{n}{clubdmx}
+\PYG{n}{sudo} \PYG{n}{systemctl} \PYG{n}{enable} \PYG{n}{clubdmx}
 \end{sphinxVerbatim}
 
-\sphinxstyleemphasis{Desktop\sphinxhyphen{}Start}
+Der Status kann überprüft werden:
+\sphinxcode{\sphinxupquote{sudo systemctl status clubdmx}}
 
-Wenn der Pi im Desktop\sphinxhyphen{}Modus laufen soll, dann muss ClubDMX anders gestartet
-werden. Daher den Start von ClubDMX nicht in \sphinxcode{\sphinxupquote{/etc/rc.local}} machen, sondern so:
+\item {} 
+NGINX einrichten:
 
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\PYG{n}{sudo} \PYG{n}{nano} \PYG{o}{/}\PYG{n}{etc}\PYG{o}{/}\PYG{n}{xdg}\PYG{o}{/}\PYG{n}{lxsession}\PYG{o}{/}\PYG{n}{LXDE}\PYG{o}{\PYGZhy{}}\PYG{n}{pi}\PYG{o}{/}\PYG{n}{autostart}
-\PYG{c+c1}{\PYGZsh{} hier eintragen vor der letzten Zeile (= @screensaver…):}
-\PYG{o}{@}\PYG{o}{/}\PYG{n}{home}\PYG{o}{/}\PYG{n}{pi}\PYG{o}{/}\PYG{n}{clubdmx\PYGZus{}code}\PYG{o}{/}\PYG{n}{app\PYGZus{}start}\PYG{o}{.}\PYG{n}{sh} \PYG{n}{start}
+\PYG{n}{sudo} \PYG{n}{cp} \PYG{o}{\PYGZti{}}\PYG{o}{/}\PYG{n}{clubdmx\PYGZus{}code}\PYG{o}{/}\PYG{n}{etc}\PYG{o}{/}\PYG{n}{nginx\PYGZus{}clubdmx}\PYG{o}{.}\PYG{n}{txt} \PYG{o}{/}\PYG{n}{etc}\PYG{o}{/}\PYG{n}{nginx}\PYG{o}{/}\PYG{n}{sites}\PYG{o}{\PYGZhy{}}\PYG{n}{available}\PYG{o}{/}\PYG{n}{clubdmx}
+\PYG{n}{sudo} \PYG{n}{ln} \PYG{o}{\PYGZhy{}}\PYG{n}{s} \PYG{o}{/}\PYG{n}{etc}\PYG{o}{/}\PYG{n}{nginx}\PYG{o}{/}\PYG{n}{sites}\PYG{o}{\PYGZhy{}}\PYG{n}{available}\PYG{o}{/}\PYG{n}{clubdmx} \PYG{o}{/}\PYG{n}{etc}\PYG{o}{/}\PYG{n}{nginx}\PYG{o}{/}\PYG{n}{sites}\PYG{o}{\PYGZhy{}}\PYG{n}{enabled}
+\PYG{n}{sudo} \PYG{n}{rm} \PYG{o}{/}\PYG{n}{etc}\PYG{o}{/}\PYG{n}{nginx}\PYG{o}{/}\PYG{n}{sites}\PYG{o}{\PYGZhy{}}\PYG{n}{enabled}\PYG{o}{/}\PYG{n}{default}
 \end{sphinxVerbatim}
+
+\item {} 
+NGINX testen und neu starten:
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{n}{sudo} \PYG{n}{nginx} \PYG{o}{\PYGZhy{}}\PYG{n}{t}
+\PYG{n}{sudo} \PYG{n}{systemctl} \PYG{n}{restart} \PYG{n}{nginx}
+\end{sphinxVerbatim}
+
+\end{itemize}
+
+Nun ist ClubDMX über NGINX erreichbar und kann im lokalen Netzwerk über
+die Adresse des Pi aufgerufen werden.
+
+Bei Fehlern  gibt es hier Kontrollen:
+
+\sphinxcode{\sphinxupquote{sudo less /var/log/nginx/error.log}} überprüft die Nginx\sphinxhyphen{}Fehlerprotokolle.
+
+\sphinxcode{\sphinxupquote{sudo less /var/log/nginx/access.log}} überprüft die Nginx\sphinxhyphen{}Zugriffsprotokolle.
+
+\sphinxcode{\sphinxupquote{sudo journalctl \sphinxhyphen{}u nginx}} überprüft die Nginx\sphinxhyphen{}Prozessprotokolle.
+
+\sphinxcode{\sphinxupquote{sudo journalctl \sphinxhyphen{}u clubdmx}} überprüft die Gunicorn\sphinxhyphen{}Protokolle von ClubDMX.
 
 
 \bigskip\hrule\bigskip
@@ -1541,7 +1620,7 @@ Lichtpultes entwickelt wurde. Der Entwickler der Hardware Günter Humpel
 lebt leider nicht mehr, ich möchte ihm hier an dieser Stelle meine
 große Wertschätzung für seine Genialität ausdrücken.
 
-Die Idee zu einer neuen Sotware schlummert seit dem Umstieg auf
+Die Idee zu einer neuen Software schlummert seit dem Umstieg auf
 kommerzielle Lichtpulte, diverse Versuche zur Realisierung verliefen
 ohne Erfolg.
 
@@ -1606,7 +1685,7 @@ Bootstrap für das Design.
 \item {} 
 Version 0.1
 
-Der Grundstein ist gelegt: Es gibt eine Patch als Kernstück. Hier
+Der Grundstein ist gelegt: Es gibt einen Patch als Kernstück. Hier
 wird die Hardware in die Software eingebunden.
 Und es gibt eine fixe Anzahl von 10 Lichtstimmungen, die über
 Fader gesteuert werden können. Alle Daten zu Patch, Heads (= Geräte) und
@@ -1623,7 +1702,7 @@ Die Anpassung an verschiedene Bedürfnisse wird wesentliches Thema.
 Das heißt:
 \begin{itemize}
 \item {} 
-eine erste Variante von Configurationsdatei entsteht.
+eine erste Variante einer Konfigurationsdatei entsteht.
 
 \item {} 
 Die Anzeige der CSV\sphinxhyphen{}Tabellen und deren Editierbarkeit werden
@@ -1640,7 +1719,7 @@ Version 0.3
 
 Die Datenbankstruktur wird einheitlich und damit universeller. Jede
 Kategorie an Daten erhät ein eigenes Verzeichnis. Die Anzahl der Cues ist
-konfigurierar und nicht mehr auf 10 beschränkt. Damit ist der Grundstein
+konfigurierbar und nicht mehr auf 10 beschränkt. Damit ist der Grundstein
 für eine modulare Struktur gelegt, allerdings wird die Datei mit den
 Web\sphinxhyphen{}Funktionen zu einem Monster, weil mir die Infos zur
 Strukturierung fehlen. In dieser Programmstruktur ist das Limit erreicht.
@@ -1810,6 +1889,47 @@ Session\sphinxhyphen{}Variablen gespeichert.
 
 \end{itemize}
 
+\item {} 
+Version 1.0
+
+Neben Stage, Fader und Button kommt eine weitere Bedieneinheit hinzu, die
+\sphinxstylestrong{Cueliste.}
+Die Komponenten der Cueliste sind:
+\begin{itemize}
+\item {} 
+Page. Hier werden Cuelisten angezeigt und bedient. Level, Go, Pause und
+Auswahl des nächsten Cues.
+
+\item {} 
+Page\sphinxhyphen{}Setup. Hier werden neue Cuelisten angelegt oder bestehende
+modifiziert, d.h. die Anzeigenamen und die Midi\sphinxhyphen{}Bedienung definiert.
+
+\item {} 
+Cuelist\sphinxhyphen{}Editor. Hier werden die Zeilen einer Cueliste angelegt und die
+Parameter eingestellt.
+
+\end{itemize}
+
+Weitere Neuerungen:
+\begin{itemize}
+\item {} 
+Stage: Geräte können zu \sphinxstylestrong{Gruppen} zusammengefasst werden. Mit dem
+Gruppensymbol werden alle Geräte der Gruppe selektiert.
+
+\item {} 
+Midi: 4 Midi\sphinxhyphen{}Inputs, 4 Midi\sphinxhyphen{}Outputs. Mit Midi verwendbar sind neben Fadern
+und Buttons auch die Cuelisten: Level, Tasten (Go, Pause, Cue\sphinxhyphen{}Auswahl).
+Der Clear\sphinxhyphen{}Button (=Topcue leeren) ist ebenfalls über Midi bedienbar.
+
+\item {} 
+Edit/Select Umschalten erfolgt über Javascript, kein Reload der Seite nötig.
+
+\item {} 
+Der Zugriff auf ClubDMX erfolgt über den Proxy\sphinxhyphen{}Server NGINX. Damit entfällt
+die Angabe des Ports beim Browser\sphinxhyphen{}Aufruf.
+
+\end{itemize}
+
 \end{itemize}
 
 
@@ -1823,7 +1943,7 @@ Telefon: +43 699 8188 1989
 
 \sphinxhref{mailto:gunther.seiser.63@gmail.com}{gunther.seiser.63@gmail.com}
 
-Erstellt  am 28.01.2022
+Erstellt  am 20.03.2022
 
 
 

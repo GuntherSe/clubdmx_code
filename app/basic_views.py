@@ -1,21 +1,26 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import imp
 import os
 import os.path
-import sys
+import json
 
 from flask import Blueprint, render_template, request, json, redirect
 from flask import session, flash,  url_for #, send_from_directory
+from flask import current_app
 from flask_login import login_required
+
+import logging
+from loggingbase import readlogfile
+
 from cuebutton import Cuebutton
 
 from ola import get_ip_address
 
 from apputils import standarduser_required #, admin_required, redirect_url
 from common_views import check_clipboard
-from filedialog_util import list_dir
-
+from filedialog_util import dir_explore
 
 import globs
 
@@ -28,6 +33,7 @@ from startup_func import fadertable_items
 basic = Blueprint ("basic", __name__, url_prefix="", 
                   static_folder="static", template_folder="templates")
 
+logger = logging.getLogger ("clubdmx")
 
 # --- Hilfsfunktionen ---------------------------------------------
 def get_buttondata () ->dict:
@@ -127,13 +133,13 @@ def list_pictures(gallery:str = "galerie"):
 
 @basic.route ("/")
 @basic.route ("/index")
-def index () -> "index.html":
-    # print ("request: ", request.endpoint)
+def index ():
     room = os.path.basename (globs.room.path ())
     conffile = Csvfile (globs.cfg.file.name())
     patchfile = Csvfile (globs.patch.file.name())
     local_ip = get_ip_address ()
     pictures = list_pictures ()
+    # current_app.logger.info('index aufgerufen.')
 
     return render_template ("index.html",
                             confname = conffile.shortname(),
@@ -315,7 +321,44 @@ def doku (page:str=None) :
 def galerie ():
     """ Bildergalerie anzeigen
     """
-
     pictures = list_pictures()
     return render_template ("gallery.html", pictures = pictures)
 
+
+@basic.route ("/viewlog")
+@login_required
+@standarduser_required
+def viewlog ():
+    """ Logfile anzeigen 
+    """
+    logdir = os.path.join (globs.basedir, "logs")
+    logdir = logdir.replace (os.sep, '+')
+    return render_template ("viewlog.html", logdir=logdir)
+
+
+@basic.route ("/getlogfile")
+def getlogfile () ->json:
+    """ Logfile  in HTML 
+
+    return im JSON-Format
+    """
+    # aktuell angezeigtes logfile in session speichern:
+    fullname = request.args.get ("name")
+
+    if fullname != "" and fullname != "undefined":
+        session["logname"] = fullname
+    else:
+        if "logname" in session:
+            fullname = session["logname"]
+        else:
+            return "kein Logfile ausgewählt."
+    
+    fullname = fullname.replace ('+', os.sep) # '+' in '/' umwandeln
+    path, shortname = os.path.split (fullname)
+    loglines = readlogfile (fullname)
+
+    table = render_template ("logfile.html",
+                    shortname = shortname, 
+                    fullname = fullname,
+                    lines = loglines)
+    return json.dumps (table)

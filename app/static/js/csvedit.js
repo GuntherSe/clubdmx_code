@@ -345,11 +345,11 @@ function postSelectedRows ($selectees) {
   var selectableCsvLinesEnabled = false;
   function selectableCsvLines () {
     // 
+    selectableCsvInit ();
     if (! selectableCsvLinesEnabled) {
       selectableCsvLinesEnabled = true;
-      selectableCsvInit ();
-      // if (editmode ("select")) {
-    
+    };
+
       $("#csvtable > tbody").selectable ({
         filter:"tr",
         create: function( e, ui ) {
@@ -377,9 +377,8 @@ function postSelectedRows ($selectees) {
         
       });
     
-      // }; // end if editmode select
     
-    }
+    // }
   }
   
   function removeSelectableCsvLines () {

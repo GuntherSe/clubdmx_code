@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import logging
+# from logging.handlers import RotatingFileHandler
+from loggingbase import Logbase
+
 import os
 import globs
 
@@ -82,6 +86,15 @@ def create_app (test_config=None):
 
     # print ("app.url_map: ", app.url_map)
 
+    # logging, siehe:
+    # https://github.com/miguelgrinberg/microblog/blob/v0.15/app/__init__.py
+    if not app.debug and not app.testing:
+        baselogger = Logbase ()
+        file_handler = baselogger.filehandler ("clubdmx.log")
+        app.logger.addHandler(file_handler)
+        # app.logger.setLevel(baselogger.loglevel)
+        # app.logger.info('ClubDMX start APP')
+
     @app.context_processor
     def inject_topcue_content ():
         """ Status des topcue in html-Seiten verfügbar machen 
@@ -96,14 +109,6 @@ def create_app (test_config=None):
         """ Datum in html verfügbar machen 
         """
         return {'now': datetime.utcnow() }
-
-    # https://stackoverflow.com/questions/28627324/disable-cache-on-a-specific-page-using-flask
-    # @app.after_request
-    # def add_header(response):
-    # #     response.headers['X-UA-Compatible'] = 'IE=Edge,chrome=1'
-    #     if ('Cache-Control' not in response.headers):
-    #         response.headers['Cache-Control'] = 'public, max-age=600'
-    #     return response
 
 
     load_config (with_savedlevels=True)

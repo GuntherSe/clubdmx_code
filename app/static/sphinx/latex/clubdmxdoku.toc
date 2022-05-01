@@ -21,7 +21,7 @@
 \contentsline {section}{\numberline {4.7}Buttons einrichten}{18}{section.4.7}%
 \contentsline {section}{\numberline {4.8}Exec\sphinxhyphen {}Seite einrichten}{20}{section.4.8}%
 \contentsline {section}{\numberline {4.9}Einrichten von zeitabhängiger Steuerung mit Crontab (in Linux)}{21}{section.4.9}%
-\contentsline {chapter}{\numberline {5}ClubDMX benützen}{23}{chapter.5}%
+\contentsline {chapter}{\numberline {5}Mit ClubDMX arbeiten}{23}{chapter.5}%
 \contentsline {section}{\numberline {5.1}Stage}{23}{section.5.1}%
 \contentsline {section}{\numberline {5.2}Exec}{27}{section.5.2}%
 \contentsline {section}{\numberline {5.3}Fader}{27}{section.5.3}%
@@ -49,7 +49,7 @@
 \contentsline {section}{\numberline {9.2}OLA installieren}{40}{section.9.2}%
 \contentsline {section}{\numberline {9.3}OLA für ClubDMX vorbereiten}{41}{section.9.3}%
 \contentsline {section}{\numberline {9.4}ClubDMX installieren}{42}{section.9.4}%
-\contentsline {section}{\numberline {9.5}Troubles?}{43}{section.9.5}%
+\contentsline {section}{\numberline {9.5}Troubles?}{44}{section.9.5}%
 \contentsline {chapter}{\numberline {10}Entwicklungsschritte}{47}{chapter.10}%
 \contentsline {section}{\numberline {10.1}Erste Idee}{47}{section.10.1}%
 \contentsline {section}{\numberline {10.2}Die Entwicklungsschritte}{48}{section.10.2}%

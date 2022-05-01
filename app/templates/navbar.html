@@ -101,6 +101,7 @@
   <div class="dropdown-menu" aria-labelledby="navbarInfoDropdown">
     {{ dropdown_link ("common.output", "DMX-Output")}}
     {{ dropdown_link ("basic.doku", "Info") }}
+    {{ dropdown_link ("basic.viewlog", "Logfiles") }}
     {% if current_user.is_authenticated %}
       {{ dropdown_link ("basic.galerie", "Galerie") }}
     {% endif %}
