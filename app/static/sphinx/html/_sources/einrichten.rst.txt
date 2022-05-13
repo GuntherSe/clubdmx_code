@@ -210,7 +210,7 @@ Weitere Informationen zur Einrichtung findest du im Kapitel
 .. _crontab_label:
 
 Einrichten von zeitabhängiger Steuerung mit Crontab (in Linux)
---------------------------------------------------------------
+----------------------------------------------------------------- 
 
 Zur Unterstützung von Fixinstallationen mit Tages- oder 
 Wochen-abhängigen Anforderungen gibt es die Möglichkeit, über den 

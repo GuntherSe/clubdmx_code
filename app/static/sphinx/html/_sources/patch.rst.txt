@@ -4,7 +4,7 @@ Patch
 =====
 
 Jedes physisch vorhandene Gerät wird im Patch eingetragen. 
-Damit wird es für ClubDMX verfügbar.
+Damit wird es für ClubDMX verfügbar. 
 
 Aufruf über die Navigation: ``Einrichtung -> Config -> Patch bearbeiten``.
 
@@ -41,7 +41,7 @@ Zu den einzelnen Spalten:
 Neuen Patch erstellen
 ---------------------
 
-In jeder Datenbank-Kategorie gibt es eine Tabelle mit Namen  *_neu*, 
+In jeder Datenbank-Kategorie gibt es eine Tabelle mit Namen  *_neu*, 
 die als Prototyp fungiert. So auch in der Kategorie Patch. 
 Sichere diesen Prototyp unter einem neuen Namen und beginne 
 nun mit der Erstellung der Zeilen.

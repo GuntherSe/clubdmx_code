@@ -6,9 +6,9 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Entwicklungsschritte &#8212; ClubDMX Doku 1.0 Dokumentation</title>
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
@@ -58,7 +58,7 @@ erproben können.</p>
 Lichtpultes entwickelt wurde. Der Entwickler der Hardware Günter Humpel
 lebt leider nicht mehr, ich möchte ihm hier an dieser Stelle meine
 große Wertschätzung für seine Genialität ausdrücken.</p>
-<p>Die Idee zu einer neuen Sotware schlummert seit dem Umstieg auf
+<p>Die Idee zu einer neuen Software schlummert seit dem Umstieg auf
 kommerzielle Lichtpulte, diverse Versuche zur Realisierung verliefen
 ohne Erfolg.</p>
 <p>Als wesentlichen Zwischenschritt zur Entwicklung einer selbständigen
@@ -110,7 +110,7 @@ Bootstrap für das Design.</p>
 <h2>Die Entwicklungsschritte<a class="headerlink" href="#die-entwicklungsschritte" title="Link zu dieser Überschrift">¶</a></h2>
 <ul>
 <li><p>Version 0.1</p>
-<p>Der Grundstein ist gelegt: Es gibt eine Patch als Kernstück. Hier
+<p>Der Grundstein ist gelegt: Es gibt einen Patch als Kernstück. Hier
 wird die Hardware in die Software eingebunden.
 Und es gibt eine fixe Anzahl von 10 Lichtstimmungen, die über
 Fader gesteuert werden können. Alle Daten zu Patch, Heads (= Geräte) und
@@ -123,7 +123,7 @@ gibt es eine Trennung zwischen Intensität und Farbe.</p>
 <p>Die Anpassung an verschiedene Bedürfnisse wird wesentliches Thema.
 Das heißt:</p>
 <ul class="simple">
-<li><p>eine erste Variante von Configurationsdatei entsteht.</p></li>
+<li><p>eine erste Variante einer Konfigurationsdatei entsteht.</p></li>
 <li><p>Die Anzeige der CSV-Tabellen und deren Editierbarkeit werden
 überarbeitet.</p></li>
 <li><p>Die Web-Funktionen befinden sich allesamt in einer immer länger
@@ -133,7 +133,7 @@ werdenden Datei.</p></li>
 <li><p>Version 0.3</p>
 <p>Die Datenbankstruktur wird einheitlich und damit universeller. Jede
 Kategorie an Daten erhät ein eigenes Verzeichnis. Die Anzahl der Cues ist
-konfigurierar und nicht mehr auf 10 beschränkt. Damit ist der Grundstein
+konfigurierbar und nicht mehr auf 10 beschränkt. Damit ist der Grundstein
 für eine modulare Struktur gelegt, allerdings wird die Datei mit den
 Web-Funktionen zu einem Monster, weil mir die Infos zur
 Strukturierung fehlen. In dieser Programmstruktur ist das Limit erreicht.</p>
@@ -260,6 +260,8 @@ Der Clear-Button (=Topcue leeren) ist ebenfalls über Midi bedienbar.</p></li>
 <li><p>Edit/Select Umschalten erfolgt über Javascript, kein Reload der Seite nötig.</p></li>
 <li><p>Der Zugriff auf ClubDMX erfolgt über den Proxy-Server NGINX. Damit entfällt
 die Angabe des Ports beim Browser-Aufruf.</p></li>
+<li><p>Logfiles: Startup und Laden des Raums/der Config wird in Logdateien
+protokolliert.</p></li>
 </ul>
 </li>
 </ul>
@@ -298,7 +300,7 @@ die Angabe des Ports beim Browser-Aufruf.</p></li>
 
 
 <h3>Navigation</h3>
-<p class="caption"><span class="caption-text">Inhalt:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Inhalt:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="readme.html">README</a></li>
 <li class="toctree-l1"><a class="reference internal" href="features.html">Features</a></li>
@@ -330,7 +332,7 @@ die Angabe des Ports beim Browser-Aufruf.</p></li>
   <h3 id="searchlabel">Schnellsuche</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Los" />
     </form>
     </div>
@@ -352,7 +354,7 @@ die Angabe des Ports beim Browser-Aufruf.</p></li>
       &copy;2022, Gunther Seiser.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.4.3</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.5.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

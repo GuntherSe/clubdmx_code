@@ -214,6 +214,7 @@ def restoresource ():
             session.pop ("usbdrive", None)
             ret = globs.room.usbrestore (usbdrv, newpath)
             flash (ret["message"], category=ret["category"])
+            flash ("evtl. geänderte Config muss geöffnet werden.", category="warning")
         else:
             flash (f"Restore: kein USB Laufwerk angegeben.", category="danger")
         return "ok"

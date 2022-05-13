@@ -4,14 +4,14 @@ Raspberry einrichten
 ====================
 
 Der Raspberry PI ist eine für ClubDMX getestete Hardware, hier ist 
-eine Anleitung zur Neu-Installation von Raspbian Buster als Betriebssystem, 
+eine Anleitung zur Neu-Installation von Raspbian als Betriebssystem, 
 Installation von OLA und Installation von ClubDMX.
 
 
-.. _Buster:
+.. _Bullseye:
 
-Raspberry Buster neu installieren
----------------------------------
+Raspberry Bullseye neu installieren
+-------------------------------------
 
 Das aktuelle Raspberry OS hat den Namen **BULLSEYE**.
 

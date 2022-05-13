@@ -13,7 +13,7 @@ Lichtpultes entwickelt wurde. Der Entwickler der Hardware Günter Humpel
 lebt leider nicht mehr, ich möchte ihm hier an dieser Stelle meine 
 große Wertschätzung für seine Genialität ausdrücken.
 
-Die Idee zu einer neuen Sotware schlummert seit dem Umstieg auf 
+Die Idee zu einer neuen Software schlummert seit dem Umstieg auf 
 kommerzielle Lichtpulte, diverse Versuche zur Realisierung verliefen 
 ohne Erfolg. 
 
@@ -73,7 +73,7 @@ Die Entwicklungsschritte
 
 * Version 0.1
 
-  Der Grundstein ist gelegt: Es gibt eine Patch als Kernstück. Hier 
+  Der Grundstein ist gelegt: Es gibt einen Patch als Kernstück. Hier 
   wird die Hardware in die Software eingebunden.
   Und es gibt eine fixe Anzahl von 10 Lichtstimmungen, die über
   Fader gesteuert werden können. Alle Daten zu Patch, Heads (= Geräte) und 
@@ -88,7 +88,7 @@ Die Entwicklungsschritte
   Die Anpassung an verschiedene Bedürfnisse wird wesentliches Thema. 
   Das heißt: 
 
-  - eine erste Variante von Configurationsdatei entsteht.
+  - eine erste Variante einer Konfigurationsdatei entsteht.
 
   - Die Anzeige der CSV-Tabellen und deren Editierbarkeit werden
     überarbeitet.
@@ -100,7 +100,7 @@ Die Entwicklungsschritte
 
   Die Datenbankstruktur wird einheitlich und damit universeller. Jede 
   Kategorie an Daten erhät ein eigenes Verzeichnis. Die Anzahl der Cues ist
-  konfigurierar und nicht mehr auf 10 beschränkt. Damit ist der Grundstein 
+  konfigurierbar und nicht mehr auf 10 beschränkt. Damit ist der Grundstein 
   für eine modulare Struktur gelegt, allerdings wird die Datei mit den 
   Web-Funktionen zu einem Monster, weil mir die Infos zur 
   Strukturierung fehlen. In dieser Programmstruktur ist das Limit erreicht.
@@ -264,6 +264,9 @@ Die Entwicklungsschritte
 
   - Der Zugriff auf ClubDMX erfolgt über den Proxy-Server NGINX. Damit entfällt
     die Angabe des Ports beim Browser-Aufruf. 
+
+  - Logfiles: Startup und Laden des Raums/der Config wird in Logdateien 
+    protokolliert.
 
 
   

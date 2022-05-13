@@ -274,11 +274,14 @@ class Roombase:
                 dst = os.path.join (dest, subdir)
                 copytree (src, dst)
 
+            self.logger.info (f"Backup in {dest} erzeugt.")
             ret["category"]="success"
             ret["message"] = f"Backup in {dest} erzeugt."
         else:
+            self.logger.warning (
+                f"Backup nicht erzeugt. Ziel {dest} nicht erlaubt")
             ret["category"]="danger"
-            ret["message"] = f"Backup nicht erzeugt. (Ziel = aktueller Raum)"
+            ret["message"] = f"Backup nicht erzeugt. (Ziel {dest} nicht erlaubt.)"
         return ret
 
 
@@ -352,11 +355,14 @@ class Roombase:
         print ("Pfad: ", destpath)
         backupdir = os.path.normpath (destpath)
         print ("Backupdir: ", backupdir)
+        self.logger.info (f"Backup nach {backupdir} ...")
         try:
             ret = backuproom.backup (backupdir)
+            self.logger.info ("Backup ok.")
         except:
             ret = {"message":"Backup nicht gelungen", 
                     "category":"danger"} 
+            self.logger.warning ("Backup nicht gelungen.")
         mount.mnt.unmount (dest)
         return ret
 
