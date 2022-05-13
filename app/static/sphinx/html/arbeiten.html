@@ -1,0 +1,418 @@
+
+<!DOCTYPE html>
+
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mit ClubDMX arbeiten &#8212; ClubDMX Doku 1.0 Dokumentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/translations.js"></script>
+    <link rel="index" title="Stichwortverzeichnis" href="genindex.html" />
+    <link rel="search" title="Suche" href="search.html" />
+    <link rel="next" title="Benutzer" href="benutzer.html" />
+    <link rel="prev" title="Einrichtung" href="einrichten.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+              <div class="related top">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="einrichten.html" title="Previous document">Einrichtung</a>
+        </li>
+        <li>
+          <a href="benutzer.html" title="Next document">Benutzer</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="mit-clubdmx-arbeiten">
+<span id="arbeiten-label"></span><h1>Mit ClubDMX arbeiten<a class="headerlink" href="#mit-clubdmx-arbeiten" title="Link zu dieser Überschrift">¶</a></h1>
+<p>Über die Startseite (erreichbar über das Symbol <img alt="clublogo" src="_images/favicon-16x16.png" />) können die
+wichtigsten Module aufgerufen werden, über die Navigationsleiste
+können alle Module aufgerufen werden.</p>
+<p>Hier ist eine Übersicht über die Navigation:</p>
+<div class="section" id="stage">
+<h2>Stage<a class="headerlink" href="#stage" title="Link zu dieser Überschrift">¶</a></h2>
+<ul class="simple">
+<li><p>Stage</p></li>
+<li><p>Stage kompakt</p></li>
+<li><p>Single</p></li>
+</ul>
+<p>Die erste Wahl in der Navigation ist die <strong>Stage</strong>. Dieses Modul besteht aus
+mehreren Webseiten. Die erste Wahl ist die Stage mit beweglichen und
+selektierbaren Elementen. Als Idee dahinter ist, die <strong>Geräte (= Heads)</strong>
+wie in einem Grundriss eines Raumplanes zu positionieren. Damit können
+die Geräte auf dem Bildschirm so angeordnet werden, wie sie sich im reellen
+Raum befinden.</p>
+<img alt="_images/stage_page.jpg" src="_images/stage_page.jpg" />
+<p>Da bei Samrtphones und anderen kleinen Anzeigen der Platz oft nicht
+ausreicht, wird eine zweite Stage-Ansicht zur Verfügung gestellt:
+<strong>Stage kompakt</strong>. Hier werden die Elemente neben- und untereinander so
+platziert, dass der Bildschirm optimal genutzt wird (Responsive Design).</p>
+<img alt="_images/stage_kompakt.jpg" src="_images/stage_kompakt.jpg" />
+<p>In der <strong>Single</strong> Seite kann mittels Navigationspfeilen <code class="docutils literal notranslate"><span class="pre">&lt;&lt;</span></code>,
+<code class="docutils literal notranslate"><span class="pre">&lt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&gt;&gt;</span></code> jedes Gerät
+einzeln in den <a class="reference internal" href="grundlagen.html#topcuelabel"><span class="std std-ref">Topcue</span></a> geladen werden.
+Für das ausgewählte Gerät werden im
+Arbeitsbereich Fader angezeigt, die die einzelnen <em>Attribute</em>
+bedienbar machen.</p>
+<img alt="_images/single_page.jpg" src="_images/single_page.jpg" />
+</div>
+<div class="section" id="exec">
+<h2>Exec<a class="headerlink" href="#exec" title="Link zu dieser Überschrift">¶</a></h2>
+<p>Die Exec-Seite enthält Buttons und Fader. Sie kann so konfiguriert werden,
+dass sie einen Button-Bereich, einen Fader-Bereich und einen weiteren
+Button-Bereich anzeigt. Jeder dieser Bereiche kann auch leer sein.</p>
+<p>Das Ziel der Exec-Seite ist ein schneller und simpler Zugang zu Szenen.
+Auf die Editiermöglichkeiten wurde daher verzichtet. Zum
+Einrichten und Editieren der Exec-Seite wechselt man auf die Fader- oder
+Button-Seite. Genaueres dazu findest du unter <a class="reference internal" href="einrichten.html#fader"><span class="std std-ref">Fader einrichten</span></a> und
+<a class="reference internal" href="einrichten.html#buttons"><span class="std std-ref">Buttons einrichten</span></a> .</p>
+<img alt="_images/exec_page.jpg" src="_images/exec_page.jpg" />
+</div>
+<div class="section" id="fader">
+<h2>Fader<a class="headerlink" href="#fader" title="Link zu dieser Überschrift">¶</a></h2>
+<p>Die Fader-Seite war der Startpunkt für die Arbeiten zu ClubDMX, diese Seite
+war das erste Ziel: Lichtszenen (Cues) über einen
+Webseiten-Fader zu bedienen.</p>
+<p>Die dazu nötigen Voraussetzungen waren dann doch eher umfangreich, aber die
+für die Anwender wichtige Klarheit ist hier nach wie vor gegeben: Ein Fader für
+jeden Cue,
+ein Text zur Identifizierung, ein Button zur Ansicht, welche Geräte mit diesem
+Fader bedient werden und ein Button zum Editieren des Cues.</p>
+<p>Neue Fader hinzufügen oder entfernen, die Reihenfolge der Fader ändern: Das
+alles ist möglich, und zwar in der Fadertabelle.
+Siehe <a class="reference internal" href="einrichten.html#fader"><span class="std std-ref">Fader einrichten</span></a></p>
+<p>In der Fadertabelle ist es auch möglich, einen MIDI-Regler einem Fader
+zuzuorden.</p>
+</div>
+<div class="section" id="button">
+<h2>Button<a class="headerlink" href="#button" title="Link zu dieser Überschrift">¶</a></h2>
+<p>Ganz gleich wie die Fader-Seite ist die Button-Seite für die einfache
+Bedienung konzipiert: Hier können Szenen (Cues) über die Webseite ein- oder
+ausgeschalten werden.</p>
+<p>Buttons unterscheiden sich von Fadern dadurch, dass bei
+Buttons nur die Endpunkte 0 und 100% (Aus oder Ein) vom Benutzer gewählt
+werden können.</p>
+<p>Der Übergang von Aus zu Ein beziehungsweise von Ein zu Aus kann mit
+Fade-Zeiten verknüpft werden. Dann bestimmt die Zeit in Sekunden einen linearen
+Übergang von Ursprungs- zum Zielzustand.</p>
+<p>Es gibt drei verschiedene Arten von Buttons:</p>
+<ul class="simple">
+<li><p>Schalter</p></li>
+<li><p>Taster</p></li>
+<li><p>Auswahlschalter</p></li>
+</ul>
+<p>Ein Schalter verändert mit jedem Drücken seinen Status, von <em>aus</em> nach <em>ein</em>
+und wieder zurück.
+Ein Taster ist nur dann <em>ein</em>, wenn er gedrückt und gehalten wird. Das
+funktioniert nur auf einem Midi-Keyboard, nicht auf der Webseite.</p>
+<p>Ein Auswahlschalter hängt mit anderen Auswahlschaltern zusammen: Mehrere
+Auswahlschalter bilden eine Gruppe (mit einer Gruppen-Nummer). Wird ein
+Schalter aus dieser Gruppe <em>ein</em>-geschalten, dann wird damit ein momentan
+aktiver Schalter aus dieser Gruppe <em>aus</em>-geschalten. Es kann also immer
+nur ein Schalter aus einer Gruppe <em>ein</em> sein.</p>
+<p>Es können beliebig viele Buttons eingerichtet werden. Auswahlschalter
+müssen nicht nebeneinander platziert wrden, sie werden durch die Gruppen-Nummer
+als zusammengehörig definiert.</p>
+<p>Auf der Button-Seite sind die für den Benutzer essentiellen Informationen
+enthalten: Text zur Identifizierung, Status (Aus: grauer Rand,
+Ein: roter Rand), weiters Buttons zur Ansicht der Cue-Informationen und zum
+Editieren.</p>
+<p>In der Buttontabelle werden alle Infos zu den Buttons verwaltet. Hier können
+Buttons hinzugefügt, entfernt und in der Reihenfolge verändert werden.
+Weiters werden hier die Fade-Zeiten und die Zuordnung zu MIDI-Tasten
+eigetragen.</p>
+</div>
+<div class="section" id="cuelist">
+<h2>Cuelist<a class="headerlink" href="#cuelist" title="Link zu dieser Überschrift">¶</a></h2>
+<p>Eine Cuelist ist eine Sammlung von Cues, die aufeinander folgend ausgeführt
+werden. Dabei gibt es zwei grundsätzliche Unterscheidungen. Die erste Form der
+Cuelist ist die, bei der nach dem Fade-in auf das Go gewartet wird. Die zweite
+Form der Cuelist ist die, bei der der jeweils nächste Cue nach einer definierten
+Zeit ausgeführt wird. Diese Form der Cuelist wird auch Chaser genannt.</p>
+<p>In ClubDMX sind beide Formen der Cuelist in Verwendung. Die einzelnen Cuelisten
+werden in den Cuelist-Pages angelegt. Jede dieser Cuelisten kann eine beliebige
+Anzahl von Cues enthalten.</p>
+<p>Die vorhandenen Cuelisten werden in der <strong>Pages-Seite</strong> angezeigt.</p>
+<img alt="_images/cuelist_pages.jpg" src="_images/cuelist_pages.jpg" />
+<p>Hier werden auch die Cuelisten bedient: Intensität, Go, Pause, Auswahl
+des nächsten Cues. Der Status der Cuelisten wird hier auch angezeigt:
+- aktueller Cue mit aktuellem Fade-Level
+- nächster Cue</p>
+<p>Details zu einer Cueliste werden in der <strong>Editor Page</strong> angezeigt. Hier
+werden auch die Fade- und Wartezeiten sowie der angezeigte Text eingetragen.</p>
+<img alt="_images/cuelist_editor.jpg" src="_images/cuelist_editor.jpg" />
+<p>Cuelisten werden mit vorhandenen Cues erstellt. Diese Cues können nicht nur in den
+Cuelisten, sondern auch in Fadern oder Buttons in Verwendung sein. Wenn eine
+Cueliste im Editor geöffnet wurde, dann wird sie auch gleichzeitig vorbereitet
+zum Hinzufügen von neuen Cues. So geht es recht komfortabel von der
+Stage-Seite und dem <strong>Speichern-Button</strong>, um einen neuen Cue an die Cueliste
+anzuhängen.</p>
+<img alt="_images/topcue2.jpg" src="_images/topcue2.jpg" />
+<p>Die Verwaltung (öffnen, sichern als, neue Zeile, upload) wird in der
+<strong>Pages-Setup</strong>-Seite gemacht. Diese ist über das Zahnradsymbol auf der
+Pages-Seite erreichbar.</p>
+<img alt="_images/cuelist_pages_setup.jpg" src="_images/cuelist_pages_setup.jpg" />
+</div>
+<div class="section" id="einrichtung">
+<h2>Einrichtung<a class="headerlink" href="#einrichtung" title="Link zu dieser Überschrift">¶</a></h2>
+<p>Die Einrichtung von ClubDMX ist schon recht vielseitig, meine Hoffnung ist,
+dass sie trotzdem noch übersichtlich ist, um sich schnell zurecht zu finden.</p>
+<ul class="simple">
+<li><p>Raum</p></li>
+<li><p>Config</p></li>
+<li><p>Bedienelemente</p></li>
+<li><p>Midi</p></li>
+<li><p>Datenbank</p></li>
+<li><p>Admin</p></li>
+</ul>
+<p>Die Einrichtung ist in verschiedene Bereiche gegliedert, die sich auf der
+Webseite in Tabs wiederfinden.</p>
+<p>Im <strong>Raum</strong>-Tab werden die ersten und elementaren Einrichtungen getätigt:
+Einen neuen Raum anlegen, den Raum wechseln, den aktiven Raum umbenennen.
+Im Raum-Tab befinden sich auch die Optionen zum Backup und Restore.</p>
+<p>Die nächste Ebene der Einrichtung ist die <strong>Config</strong>, deren Hardware-Komponenten
+sich im Config-Tab befinden. Das
+Kernstück der Konfiguration ist der <strong>Patch</strong>. Die zweite wesentliche
+Hardware-Komponente ist OLA, das die pyhsische Zuordnung über DMX zu den
+Geräten herstellt.</p>
+<p>Falls  für einen Raum
+mehrere Configs angelegt wurden, kann hier eine davon ausgewählt werden. Die
+aktuelle Config kann auch unter einem anderen Namen gespeichert werden.</p>
+<p>Zur Erläuterung der Begriffe Raum und Config siehe <a class="reference internal" href="grundlagen.html#raum-config-label"><span class="std std-ref">Räume und Config</span></a> .</p>
+<p>Nach dem Öffnen einer Config werden der
+<a class="reference internal" href="patch.html#patchlabel"><span class="std std-ref">Patch</span></a> ausgewählt, die OLA-Adresse und die Anzahl der Universen
+eingestellt.</p>
+<p>Im <strong>Config</strong>-Tab wird auch OSC Input ein- oder ausgeschalten.</p>
+<p>Im <strong>Bedienelemente</strong>-Tab sind die Tabellen auswählbar, die die zur Nutzung
+relevanten Seiten definieren: Stage, Fader und Buttons. Damit können für einen
+Anwendungsbereich die nötige Lokalisierung der Geräte auf der Stage und die
+passenden Fader und Buttons bereitgestellt werden.</p>
+<p>Für den Fall, dass ClubDMX als Steuerung für eine Fix-Installation verwendet
+wird, die nach einem Ausschalten mit den letzten Einstellungen wieder
+hochgefahren werden soll, gibt es den Schalter <em>Levels speichern</em>.</p>
+<p>Verschiedene Stil-Themen für die Webseite können im Bedienelemente-Tab
+ausgewählt werden.</p>
+<p>Im <strong>Midi</strong>-Tab können maximal vier Midi-Geräte als Input definiert werden. Diese
+Midi-Geräte können Fadern und Buttons zugeordnet werden. Damit können Cues
+auch ohne Website bedient werden.</p>
+<p>Der <strong>Datenbank</strong>-Tab ermöglicht einen Zugriff auf die Tabellen, die hier
+bearbeitet werden können. Je nach gewähltem <a class="reference internal" href="grundlagen.html#bearbeitungsmoduslabel"><span class="std std-ref">Bearbeitungsmodus</span></a>
+können hier
+Zell- oder Zeilenbearbeitungen gemacht werden.</p>
+<p>Umfassende Erläuterungen zum Thema Einrichtung finden sich im
+Kapitel <a class="reference internal" href="einrichten.html#einrichten-label"><span class="std std-ref">Einrichtung</span></a>.</p>
+</div>
+<div class="section" id="info">
+<h2>Info<a class="headerlink" href="#info" title="Link zu dieser Überschrift">¶</a></h2>
+<p>Information zur Software und den aktuellen DMX-Output</p>
+<ul class="simple">
+<li><p>DMX-Output: zeigt alle DMX-Werte, die nicht Null sind. Das ist
+zur Kontrolle gedacht, da man hier sieht, welche Berechnungen ClubDMX
+für die einzelnen Fader, Buttons und den Topcue vorgenommen hat.</p></li>
+<li><p>Info: Kurz-Informationen</p></li>
+<li><p>Logfiles: Die Logdateien liefern Auskunft darüber, ob und wie einzelne
+Arbeitsschritte von ClubDMX erledigt wurden. Speziell informativ ist das
+beim Starten der App und beim Laden der Config, da hier die
+Rückmeldungen noch nicht auf der Webseite ausgegeben werden können.</p></li>
+<li><p>Galerie: Hier sind ein paar Bilder aus dem Abwendungsbereich von ClubDMX.</p></li>
+<li><p>Doku: Umfangreiche Information zu verschiedenen Themen: Erste Schritte,
+Einrichtung, die einzelnen Navigations-Punkte (Module) und ein Bereich
+zu Grundlagen der Lichtsteuerung.</p></li>
+</ul>
+</div>
+<div class="section" id="benutzer-datenbank">
+<h2>Benutzer-Datenbank<a class="headerlink" href="#benutzer-datenbank" title="Link zu dieser Überschrift">¶</a></h2>
+<p>Die Benützung von ClubDMX ist nur mit einem Login möglich.
+Es gibt verschiedene Rollen der Berechtigung, zur Zeit sind das
+Basic, Standard und Admin.</p>
+<p>Die genaue Kategorisierung, welche Aktionen mit welcher Rolle
+durchgeführt werden dürfen, ist noch in Arbeit. Den aktuellen Stand zu den
+Benutzer-Rollen siehe <a class="reference internal" href="benutzer.html#benutzer-label"><span class="std std-ref">Benutzer</span></a> .</p>
+</div>
+<div class="section" id="osc-input">
+<span id="osc-commands"></span><h2>OSC Input<a class="headerlink" href="#osc-input" title="Link zu dieser Überschrift">¶</a></h2>
+<p>Dieses Modul ermöglicht die Verbindung mit externen Programmen wie zum Beispiel
+<a class="reference external" href="https://troikatronix.com/">Isadora</a> . Über
+<a class="reference external" href="https://de.wikipedia.org/wiki/Open_Sound_Control">OSC</a> können
+folgende Aktionen in ClubDMX ausgeführt werden.</p>
+<p><strong>Allgemeine Aktionen</strong></p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">/head</span> <span class="pre">&lt;attribut&gt;</span> <span class="pre">&lt;headnr&gt;</span> <span class="pre">&lt;level&gt;</span></code> ermöglicht de Zugriff auf sämtliche
+Geräte und deren Attribute.</p>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">&lt;attribut&gt;</span></code> bezeichnet den Attribut-Namen, so wie er in der Head-Definition</div>
+<div class="line">angelegt ist.</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">&lt;headnr&gt;</span></code> ist eine Ganzzahl entsprechend der Headnummer im Patch.</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">&lt;level&gt;</span></code> ist eine Gleitzahl im Bereich zwischen 0 und 1.</div>
+</div>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/clear</span></code> leert den <a class="reference internal" href="grundlagen.html#topcuelabel"><span class="std std-ref">Topcue</span></a> .</p></li>
+</ul>
+<p><strong>Fader-Aktionen</strong></p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">/fader</span> <span class="pre">&lt;nummer&gt;</span> <span class="pre">&lt;level&gt;</span></code> ändert den Level eines Faders.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/exefader</span> <span class="pre">&lt;nummer&gt;</span> <span class="pre">&lt;level&gt;</span></code> ändert den Level eines Faders aus der
+Exec-Seite.</p>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">&lt;nummer&gt;</span></code> ist eine Ganzzahl entsprechend der Fadertabelle.</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">&lt;level&gt;</span></code> ist eine Gleitzahl im Bereich zwischen 0 und 1.</div>
+</div>
+</li>
+</ul>
+<p><strong>Button-Aktionen</strong></p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">/button</span> <span class="pre">&lt;nummer&gt;</span></code> betätigt einen Button.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/exebutton1</span> <span class="pre">&lt;nummer&gt;</span></code> betätigt einen Button aus der oberen Reihe
+der Exec-Seite.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/exebutton2</span> <span class="pre">&lt;nummer&gt;</span></code> betätigt einen Button aus der unteren Reihe
+der Exec-Seite.</p>
+<p><code class="docutils literal notranslate"><span class="pre">&lt;nummer&gt;</span></code> ist eine Ganzzahl entsprechend der Buttontabelle.</p>
+</li>
+</ul>
+<p><strong>Cuelist-Aktionen</strong></p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">/cuelistfader</span> <span class="pre">&lt;nummer&gt;</span> <span class="pre">&lt;level&gt;</span></code> ändert den Level eines Cuelist-Faders.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/go</span> <span class="pre">&lt;nummer&gt;</span></code> ist ein GO in Cueliste.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/go</span> <span class="pre">&lt;nummer&gt;</span> <span class="pre">&lt;cuenummer&gt;</span></code> ist ein GO in Cueliste.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/pause</span> <span class="pre">&lt;nummer&gt;</span></code> pausiert die Cueliste.</p>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">&lt;nummer&gt;</span></code> ist die Zeilennummer in der Cuelist-Page.</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">&lt;cuenummer&gt;</span></code> ist die Nummer des nächsten Cues.</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">&lt;level&gt;</span></code> ist eine Gleitzahl im Bereich zwischen 0 und 1.</div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+              <div class="related bottom">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="einrichten.html" title="Previous document">Einrichtung</a>
+        </li>
+        <li>
+          <a href="benutzer.html" title="Next document">Benutzer</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="inhalt.html">ClubDMX Doku</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Inhalt:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="readme.html">README</a></li>
+<li class="toctree-l1"><a class="reference internal" href="features.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="erste_schritte.html">Erste Schritte</a></li>
+<li class="toctree-l1"><a class="reference internal" href="einrichten.html">Einrichtung</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Mit ClubDMX arbeiten</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#stage">Stage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#exec">Exec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fader">Fader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#button">Button</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cuelist">Cuelist</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#einrichtung">Einrichtung</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#info">Info</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#benutzer-datenbank">Benutzer-Datenbank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#osc-input">OSC Input</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="benutzer.html">Benutzer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="patch.html">Patch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="grundlagen.html">Grundlagen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="raspberry.html">Raspberry einrichten</a></li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">Entwicklungsschritte</a></li>
+<li class="toctree-l1"><a class="reference internal" href="impressum.html">Impressum</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="inhalt.html">Documentation overview</a><ul>
+      <li>Previous: <a href="einrichten.html" title="vorheriges Kapitel">Einrichtung</a></li>
+      <li>Next: <a href="benutzer.html" title="nächstes Kapitel">Benutzer</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Schnellsuche</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Los" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Gunther Seiser.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.5.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/arbeiten.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
