@@ -71,4 +71,6 @@ mit Anfangs-Großbuchstaben:
    Prüfen, ob %2 angegeben, sonst existenz von clubdmx_code.zip prüfen.
    Wenn vorhanden, dann unzip etc.
    wenn nicht: Fehlermeldung -> noch testen
+
+-- python_setup.sh mit Kommandozeilen-Parametern 
    

@@ -4,7 +4,9 @@
 ## Image und Basics
 
 Programm Imager von <https://www.raspberrypi.org/downloads/>
+
 Image erzeugen
+
 Raspi mit Bidschirm und Tatatur starten, anschließend Guide ausführen
 
 Raspi-Config:
@@ -52,9 +54,10 @@ Siehe meinen Beitrag vom 14.7.2020.
 
 Diese Möglichkeit ist nötig, wenn die neueste Version von OLA gewünscht ist. Ich benötigte die Hardware-Unterstützung des Eurolite-DMX-Adapters USB-DMX512-Pro. Nach Ausführung der in dem Google-Groups Beitrag gelisteten Schritte ist OLA in der neuesten Vrsion installiert.
 
-#### Kontrolle: 
+#### Kontrolle für beide Installationsvarianten: 
 
 im Browser die OLA Website aufrufen = 127.0.0.1:9090
+
 hier nachsehen: Plugins -> OSC ->Config Location: /etc/ola/ola-osc.conf
 
 Weiter im Browser auf 127.0.0.1:9090:
@@ -75,48 +78,68 @@ WinSCP oder anderes Programm zum Übertragen der Dateien.
 In allen Betriebssystemen kann **Filezilla** verwendet werden.
 Oder vom USB-Stick kopieren.
 
-/home/pi/clubdmx_code
-/home/pi/clubdmx_rooms
+*TODO:* Install von Github dokumentieren. 
 
-NEU ab Version 0.96:
-Die Verzeichnisse für Code und Räume können beliebig positioniert werden. ClubDMX findet die Verzeichnisse über Environment-Variablen.
+### Verzeichnisse:
 
-app_start.sh kann bleiben, wie es ist. Die für das Starten von ClubDMX notwendigen Änderungen werden  mit Environment-Variablen gemacht. In /etc/environment können diese Environment-Variablen eingetragen werden, dann sind sie global verfügbar.
+Die beiden für ClubDMX nötigen Verzeichnisse sind das Programm-Verzeichnis und das Raum-Verzeichnis:
+
+    /home/pi/clubdmx_code
+    /home/pi/clubdmx_rooms
+
+Die beiden hier genannten Verzeichnisse sind die Default-Werte für den User pi. 
+
+Die Verzeichnisse für Code und Räume können abweichend von den Default-Werten beliebig positioniert werden. ClubDMX findet die Verzeichnisse über Environment-Variablen.
 
 export CLUBDMX_CODEPATH=/home/pi/clubdmx_code
 export CLUBDMX_ROOMPATH=/home/pi/clubdmx_rooms
 export GUNICORNSTART=/home/pi/.local/bin/gunicorn
 
-In den obigen Zeilen stehen die Default-Werte. Falls andere Pfade verwendet werden - es kann auch ein anderes Raumverzeichnis angegeben werden - , dann werden in /etc/environment die entsprechenden Environment-Variablen gesetzt.
+In den obigen Zeilen stehen die Default-Werte. Falls andere Pfade verwendet werden, dann werden in /etc/environment die entsprechenden Environment-Variablen gesetzt.
 
-Alias anlegen: 
-- Diese Zeile am Ende von /home/pi/.bashrc anfügen:
-alias clubdmx='/home/pi/clubdmx_code/app_start.sh'
+In dieser Installations-Anleitung wird die Verwendung der Default-Verzeichnisse angenommen. Für alternative Verzeichnisse werden die angegebenen Befehle entsprechend adaptiert.
+
+### Alias anlegen: 
+
+Diese Zeile am Ende von /home/pi/.bashrc anfügen:
+
+    alias clubdmx='/home/pi/clubdmx_code/app_start.sh'
 
 Shell Script Files ausführbar machen:
-cd /home/pi/clubdmx_code
-dos2unix *.sh
-chmod +x *.sh
+
+    cd /home/pi/clubdmx_code
+    dos2unix *.sh
+    chmod +x *.sh
 
 ## Python Module
 
+(wir befinden uns im ClubDMX-Programmverzeichnis)
+
 Alle nötigen Module installieren:
-./python_setup.sh
+
+    ./python_setup.sh
 
 .env editieren:
-nano .env
+
+    nano .env
+
 hier eintragen: 
-SECRET_KEY = b”84nrf97vzih47vzha” 
+
+    SECRET_KEY = b”84nrf97vzih47vzha” 
+
 (= beliebiger zufälliger String, NICHT genau dieser)
 
 Terminal öffnen (in WinSCP oder am Raspi direkt) 
-./app_start.sh start
 
-Wichtige Anmerkungen:
+    ./app_start.sh start
+
+### Wichtige Anmerkungen:
 
 Die Datei python_setup.sh kann an verschiedene Bedürfnisse angepasst werden. Ich habe hier verschiedene Verwendungsmöglichkeiten reingeschrieben, die mit ‘#’ auskommentiert sind.
 
 python_setup.sh: kann für die erstmalige Installation der Python-Extensions oder für das Upgrade der Extensions verwendet werden.
+
+*TODO:* python_setup.sh mit Kommandozeilen-Parametern formulieren.
 
 app_start.sh: Der Start der App ist, obwohl die Raspberries bzw. Linux-Rechner nach dem selben Schema installiert wurden, unterschiedlich zu bewerkstelligen. Computer geben eben manchmal Rätsel auf. So liegt zum Beispiel die Extension Gunicorn am Raspberry im Jazzit im Verzeichnis /usr/bin und auf meinem Raspberry in /home/pi/.local/bin. Das muss beim Start der App berücksichtigt werden, indem die Environment-Variable GUNICORNSTART gesetzt wird.
 
