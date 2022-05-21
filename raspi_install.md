@@ -91,9 +91,9 @@ Die beiden hier genannten Verzeichnisse sind die Default-Werte für den User pi.
 
 Die Verzeichnisse für Code und Räume können abweichend von den Default-Werten beliebig positioniert werden. ClubDMX findet die Verzeichnisse über Environment-Variablen.
 
-export CLUBDMX_CODEPATH=/home/pi/clubdmx_code
-export CLUBDMX_ROOMPATH=/home/pi/clubdmx_rooms
-export GUNICORNSTART=/home/pi/.local/bin/gunicorn
+    export CLUBDMX_CODEPATH=/home/pi/clubdmx_code
+    export CLUBDMX_ROOMPATH=/home/pi/clubdmx_rooms
+    export GUNICORNSTART=/home/pi/.local/bin/gunicorn
 
 In den obigen Zeilen stehen die Default-Werte. Falls andere Pfade verwendet werden, dann werden in /etc/environment die entsprechenden Environment-Variablen gesetzt.
 
@@ -186,8 +186,6 @@ Die systemd-Datei erstellen:
 
     sudo cp ~/clubdmx_code/etc/clubdmx.service /etc/systemd/system
 
-(=eine Zeile!)
-
 Anmerkung: Hier müssen die Pfade angepasst werden, wenn ClubDMX in einem anderen Verzeichnis installiert wurde. 
 
 Den Dienst starten:
@@ -202,13 +200,7 @@ Der Status kann überprüft werden:
 NGINX einrichten:
 
     sudo cp ~/clubdmx_code/etc/nginx_clubdmx.txt /etc/nginx/sites-available/clubdmx
-
-(=eine Zeile!)
-
     sudo ln -s /etc/nginx/sites-available/clubdmx /etc/nginx/sites-enabled
-
-(=eine Zeile!)
-
     sudo rm /etc/nginx/sites-enabled/default
 
 Bei Fehlern gibt es hier Kontrollen:
@@ -236,13 +228,9 @@ Nun ist ClubDMX über NGINX erreichbar.
 
 Im Browser sind nun OLA und ClubDMX aufrufbar.
 
+Die mit der Installation verfügbaren Webseiten:
+
 OLA: 127.0.0.1:9090
+
 ClubDMX: 127.0.0.1
-
-
-Update einer bestehenden Installation von ClubDMX
-Diese Update-Option ist für bereits installierte Apps geschrieben, für das eine neue Version verfügbar ist. Die neue Version kommt gezippt als clubdmx_code.zip
-Die neue Version wird in das Verzeichnis /home/pi kopiert, dann wird 
-app_start.sh update
-im Terminal ausgeführt.
 
