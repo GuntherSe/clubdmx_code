@@ -1,3 +1,51 @@
 # clubdmx_code
-LIGHT OPERATION with a Web interface and various hardware
-For a demo visit https://guntherseiser.pythonanywhere.com
+
+LIGHT OPERATION with a Web interface and various hardware.
+For a demo visit <https://guntherseiser.pythonanywhere.com>
+
+(The Web page language is German. Contributers that translate to other languages are highly welcome.)
+
+## Features
+
+### Web Interface
+
+ClubDMX runs on a Raspberry PI (or on any other computer with Linux OS) and delivers a website for the user interaction. In other words, the Raspberry PI hosts the software, the user operates on his favorite device, which can be a laptop, tablet or a samrtphone. On this device no app is needed, a browser is enough.
+
+The websight is in responsive Design and adopts to the size of the screen.
+
+### Open Lighting Architecture
+
+The DMX connection is carried out by [OLA](https://www.openlighting.org/) . With it there is a lot of hardware options available, for example Enttec DMX USB Pro and DMX King. OLA establishes various ethernet protocols like ArtNet, sACN and others. An overview of the wide range of possibilities for DMX output is here:
+<https://www.openlighting.org/ola/> .
+
+### Scenes
+
+The first and basic goal in the development of ClubDMX was to enable an easy handling of **Light Scenes (= Cues)**. It's exactly this feature that distinguishes ClubDMX from other lighting software.
+
+ClubDMX offers various possibilities for **Cues**:
+* Cues with Fader
+* Cues with Button
+* One Cue with top priority for handling the the hardware devices and creating new Cues
+* Cuelists as collections of Cues, with fade-times and wait-times.
+
+### Data stored in CSV files
+
+All program data is stored in CSV files. This is a plain text format, that is highly compatible with most text editors and operating systems. Of course creating end editing is done in ClubDMX.
+
+### Adapted to various Users
+
+There is a login on the website, and then all user specific possibilities and data is activated. There are differnt roles of Users with different rights. Only after login you can you can operate DMX hardware.
+
+### MIDI
+
+In addition to the website ClubDMX can be operated by MIDI. For example with a KORG nanoKontrol-2. The buttons and faders of the NanoKontrol can be linked to the buttons and faders of ClubDMX.
+
+Up to four MIDI inputs and for MIDI outputs can be connected to ClubDMX.
+
+### OSC Input
+
+[OSC](https://en.wikipedia.org/wiki/Open_Sound_Control) can link external software with ClubDMX. With it all devices with all attributes can be operated, as well as faders, buttons and cuelists defined in ClubDMX.
+
+This feature is extensively tested with [Isadora](https://troikatronix.com/) . 
+For interaction between ClubDMX and Isadora there are example Isadora patches and user actors available.
+
