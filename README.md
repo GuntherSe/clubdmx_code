@@ -9,16 +9,16 @@ For a demo visit <https://guntherseiser.pythonanywhere.com>
 
 ### Web Interface
 
-ClubDMX runs on a Raspberry PI (or on any other computer with Linux OS) and delivers a website for the user interaction. In other words, the Raspberry PI hosts the software, the user operates on his favorite device, which can be a laptop, tablet or a samrtphone. On this device no app is needed, a browser is enough.
+ClubDMX runs on a Raspberry PI (or on any other computer with Linux OS) and delivers a website for the user interaction. In other words, the Raspberry PI hosts the software, the user operates on his favorite device, which can be a laptop, tablet or a smartphone. On this device no app is needed, a browser is sufficient.
 
-The websight is in responsive Design and adopts to the size of the screen.
+The website is written in Responsive Design and adopts to the size of the screen.
 
 ### Open Lighting Architecture
 
 The DMX connection is carried out by [OLA](https://www.openlighting.org/) . With it there is a lot of hardware options available, for example Enttec DMX USB Pro and DMX King. OLA establishes various ethernet protocols like ArtNet, sACN and others. An overview of the wide range of possibilities for DMX output is here:
 <https://www.openlighting.org/ola/> .
 
-### Scenes
+### Scenes/Cues
 
 The first and basic goal in the development of ClubDMX was to enable an easy handling of **Light Scenes (= Cues)**. It's exactly this feature that distinguishes ClubDMX from other lighting software.
 
