@@ -1,8 +1,44 @@
-# Erweiterungen abspeichern:
-# pip freeze > requirements.txt
+#!/bin/bash
 
-# setup Python mit den nötigen Erweiterungen:
-pip3 install -r require_linux.txt 
+# ----------------------------------------------------
+# Python für ClubDMX vorbereiten 
+# und/oder aktuellen Python Extension Status ermitteln
+# ----------------------------------------------------
 
-# Upgrade:
-# pip3 install -r require_linux.txt --upgrade
+# Requirement-Datei angegeben?
+# diese Terminologie ist vorgesehen: require_'version'.txt 
+# 'version' ist die OS-Version, in der Python installiert ist
+if [ -z "$2" ]; then
+  REQFILE="./require_$2.txt"
+else
+  REQFILE="requirements.txt"
+fi
+    
+
+case "$1" in
+  freeze)
+  echo "Status der Python Extensions sichern. Sichere in $REQFILE."
+  # Erweiterungen abspeichern:
+  pip3 freeze > $REQFILE
+  ;;
+
+  install)
+  echo "Python Eyxtensions installieren. Verwende $REQFILE."
+  # setup Python mit den nötigen Erweiterungen:
+  pip3 install -r $REQFILE
+  ;;
+
+  upgrade)
+  # Upgrade:
+  echo "Python Eyxtensions upgrade. Verwende $REQFILE."
+  pip3 install -r $REQFILE --upgrade
+  ;;
+
+  *)
+  echo "Verwendung: $0 {freeze|install|upgrade [require_<name>.txt] }"
+  echo "<name> bezeichnet die OS-Version."
+  ;;
+
+esac
+
+exit 0

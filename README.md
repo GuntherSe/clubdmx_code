@@ -67,6 +67,8 @@ Please have a look at the file [raspi_install](raspi_install.md). You will find 
 
 If you plan to test and work with older hardware like unused laptops or so, this is also fine. I can recommend to install Debian with a lightweight desktop like LXDE or LXQT. The install instructions mentioned above will apply to this hardware too.
 
+Also fine and tested is to use a VirtualBox on a Windows host to install a Debian client and ClubDMX. 
+
 ## License
 
 [MIT](LICENSE.md)

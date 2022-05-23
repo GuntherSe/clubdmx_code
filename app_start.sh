@@ -5,9 +5,9 @@
 # ----------------------------------------------------
 
 # Am Besten auch gleich einen Alias anlegen:
-# Die folgende Zeile am Ende von /home/pi/.bashrc anfügen 
+# Die folgende Zeile am Ende von /home/USER/.bashrc anfügen 
 # (natürlich ohne '#' am Anfang):
-# alias clubdmx='/home/pi/clubdmx_code/app_start.sh'
+# alias clubdmx='$HOME/clubdmx_code/app_start.sh'
 # Anschließend Terminal neu starten
 
 # --- Startoptionen: ----------------------------------
@@ -89,7 +89,7 @@ case "$1" in
     ;;
 
   *)
-    echo "Verwendung: ~/clubdmx_code/app_start.sh {start|stop|update [zipfile]}"
+    echo "Verwendung: $0 {start|stop|update [zipfile] }"
     if [ -e test1running ]
     then
         echo "running"
