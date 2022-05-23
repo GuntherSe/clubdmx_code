@@ -1,10 +1,9 @@
 # Umgebungsvariablen setzen:
-# DIESES SCRIPT SO AUFRUFEN: . setenviron.bash
+# DIESES SCRIPT SO AUFRUFEN: . setenviron.sh
 
 export FLASK_APP=wsgi.py
 export FLASK_ENV=development
 export PYTHONPATH="${PWD}/app:${PWD}/dmx"
-# c:\Users\Gunther\OneDrive\Programmierung\clubdmx_code\app;c:\Users\Gunther\OneDrive\Programmierung\clubdmx_code\dmx
 export SQLALCHEMY_DATABASE_URI="sqlite:///${PWD}/app.db"
 export SQLALCHEMY_TRACK_MODIFICATIONS="False"
 echo "Umgebungsvariablen gesetzt."

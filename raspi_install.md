@@ -218,7 +218,7 @@ NGINX testen und neu starten:
 Nun ist ClubDMX über NGINX erreichbar.
 
 
-## Clubdmx update: 
+## ClubDMX update: 
 
     unzip clubdmx_code
     chmod +x *.sh
