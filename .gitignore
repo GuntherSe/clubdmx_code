@@ -7,6 +7,9 @@ logs/
 .app.db
 .require_pyanywhere(installed).txt
 .pass-pythonanywhere.txt
+.todo.txt
+schema.sql
+setenviron.ps1
 
 # /dmx/.vscode/
 /dmx/backup/

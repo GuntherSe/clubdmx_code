@@ -1,7 +1,7 @@
 # clubdmx_code
 
-LIGHT OPERATION with a Web interface and various hardware.
-For a demo visit <https://guntherseiser.pythonanywhere.com> . You'll need to login for playing with ClubDMX. I have prepared two users with different rights, details follow below.
+LIGHT OPERATION with a Web interface, suitable for various DMX hardware and ethernet protocols.
+For a demo visit <https://guntherseiser.pythonanywhere.com>. You'll need to login for playing with ClubDMX. I have prepared two users with different rights, details follow below.
 
 (The Web page language is German. Contributers that translate to other languages are highly welcome.)
 
@@ -46,12 +46,12 @@ Up to four MIDI inputs and for MIDI outputs can be connected to ClubDMX.
 
 [OSC](https://en.wikipedia.org/wiki/Open_Sound_Control) can link external software with ClubDMX. With it all devices with all attributes can be operated, as well as faders, buttons and cuelists defined in ClubDMX.
 
-This feature is extensively tested with [Isadora](https://troikatronix.com/) . 
+This feature is extensively tested with [Isadora](https://troikatronix.com/). 
 For interaction between ClubDMX and Isadora there are example Isadora patches and user actors available.
 
 ## Play with the demo
 
-There is a demo of ClubDMX on [pythonanywhere.com]<https://guntherseiser.pythonanywhere.com/index> . Without login you can vie some pictures of ClubDMX in action and read the documentation. It's a good starting point to get some ideas what to do with ClubDMX. 
+There is a demo of ClubDMX on [pythonanywhere.com](https://guntherseiser.pythonanywhere.com/index). Without login you can view some pictures of ClubDMX in action and read the documentation. It's a good starting point to get some ideas what to do with ClubDMX. 
 
 I suggest that you login as user *basic* next. This gives you the opportunity to use ClubDMX as intended and prepared by a *standard* or *admin* user. 
 
@@ -63,7 +63,10 @@ User *Standard* has the password "Standard2021*
 
 ## Getting started with real hardware
 
-Please have a look at the file [raspi_install](raspi_install.md) . You will find detailed install instructions for setting up a Raspberry PI from scratch. A PI-4 is recommended. 
+Please have a look at the file [raspi_install](raspi_install.md). You will find detailed install instructions for setting up a Raspberry PI from scratch. A PI-4 is recommended. 
 
 If you plan to test and work with older hardware like unused laptops or so, this is also fine. I can recommend to install Debian with a lightweight desktop like LXDE or LXQT. The install instructions mentioned above will apply to this hardware too.
 
+## License
+
+[MIT](LICENSE.md)
