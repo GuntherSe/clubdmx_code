@@ -10,7 +10,7 @@ Programm Imager von <https://www.raspberrypi.org/downloads/>
 
 Image erzeugen
 
-Raspi mit Bidschirm und Tatatur starten, anschließend Guide ausführen
+Raspi mit Bildschirm und Tatatur starten, anschließend Guide ausführen.
 
 Raspi-Config:
 
@@ -29,7 +29,7 @@ Siehe: https://www.digitalmasters.info/de/das-zeilenende-unter-linux-windows-und
 
 ### Debian Installation:
 
-Zur Installation von Debian ist nichts spezielles anzumerken. Download des Installers von https://www.debian.org/index.en.html und los gehts. dos2unix ist vorläufig das einzige zusätzliche Paket, das zu installieren ist (siehe oben).
+Zur Installation von Debian ist nichts Spezielles anzumerken. Download des Installers von https://www.debian.org/index.de.html und los gehts. dos2unix ist vorläufig das einzige zusätzliche Paket, das zu installieren ist (siehe oben).
 
 ### Windows Installation: 
 
