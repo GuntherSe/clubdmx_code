@@ -1,7 +1,7 @@
 
 # ClubDMX neu installieren
 
-ClubDMX ist in Python programmiert und ist im Wesentlichen Plattform-unabhängig. Eine Installation kann somit auf verschiedenen Betriebssystemen erfolgen. Ich habe es auf Windows 10 und auf verschiedenen Linux-Versionen installiert. Zur Installation auf einem MacOS kann ich leider nichts sagen. In der folgenden Anleitung ist im Wesentlichen auf den Raspberry PI Bezug genommen, zur Installation auf andere Betriebssysteme gibt es entsprechende Hinweise in den einzelnen Abschnitten.
+ClubDMX ist in Python programmiert und ist im Wesentlichen Plattform-unabhängig. Eine Installation kann somit auf verschiedenen Betriebssystemen erfolgen. Ich habe es auf Windows 10 und auf verschiedenen Linux-Versionen installiert. Zur Installation auf einem MacOS kann ich leider nichts sagen. In der folgenden Anleitung ist auf den Raspberry PI Bezug genommen, zur Installation auf andere Betriebssysteme gibt es entsprechende Hinweise in den einzelnen Abschnitten.
 
 
 ## Image und Basics (Raspberry PI)
@@ -121,6 +121,7 @@ In dieser Installations-Anleitung wird die Verwendung der Default-Verzeichnisse 
 
 ### Alias anlegen: 
 
+Für die Standard-Installation kann auf diesen Schritt verzichtet werden. Zu Testzwecken, Programmentwicklung und Fehlersuche erspart die Verwendung eines Alaias einiges an Tippen.
 Diese Zeile am Ende von ~/.bashrc anfügen:
 
     alias clubdmx='$HOME/clubdmx_code/app_start.sh'
@@ -158,9 +159,11 @@ hier eintragen:
 
 (= beliebiger, langer String, NICHT genau dieser)
 
-Nun ist ClubDMX fertig installiert und die Installation kann getestet werden, durch Starten von app_start.sh. Wenn wie oben angegeben der Alias angelegt wurde, dann mit folgendem Befehl in einem Terminal:
+Nun ist ClubDMX fertig installiert und die Installation kann **getestet** werden, durch Starten von app_start.sh. Wenn wie oben angegeben der Alias angelegt wurde, dann mit folgendem Befehl in einem Terminal:
 
-    ./app_start.sh start
+    clubdmx start
+
+(Ohne das Anlegen eines Alias: *~/clubdmx_code/app_start.sh start*)
 
 ### Windows:
 
@@ -208,8 +211,6 @@ Damit entfällt in Raspi-config der Punkt “Wait for Network on Boot”.
 
 NGINX ist ein Proxy-Server. Mit diesem Server kann ClubDMX im Browser ohne Port-Angabe aufgerufen werden. Also 127.0.0.1 statt 127.0.0.1:5000.
 
-Die im vorigen Abschnitt beschriebenen Starts für ClubDMX sind ab Version 1.0 geändert. ClubDMX wird nun als Service gestartet und über NGINX aufgerufen. Damit gibt es auch keine Unterschiede zwischen GUI und Kommandozeilen-Start des Raspberry Pi.
-
 NGINX muss erst installiert werden:
 
     sudo apt-get install nginx
@@ -226,7 +227,7 @@ Die systemd-Datei erstellen:
 
     sudo cp ~/clubdmx_code/etc/clubdmx.service /etc/systemd/system
 
-Anmerkung: Hier müssen die Pfade angepasst werden, wenn ClubDMX in einem anderen Verzeichnis installiert wurde. 
+**Anmerkung:** Hier müssen die Pfade angepasst werden, wenn ClubDMX in einem anderen Verzeichnis installiert wurde. Das gilt auch für die Installation auf einem Debian-Rechner.
 
 Den Dienst starten:
 
@@ -242,6 +243,13 @@ NGINX einrichten:
     sudo cp ~/clubdmx_code/etc/nginx_clubdmx.txt /etc/nginx/sites-available/clubdmx
     sudo ln -s /etc/nginx/sites-available/clubdmx /etc/nginx/sites-enabled
     sudo rm /etc/nginx/sites-enabled/default
+
+Wurde ClubDMX in einem anderen Verzeichnis installiert, dann ist der Kopier-Befehl entsprechend zu ändern.
+
+### Debian Installation:
+
+Die beiden Dateien im Verzeichnis ~/clubdmx_code/etc enthalten Pfadangaben, die auf den User Pi und die Raspi-Installation angepasst sind. Vor Ausführung der oben genannten Schritte müssen diese Pfadangaben korrigiert werden.
+
 
 Bei Fehlern gibt es hier Kontrollen:
 
