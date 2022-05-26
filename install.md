@@ -17,15 +17,18 @@ Raspi-Config:
     sudo raspi-config
     1 System Options -> S4 Hostname: Pi-Name eintragen (optional)
     1 System Options -> S6 Wait for Network on Boot (sonst ist OLA nicht mit allen Plugins ausgestattet)
-    3 Interfacing Options -> I2 SSH enable (wichtig)
-    3 Interfacing Options -> I3 VNC enable (optional)
+    3 Interfacing Options -> P2 SSH enable (wichtig)
+    3 Interfacing Options -> P3 VNC enable (optional)
+    4 Localisation Options -> L4 WLAN Country (wichtig) 
 
-wichtig: 4 Localisation Options: Ländercode + Utf-8, auch Ländercode für Wlan    
+Anschließend im Terminal:
 
-    sudo apt-get install dos2unix
+    sudo apt-get install dos2unix nginx
 
 dos2unix ist ein Tool zum Umwandeln von Textdateien mit Windows-Zeilenenden in ein Linux-Format.
 Siehe: https://www.digitalmasters.info/de/das-zeilenende-unter-linux-windows-und-os-x-im-griff/
+
+NGINX ist ein Proxy-Server, der die ClubDMX-Webseite zur Verfügung stellt. Mehr dazu später.
 
 ### Debian Installation:
 
@@ -211,23 +214,20 @@ Damit entfällt in Raspi-config der Punkt “Wait for Network on Boot”.
 
 NGINX ist ein Proxy-Server. Mit diesem Server kann ClubDMX im Browser ohne Port-Angabe aufgerufen werden. Also 127.0.0.1 statt 127.0.0.1:5000.
 
-NGINX muss erst installiert werden:
-
-    sudo apt-get install nginx
-
-Falls bei der Installation Fehler auftreten, dann war es vielleicht schon installiert und muss erst vollständig entfernt werden:
+NGINX wurde bereits installiert (siehe Beginn des Dokuments).
+Falls bei der Installation Fehler auftraten, dann war es vielleicht schon installiert und muss erst vollständig entfernt werden:
 
     sudo apt-get remove --purge nginx nginx-full nginx-common 
     sudo apt-get install nginx
 
 Kontrolle: Im Browser die IP-Adresse eingeben. Die Nginx Default-Seite sollte sich zeigen.
-Hier sind die dazu nötigen Schritte. (siehe: https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-gunicorn-and-nginx-on-ubuntu-20-04-de )
+Hier sind die dazu nötigen Schritte im Detail erläutert. (siehe: https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-gunicorn-and-nginx-on-ubuntu-20-04-de )
 
 Die systemd-Datei erstellen:
 
     sudo cp ~/clubdmx_code/etc/clubdmx.service /etc/systemd/system
 
-**Anmerkung:** Hier müssen die Pfade angepasst werden, wenn ClubDMX in einem anderen Verzeichnis installiert wurde. Das gilt auch für die Installation auf einem Debian-Rechner.
+**Anmerkung:** Hier müssen die Pfade angepasst werden, wenn ClubDMX in einem anderen Verzeichnis installiert und/oder ein anderer User als *pi* gewählt wurde. Das gilt auch für die Installation auf einem Debian-Rechner.
 
 Den Dienst starten:
 
