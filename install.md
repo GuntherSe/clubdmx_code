@@ -1,7 +1,10 @@
 
-# Raspberry BULLSEYE neu installieren
+# ClubDMX neu installieren
 
-## Image und Basics
+ClubDMX ist in Python programmiert und ist im Wesentlichen Plattform-unabhängig. Eine Installation kann somit auf verschiedenen Betriebssystemen erfolgen. Ich habe es auf Windows 10 und auf verschiedenen Linux-Versionen installiert. Zur Installation auf einem MacOS kann ich leider nichts sagen. In der folgenden Anleitung ist im Wesentlichen auf den Raspberry PI Bezug genommen, zur Installation auf andere Betriebssysteme gibt es entsprechende Hinweise in den einzelnen Abschnitten.
+
+
+## Image und Basics (Raspberry)
 
 Programm Imager von <https://www.raspberrypi.org/downloads/>
 
@@ -24,7 +27,17 @@ wichtig: 4 Localisation Options: Ländercode + Utf-8, auch Ländercode für Wlan
 dos2unix ist ein Tool zum Umwandeln von Textdateien mit Windows-Zeilenenden in ein Linux-Format.
 Siehe: https://www.digitalmasters.info/de/das-zeilenende-unter-linux-windows-und-os-x-im-griff/
 
+### Debian Installation:
+
+Zur Installation von Debian ist nichts spezielles anzumerken. Download des Installers von https://www.debian.org/index.en.html und los gehts. dos2unix ist vorläufig das einzige zusätzliche Paket, das zu installieren ist (siehe oben).
+
+### Windows Installation: 
+
+Hier gibt es keine Anleitung zur Installation von Windows. Wir gehen mal davon aus, dass Windows bereits installiert ist.
+
 ## OLA
+
+OLA steht für **Open Lighting Architecture** und es stellt die Verbindung zwischen ClubDMX und der DMX Hardware bzw. der Ethernet Schnittstellen her. OLA läuft auf Linux (und auf MacOS, aber dazu kann ich keine Informationen liefern). Die folgenden Installationsschritte gelten also für Raspberry und Debian.
 
 Zur Installation von OLA gibt es zwei Möglichkeiten: Die Paket-Installation einer ziemlich sicher älteren Version mit apt-get und die Installation der neuesten Version von Github.
 
@@ -37,9 +50,9 @@ hier eintragen:
     #ola:
     deb http://apt.openlighting.org/raspbian wheezy main
 
-anschließend Reboot
+anschließend neu starten.
 
-nach dem Neustart:
+Nach dem Neustart:
 
     sudo apt-get install ola
 
@@ -56,7 +69,7 @@ Diese Möglichkeit ist nötig, wenn die neueste Version von OLA gewünscht ist. 
 
 #### Kontrolle für beide Installationsvarianten: 
 
-im Browser die OLA Website aufrufen = 127.0.0.1:9090
+im Browser die **OLA Website** aufrufen = 127.0.0.1:9090
 
 hier nachsehen: Plugins -> OSC ->Config Location: /etc/ola/ola-osc.conf
 
@@ -72,76 +85,108 @@ für weitere Universen wiederholen.
 Outputs nach Verfügbarkeit eintragen.
 (Anm: Enttec war erst nach Reboot verfügbar)
 
+### Windows Installation
+
+Da OLA auf Windows nicht läuft, muss eine virtuelle Maschine mit Linux eingerichtet werden. Ich habe dafür VirtualBox und Debian im Einsatz. Das läuft gut. 
+
+
 ## ClubDMX
 
-WinSCP oder anderes Programm zum Übertragen der Dateien.
-In allen Betriebssystemen kann **Filezilla** verwendet werden.
-Oder vom USB-Stick kopieren.
+ClubDMX ist gepackt in der Datei **clubdmx_code.zip**. Diese Datei wird ins Home-Verzeichnis kopiert. Das kann mit **Filezilla** oder einem anderen Programm zum Übertragen der Dateien gemacht werden. Oder vom USB-Stick kopieren.
 
-*TODO:* Install von Github dokumentieren. 
+Anschließend werden die zip-Datei entpackt und die weiteren Installationsschritte ausgeführt:
+
+    unzip clubdmx_code.zip
+    cd clubdmx_code
+    dos2unix *.sh
+    ./python_setup.sh install raspi
+
+### Debian Installation
+
+Die letzte Zeile der obigen Kommandos wird durch dieses Kommando ersetzt:
+
+    ./python_setup.sh install raspi
+
+### Windows Installation
+
+*TODO*: Batch-Dateien anpassen. Dokumentation.
+
+*TODO:* Installation von Github dokumentieren. 
 
 ### Verzeichnisse:
 
-Die beiden für ClubDMX nötigen Verzeichnisse sind das Programm-Verzeichnis und das Raum-Verzeichnis:
+Die beiden für ClubDMX nötigen Verzeichnisse sind das Code-Verzeichnis und das Raum-Verzeichnis:
 
-    /home/pi/clubdmx_code
-    /home/pi/clubdmx_rooms
+    ~/clubdmx_code
+    ~/clubdmx_rooms
 
-Die beiden hier genannten Verzeichnisse sind die Default-Werte für den User pi. 
-
+Die beiden hier genannten Verzeichnisse sind die Default-Werte. 
 Die Verzeichnisse für Code und Räume können abweichend von den Default-Werten beliebig positioniert werden. ClubDMX findet die Verzeichnisse über Environment-Variablen.
 
     export CLUBDMX_CODEPATH=/home/pi/clubdmx_code
     export CLUBDMX_ROOMPATH=/home/pi/clubdmx_rooms
     export GUNICORNSTART=/home/pi/.local/bin/gunicorn
 
-In den obigen Zeilen stehen die Default-Werte. Falls andere Pfade verwendet werden, dann werden in /etc/environment die entsprechenden Environment-Variablen gesetzt.
+In den obigen Zeilen stehen die Default-Werte für den User pi. Falls andere Pfade und/oder ein anderer User verwendet werden, dann werden in /etc/environment die entsprechenden Environment-Variablen gesetzt.
 
 In dieser Installations-Anleitung wird die Verwendung der Default-Verzeichnisse angenommen. Für alternative Verzeichnisse werden die angegebenen Befehle entsprechend adaptiert.
 
 ### Alias anlegen: 
 
-Diese Zeile am Ende von /home/pi/.bashrc anfügen:
+Diese Zeile am Ende von ~/.bashrc anfügen:
 
-    alias clubdmx='/home/pi/clubdmx_code/app_start.sh'
+    alias clubdmx='$HOME/clubdmx_code/app_start.sh'
 
 Shell Script Files ausführbar machen:
 
-    cd /home/pi/clubdmx_code
+    cd ~/clubdmx_code
     dos2unix *.sh
     chmod +x *.sh
 
 ## Python Module
 
-(wir befinden uns im ClubDMX-Programmverzeichnis)
+(wir befinden uns im ClubDMX-Codeverzeichnis)
 
 Alle nötigen Module installieren:
 
-    ./python_setup.sh
+Für Installation am Raspberry:
 
-.env editieren:
+    ./python_setup.sh install raspi
+
+Für Installation am Debian Rechner:
+
+    ./python_setup.sh install debian
+ 
+
+.env editieren (mit Nano oder anderem Texteditor):
 
     nano .env
 
 hier eintragen: 
 
-    SECRET_KEY = b”84nrf97vzih47vzha” 
+    SECRET_KEY = b”lange+geheime?Zeichenkette” 
 
 (= beliebiger zufälliger String, NICHT genau dieser)
 
-Terminal öffnen (in WinSCP oder am Raspi direkt) 
+Nun ist ClubDMX fertig installiert und die Installation kann getestet werden, durch Starten von app_start.sh. Wenn wie oben angegeben der Alias angelegt wurde, dann mit folgendem Befehl in einem Terminal:
 
     ./app_start.sh start
 
-### Wichtige Anmerkungen:
+### Windows:
 
-Die Datei python_setup.sh kann an verschiedene Bedürfnisse angepasst werden. Ich habe hier verschiedene Verwendungsmöglichkeiten reingeschrieben, die mit ‘#’ auskommentiert sind.
 
-python_setup.sh: kann für die erstmalige Installation der Python-Extensions oder für das Upgrade der Extensions verwendet werden.
 
-*TODO:* python_setup.sh mit Kommandozeilen-Parametern formulieren.
+## Wichtige Anmerkungen:
 
-app_start.sh: Der Start der App ist, obwohl die Raspberries bzw. Linux-Rechner nach dem selben Schema installiert wurden, unterschiedlich zu bewerkstelligen. Computer geben eben manchmal Rätsel auf. So liegt zum Beispiel die Extension Gunicorn am Raspberry im Jazzit im Verzeichnis /usr/bin und auf meinem Raspberry in /home/pi/.local/bin. Das muss beim Start der App berücksichtigt werden, indem die Environment-Variable GUNICORNSTART gesetzt wird.
+python_setup.sh kann auch für das Upgrade der Extensions verwendet werden, der entsprechende Befehl lautet für den Raspberry:
+
+    ./python_setup.sh upgrade raspi 
+
+und für Debian:
+
+    ./python_setup.sh upgrade debian 
+
+**app_start.sh**: Der Start der App ist, obwohl die Raspberries bzw. Linux-Rechner nach dem selben Schema installiert wurden, unterschiedlich zu bewerkstelligen. Computer geben eben manchmal Rätsel auf. So liegt zum Beispiel die Extension Gunicorn am Raspberry im Jazzit im Verzeichnis /usr/bin und auf meinem Raspberry in /home/pi/.local/bin. Das muss beim Start der App berücksichtigt werden, indem die Environment-Variable GUNICORNSTART gesetzt wird.
 
 Die Pfadangabe ist deshalb wichtig, weil beim im Folgenden beschriebenen Autostart die PATH Variable vom Betriebssystem noch nicht gesetzt ist.
 
@@ -162,7 +207,7 @@ Anmerkung: Wenn beim Einschalten auch der Netzwerk-Router hochgestartet wird (z.
 
     bash -c “sleep 90 && sudo systemctl restart networking && curl http://127.0.0.1:9090/reload”
 
-Damit entfällt in Raspi-config der Punkt “Wait for Network on Boot”
+Damit entfällt in Raspi-config der Punkt “Wait for Network on Boot”.
 
 ## ClubDMX und NGINX
 
@@ -228,7 +273,7 @@ Nun ist ClubDMX über NGINX erreichbar.
 
 Im Browser sind nun OLA und ClubDMX aufrufbar.
 
-Die mit der Installation verfügbaren Webseiten:
+Die nach der Installation verfügbaren Webseiten:
 
 OLA: 127.0.0.1:9090
 

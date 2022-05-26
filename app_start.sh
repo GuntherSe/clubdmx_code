@@ -5,7 +5,7 @@
 # ----------------------------------------------------
 
 # Am Besten auch gleich einen Alias anlegen:
-# Die folgende Zeile am Ende von /home/USER/.bashrc anfügen 
+# Die folgende Zeile am Ende von ~/.bashrc anfügen 
 # (natürlich ohne '#' am Anfang):
 # alias clubdmx='$HOME/clubdmx_code/app_start.sh'
 # Anschließend Terminal neu starten
@@ -13,7 +13,7 @@
 # --- Startoptionen: ----------------------------------
 # werden in /etc/environment mit Environment-Variablen festgelegt
 # z.B.: in /etc/environment am Ende: export GUNICORNSTART="/usr/bin/gunicorn3 --daemon"
-# oder Terminal Start mit Meldung: export GUNICORNSTART="gunicorn"
+# oder Terminal Start mit Rückeldungen: export GUNICORNSTART="gunicorn"
 # -----------------------------------------------------
 
 # Konfiguration über Environment-Varialben oder Default-Werte:
@@ -51,14 +51,25 @@ case "$1" in
     pkill -f gunicorn
 
     echo "Python-Module updaten..."
-    ./python_setup.sh
+    # raspi oder debian, default=raspi:
+    while getopts f:o: flag
+    do
+        case "${flag}" in
+            f) ZIPFILE=${OPTARG};;
+            o) OSVERSION=${OPTARG};;
+        esac
+    done
+    # Betriebssystem ermittlen:
+    if [ -z "$OSVERSION" ]; then
+      OSVERSION="raspi"
+    fi
+
+    ./python_setup.sh upgrade $OSVERSION
 
     echo "entpacken und installieren..."
     # Zip-Datei ermittlen:
-    if [ -z "$2" ]; then
-      ZIPFILE="/$HOME/clubdmx_code.zip"
-    else
-      ZIPFILE="$2"
+    if [ -z "$ZIPFILE" ]; then
+      ZIPFILE="$HOME/clubdmx_code.zip"
     fi
     
     # Existenz prüfen:
@@ -89,7 +100,11 @@ case "$1" in
     ;;
 
   *)
-    echo "Verwendung: $0 {start|stop|update [zipfile] }"
+    echo "Verwendung: $0 {start|stop|update [-f zipfile] [-o os_version]}"
+    echo "zipfile: wenn nicht angegeben, dann wird clubdmx_code.zip verwendet."
+    echo "os_version: wenn nicht angegeben, dann wird raspi verwendet."
+    echo "für nicht-Standard-Update beide Variablen angeben."
+
     if [ -e test1running ]
     then
         echo "running"

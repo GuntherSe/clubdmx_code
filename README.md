@@ -63,9 +63,9 @@ User *Standard* has the password "Standard2021*
 
 ## Getting started with real hardware
 
-Please have a look at the file [raspi_install](raspi_install.md). You will find detailed install instructions for setting up a Raspberry PI from scratch. A PI-4 is recommended. 
+Please have a look at the [install file](install.md). You will find detailed install instructions for setting up a Raspberry PI from scratch. A PI-4 is recommended. 
 
-If you plan to test and work with older hardware like unused laptops or so, this is also fine. I can recommend to install Debian with a lightweight desktop like LXDE or LXQT. The install instructions mentioned above will apply to this hardware too.
+If you plan to test and work with older hardware like unused laptops or so, this is also fine. I can recommend to install Debian with a lightweight desktop like LXDE or LXQT. The install file mentioned above contains instructions for Debian machines also.
 
 Also fine and tested is to use a VirtualBox on a Windows host to install a Debian client and ClubDMX. 
 

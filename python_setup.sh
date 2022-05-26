@@ -8,12 +8,15 @@
 # Requirement-Datei angegeben?
 # diese Terminologie ist vorgesehen: require_'version'.txt 
 # 'version' ist die OS-Version, in der Python installiert ist
+# echo "1. Parameter: $1"
+# echo "2. Parameter: $2"
+
 if [ -z "$2" ]; then
-  REQFILE="./require_$2.txt"
-else
   REQFILE="requirements.txt"
+else
+  REQFILE="require_$2.txt"
 fi
-    
+# echo "reqfile: $REQFILE"   
 
 case "$1" in
   freeze)
@@ -36,7 +39,7 @@ case "$1" in
 
   *)
   echo "Verwendung: $0 {freeze|install|upgrade [require_<name>.txt] }"
-  echo "<name> bezeichnet die OS-Version."
+  echo "<name> bezeichnet die OS-Version. (raspi oder debian)"
   ;;
 
 esac
