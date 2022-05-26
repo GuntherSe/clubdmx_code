@@ -4,7 +4,7 @@
 ClubDMX ist in Python programmiert und ist im Wesentlichen Plattform-unabhängig. Eine Installation kann somit auf verschiedenen Betriebssystemen erfolgen. Ich habe es auf Windows 10 und auf verschiedenen Linux-Versionen installiert. Zur Installation auf einem MacOS kann ich leider nichts sagen. In der folgenden Anleitung ist im Wesentlichen auf den Raspberry PI Bezug genommen, zur Installation auf andere Betriebssysteme gibt es entsprechende Hinweise in den einzelnen Abschnitten.
 
 
-## Image und Basics (Raspberry)
+## Image und Basics (Raspberry PI)
 
 Programm Imager von <https://www.raspberrypi.org/downloads/>
 
@@ -50,13 +50,13 @@ hier eintragen:
     #ola:
     deb http://apt.openlighting.org/raspbian wheezy main
 
-anschließend neu starten.
+Anschließend neu starten.
 
 Nach dem Neustart:
 
     sudo apt-get install ola
 
-damit ist OLA installiert
+Damit ist OLA installiert
 
 ### OLA von Github installieren (die neueste Version)
 
@@ -71,18 +71,18 @@ Diese Möglichkeit ist nötig, wenn die neueste Version von OLA gewünscht ist. 
 
 im Browser die **OLA Website** aufrufen = 127.0.0.1:9090
 
-hier nachsehen: Plugins -> OSC ->Config Location: /etc/ola/ola-osc.conf
+hier nachsehen: Plugins -> OSC ->Config Location: /etc/ola/ola-osc.conf. Findet man hier Informationen, dann kann man von einer korrekten Installation ausgehen.
 
 Weiter im Browser auf 127.0.0.1:9090:
 
-    Universes -> Add Universe
+    Home -> Add Universe
     Universe ID: 1
     Universe Name: Uni1
     Checkbox anhaken bei erster Zeile OSC Device Input /dmx/universe/%d 
 
 für weitere Universen wiederholen.
 
-Outputs nach Verfügbarkeit eintragen.
+Outputs nach persönlicher Hardware-Verfügbarkeit eintragen. Die entsprechenden Hardware-Komponenten müssen angesteckt sein und werden von OLA erkannt.
 (Anm: Enttec war erst nach Reboot verfügbar)
 
 ### Windows Installation
@@ -98,18 +98,6 @@ Anschließend werden die zip-Datei entpackt und die weiteren Installationsschrit
 
     unzip clubdmx_code.zip
     cd clubdmx_code
-    dos2unix *.sh
-    ./python_setup.sh install raspi
-
-### Debian Installation
-
-Die letzte Zeile der obigen Kommandos wird durch dieses Kommando ersetzt:
-
-    ./python_setup.sh install raspi
-
-### Windows Installation
-
-*TODO*: Batch-Dateien anpassen. Dokumentation.
 
 *TODO:* Installation von Github dokumentieren. 
 
@@ -136,6 +124,8 @@ In dieser Installations-Anleitung wird die Verwendung der Default-Verzeichnisse 
 Diese Zeile am Ende von ~/.bashrc anfügen:
 
     alias clubdmx='$HOME/clubdmx_code/app_start.sh'
+
+### Script Files
 
 Shell Script Files ausführbar machen:
 
@@ -166,7 +156,7 @@ hier eintragen:
 
     SECRET_KEY = b”lange+geheime?Zeichenkette” 
 
-(= beliebiger zufälliger String, NICHT genau dieser)
+(= beliebiger, langer String, NICHT genau dieser)
 
 Nun ist ClubDMX fertig installiert und die Installation kann getestet werden, durch Starten von app_start.sh. Wenn wie oben angegeben der Alias angelegt wurde, dann mit folgendem Befehl in einem Terminal:
 
@@ -174,7 +164,12 @@ Nun ist ClubDMX fertig installiert und die Installation kann getestet werden, du
 
 ### Windows:
 
+Die Python Module werden mit der Batch-Datei **python_steup.bat** installiert. ClubDMX wird mit der Batch-Datei **app_start.bat** gestartet.
 
+    app_start.bat
+
+
+*TODO*: Batch Dateien aktualisieren.
 
 ## Wichtige Anmerkungen:
 
@@ -265,7 +260,12 @@ Nun ist ClubDMX über NGINX erreichbar.
 
 ## ClubDMX update: 
 
+Ich gehe davon aus, dass NGINX im Einsatz ist.
+Das neue zip-File wird ins Home-Verzeichnis kopiert, anschließend werden die folgenden Befehle im Terminal ausgeführt.
+
     unzip clubdmx_code
+    cd ~/clubdmx_code
+    dos2unix *.sh
     chmod +x *.sh
     sudo systemctl restart clubdmx
     sudo systemctl restart nginx
