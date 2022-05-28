@@ -10,6 +10,6 @@ _todo.txt
 schema.sql
 setenviron.ps1
 
-/dmx/.vscode/
-/dmx/backup/
-/app/static/sphinx/doctrees/
+dmx/.vscode/
+dmx/backup/
+app/static/sphinx/doctrees/
