@@ -104,6 +104,12 @@ Anschließend werden die zip-Datei entpackt und die weiteren Installationsschrit
 
 *TODO:* Installation von Github dokumentieren. 
 
+Zipfile von Github: 
+
+    cd ~
+    mkdir clubdmx_code
+    unzip clubdmx_code.zip -d clubdmx_code
+
 ### Verzeichnisse:
 
 Die beiden für ClubDMX nötigen Verzeichnisse sind das Code-Verzeichnis und das Raum-Verzeichnis:
@@ -167,6 +173,15 @@ Nun ist ClubDMX fertig installiert und die Installation kann **getestet** werden
     clubdmx start
 
 (Ohne das Anlegen eines Alias: *~/clubdmx_code/app_start.sh start*)
+
+## Erstes Login in ClubDMX
+
+Die Berechtigungen in ClubDMX sind benutzerabhängig. Ohne Login sind nur wenige Seiten verfügbar. Um das Anlegen von Benutzern nach einer Neu-Installation zu ermöglichen, ist ein Admin-Konto bereits angelegt. Das Login erfolgt aus der Navigationsleiste mit diesen Daten:
+
+    Benutzername: Administrator
+    Passwort: ClubAdmin2021
+
+Für die Benützung von ClubDMX siehe **Erste Schritte** in der Doku. Die Doku ist in ClubDMX integriert und findet sich über die Navigationszeile im HTML- und im PDF-Format.
 
 ### Windows:
 

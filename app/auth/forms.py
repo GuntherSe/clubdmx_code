@@ -26,7 +26,7 @@ def userbeautify (inputlist:list) -> list:
 
 class LoginForm(FlaskForm):
     username = StringField('Benutzername', validators=[DataRequired()])
-    password = PasswordField('Password', validators=[DataRequired()])
+    password = PasswordField('Passwort', validators=[DataRequired()])
     remember_me = BooleanField('Remember Me')
     # submit = SubmitField('Log In')
 
@@ -35,9 +35,9 @@ class LoginForm(FlaskForm):
 class RegistrationForm(FlaskForm):
     username = StringField('Benutzername', validators=[DataRequired()])
     # email = StringField('Email', validators=[DataRequired(), Email()])
-    password = PasswordField('Password', validators=[DataRequired()])
+    password = PasswordField('Passwort', validators=[DataRequired()])
     password2 = PasswordField(
-        'Wiederhole Password', validators=[DataRequired(), EqualTo('password')])
+        'Wiederhole Passwort', validators=[DataRequired(), EqualTo('password')])
     role = SelectField ("Kategorie", # [DataRequired()],
                         default="basic",
                         choices=role_choices)

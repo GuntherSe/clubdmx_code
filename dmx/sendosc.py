@@ -8,7 +8,6 @@ from pythonosc import osc_message_builder
 from pythonosc import udp_client
 
 # -------------------------------------------------------------------------
-# Modul Test:
 
 if __name__ == '__main__':
 
