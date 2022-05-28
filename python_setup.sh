@@ -8,8 +8,6 @@
 # Requirement-Datei angegeben?
 # diese Terminologie ist vorgesehen: require_'version'.txt 
 # 'version' ist die OS-Version, in der Python installiert ist
-# echo "1. Parameter: $1"
-# echo "2. Parameter: $2"
 
 if [ -z "$2" ]; then
   REQFILE="requirements.txt"

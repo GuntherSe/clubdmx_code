@@ -189,9 +189,7 @@ und für Debian:
 
 **app_start.sh**: Der Start der App ist, obwohl die Raspberries bzw. Linux-Rechner nach dem selben Schema installiert wurden, unterschiedlich zu bewerkstelligen. Computer geben eben manchmal Rätsel auf. So liegt zum Beispiel die Extension Gunicorn am Raspberry im Jazzit im Verzeichnis /usr/bin und auf meinem Raspberry in /home/pi/.local/bin. Das muss beim Start der App berücksichtigt werden, indem die Environment-Variable GUNICORNSTART gesetzt wird.
 
-Die Pfadangabe ist deshalb wichtig, weil beim im Folgenden beschriebenen Autostart die PATH Variable vom Betriebssystem noch nicht gesetzt ist.
-
-Also: Zum Testen der Installation im Terminal kann Gunicorn ohne Pfadangabe verwendet werden, für den Autostart muss die Pfadangabe verwendet werden. 
+Zum Testen der Installation im Terminal kann Gunicorn ohne Pfadangabe verwendet werden.
 
 ## Autostart:
 
@@ -204,7 +202,7 @@ hier eintragen vor der letzten Zeile (= exit 0):
     # olad start:
     su pi -c "olad -f" 
 
-Anmerkung: Wenn beim Einschalten auch der Netzwerk-Router hochgestartet wird (z.B. im Jazzit Saal), dann muss der Netzwerk-Dienst mit Zeitverzögerung neu gestartet werden. Dabei kann auch OLA neugestartet werden:
+Anmerkung: Wenn beim Einschalten auch der Netzwerk-Router hochgestartet wird (z.B. im Jazzit Saal), dann muss der Netzwerk-Dienst mit Zeitverzögerung neu gestartet werden. Dabei kann auch OLA neugestartet werden. Die folgende Zeile wird in /etc/rc.local eingetragen:
 
     bash -c “sleep 90 && sudo systemctl restart networking && curl http://127.0.0.1:9090/reload”
 
@@ -212,22 +210,22 @@ Damit entfällt in Raspi-config der Punkt “Wait for Network on Boot”.
 
 ## ClubDMX und NGINX
 
-NGINX ist ein Proxy-Server. Mit diesem Server kann ClubDMX im Browser ohne Port-Angabe aufgerufen werden. Also 127.0.0.1 statt 127.0.0.1:5000.
-
+NGINX ist ein Proxy-Server. Über diesen Server wird ClubDMX im Browser aufgerufen.
 NGINX wurde bereits installiert (siehe Beginn des Dokuments).
 Falls bei der Installation Fehler auftraten, dann war es vielleicht schon installiert und muss erst vollständig entfernt werden:
 
     sudo apt-get remove --purge nginx nginx-full nginx-common 
     sudo apt-get install nginx
 
-Kontrolle: Im Browser die IP-Adresse eingeben. Die Nginx Default-Seite sollte sich zeigen.
-Hier sind die dazu nötigen Schritte im Detail erläutert. (siehe: https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-gunicorn-and-nginx-on-ubuntu-20-04-de )
+Kontrolle: Im Browser die IP-Adresse 127.0.0.1 eingeben. Die Nginx Default-Seite sollte sich zeigen.
+Hier sind die dazu nötigen Schritte im Detail erläutert, siehe: https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-gunicorn-and-nginx-on-ubuntu-20-04-de 
+
+Um ClubDMX und NGINX miteinander zu verbinden, sind zwei Dateien nötig. Eine systemd-Datei und eine site-Datei. In beiden Dateien sind User- und Pfad-Angaben, die entsprechend angepasst werden müssen. Ich habe im Verzeichnis ~/clubdmx_code/etc/ Prototypen angelegt, die für den User *pi* und das Code-Verzeichnis */home/pi/clubdmx_code/* ausgelegt sind. 
+Daher müssen die Pfade angepasst werden, wenn ClubDMX in einem anderen Verzeichnis installiert und/oder ein anderer User als *pi* gewählt wurde. Das gilt auch für die Installation auf einem Debian-Rechner. 
 
 Die systemd-Datei erstellen:
 
     sudo cp ~/clubdmx_code/etc/clubdmx.service /etc/systemd/system
-
-**Anmerkung:** Hier müssen die Pfade angepasst werden, wenn ClubDMX in einem anderen Verzeichnis installiert und/oder ein anderer User als *pi* gewählt wurde. Das gilt auch für die Installation auf einem Debian-Rechner.
 
 Den Dienst starten:
 
