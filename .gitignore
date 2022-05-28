@@ -6,11 +6,10 @@ logs/
 .app.csv
 .app.db
 .require_pyanywhere(installed).txt
-.pass-pythonanywhere.txt
 .todo.txt
 schema.sql
 setenviron.ps1
 
-# /dmx/.vscode/
+/dmx/.vscode/
 /dmx/backup/
 /app/static/sphinx/doctrees/
