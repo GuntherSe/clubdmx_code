@@ -6,7 +6,7 @@ logs/
 .app.csv
 .app.db
 .require_pyanywhere(installed).txt
-.todo.txt
+_todo.txt
 schema.sql
 setenviron.ps1
 
