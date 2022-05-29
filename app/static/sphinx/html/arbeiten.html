@@ -257,12 +257,15 @@ Benutzer-Rollen siehe <a class="reference internal" href="benutzer.html#benutzer
 <div class="section" id="osc-input">
 <span id="osc-commands"></span><h2>OSC Input<a class="headerlink" href="#osc-input" title="Link zu dieser Überschrift">¶</a></h2>
 <p>Dieses Modul ermöglicht die Verbindung mit externen Programmen wie zum Beispiel
-<a class="reference external" href="https://troikatronix.com/">Isadora</a> . Über
-<a class="reference external" href="https://de.wikipedia.org/wiki/Open_Sound_Control">OSC</a> können
+<a class="reference external" href="https://troikatronix.com/">Isadora</a> oder
+<a class="reference external" href="https://www.ableton.com/">Ableton Live</a>. ClubDMX stellt das
+Programm <strong>sendosc</strong> zum Senden von OSC-Befehlen aus der Kommandozeile
+zur Verfügung.
+Über <a class="reference external" href="https://de.wikipedia.org/wiki/Open_Sound_Control">OSC</a> können
 folgende Aktionen in ClubDMX ausgeführt werden.</p>
 <p><strong>Allgemeine Aktionen</strong></p>
 <ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">/head</span> <span class="pre">&lt;attribut&gt;</span> <span class="pre">&lt;headnr&gt;</span> <span class="pre">&lt;level&gt;</span></code> ermöglicht de Zugriff auf sämtliche
+<li><p><code class="docutils literal notranslate"><span class="pre">/head</span> <span class="pre">&lt;attribut&gt;</span> <span class="pre">&lt;headnr&gt;</span> <span class="pre">&lt;level&gt;</span></code> ermöglicht den Zugriff auf sämtliche
 Geräte und deren Attribute.</p>
 <div class="line-block">
 <div class="line"><code class="docutils literal notranslate"><span class="pre">&lt;attribut&gt;</span></code> bezeichnet den Attribut-Namen, so wie er in der Head-Definition</div>
@@ -274,9 +277,16 @@ Geräte und deren Attribute.</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">/clear</span></code> leert den <a class="reference internal" href="grundlagen.html#topcuelabel"><span class="std std-ref">Topcue</span></a> .</p></li>
 </ul>
 <p><strong>Fader-Aktionen</strong></p>
-<ul>
+<ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">/fader</span> <span class="pre">&lt;nummer&gt;</span> <span class="pre">&lt;level&gt;</span></code> ändert den Level eines Faders.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">/exefader</span> <span class="pre">&lt;nummer&gt;</span> <span class="pre">&lt;level&gt;</span></code> ändert den Level eines Faders aus der
+Exec-Seite.</p></li>
+</ul>
+<p>Für die ersten 10 Fader aus jeder Fader-Gruppe gibt es auch OSC-Kommandos mit
+nur einem Parameter:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">/fader/&lt;nummer&gt;</span> <span class="pre">&lt;level&gt;</span></code> ändert den Level eines Faders.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/exefader/&lt;nummer&gt;</span> <span class="pre">&lt;level&gt;</span></code> ändert den Level eines Faders aus der
 Exec-Seite.</p>
 <div class="line-block">
 <div class="line"><code class="docutils literal notranslate"><span class="pre">&lt;nummer&gt;</span></code> ist eine Ganzzahl entsprechend der Fadertabelle.</div>
@@ -291,15 +301,24 @@ Exec-Seite.</p>
 der Exec-Seite.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">/exebutton2</span> <span class="pre">&lt;nummer&gt;</span></code> betätigt einen Button aus der unteren Reihe
 der Exec-Seite.</p>
-<p><code class="docutils literal notranslate"><span class="pre">&lt;nummer&gt;</span></code> ist eine Ganzzahl entsprechend der Buttontabelle.</p>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">&lt;nummer&gt;</span></code> ist eine Ganzzahl entsprechend der Buttontabelle.</div>
+</div>
 </li>
 </ul>
 <p><strong>Cuelist-Aktionen</strong></p>
-<ul>
+<ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">/cuelistfader</span> <span class="pre">&lt;nummer&gt;</span> <span class="pre">&lt;level&gt;</span></code> ändert den Level eines Cuelist-Faders.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">/go</span> <span class="pre">&lt;nummer&gt;</span></code> ist ein GO in Cueliste.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">/go</span> <span class="pre">&lt;nummer&gt;</span> <span class="pre">&lt;cuenummer&gt;</span></code> ist ein GO in Cueliste.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">/pause</span> <span class="pre">&lt;nummer&gt;</span></code> pausiert die Cueliste.</p>
+<li><p><code class="docutils literal notranslate"><span class="pre">/pause</span> <span class="pre">&lt;nummer&gt;</span></code> pausiert die Cueliste.</p></li>
+</ul>
+<p>Für die ersten 10 Cuelisten gibt es auch OSC-Kommandos mit nur einem Parameter:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">/cuelistfader/&lt;nummer&gt;</span> <span class="pre">&lt;level&gt;</span></code> ändert den Level eines Cuelist-Faders.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/go/&lt;nummer&gt;</span></code> ist ein GO in Cueliste.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/go/&lt;nummer&gt;</span> <span class="pre">&lt;cuenummer&gt;</span></code> ist ein GO in Cueliste.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/pause/&lt;nummer&gt;</span></code> pausiert die Cueliste.</p>
 <div class="line-block">
 <div class="line"><code class="docutils literal notranslate"><span class="pre">&lt;nummer&gt;</span></code> ist die Zeilennummer in der Cuelist-Page.</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">&lt;cuenummer&gt;</span></code> ist die Nummer des nächsten Cues.</div>

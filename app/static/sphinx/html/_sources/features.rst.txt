@@ -5,8 +5,9 @@ Features
 Web-Interface
 -------------
 
-ClubDMX läuft auf einem Raspberry PI (oder auf einem anderen Computer) und 
-wird durch eine Webseite bedient. Auf dem Raspberry läuft also die Software 
+ClubDMX läuft auf einem Raspberry PI (oder auf einem anderen Computer mit 
+Linux Betriebssystem) und 
+wird über eine Webseite bedient. Auf dem Raspberry läuft also die Software 
 von ClubDMX und ein Webserver. ClubDMX wird von einem im selben
 (lokalen) Netzwerk befindlichen Gerät bedient. Das kann ein Tablet, Samrtphone 
 oder ein Rechner sein. Es wird dazu keine App benötigt, der Browser genügt.
@@ -37,7 +38,7 @@ Wie sind also hier in ClubDMX die Möglichkeiten für Lichtszenen?
   * Cues mit Button.
   * Cue mit Top-Priorität zur Bedienung der einzelnen Geräte und
     Erzeugung von weiteren Cues. Siehe :ref:`topcuelabel`
-  * Cueliste als Sammlung von Cues, mit In-, Out und Wartezeiten.
+  * Cuelisten als Sammlung von Cues, mit In-, Out und Wartezeiten.
 
 
 Daten in CSV-Dateien
@@ -45,7 +46,7 @@ Daten in CSV-Dateien
 
 Die Programmdaten werden in CSV-Dateien gespeichert. Das sind Textdateien,
 die mit jedem Editor (Notepad, Excel, Libre Office, ...) bearbeitet werden 
-können. Natürlich ist auch eine Bearbeitung in ClubDMX möglich. 
+können. Natürlich ist auch eine Bearbeitung in ClubDMX gegeben. 
 Es stehen Zeilen- und Zellen-Bearbeitungsoptionen zur Verfügung.
 
 
@@ -53,15 +54,18 @@ Angepasst an Benutzer
 ---------------------
 
 Indem man sich auf der Webseite anmeldet, werden die benutzerspezifischen
-Möglichkeiten und Daten aktiv. Ohne Anmeldung ist keine Bedienung der
+Möglichkeiten und Daten aktiv. Es gibt verschiedene User-Rollen mit 
+unterschiedlichen Berechtigungen. Erst nach Anmeldung ist eine Bedienung der
 DMX-Geäte möglich. 
 
 MIDI
 ----
 
-Außer der Webseite kann ClubDMX auch über MIDI bedient werden. Vorzugsweise über 
+Zusätzlich zur Webseite kann ClubDMX auch über MIDI bedient werden. 
+Vorzugsweise über 
 ein Korg NanoKontrol-2. Die Buttons und Fader des NanoKontrol2 können mit den 
-Buttons und Fadern verbunden werden. Bis zu vier Midi-Geräte können als Input
+Buttons und Fadern von ClubDMX verbunden werden. 
+Bis zu vier Midi-Geräte können als Input
 und/oder Output gleichzeitig verwendet werden.
 
 OSC Input
@@ -71,4 +75,5 @@ OSC Input
 kann eine Verbindung von einer externen Software zu ClubDMX hergestellt 
 werden. Damit können alle Geräte mit allen Attributen, die Szenen-Fader und 
 Szenen-Buttons bedient werden. Getestet mit 
-`Isadora <https://troikatronix.com/>`_ .
+`Isadora <https://troikatronix.com/>`_ . Beispiele zur Interaktion von 
+Isadora ud ClubDMX sind verfügbar, ebenso wie Isadora User Actors.

@@ -39,9 +39,16 @@ class OscInput (threading.Thread):
 
         self.addresses = ["/button", "/exebutton1", "/exebutton2", "/fader",
            "/exefader", "/head", "/clear", "/go", "/pause", "/cuelistfader"]
-
         for addr in self.addresses:
             self.dispatcher.map (addr, self.eval)
+
+        # Adressen, die mehr als 1 Argument enthalten:
+        # für die ersten 10 zusätzliche Mappings im Dispatcher erzeugen
+        self.numaddresses = ["/fader", "/exefader", 
+            "/go", "/pause", "/cuelistfader"]
+        for addr in self.numaddresses:
+            for cnt in range (1,11):
+                self.dispatcher.map (addr + '/' + str(cnt), self.eval)
 
         # nur wenn port != 0 server starten:
         self.set_port (self.in_port)
@@ -76,6 +83,11 @@ class OscInput (threading.Thread):
         for addr in self.addresses:
             self.dispatcher.unmap (addr, self.eval)
             self.dispatcher.map (addr, newfunc)
+
+        for addr in self.numaddresses:
+            for cnt in range (1,11):
+                self.dispatcher.unmap (addr + '/' + str(cnt), self.eval)
+                self.dispatcher.map (addr + '/' + str(cnt), newfunc)
 
         self.eval = newfunc
         # print ("ok eval.")

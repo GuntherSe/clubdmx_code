@@ -150,12 +150,14 @@ def calc_mixoutput ():
 def evaluate_osc (address, *arg):
     """ OSC Input je nach Adresse auswerten
     
-    adress: OSC String 
-    *args: restliche Parameter
+    address: OSC String, beginnend mit '/'. address kann mehr als 1 '/' enthalten,
+    dann ist der erste Teil der command-String und die restlichen Teile sind 
+    Argumente. 
+    *arg: restliche Parameter
     /head <Attribut> <Headnr> <Level> -> topcue.add_item
     /clear -> topcue.clear
-    /fader/<nummer> <Level> -> Fader Level
-    /button/<nummer> -> Button Go
+    /fader <nummer> <Level> -> Fader Level
+    /button <nummer> -> Button Go
     """
     def search_for (id:str, srchlist:list):
         # suche elem in srchlist mit elem[id] == id
@@ -166,13 +168,28 @@ def evaluate_osc (address, *arg):
 
     buttonaddr = ["/button", "/exebutton1", "/exebutton2"]
     faderaddr  = ["/fader", "/exefader"]
-    if len(arg) and isinstance (arg[0], list):
-        args = arg[0]
+
+    # enthält address mehr als 1 '/'?
+    addresslist = address[1:].split ('/')
+    args = []
+    if len (addresslist) > 1:
+        command = '/' + addresslist.pop (0)
+        for elem in addresslist:
+            args.append (elem)
     else:
-        args = arg
+        command = address
+
+    if len(arg) and isinstance (arg[0], list):
+        # so macht sendosc.py die OSC Strings
+        arguments = arg[0]
+    else:
+        # so macht Isadora die OSC Strings
+        arguments = arg
+    for elem in arguments:
+        args.append (elem)
 
     if not globs.oscinput.paused:
-        if address == "/head":
+        if command == "/head":
             # args: Attribut, Head-Nr, Level
             try:
                 head = str (int (args[1])) # Test, ob Headnummer
@@ -186,11 +203,11 @@ def evaluate_osc (address, *arg):
                 return
             if 0.0 <= val <= 1.0:
                 globs.topcue.add_item (head, args[0], int(val * 255))
-        elif address == "/clear":
+        elif command == "/clear":
             # topcue clear
             globs.topcue.clear()
             # session.pop ("topcuecontent", None)
-        elif address == "/go":
+        elif command == "/go":
             # args: cuelist-Nr in Pages-Seite [, next cue ]
             try:
                 num = int (args[0])
@@ -206,7 +223,7 @@ def evaluate_osc (address, *arg):
                     # print (f"go: {num}, next = {args[1]}")
                     cl.go (args[1])
 
-        elif address == "/pause":
+        elif command == "/pause":
             # args: cuelist-Nr in Pages-Seite [, next cue ]
             try:
                 num = int (args[0])
@@ -218,7 +235,7 @@ def evaluate_osc (address, *arg):
                 if len (args) == 1:
                     cl.pause ()
 
-        elif address == "/cuelistfader":
+        elif command == "/cuelistfader":
             # args: cuelist-Nr, level
             try:
                 num = int (args[0])
@@ -231,27 +248,27 @@ def evaluate_osc (address, *arg):
                 cl.level = val
 
         # cuebuttons:
-        elif address in buttonaddr:
+        elif command in buttonaddr:
             #arg: Nr in buttontable
             try:
                 num = int (args[0])
             except:
                 return
-            pos = buttonaddr.index (address)
+            pos = buttonaddr.index (command)
             id = button_locations[pos] + str (num-1)
             but = search_for (id, globs.buttontable)
             if but:
                 but.go ()
 
         #cuefader
-        elif address in faderaddr:
+        elif command in faderaddr:
             # args: Nr. in fadertable, level
             try:
                 num = int (args[0])
                 val = float (args[1])
             except:
                 return
-            pos = faderaddr.index (address)
+            pos = faderaddr.index (command)
             id = fader_locations[pos] + str (num-1)
             fader = search_for (id, globs.fadertable)
             if fader and 0.0 <= val <= 1.0:

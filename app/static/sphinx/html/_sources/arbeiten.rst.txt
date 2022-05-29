@@ -269,13 +269,16 @@ OSC Input
 ---------
 
 Dieses Modul ermöglicht die Verbindung mit externen Programmen wie zum Beispiel 
-`Isadora <https://troikatronix.com/>`_ . Über 
-`OSC <https://de.wikipedia.org/wiki/Open_Sound_Control>`_ können 
+`Isadora <https://troikatronix.com/>`_ oder 
+`Ableton Live <https://www.ableton.com/>`_. ClubDMX stellt das 
+Programm **sendosc** zum Senden von OSC-Befehlen aus der Kommandozeile
+zur Verfügung. 
+Über `OSC <https://de.wikipedia.org/wiki/Open_Sound_Control>`_ können 
 folgende Aktionen in ClubDMX ausgeführt werden.
 
 **Allgemeine Aktionen**
  
-* ``/head <attribut> <headnr> <level>`` ermöglicht de Zugriff auf sämtliche
+* ``/head <attribut> <headnr> <level>`` ermöglicht den Zugriff auf sämtliche
   Geräte und deren Attribute.
 
   | ``<attribut>`` bezeichnet den Attribut-Namen, so wie er in der Head-Definition
@@ -288,34 +291,42 @@ folgende Aktionen in ClubDMX ausgeführt werden.
 **Fader-Aktionen**
 
 * ``/fader <nummer> <level>`` ändert den Level eines Faders.
-
 * ``/exefader <nummer> <level>`` ändert den Level eines Faders aus der
   Exec-Seite.
   
+Für die ersten 10 Fader aus jeder Fader-Gruppe gibt es auch OSC-Kommandos mit
+nur einem Parameter:
+
+* ``/fader/<nummer> <level>`` ändert den Level eines Faders.
+* ``/exefader/<nummer> <level>`` ändert den Level eines Faders aus der
+  Exec-Seite.
+
   | ``<nummer>`` ist eine Ganzzahl entsprechend der Fadertabelle.
   | ``<level>`` ist eine Gleitzahl im Bereich zwischen 0 und 1.
 
 **Button-Aktionen**
 
 * ``/button <nummer>`` betätigt einen Button.
-  
 * ``/exebutton1 <nummer>`` betätigt einen Button aus der oberen Reihe 
   der Exec-Seite.
-  
 * ``/exebutton2 <nummer>`` betätigt einen Button aus der unteren Reihe 
   der Exec-Seite.
 
-  ``<nummer>`` ist eine Ganzzahl entsprechend der Buttontabelle.
+  | ``<nummer>`` ist eine Ganzzahl entsprechend der Buttontabelle.
 
 **Cuelist-Aktionen**
 
 * ``/cuelistfader <nummer> <level>`` ändert den Level eines Cuelist-Faders.
-
 * ``/go <nummer>`` ist ein GO in Cueliste.
-
 * ``/go <nummer> <cuenummer>`` ist ein GO in Cueliste.
-
 * ``/pause <nummer>`` pausiert die Cueliste.
+
+Für die ersten 10 Cuelisten gibt es auch OSC-Kommandos mit nur einem Parameter:
+
+* ``/cuelistfader/<nummer> <level>`` ändert den Level eines Cuelist-Faders.
+* ``/go/<nummer>`` ist ein GO in Cueliste.
+* ``/go/<nummer> <cuenummer>`` ist ein GO in Cueliste.
+* ``/pause/<nummer>`` pausiert die Cueliste.
 
   | ``<nummer>`` ist die Zeilennummer in der Cuelist-Page.
   | ``<cuenummer>`` ist die Nummer des nächsten Cues.
