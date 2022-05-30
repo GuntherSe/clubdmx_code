@@ -64,7 +64,7 @@ case "$1" in
       OSVERSION="raspi"
     fi
 
-    ./python_setup.sh upgrade $OSVERSION
+    ./scripts/python_setup.sh upgrade $OSVERSION
 
     echo "entpacken und installieren..."
     # Zip-Datei ermittlen:

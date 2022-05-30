@@ -10,9 +10,9 @@
 # 'version' ist die OS-Version, in der Python installiert ist
 
 if [ -z "$2" ]; then
-  REQFILE="requirements.txt"
+  REQFILE="./scripts/requirements.txt"
 else
-  REQFILE="require_$2.txt"
+  REQFILE="./scripts/require_$2.txt"
 fi
 # echo "reqfile: $REQFILE"   
 

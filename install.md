@@ -68,7 +68,7 @@ Hier gibt es meine Dokumentation der einzelnen Schritte:
 
 Siehe meinen Beitrag vom 14.7.2020.
 
-Diese Möglichkeit ist nötig, wenn die neueste Version von OLA gewünscht ist. Ich benötigte die Hardware-Unterstützung des Eurolite-DMX-Adapters USB-DMX512-Pro. Nach Ausführung der in dem Google-Groups Beitrag gelisteten Schritte ist OLA in der neuesten Vrsion installiert.
+Diese Installation ist nötig, wenn die neueste Version von OLA gewünscht ist. Ich benötigte die Hardware-Unterstützung des Eurolite-DMX-Adapters USB-DMX512-Pro. Nach Ausführung der in dem Google-Groups Beitrag gelisteten Schritte ist OLA in der neuesten Vrsion installiert.
 
 #### Kontrolle für beide Installationsvarianten: 
 
@@ -85,7 +85,7 @@ Weiter im Browser auf 127.0.0.1:9090:
 
 für weitere Universen wiederholen.
 
-Outputs nach persönlicher Hardware-Verfügbarkeit eintragen. Die entsprechenden Hardware-Komponenten müssen angesteckt sein und werden von OLA erkannt.
+Outputs nach persönlicher Hardware-Verfügbarkeit eintragen. Die entsprechenden Hardware-Komponenten müssen angeschlossen sein und werden von OLA erkannt.
 (Anm: Enttec war erst nach Reboot verfügbar)
 
 ### Windows Installation
@@ -95,20 +95,15 @@ Da OLA auf Windows nicht läuft, muss eine virtuelle Maschine mit Linux eingeric
 
 ## ClubDMX
 
-ClubDMX ist gepackt in der Datei **clubdmx_code.zip**. Diese Datei wird ins Home-Verzeichnis kopiert. Das kann mit **Filezilla** oder einem anderen Programm zum Übertragen der Dateien gemacht werden. Oder vom USB-Stick kopieren.
+ClubDMX ist gepackt in der Datei **clubdmx_code.zip**. Diese Datei wird ins Home-Verzeichnis kopiert. Das kann mit **Filezilla** oder einem anderen Programm zum Übertragen der Dateien gemacht oder vom USB-Stick kopiert werden.
 
 Anschließend werden die zip-Datei entpackt und die weiteren Installationsschritte ausgeführt:
-
-    unzip clubdmx_code.zip
-    cd clubdmx_code
-
-*TODO:* Installation von Github dokumentieren. 
-
-Zipfile von Github: 
 
     cd ~
     mkdir clubdmx_code
     unzip clubdmx_code.zip -d clubdmx_code
+
+*TODO:* Installation von Github dokumentieren. 
 
 ### Verzeichnisse:
 

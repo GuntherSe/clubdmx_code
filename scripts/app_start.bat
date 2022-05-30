@@ -1,5 +1,6 @@
-echo off
+@echo off
 echo Starte ClubDMX...
+pushd %~dp0
 c:
 cd \Users\Gunther\OneDrive\Programmierung\clubdmx_code
 echo %cd%
@@ -19,4 +20,4 @@ python wsgi.py
 REM flask run --host=0.0.0.0 --port=5000
 
 pause
-
+popd

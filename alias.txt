@@ -1,3 +1,0 @@
-Diese Zeile am Ende von .bashrc anfügen:
-
-alias clubdmx='$HOME/clubdmx_code/app_start.bash'

@@ -5,10 +5,11 @@ logs/
 .env
 .app.csv
 .app.db
-.require_pyanywhere(installed).txt
 _todo.txt
-schema.sql
-setenviron.ps1
+
+scripts/.require_pyanywhere(installed).txt
+scripts/schema.sql
+scripts/setenviron.ps1
 
 dmx/.vscode/
 dmx/backup/
