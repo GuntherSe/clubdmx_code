@@ -128,13 +128,13 @@ In dieser Installations-Anleitung wird die Verwendung der Default-Verzeichnisse 
 Für die Standard-Installation kann auf diesen Schritt verzichtet werden. Zu Testzwecken, Programmentwicklung und Fehlersuche erspart die Verwendung eines Alaias einiges an Tippen.
 Diese Zeile am Ende von ~/.bashrc anfügen:
 
-    alias clubdmx='$HOME/clubdmx_code/app_start.sh'
+    alias clubdmx='$HOME/clubdmx_code/scripts/app_start.sh'
 
 ### Script Files
 
 Shell Script Files ausführbar machen:
 
-    cd ~/clubdmx_code
+    cd ~/clubdmx_code/scripts
     dos2unix *.sh
     chmod +x *.sh
 
@@ -146,11 +146,11 @@ Alle nötigen Module installieren:
 
 Für Installation am Raspberry:
 
-    ./python_setup.sh install raspi
+    ./scripts/python_setup.sh install raspi
 
 Für Installation am Debian Rechner:
 
-    ./python_setup.sh install debian
+    ./scripts/python_setup.sh install debian
  
 
 .env editieren (mit Nano oder anderem Texteditor):
@@ -167,7 +167,7 @@ Nun ist ClubDMX fertig installiert und die Installation kann **getestet** werden
 
     clubdmx start
 
-(Ohne das Anlegen eines Alias: *~/clubdmx_code/app_start.sh start*)
+(Ohne das Anlegen eines Alias: *~/clubdmx_code/scripts/app_start.sh start*)
 
 ## Erstes Login in ClubDMX
 
@@ -191,11 +191,11 @@ Die Python Module werden mit der Batch-Datei **python_steup.bat** installiert. C
 
 python_setup.sh kann auch für das Upgrade der Extensions verwendet werden, der entsprechende Befehl lautet für den Raspberry:
 
-    ./python_setup.sh upgrade raspi 
+    ./scripts/python_setup.sh upgrade raspi 
 
 und für Debian:
 
-    ./python_setup.sh upgrade debian 
+    ./scripts/python_setup.sh upgrade debian 
 
 **app_start.sh**: Der Start der App ist, obwohl die Raspberries bzw. Linux-Rechner nach dem selben Schema installiert wurden, unterschiedlich zu bewerkstelligen. Computer geben eben manchmal Rätsel auf. So liegt zum Beispiel die Extension Gunicorn am Raspberry im Jazzit im Verzeichnis /usr/bin und auf meinem Raspberry in /home/pi/.local/bin. Das muss beim Start der App berücksichtigt werden, indem die Environment-Variable GUNICORNSTART gesetzt wird.
 
@@ -279,8 +279,8 @@ Nun ist ClubDMX über NGINX erreichbar.
 Ich gehe davon aus, dass NGINX im Einsatz ist.
 Das neue zip-File wird ins Home-Verzeichnis kopiert, anschließend werden die folgenden Befehle im Terminal ausgeführt.
 
-    unzip clubdmx_code
-    cd ~/clubdmx_code
+    unzip clubdmx_code.zip -d clubdmx_code
+    cd ~/clubdmx_code/scripts
     dos2unix *.sh
     chmod +x *.sh
     sudo systemctl restart clubdmx
