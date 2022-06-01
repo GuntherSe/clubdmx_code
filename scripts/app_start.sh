@@ -83,8 +83,8 @@ case "$1" in
       cd $codepath
 
       echo "Skripte ausführbar machen..."
-      dos2unix *.sh
-      chmod +x *.sh
+      dos2unix ./scripts/*.sh
+      chmod +x ./scripts/*.sh
 
       echo "Raum-Verzeichnis für neue Version updaten..."
       python3 dmx/rooms_check.py $roompath
