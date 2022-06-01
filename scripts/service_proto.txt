@@ -1,0 +1,13 @@
+[Unit]
+Description=Gunicorn instance to serve ClubDMX
+After=network.target
+
+[Service]
+User=_USER
+Group=www-data
+WorkingDirectory=_CLUBDMX_CODEPATH
+Environment="PYTHONPATH=_CLUBDMX_CODEPATH/app:_CLUBDMX_CODEPATH/dmx"
+ExecStart=_CLUBDMX_CODEPATH/scripts/app_start.sh service
+
+[Install]
+WantedBy=multi-user.target

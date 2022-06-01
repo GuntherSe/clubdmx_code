@@ -119,7 +119,7 @@ Die Verzeichnisse für Code und Räume können abweichend von den Default-Werten
     export CLUBDMX_ROOMPATH=/home/pi/clubdmx_rooms
     export GUNICORNSTART=/home/pi/.local/bin/gunicorn
 
-In den obigen Zeilen stehen die Default-Werte für den User pi. Falls andere Pfade und/oder ein anderer User verwendet werden, dann werden in /etc/environment die entsprechenden Environment-Variablen gesetzt.
+In den obigen Zeilen stehen die Default-Werte für den User pi. Falls andere Pfade und/oder ein anderer User verwendet werden, dann werden in /etc/environment die entsprechenden Environment-Variablen gesetzt. Anschließend neu starten.
 
 In dieser Installations-Anleitung wird die Verwendung der Default-Verzeichnisse angenommen. Für alternative Verzeichnisse werden die angegebenen Befehle entsprechend adaptiert.
 
@@ -140,17 +140,17 @@ Shell Script Files ausführbar machen:
 
 ## Python Module
 
-(wir befinden uns im ClubDMX-Codeverzeichnis)
+(wir befinden uns im ClubDMX-Skriptverzeichnis, ~/clubdmx_code/scripts)
 
 Alle nötigen Module installieren:
 
 Für Installation am Raspberry:
 
-    ./scripts/python_setup.sh install raspi
+    ./python_setup.sh install raspi
 
 Für Installation am Debian Rechner:
 
-    ./scripts/python_setup.sh install debian
+    ./python_setup.sh install debian
  
 
 .env editieren (mit Nano oder anderem Texteditor):
@@ -230,34 +230,16 @@ Falls bei der Installation Fehler auftraten, dann war es vielleicht schon instal
 Kontrolle: Im Browser die IP-Adresse 127.0.0.1 eingeben. Die Nginx Default-Seite sollte sich zeigen.
 Hier sind die dazu nötigen Schritte im Detail erläutert, siehe: https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-gunicorn-and-nginx-on-ubuntu-20-04-de 
 
-Um ClubDMX und NGINX miteinander zu verbinden, sind zwei Dateien nötig. Eine systemd-Datei und eine site-Datei. In beiden Dateien sind User- und Pfad-Angaben, die entsprechend angepasst werden müssen. Ich habe im Verzeichnis ~/clubdmx_code/etc/ Prototypen angelegt, die für den User *pi* und das Code-Verzeichnis */home/pi/clubdmx_code/* ausgelegt sind. 
-Daher müssen die Pfade angepasst werden, wenn ClubDMX in einem anderen Verzeichnis installiert und/oder ein anderer User als *pi* gewählt wurde. Das gilt auch für die Installation auf einem Debian-Rechner. 
+Um die Einrichtung der Verbindung zwischen ClubDMX und NGINX zu erleichtern, habe ich das Script **nginx_setup.sh** geschrieben. Mit diesem Script werden die nötigen Systemdateien abhängig von User und Code-Verzeichnis erzeugt und installiert. Dazu sind root-Rechte nötig.
 
-Die systemd-Datei erstellen:
+Falls ClubDMX noch im Test läuft, dann beenden mit:
 
-    sudo cp ~/clubdmx_code/etc/clubdmx.service /etc/systemd/system
+    clubdmx stop
 
-Den Dienst starten:
+Nun wird der Start von ClubDMX mit NGINX vorbereitet:
 
-    sudo systemctl start clubdmx
-    sudo systemctl enable clubdmx
-
-Der Status kann überprüft werden:
-
-    sudo systemctl status clubdmx
-
-NGINX einrichten:
-
-    sudo cp ~/clubdmx_code/etc/nginx_clubdmx.txt /etc/nginx/sites-available/clubdmx
-    sudo ln -s /etc/nginx/sites-available/clubdmx /etc/nginx/sites-enabled
-    sudo rm /etc/nginx/sites-enabled/default
-
-Wurde ClubDMX in einem anderen Verzeichnis installiert, dann ist der Kopier-Befehl entsprechend zu ändern.
-
-### Debian Installation:
-
-Die beiden Dateien im Verzeichnis ~/clubdmx_code/etc enthalten Pfadangaben, die auf den User Pi und die Raspi-Installation angepasst sind. Vor Ausführung der oben genannten Schritte müssen diese Pfadangaben korrigiert werden.
-
+    su
+    ./scripts/nginx_setup.sh
 
 Bei Fehlern gibt es hier Kontrollen:
 
@@ -265,11 +247,6 @@ Bei Fehlern gibt es hier Kontrollen:
     sudo less /var/log/nginx/access.log überprüft die Nginx-Zugriffsprotokolle.
     sudo journalctl -u nginx überprüft die Nginx-Prozessprotokolle.
     sudo journalctl -u clubdmx überprüft die Gunicorn-Protokolle von ClubDMX.
-
-NGINX testen und neu starten:
-
-    sudo nginx -t
-    sudo systemctl restart nginx
 
 Nun ist ClubDMX über NGINX erreichbar.
 

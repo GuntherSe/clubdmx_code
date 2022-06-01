@@ -10,6 +10,8 @@ _todo.txt
 scripts/.require_pyanywhere(installed).txt
 scripts/schema.sql
 scripts/setenviron.ps1
+scripts/site.txt
+scripts/service.txt
 
 dmx/.vscode/
 dmx/backup/

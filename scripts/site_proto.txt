@@ -4,6 +4,6 @@ server {
 
     location / {
 	include proxy_params;
-	proxy_pass http://unix:/home/pi/clubdmx_code/clubdmx.sock;
+	proxy_pass http://unix:_CLUBDMX_CODEPATH/clubdmx.sock;
     }
 }
