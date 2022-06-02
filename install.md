@@ -23,7 +23,7 @@ Raspi-Config:
 
 Anschließend im Terminal:
 
-    sudo apt-get install dos2unix nginx
+    sudo apt-get install dos2unix nginx git
 
 dos2unix ist ein Tool zum Umwandeln von Textdateien mit Windows-Zeilenenden in ein Linux-Format.
 Siehe: https://www.digitalmasters.info/de/das-zeilenende-unter-linux-windows-und-os-x-im-griff/
@@ -74,7 +74,7 @@ Diese Installation ist nötig, wenn die neueste Version von OLA gewünscht ist. 
 
 im Browser die **OLA Website** aufrufen = 127.0.0.1:9090
 
-hier nachsehen: Plugins -> OSC ->Config Location: /etc/ola/ola-osc.conf. Findet man hier Informationen, dann kann man von einer korrekten Installation ausgehen.
+hier nachsehen: Plugins -> OSC -> Config Location: /etc/ola/ola-osc.conf. Findet man hier Informationen, dann kann man von einer korrekten Installation ausgehen.
 
 Weiter im Browser auf 127.0.0.1:9090:
 
@@ -95,6 +95,10 @@ Da OLA auf Windows nicht läuft, muss eine virtuelle Maschine mit Linux eingeric
 
 ## ClubDMX
 
+Die hier im Detail beschriebenen Installationsschritte beziehen sich auf eine Linux-Umgebung. Am Ende dieses Abschnitts finden sich Anmerkungen zur Installation auf einem Windows-System.
+
+### Installation von Zip-Datei
+
 ClubDMX ist gepackt in der Datei **clubdmx_code.zip**. Diese Datei wird ins Home-Verzeichnis kopiert. Das kann mit **Filezilla** oder einem anderen Programm zum Übertragen der Dateien gemacht oder vom USB-Stick kopiert werden.
 
 Anschließend werden die zip-Datei entpackt und die weiteren Installationsschritte ausgeführt:
@@ -103,7 +107,12 @@ Anschließend werden die zip-Datei entpackt und die weiteren Installationsschrit
     mkdir clubdmx_code
     unzip clubdmx_code.zip -d clubdmx_code
 
-*TODO:* Installation von Github dokumentieren. 
+### Installation von Github
+
+ClubDMX ist auf Github zu finden. Die Installation der neuesten Version ist hier einfach zu machen.
+
+    cd ~
+    git clone https://github.com/GuntherSe/clubdmx_code.git clubdmx_code
 
 ### Verzeichnisse:
 
@@ -171,6 +180,12 @@ Nun ist ClubDMX fertig installiert und die Installation kann **getestet** werden
 
 ## Erstes Login in ClubDMX
 
+Die Testversion von ClubDMX wird im Browser unter der aktuellen IP-Adresse und Port 5000 aufgerufen. Vom aktuellen Rechner also mit
+
+    127.0.0.1:5000
+
+Im lokalen Netzwerk kann ClubDMX nun von jedem Computer mit Browser erreicht werden.
+
 Die Berechtigungen in ClubDMX sind benutzerabhängig. Ohne Login sind nur wenige Seiten verfügbar. Um das Anlegen von Benutzern nach einer Neu-Installation zu ermöglichen, ist ein Admin-Konto bereits angelegt. Das Login erfolgt aus der Navigationsleiste mit diesen Daten:
 
     Benutzername: Administrator
@@ -178,14 +193,26 @@ Die Berechtigungen in ClubDMX sind benutzerabhängig. Ohne Login sind nur wenige
 
 Für die Benützung von ClubDMX siehe **Erste Schritte** in der Doku. Die Doku ist in ClubDMX integriert und findet sich über die Navigationszeile im HTML- und im PDF-Format.
 
-### Windows:
+## Windows Installation:
 
-Die Python Module werden mit der Batch-Datei **python_steup.bat** installiert. ClubDMX wird mit der Batch-Datei **app_start.bat** gestartet.
+Die neueste Version von ClubDMX kann mit [Git for Windows](https://gitforwindows.org/) heruntergeladen werden. Ist *Git for Windows* installiert, dann kann in einem beliebigen Verzeichnis - zum Beispiel im persönlichen Dokumente-Ordner - ClubDMX in wenigen Schritten zum Laufen gebracht werden. Voraussetzung ist ein installiertes Python mit Version > 3.8. Hier sind die Schritte skizziert:
 
+Zuerst wird der Explorer gestartet und ins Dokumente-Verzeichnis gewechselt. Mit Rechtsklick wird ein Git BASH Terminal gestartet. In diesem Terminal: 
+
+    git clone https://github.com/GuntherSe/clubdmx_code clubdmx_code
+
+Anschließend im Explorer ins Verzeichnis clubdmx_code wechseln. Hier mit Rechtsklick eine neue Textdatei mit Namen **.env** erzeugen. Hier eintragen (siehe oben in der Linux-Anleitung):
+
+    SECRET_KEY = b”lange+geheime?Zeichenkette” 
+
+Anschließend ins verzeichnis scripts wechseln.
+
+Vor dem ersten Start sind die nötigen Python-Module zu installieren, das geschieht mit dem Script **python_setup.bat**. ClubDMX wird mit der Batch-Datei **app_start.bat** gestartet. 
+
+    python_setup.bat
     app_start.bat
 
-
-*TODO*: Batch Dateien aktualisieren.
+Für das erste Login gilt in Windows dieselbe Anleitung wie in der Linux-Installtion beschrieben. 
 
 ## Wichtige Anmerkungen:
 

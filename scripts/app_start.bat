@@ -1,9 +1,10 @@
 @echo off
 echo Starte ClubDMX...
 pushd %~dp0
-c:
-cd \Users\Gunther\OneDrive\Programmierung\clubdmx_code
+
 echo %cd%
+rem ins code-Verzeichnis wechseln:
+cd ..
 
 rem development oder production:
 set FLASK_ENV=production
@@ -14,7 +15,7 @@ set FLASK_APP=wsgi.py
 
 set PYTHONPATH=%cd%\app;%cd%\dmx
 
-set CLUBDMX_ROOMPATH=c:\Users\Gunther\OneDrive\Programmierung\clubdmx_rooms
+set CLUBDMX_ROOMPATH=%cd%\..\clubdmx_rooms
 
 python wsgi.py
 REM flask run --host=0.0.0.0 --port=5000
