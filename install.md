@@ -195,7 +195,7 @@ Für die Benützung von ClubDMX siehe **Erste Schritte** in der Doku. Die Doku i
 
 ## Windows Installation:
 
-Die neueste Version von ClubDMX kann mit [Git for Windows](https://gitforwindows.org/) heruntergeladen werden. Ist *Git for Windows* installiert, dann kann in einem beliebigen Verzeichnis - zum Beispiel im persönlichen Dokumente-Ordner - ClubDMX in wenigen Schritten zum Laufen gebracht werden. Voraussetzung ist ein installiertes Python mit Version > 3.8. Hier sind die Schritte skizziert:
+Die neueste Version von ClubDMX kann mit [Git for Windows](https://gitforwindows.org/) heruntergeladen werden. Ist *Git for Windows* installiert, dann kann in einem beliebigen Verzeichnis - zum Beispiel im persönlichen Dokumente-Ordner - ClubDMX in wenigen Schritten zum Laufen gebracht werden. Voraussetzung ist ein installiertes Python mit Version >= 3.8. Hier sind die Schritte skizziert:
 
 Zuerst wird der Explorer gestartet und ins Dokumente-Verzeichnis gewechselt. Mit Rechtsklick wird ein Git BASH Terminal gestartet. In diesem Terminal: 
 
@@ -205,14 +205,14 @@ Anschließend im Explorer ins Verzeichnis clubdmx_code wechseln. Hier mit Rechts
 
     SECRET_KEY = b”lange+geheime?Zeichenkette” 
 
-Anschließend ins verzeichnis scripts wechseln.
+Anschließend ins Verzeichnis scripts wechseln.
 
 Vor dem ersten Start sind die nötigen Python-Module zu installieren, das geschieht mit dem Script **python_setup.bat**. ClubDMX wird mit der Batch-Datei **app_start.bat** gestartet. 
 
     python_setup.bat
     app_start.bat
 
-Für das erste Login gilt in Windows dieselbe Anleitung wie in der Linux-Installtion beschrieben. 
+Für das erste Login gilt in Windows dieselbe Anleitung wie in der Linux-Installtion beschrieben. Autostart und die weiteren Installationsschritte entfallen in Windows.
 
 ## Wichtige Anmerkungen:
 
