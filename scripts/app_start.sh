@@ -28,7 +28,7 @@ case "$1" in
   start)
     echo "Starte ClubDMX zum Testen"
     touch test1running
-    $gunicornstart  --daemon -b 0.0.0.0:5000  wsgi:app
+    $gunicornstart  -b 0.0.0.0:5000  wsgi:app
     # Anmerkung: mit pgrep -fl wsgi.py erhält man die PID
     ;;
     
@@ -47,55 +47,56 @@ case "$1" in
 
   update)
     echo "Update ClubDMX"
-    rm test1running 2> /dev/null
-    pkill -f gunicorn
+    echo "Zum Update das Script update.sh verwenden!"
+    # rm test1running 2> /dev/null
+    # pkill -f gunicorn
 
-    echo "Python-Module updaten..."
-    # raspi oder debian, default=raspi:
-    while getopts f:o: flag
-    do
-        case "${flag}" in
-            f) ZIPFILE=${OPTARG};;
-            o) OSVERSION=${OPTARG};;
-        esac
-    done
-    # Betriebssystem ermittlen:
-    if [ -z "$OSVERSION" ]; then
-      OSVERSION="raspi"
-    fi
+    # echo "Python-Module updaten..."
+    # # raspi oder debian, default=raspi:
+    # while getopts f:o: flag
+    # do
+    #     case "${flag}" in
+    #         f) ZIPFILE=${OPTARG};;
+    #         o) OSVERSION=${OPTARG};;
+    #     esac
+    # done
+    # # Betriebssystem ermittlen:
+    # if [ -z "$OSVERSION" ]; then
+    #   OSVERSION="raspi"
+    # fi
 
-    ./scripts/python_setup.sh upgrade $OSVERSION
+    # ./scripts/python_setup.sh upgrade $OSVERSION
 
-    echo "entpacken und installieren..."
-    # Zip-Datei ermittlen:
-    if [ -z "$ZIPFILE" ]; then
-      ZIPFILE="$HOME/clubdmx_code.zip"
-    fi
+    # echo "entpacken und installieren..."
+    # # Zip-Datei ermittlen:
+    # if [ -z "$ZIPFILE" ]; then
+    #   ZIPFILE="$HOME/clubdmx_code.zip"
+    # fi
     
-    # Existenz prüfen:
-    if [ -f "$ZIPFILE" ]; then
-      rm -r app
-      rm -r dmx
-      # cd /home/pi
-      cd ..
-      echo A | unzip "$ZIPFILE" 
-      # cd /home/pi/clubdmx_code
-      cd $codepath
+    # # Existenz prüfen:
+    # if [ -f "$ZIPFILE" ]; then
+    #   rm -r app
+    #   rm -r dmx
+    #   # cd /home/pi
+    #   cd ..
+    #   echo A | unzip "$ZIPFILE" 
+    #   # cd /home/pi/clubdmx_code
+    #   cd $codepath
 
-      echo "Skripte ausführbar machen..."
-      dos2unix ./scripts/*.sh
-      chmod +x ./scripts/*.sh
+    #   echo "Skripte ausführbar machen..."
+    #   dos2unix ./scripts/*.sh
+    #   chmod +x ./scripts/*.sh
 
-      echo "Raum-Verzeichnis für neue Version updaten..."
-      python3 dmx/rooms_check.py $roompath
+    #   echo "Raum-Verzeichnis für neue Version updaten..."
+    #   python3 dmx/rooms_check.py $roompath
 
-      echo "ClubDMX mit Rückmeldungen starten."
-      $gunicornstart -b 0.0.0.0:5000  wsgi:app
+    #   echo "ClubDMX mit Rückmeldungen starten."
+    #   $gunicornstart -b 0.0.0.0:5000  wsgi:app
     
-    else
-      echo "$ZIPFILE nicht gefunden. Update konnte nicht durchgeführt werden."
+    # else
+    #   echo "$ZIPFILE nicht gefunden. Update konnte nicht durchgeführt werden."
     
-    fi
+    # fi
 
     ;;
 

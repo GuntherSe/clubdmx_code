@@ -11,7 +11,7 @@ from flask import flash, redirect, url_for, send_from_directory
 from flask import current_app as app
 from flask import session
 
-from werkzeug.utils import html, secure_filename
+from werkzeug.utils import secure_filename
 
 from startup import load_config
 import globs

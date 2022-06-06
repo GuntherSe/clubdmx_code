@@ -47,16 +47,6 @@ else
   echo "Nach dem Update ClubDMX im Testmodus starten."
 fi
 
-# Python-Extensions update:
-if [ "$OSVERSION" = "raspi" ]; then
-  ./scripts/python_setup.sh upgrade $OSVERSION
-elif [ "$OSVERSION" = "debian" ]; then
-  ./scripts/python_setup.sh upgrade $OSVERSION
-else
-  echo "$OSVERSION ist keine gültige os_version (raspi oder debian). "
-  exit 1
-fi
-
 # code-Verzeichnis update:
 if [ "$ZIPFILE" = "git" ]; then
   echo "Update von GIT"
@@ -66,28 +56,31 @@ else
     echo "Update von $ZIPFILE"
     # Problem: Struktur von ZIP-File kann mit subdir 'clubdmx_code' oder
     # mit subdir 'clubdmx_code-master' oder ohne subdir sein.
+
     cd ..
+    
+    if [ -d tmpupdate ]; then
+      rm -r tmpupdate
+    fi
     mkdir tmpupdate
-    cd $codepath
-    echo A | unzip "$ZIPFILE" -d ../tmpupdate
-    if [ -d "../tmpupdate/clubdmx_code-master" ]; then
-      mv "../tmpupdate/clubdmx_code-master" "../tmpupdate/clubdmx_code"
-      updatesource="../tmpupdate/clubdmx_code" 
-    elif [ -d "../tmpupdate/clubdmx_code" ]; then
-      updatesource="../tmpupdate/clubdmx_code" 
+    # cd $codepath
+    echo A | unzip "$ZIPFILE" -d tmpupdate/
+    if [ -d "tmpupdate/clubdmx_code-master" ]; then
+      mv "tmpupdate/clubdmx_code-master" "tmpupdate/clubdmx_code"
+      updatesource="tmpupdate/clubdmx_code" 
+    elif [ -d "tmpupdate/clubdmx_code" ]; then
+      updatesource="tmpupdate/clubdmx_code" 
     else
-      updatesource="../tmpupdate/" 
+      updatesource="tmpupdate/" 
     fi
     echo "Update Source = $updatesource"
 
-    cp -R $updatesource $codepath
+    rm -r $codepath/app
+    rm -r $codepath/dmx
+    rm -r $codepath/scripts
 
-    # rm -r app
-    # rm -r dmx
-    # cd ..
-    # echo A | unzip "$ZIPFILE" 
-    # # cd /home/pi/clubdmx_code
-    # cd $codepath
+    cp -R $updatesource/. $codepath/
+    rm -r tmpupdate
 
   else
     echo "$ZIPFILE nicht gefunden. Update konnte nicht durchgeführt werden."
@@ -95,17 +88,31 @@ else
   fi
 fi
 
+cd $codepath
+
+# Python-Extensions update:
+echo "Python Extensions updaten..."
+if [ "$OSVERSION" = "raspi" ]; then
+  ./scripts/python_setup.sh upgrade $OSVERSION
+elif [ "$OSVERSION" = "debian" ]; then
+  ./scripts/python_setup.sh upgrade $OSVERSION
+else
+  echo "$OSVERSION ist keine gültige os_version (raspi oder debian). "
+  exit 1
+fi
+
 # vor dem Start:
-  dos2unix ./scripts/*.sh
-  chmod +x ./scripts/*.sh
-  echo "Raum-Verzeichnis für neue Version updaten..."
-  python3 ./dmx/rooms_check.py $roompath
+dos2unix ./scripts/*.sh
+chmod +x ./scripts/*.sh
+echo "Raum-Verzeichnis für neue Version updaten..."
+python3 ./dmx/rooms_check.py $roompath
 
 # ClubDMX neu starten:
 if [ -z "$STARTOPT" ]; then
   echo "ClubDMX neu starten."
 else
   echo "ClubDMX im Testmodus mit Rückmeldungen starten."
-  $gunicornstart -b 0.0.0.0:5000  wsgi:app
+  ./scripts/app_start.sh stop
+  ./scripts/app_start.sh start
 fi
 

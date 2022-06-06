@@ -5,7 +5,7 @@ import os
 import os.path
 import json
 
-from werkzeug.utils import html
+# from werkzeug.utils import html
 
 # https://stackoverflow.com/questions/33135038/how-do-i-use-os-scandir-to-return-direntry-objects-recursively-on-a-directory
 
@@ -143,7 +143,7 @@ table: Bootstrap Tabele
     ret['table']   = dir_to_table (spath,ftype,updir)
     return json.dumps (ret)
 
-def dir_to_table (spath:str=None, ftype:str=None, updir:bool=False) -> html:
+def dir_to_table (spath:str=None, ftype:str=None, updir:bool=False) :
     """  Tabelle aus Dir content erzeugen """
 
     direc = list_dir (spath, ftype)
