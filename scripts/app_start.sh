@@ -26,7 +26,7 @@ export PYTHONPATH="${PWD}/app:${PWD}/dmx"
 
 case "$1" in
   start)
-    echo "Starte ClubDMX "
+    echo "Starte ClubDMX zum Testen"
     touch test1running
     $gunicornstart  --daemon -b 0.0.0.0:5000  wsgi:app
     # Anmerkung: mit pgrep -fl wsgi.py erhält man die PID
@@ -104,6 +104,7 @@ case "$1" in
     echo "zipfile: wenn nicht angegeben, dann wird clubdmx_code.zip verwendet."
     echo "os_version: wenn nicht angegeben, dann wird raspi verwendet."
     echo "für nicht-Standard-Update beide Variablen angeben."
+    echo "test Update."
 
     if [ -e test1running ]
     then
