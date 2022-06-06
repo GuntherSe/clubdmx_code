@@ -50,7 +50,7 @@ fi
 # code-Verzeichnis update:
 if [ "$ZIPFILE" = "git" ]; then
   echo "Update von GIT"
-  git clone https://github.com/GuntherSe/clubdmx_code.git
+  git clone https://github.com/GuntherSe/clubdmx_code.git $codepath
 else
   if [ -f "$ZIPFILE" ]; then
     echo "Update von $ZIPFILE"
