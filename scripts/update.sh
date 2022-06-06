@@ -89,6 +89,8 @@ else
 fi
 
 cd $codepath
+dos2unix ./scripts/*.sh
+chmod +x ./scripts/*.sh
 
 # Python-Extensions update:
 echo "Python Extensions updaten..."
@@ -102,8 +104,6 @@ else
 fi
 
 # vor dem Start:
-dos2unix ./scripts/*.sh
-chmod +x ./scripts/*.sh
 echo "Raum-Verzeichnis für neue Version updaten..."
 python3 ./dmx/rooms_check.py $roompath
 
