@@ -8,6 +8,8 @@
 # Requirement-Datei angegeben?
 # diese Terminologie ist vorgesehen: require_'version'.txt 
 # 'version' ist die OS-Version, in der Python installiert ist
+codepath="${CLUBDMX_CODEPATH:-$HOME/clubdmx_code}"
+cd $codepath
 
 if [ -z "$2" ]; then
   REQFILE="./scripts/requirements.txt"
@@ -26,13 +28,13 @@ case "$1" in
   install)
   echo "Python Eyxtensions installieren. Verwende $REQFILE."
   # setup Python mit den nötigen Erweiterungen:
-  pip3 install -r $REQFILE
+  python3 -m pip  install -r $REQFILE
   ;;
 
   upgrade)
   # Upgrade:
   echo "Python Eyxtensions upgrade. Verwende $REQFILE."
-  pip3 install -r $REQFILE --upgrade
+  python3 -m pip  install -r $REQFILE --upgrade
   ;;
 
   *)

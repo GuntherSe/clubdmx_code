@@ -6,6 +6,7 @@ import os
 import os.path
 import shutil # fürs kopieren
 from pathlib import Path
+from csvfileclass import Csvfile
 
 import mount
 from layout import Layout
@@ -255,6 +256,26 @@ class Roombase:
         """
         src = os.path.join (self.PATH, "head")
         dst = os.path.join (self.codepath, "head")
+        count = 0   # Files mit Änderungen
+        fail = 0    # sichern nicht ok
+        c = Csvfile ()
+        # Änderungen in src sichern, siehe Roomclass.save_changes ():
+        filelist = os.listdir (src)
+        for item in filelist:
+            base, ext = os.path.splitext (item)
+            if ext == c.CHGEXT: # .ccsv gefunden
+                count = count + 1
+                check = False
+                fullname = os.path.join (src, base) # + c.CHGEXT
+                c.name (fullname)
+                check = c.save_changes ()
+                if not check:
+                    fail = fail + 1
+                else:
+                    self.logger.info (f"Änderungen gesichert: {fullname}")
+        self.logger.info (f"{count} Änderungen")
+        if fail:
+            self.logger.warning (f"{fail} konnten nicht gesichert werden.")
         copytree (src, dst)
         
 

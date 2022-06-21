@@ -3,16 +3,27 @@
 # ----------------------------------------------------
 # NGINX für ClubDMX vorbereiten 
 # ----------------------------------------------------
+# ref: https://askubuntu.com/a/30157/8698
 
-echo "Script wird von User $USER ausgeführt."
-echo "Taste drücken, um fortzufahren."
-read i
+if ! [ "$(id -u)" = 0 ]; then
+  echo "Dieses Script muss als root gestartet werden!" 
+	exit 1
+fi
 
-codepath="${CLUBDMX_CODEPATH:-$HOME/clubdmx_code}"
+if [ $SUDO_USER ]; then
+    realuser=$SUDO_USER
+else
+    realuser=$(whoami)
+fi
+realhome="/home/$realuser"
+echo "Real User: $realuser"
+echo "User: $USER"
+
+codepath="${CLUBDMX_CODEPATH:-$realhome/clubdmx_code}"
 cd $codepath/scripts
 
 echo "Files vorbereiten..."
-python3 nginxfiles.py
+sudo -u $realuser python3 nginxfiles.py
 
 # echo "Files kopieren, benötigt SUDO Rechte!"
 cp service.txt /etc/systemd/system/clubdmx.service

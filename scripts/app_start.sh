@@ -48,56 +48,6 @@ case "$1" in
   update)
     echo "Update ClubDMX"
     echo "Zum Update das Script update.sh verwenden!"
-    # rm test1running 2> /dev/null
-    # pkill -f gunicorn
-
-    # echo "Python-Module updaten..."
-    # # raspi oder debian, default=raspi:
-    # while getopts f:o: flag
-    # do
-    #     case "${flag}" in
-    #         f) ZIPFILE=${OPTARG};;
-    #         o) OSVERSION=${OPTARG};;
-    #     esac
-    # done
-    # # Betriebssystem ermittlen:
-    # if [ -z "$OSVERSION" ]; then
-    #   OSVERSION="raspi"
-    # fi
-
-    # ./scripts/python_setup.sh upgrade $OSVERSION
-
-    # echo "entpacken und installieren..."
-    # # Zip-Datei ermittlen:
-    # if [ -z "$ZIPFILE" ]; then
-    #   ZIPFILE="$HOME/clubdmx_code.zip"
-    # fi
-    
-    # # Existenz prüfen:
-    # if [ -f "$ZIPFILE" ]; then
-    #   rm -r app
-    #   rm -r dmx
-    #   # cd /home/pi
-    #   cd ..
-    #   echo A | unzip "$ZIPFILE" 
-    #   # cd /home/pi/clubdmx_code
-    #   cd $codepath
-
-    #   echo "Skripte ausführbar machen..."
-    #   dos2unix ./scripts/*.sh
-    #   chmod +x ./scripts/*.sh
-
-    #   echo "Raum-Verzeichnis für neue Version updaten..."
-    #   python3 dmx/rooms_check.py $roompath
-
-    #   echo "ClubDMX mit Rückmeldungen starten."
-    #   $gunicornstart -b 0.0.0.0:5000  wsgi:app
-    
-    # else
-    #   echo "$ZIPFILE nicht gefunden. Update konnte nicht durchgeführt werden."
-    
-    # fi
-
     ;;
 
   *)
@@ -105,7 +55,6 @@ case "$1" in
     echo "zipfile: wenn nicht angegeben, dann wird clubdmx_code.zip verwendet."
     echo "os_version: wenn nicht angegeben, dann wird raspi verwendet."
     echo "für nicht-Standard-Update beide Variablen angeben."
-    echo "test Update."
 
     if [ -e test1running ]
     then

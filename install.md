@@ -265,8 +265,7 @@ Falls ClubDMX noch im Test läuft, dann beenden mit:
 
 Nun wird der Start von ClubDMX mit NGINX vorbereitet:
 
-    su
-    ./scripts/nginx_setup.sh
+    sudo ./scripts/nginx_setup.sh
 
 Bei Fehlern gibt es hier Kontrollen:
 
