@@ -121,13 +121,14 @@ fi
 
 # vor dem Start:
 echo "Raum-Verzeichnis für neue Version updaten..."
-python3 ./dmx/rooms_check.py $roompath
+sudo -u $realuser python3 ./dmx/rooms_check.py $roompath
 
 # ClubDMX neu starten:
 if [ -z "$STARTOPT" ]; then
   echo "ClubDMX neu starten."
-  systemctl restart clubdmx
-  systemctl restart nginx
+  echo "j" | ./scripts/nginx_setup.sh
+  # systemctl restart clubdmx
+  # systemctl restart nginx
 else
   echo "ClubDMX im Testmodus mit Rückmeldungen starten."
   ./scripts/app_start.sh stop
