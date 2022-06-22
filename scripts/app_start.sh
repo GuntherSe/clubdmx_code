@@ -51,10 +51,7 @@ case "$1" in
     ;;
 
   *)
-    echo "Verwendung: $0 {start|stop|update [-f zipfile] [-o os_version]}"
-    echo "zipfile: wenn nicht angegeben, dann wird clubdmx_code.zip verwendet."
-    echo "os_version: wenn nicht angegeben, dann wird raspi verwendet."
-    echo "für nicht-Standard-Update beide Variablen angeben."
+    echo "Verwendung: $0 <start|stop|service>"
 
     if [ -e test1running ]
     then
