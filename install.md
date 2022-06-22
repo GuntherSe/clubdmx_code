@@ -224,7 +224,8 @@ und für Debian:
 
     ./scripts/python_setup.sh upgrade debian 
 
-**app_start.sh**: Der Start der App ist, obwohl die Raspberries bzw. Linux-Rechner nach dem selben Schema installiert wurden, unterschiedlich zu bewerkstelligen. Computer geben eben manchmal Rätsel auf. So liegt zum Beispiel die Extension Gunicorn am Raspberry im Jazzit im Verzeichnis /usr/bin und auf meinem Raspberry in /home/pi/.local/bin. Das muss beim Start der App berücksichtigt werden, indem die Environment-Variable GUNICORNSTART gesetzt wird.
+**app_start.sh**: Der Start der App ist, obwohl die Raspberries bzw. Linux-Rechner nach dem selben Schema installiert wurden, unterschiedlich zu bewerkstelligen. Vermutlich liegt es daran, ob die Installation als root oder als regulärer User gemacht wird.
+Das muss beim Start der App berücksichtigt werden, indem die Environment-Variable GUNICORNSTART gesetzt wird.
 
 Zum Testen der Installation im Terminal kann Gunicorn ohne Pfadangabe verwendet werden.
 
@@ -279,16 +280,25 @@ Nun ist ClubDMX über NGINX erreichbar.
 
 ## ClubDMX update: 
 
-Ich gehe davon aus, dass NGINX im Einsatz ist.
-Das neue zip-File wird ins Home-Verzeichnis kopiert, anschließend werden die folgenden Befehle im Terminal ausgeführt.
+Für das Update von ClubDMX gibt es ein Shell Script, **update.sh**. Da Änderungen in diesem Script in einer neueren Version von ClubDMX möglich sind, sollte zuerst 
+das aktuelle **update.sh** verfügbar gemacht werden, das auf Github zu finden ist:
 
-    unzip clubdmx_code.zip -d clubdmx_code
-    cd ~/clubdmx_code/scripts
-    dos2unix *.sh
-    chmod +x *.sh
-    sudo systemctl restart clubdmx
-    sudo systemctl restart nginx
+https://github.com/GuntherSe/clubdmx_code/blob/master/scripts/update.sh
 
+Hier auf den Button *Raw* klicken, anschließend Rechtsklick, *Seite speichern unter...* auswählen und im Home-Verzeichnis abspeichern. Damit ist die neueste Version des Update-Skripts verfügbar. Anschließend werden die folgenden Befehle im Terminal ausgeführt. **update.sh** benötigt einige Parameter zur korrekten Ausführung:
+
+-f: Hier muss der Name eines ZIP-Files oder *github* als Quelle angegeben werden
+
+-o: Hier muss das Betriebssystem angegeben werden, entweder *raspi* oder *debian*. 
+
+-s: Hier kann die Startoption festgelegt werden. Wird dieser Parameter weggelassen (das ist der Standard), dann wird ClubDMX über NGINX ausgeführt. Falls Probleme beim Update auftreten sollten, dann bitte **update.sh** mit der Startoption -s test erneut ausführen. Damit wird ClubDMX mit im Terminal mit Rückmeldungen gestartet und Fehler können lokalisiert werden.
+
+Das Update wird nun für den Raspberry mit folgenden Befehlen im Terminal durchgeführt:
+
+    cd ~
+    dos2unix update.sh
+    chmod +x update.sh
+    ./update.sh -f github -o raspi
 
 Im Browser sind nun OLA und ClubDMX aufrufbar.
 
@@ -297,4 +307,8 @@ Die nach der Installation verfügbaren Webseiten:
 OLA: 127.0.0.1:9090
 
 ClubDMX: 127.0.0.1
+
+Wenn die Startoption *test* gewählt wurde (im Terminal mit dem Befehl *./update.sh -f github -o raspi -s test*), dann ist ClubDMX im Browser hier zu finden:
+
+127.0.0.1:5000
 

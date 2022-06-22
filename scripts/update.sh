@@ -12,7 +12,7 @@
 # ref: https://askubuntu.com/a/30157/8698
 
 if ! [ "$(id -u)" = 0 ]; then
-  echo "Dieses Script muss als root gestartet werden!" 
+  echo "Dieses Script muss mit root-Rechten gestartet werden!" 
 	exit 1
 fi
 
@@ -58,7 +58,6 @@ if [ -z "$ZIPFILE" ]; then
 fi
 
 # Startoption nach Update:
-# zip oder git?
 if [ -z "$STARTOPT" ]; then
   echo "Nach dem Update ClubDMX regulär starten."
 else
