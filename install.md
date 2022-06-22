@@ -291,14 +291,14 @@ Hier auf den Button *Raw* klicken, anschließend Rechtsklick, *Seite speichern u
 
 -o: Hier muss das Betriebssystem angegeben werden, entweder *raspi* oder *debian*. 
 
--s: Hier kann die Startoption festgelegt werden. Wird dieser Parameter weggelassen (das ist der Standard), dann wird ClubDMX über NGINX ausgeführt. Falls Probleme beim Update auftreten sollten, dann bitte **update.sh** mit der Startoption -s test erneut ausführen. Damit wird ClubDMX mit im Terminal mit Rückmeldungen gestartet und Fehler können lokalisiert werden.
+-s: Hier kann die Startoption festgelegt werden. Wird dieser Parameter weggelassen (das ist der Standard), dann wird ClubDMX über NGINX ausgeführt. Falls Probleme beim Update auftreten sollten, dann bitte **update.sh** mit der Startoption -s test erneut ausführen. Damit wird ClubDMX im Terminal mit Rückmeldungen gestartet und Fehler können lokalisiert werden.
 
 Das Update wird nun für den Raspberry mit folgenden Befehlen im Terminal durchgeführt:
 
     cd ~
     dos2unix update.sh
     chmod +x update.sh
-    ./update.sh -f github -o raspi
+    sudo ./update.sh -f github -o raspi
 
 Im Browser sind nun OLA und ClubDMX aufrufbar.
 

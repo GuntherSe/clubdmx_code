@@ -130,7 +130,7 @@ if [ -z "$STARTOPT" ]; then
   # systemctl restart nginx
 else
   echo "ClubDMX im Testmodus mit Rückmeldungen starten."
-  ./scripts/app_start.sh stop
-  ./scripts/app_start.sh start
+  sudo -u $realuser ./scripts/app_start.sh stop
+  sudo -u $realuser ./scripts/app_start.sh start
 fi
 
