@@ -61,7 +61,11 @@ midi-overview
           {{ config_header () }}
       
           <!-- Body -->
-          {% if config.PYTHONANYWHERE == "false" %}
+          {% if config.PYTHONANYWHERE == "true" %}
+          <div class="alert alert-danger">
+            Midi ist in PythonAnywhere nicht verfügbar - DEMO
+          </div>
+          {% endif %}
           <div id="formBody" class="form-body">
             {{ render_bs_field (configform.midi_on )}} 
             {{ render_bs_field (configform.midi_buttons )}} 
@@ -74,12 +78,6 @@ midi-overview
             {{ render_bs_field (configform.midi_output_3 )}} 
             {{ render_bs_field (configform.midi_output_4 )}} 
           </div>
-          {% else %}
-          <div id="formBody" class="form-body">
-            Midi ist in Pythonanywhere nicht verfügbar - aus offensichtlichen Gründen.
-          </div>
-          {% endif %}
-
         </form> 
       </div>
     

@@ -126,7 +126,8 @@
               Meine aktuelle IP ist <b class="px-1">{{ local_ip }}</b>
             </p>
             <p>
-              Die DMX-Daten werden an OLA mit Adresse <b class="px-1">{{ ola_ip }}</b>
+              Die DMX-Daten werden an OLA mit Adresse 
+              <b class="px-1">{{ ola_ip }}</b>
               gesendet.
             </p>
             <p>Die <a href="{{ url_for ('basic.doku') }}" class="px-1"> 
@@ -138,7 +139,12 @@
               Doku </a> 
               gehts hier.
             </p>
-            <!-- {{ idx.button_elem_js ("Fullscreen ein/aus", "fullscreenOnOff")}} -->
+            <p>Die aktuelle Version 
+              <a href="https://github.com/GuntherSe/clubdmx_code" 
+                class="px-1" target="_blank"> 
+               auf Github 
+              </a> findest du hier.
+            </p>
           </div>
         </div>
       </div> 

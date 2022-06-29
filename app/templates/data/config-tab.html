@@ -65,14 +65,13 @@ config-overview
             {{ render_bs_field (configform.universes )}} 
 
             <h5 class="card-title">OSC</h5>
-            {% if config.PYTHONANYWHERE == "false" %}
-              {{ render_bs_field (configform.osc_input )}} 
-              {{ render_bs_field (configform.osc_inputport )}} 
-            {% else %}
-              <p class="card-text">
-                OSC Input ist in PythonAnywhere nicht verfügbar.
-              </p>
+            {% if config.PYTHONANYWHERE == "true" %}
+              <div class="alert alert-danger">
+                OSC Input ist in PythonAnywhere nicht verfügbar - DEMO
+              </div>
             {% endif %}
+            {{ render_bs_field (configform.osc_input )}} 
+            {{ render_bs_field (configform.osc_inputport )}} 
 
           </div>
         </form> 
