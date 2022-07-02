@@ -20,7 +20,7 @@ The DMX connection is carried out by [OLA](https://www.openlighting.org/) . With
 
 ### Scenes/Cues
 
-The first and basic goal in the development of ClubDMX was to enable an easy handling of **Light Scenes (= Cues)**. It's exactly this feature that distinguishes ClubDMX from other lighting software.
+The first and basic goal in the development of ClubDMX was to enable an easy handling of **Light Scenes (= Cues)**. 
 
 ClubDMX offers various possibilities for **Cues**:
 * Cues with Fader
