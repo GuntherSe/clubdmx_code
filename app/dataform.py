@@ -93,7 +93,7 @@ def config ():
         # if globs.PYTHONANYWHERE == "false":
         midi_on      = SelectField ("Midi ein/aus", choices=onoff_choices,
                         default=cur["midi_on"])
-        midi_buttons = SelectField ("Zusatz-Buttons", choices=midibutton_choices,
+        midi_buttons = SelectField ("Midi Funktionstasten", choices=midibutton_choices,
                     default=cur["midi_buttons"])
         midi_input_1 = SelectField ("Midi Input 1", choices=midiin_choices,
                         default=cur["midi_input_1"])

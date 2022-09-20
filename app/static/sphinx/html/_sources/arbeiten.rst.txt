@@ -184,54 +184,57 @@ dass sie trotzdem noch übersichtlich ist, um sich schnell zurecht zu finden.
 * Datenbank
 * Admin 
 
-Die Einrichtung ist in verschiedene Bereiche gegliedert, die sich auf der
-Webseite in Tabs wiederfinden.
+Genaue Erläuterungen zu den einzelnen Punkten finden sich im Kapitel 
+:ref:`einrichten_label`.
 
-Im **Raum**-Tab werden die ersten und elementaren Einrichtungen getätigt: 
-Einen neuen Raum anlegen, den Raum wechseln, den aktiven Raum umbenennen.
-Im Raum-Tab befinden sich auch die Optionen zum Backup und Restore. 
+..  Die Einrichtung ist in verschiedene Bereiche gegliedert, die sich auf der
+  Webseite in Tabs wiederfinden.
 
-Die nächste Ebene der Einrichtung ist die **Config**, deren Hardware-Komponenten
-sich im Config-Tab befinden. Das 
-Kernstück der Konfiguration ist der **Patch**. Die zweite wesentliche
-Hardware-Komponente ist OLA, das die pyhsische Zuordnung über DMX zu den 
-Geräten herstellt.
+  Im **Raum**-Tab werden die ersten und elementaren Einrichtungen getätigt: 
+  Einen neuen Raum anlegen, den Raum wechseln, den aktiven Raum umbenennen.
+  Im Raum-Tab befinden sich auch die Optionen zum Backup und Restore. 
 
-Falls  für einen Raum 
-mehrere Configs angelegt wurden, kann hier eine davon ausgewählt werden. Die
-aktuelle Config kann auch unter einem anderen Namen gespeichert werden.
+  Die nächste Ebene der Einrichtung ist die **Config**, deren Hardware-Komponenten
+  sich im Config-Tab befinden. Das 
+  Kernstück der Konfiguration ist der **Patch**. Die zweite wesentliche
+  Hardware-Komponente ist OLA, das die pyhsische Zuordnung über DMX zu den 
+  Geräten herstellt.
 
-Zur Erläuterung der Begriffe Raum und Config siehe :ref:`raum_config_label` .
+  Falls  für einen Raum 
+  mehrere Configs angelegt wurden, kann hier eine davon ausgewählt werden. Die
+  aktuelle Config kann auch unter einem anderen Namen gespeichert werden.
 
-Nach dem Öffnen einer Config werden der 
-:ref:`patchlabel` ausgewählt, die OLA-Adresse und die Anzahl der Universen 
-eingestellt. 
+  Zur Erläuterung der Begriffe Raum und Config siehe :ref:`raum_config_label` .
 
-Im **Config**-Tab wird auch OSC Input ein- oder ausgeschalten. 
+  Nach dem Öffnen einer Config werden der 
+  :ref:`patchlabel` ausgewählt, die OLA-Adresse und die Anzahl der Universen 
+  eingestellt. 
 
-Im **Bedienelemente**-Tab sind die Tabellen auswählbar, die die zur Nutzung
-relevanten Seiten definieren: Stage, Fader und Buttons. Damit können für einen
-Anwendungsbereich die nötige Lokalisierung der Geräte auf der Stage und die 
-passenden Fader und Buttons bereitgestellt werden. 
+  Im **Config**-Tab wird auch OSC Input ein- oder ausgeschalten. 
 
-Für den Fall, dass ClubDMX als Steuerung für eine Fix-Installation verwendet
-wird, die nach einem Ausschalten mit den letzten Einstellungen wieder 
-hochgefahren werden soll, gibt es den Schalter *Levels speichern*.
+  Im **Bedienelemente**-Tab sind die Tabellen auswählbar, die die zur Nutzung
+  relevanten Seiten definieren: Stage, Fader und Buttons. Damit können für einen
+  Anwendungsbereich die nötige Lokalisierung der Geräte auf der Stage und die 
+  passenden Fader und Buttons bereitgestellt werden. 
 
-Verschiedene Stil-Themen für die Webseite können im Bedienelemente-Tab 
-ausgewählt werden.
+  Für den Fall, dass ClubDMX als Steuerung für eine Fix-Installation verwendet
+  wird, die nach einem Ausschalten mit den letzten Einstellungen wieder 
+  hochgefahren werden soll, gibt es den Schalter *Levels speichern*.
 
-Im **Midi**-Tab können maximal vier Midi-Geräte als Input definiert werden. Diese
-Midi-Geräte können Fadern und Buttons zugeordnet werden. Damit können Cues
-auch ohne Website bedient werden.
+  Verschiedene Stil-Themen für die Webseite können im Bedienelemente-Tab 
+  ausgewählt werden.
 
-Der **Datenbank**-Tab ermöglicht einen Zugriff auf die Tabellen, die hier
-bearbeitet werden können. Je nach gewähltem :ref:`bearbeitungsmoduslabel` 
-können hier
-Zell- oder Zeilenbearbeitungen gemacht werden.
+  Im **Midi**-Tab können maximal vier Midi-Geräte als Input definiert werden. Diese
+  Midi-Geräte können Fadern und Buttons zugeordnet werden. Damit können Cues
+  auch ohne Website bedient werden.
 
-Umfassende Erläuterungen zum Thema Einrichtung finden sich im 
-Kapitel :ref:`einrichten_label`.
+  Der **Datenbank**-Tab ermöglicht einen Zugriff auf die Tabellen, die hier
+  bearbeitet werden können. Je nach gewähltem :ref:`bearbeitungsmoduslabel` 
+  können hier
+  Zell- oder Zeilenbearbeitungen gemacht werden.
+
+..  Umfassende Erläuterungen zum Thema Einrichtung finden sich im 
+  Kapitel :ref:`einrichten_label`.
 
 Info
 ----

@@ -20,7 +20,7 @@ Version |release|
    benutzer
    patch
    grundlagen
-   raspberry
+   software_installation
    history
    impressum
 

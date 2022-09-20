@@ -1,0 +1,164 @@
+.. _software_label:
+
+Software einrichten
+====================
+
+ClubDMX kann auf unterschiedlicher Hardware mit unterschiedlichen Betriebssystemen
+eingerichtet werden. Der Raspberry PI bietet sich deshalb an, weil er klein, 
+kostengünstig und ausreichend leistungsfähig ist. Auch ältere Laptops, die die
+aktuellen Windows-Systemanforderungen nicht mehr erfüllen, können zusammen mit
+einem schlanken Linux-System für die Installation von ClubDMX in Betracht
+gezogen werden.
+
+Auf meiner Github-Seite
+findet sich eine Anleitung zur Neu-Installation von Raspbian als Betriebssystem, 
+Installation von OLA und Installation von ClubDMX. 
+Hier sind auch Informationen zur Installation auf einem Windows-System.
+Siehe 
+`<https://github.com/GuntherSe/clubdmx_code/blob/master/install.md>`
+
+
+Hier ist lediglich eine kurze Zusammenfassung der nötigen Arbeitsschritte.
+
+* Raspberry Bullseye neu installieren
+  
+* OLA installieren
+
+* ClubDMX installieren
+
+
+Troubles bei der Installation?
+------------------------------
+
+Die Installation ist - beginnend bei einer leeren SD-Karte - nun doch ein 
+gewisser Aufwand. Daher wird vielleicht der eine oder andere Fehler auftauchen. 
+In diesem Abschnitt der Doku werde ich versuchen, Hilfestellung zur 
+Fehlersuche zu liefern.
+
+Meine Methode zur Fehlersuche ist, einzelne Abschnitte zu testen, um nach
+Möglichkeit einen Fehler in einem bestimmten Bereich zu lokalisieren. 
+Die erste große Unterteilung ist zwischen Hardware und Software, 
+die nächste Trennung ist zwischen OLA und ClubDMX.
+
+**Hardware**
+
+* Netzwerk prüfen
+  
+  Wird der Raspberry mit Bildschirm und Tastatur verwendet oder über das 
+  Netzwerk (WinSCP, Filezilla, ssh)?
+
+  IP Adresse des PI. Am Terminal oder der Tastatur eingeben:
+
+  ``ip address``
+
+  Eine gültige IP Adresse kann so ermittelt werden. Diese ist wichtig, um
+  die OLA-Seite und die Seite von ClubDMX zu finden. Die IP Adresse des Raspberry PI
+  wird im folgenden immer mit <PI-IP> bezeichnet.
+
+**OLA prüfen**
+
+Ich gehe davon aus, dass du am Raspberry mit Bildschirm und Tastatur sitzt.
+Wenn nicht, dann bitte zuerst das Netzwerk prüfen.
+
+* Ist die OLA Webseite erreichbar? 
+  Im Browser die Seite <PI-IP>:9090 aufrufen.
+
+Auf der OLA Webseite prüfen:
+
+* Ist OLA richtig konfiguriert? 
+  Ist das DMX-Universum / sind die DMX-Universen richtig angelegt?
+
+* Ist ein OSC-Input in jedem Universum angelegt?
+  
+* Sind die Outputs angelegt?
+
+Um mithilfe der DMX Console Werte senden zu können, darf ClubDMX nicht laufen. 
+Sonst schicken sowohl DMX Console als auch ClubDMX Werte, das geht nicht. Sollte es
+also mit der DMX Console möglich sein, DMX-Werte zu senden, dann kann man 
+davon ausgehen, dass ClubDMX nicht gestartet ist.
+
+* ClubDMX stoppen.
+  Wenn der Alias *clubdmx* wie oben beschrieben angelegt ist, 
+  dann kann im Terminal mit
+  dem Befehl ``clubdmx stop`` ClubDMX angehalten werden. Wenn nicht, dann zuerst
+  ins clubdmx_code Verzeichnis wechseln:
+
+  ::
+
+    cd /home/pi/clubdmx_code
+    ./app_start.sh stop
+  
+  Nun kann mit 
+  Sicherheit festgestellt werden, ob OLA mit der Hardware kommunizieren kann.
+  In der DMX Console müssen nun alle DMX Kanäle bedienbar sein und die 
+  entsprechenden Geräte darauf reagieren.
+
+
+**ClubDMX prüfen**
+
+Wenn im vorigen Schritt ClubDMX gestoppt wurde, dann jetzt wieder starten mit 
+dem Befehl  ``clubdmx start``. Im Terminal werden nun nur wenige Meldungen
+ausgegeben, die Hinweise auf das korrekte Funktionieren geben.
+
+* Ist die Webseite erreichbar?
+
+  Im Browser die Seite <PI-IP>:5000 aufrufen.
+
+  Ist die Seite erreichbar? Erscheint im Browser eine Fehlermeldung?
+
+* Mehr Hinweise am Terminal erhalten
+  
+  Im Normalfall wird ClubDMX als Daemon ausgeführt, das bedeutet, dass nur der
+  Start im Terminal festgestellt werden kann. Ab nun wird das Programm im 
+  Hintergrund ausgeführt, Fehlermeldungen kommen also nicht aufs Terminal.
+
+  Gunicorn im Teminal und nicht als Daemon starten:
+
+  ::
+
+    clubdmx stop
+    export GUNICORNSTART="/home/pi/.local/bin/gunicorn"
+    clubdmx start
+
+  Nun sieht man die Meldungen von ClubDMX auf dem Terminal. Das kann sicher
+  hilfreich bei der Fehlersuche sein.
+  
+  Falls Gunicorn in einem anderen als dem oben genannten Verzeichnis 
+  installiert wurde, dann muss zuerst der Pfad zu Gunicorn ermittelt werden.
+  
+* Gunicorn finden
+  
+  Gunicorn ist ein Python Package, das als Webserver für ClubDMX in Verwendung ist. 
+  Packages können an unterschiedlichen Stellen installiert werden, was uns als User 
+  grundsätzlich nicht kümmern muss. Allerdings sieht es etwas anders aus, wenn ein
+  Start-Skript einen exakten Pfad benötigt, weil zum Zeitpunkt des Startens noch kein 
+  Suchpfad definiert ist. 
+
+  Genau das ist beim Autostart von ClubDMX der Fall. Daher ist es nötig, dem Skript
+  app_start.sh mitzuteilen, wo sich Gunicorn befindet. In der Regel wird sich 
+  Gunicorn im Verzeichnis */home/pi/.local/bin* befinden, aber das kann auch anders sein.
+
+  Mit dem Befehl 
+
+  ``find / -name "gunicorn*" 2>/dev/null``
+
+  erhält man die Auskunft über den Speicherort von Gunicorn. Für den Fall, dass
+  ein anderer als der oben angegebene Pfad ermittelt wird, dann muss
+  die Environment-Variable *GUNICORNSTART* gesetzt werden (siehe 
+  *Anmerkungen* weiter oben).
+
+::
+
+  sudo nano /etc/environment
+  # hier eintragen, Beispiel:
+  export GUNICORNSTART="/usr/bin/gunicorn3"
+  
+
+
+
+
+  
+
+  
+
+

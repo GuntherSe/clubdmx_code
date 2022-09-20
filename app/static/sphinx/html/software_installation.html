@@ -1,0 +1,273 @@
+
+<!DOCTYPE html>
+
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Software einrichten &#8212; ClubDMX Doku 1.0 Dokumentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/translations.js"></script>
+    <link rel="index" title="Stichwortverzeichnis" href="genindex.html" />
+    <link rel="search" title="Suche" href="search.html" />
+    <link rel="next" title="Entwicklungsschritte" href="history.html" />
+    <link rel="prev" title="Grundlagen" href="grundlagen.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+              <div class="related top">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="grundlagen.html" title="Previous document">Grundlagen</a>
+        </li>
+        <li>
+          <a href="history.html" title="Next document">Entwicklungsschritte</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="software-einrichten">
+<span id="software-label"></span><h1>Software einrichten<a class="headerlink" href="#software-einrichten" title="Link zu dieser Überschrift">¶</a></h1>
+<p>ClubDMX kann auf unterschiedlicher Hardware mit unterschiedlichen Betriebssystemen
+eingerichtet werden. Der Raspberry PI bietet sich deshalb an, weil er klein,
+kostengünstig und ausreichend leistungsfähig ist. Auch ältere Laptops, die die
+aktuellen Windows-Systemanforderungen nicht mehr erfüllen, können zusammen mit
+einem schlanken Linux-System für die Installation von ClubDMX in Betracht
+gezogen werden.</p>
+<p>Auf meiner Github-Seite
+findet sich eine Anleitung zur Neu-Installation von Raspbian als Betriebssystem,
+Installation von OLA und Installation von ClubDMX.
+Hier sind auch Informationen zur Installation auf einem Windows-System.
+Siehe
+<cite>&lt;https://github.com/GuntherSe/clubdmx_code/blob/master/install.md&gt;</cite></p>
+<p>Hier ist lediglich eine kurze Zusammenfassung der nötigen Arbeitsschritte.</p>
+<ul class="simple">
+<li><p>Raspberry Bullseye neu installieren</p></li>
+<li><p>OLA installieren</p></li>
+<li><p>ClubDMX installieren</p></li>
+</ul>
+<div class="section" id="troubles-bei-der-installation">
+<h2>Troubles bei der Installation?<a class="headerlink" href="#troubles-bei-der-installation" title="Link zu dieser Überschrift">¶</a></h2>
+<p>Die Installation ist - beginnend bei einer leeren SD-Karte - nun doch ein
+gewisser Aufwand. Daher wird vielleicht der eine oder andere Fehler auftauchen.
+In diesem Abschnitt der Doku werde ich versuchen, Hilfestellung zur
+Fehlersuche zu liefern.</p>
+<p>Meine Methode zur Fehlersuche ist, einzelne Abschnitte zu testen, um nach
+Möglichkeit einen Fehler in einem bestimmten Bereich zu lokalisieren.
+Die erste große Unterteilung ist zwischen Hardware und Software,
+die nächste Trennung ist zwischen OLA und ClubDMX.</p>
+<p><strong>Hardware</strong></p>
+<ul>
+<li><p>Netzwerk prüfen</p>
+<p>Wird der Raspberry mit Bildschirm und Tastatur verwendet oder über das
+Netzwerk (WinSCP, Filezilla, ssh)?</p>
+<p>IP Adresse des PI. Am Terminal oder der Tastatur eingeben:</p>
+<p><code class="docutils literal notranslate"><span class="pre">ip</span> <span class="pre">address</span></code></p>
+<p>Eine gültige IP Adresse kann so ermittelt werden. Diese ist wichtig, um
+die OLA-Seite und die Seite von ClubDMX zu finden. Die IP Adresse des Raspberry PI
+wird im folgenden immer mit &lt;PI-IP&gt; bezeichnet.</p>
+</li>
+</ul>
+<p><strong>OLA prüfen</strong></p>
+<p>Ich gehe davon aus, dass du am Raspberry mit Bildschirm und Tastatur sitzt.
+Wenn nicht, dann bitte zuerst das Netzwerk prüfen.</p>
+<ul class="simple">
+<li><p>Ist die OLA Webseite erreichbar?
+Im Browser die Seite &lt;PI-IP&gt;:9090 aufrufen.</p></li>
+</ul>
+<p>Auf der OLA Webseite prüfen:</p>
+<ul class="simple">
+<li><p>Ist OLA richtig konfiguriert?
+Ist das DMX-Universum / sind die DMX-Universen richtig angelegt?</p></li>
+<li><p>Ist ein OSC-Input in jedem Universum angelegt?</p></li>
+<li><p>Sind die Outputs angelegt?</p></li>
+</ul>
+<p>Um mithilfe der DMX Console Werte senden zu können, darf ClubDMX nicht laufen.
+Sonst schicken sowohl DMX Console als auch ClubDMX Werte, das geht nicht. Sollte es
+also mit der DMX Console möglich sein, DMX-Werte zu senden, dann kann man
+davon ausgehen, dass ClubDMX nicht gestartet ist.</p>
+<ul>
+<li><p>ClubDMX stoppen.
+Wenn der Alias <em>clubdmx</em> wie oben beschrieben angelegt ist,
+dann kann im Terminal mit
+dem Befehl <code class="docutils literal notranslate"><span class="pre">clubdmx</span> <span class="pre">stop</span></code> ClubDMX angehalten werden. Wenn nicht, dann zuerst
+ins clubdmx_code Verzeichnis wechseln:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">pi</span><span class="o">/</span><span class="n">clubdmx_code</span>
+<span class="o">./</span><span class="n">app_start</span><span class="o">.</span><span class="n">sh</span> <span class="n">stop</span>
+</pre></div>
+</div>
+<p>Nun kann mit
+Sicherheit festgestellt werden, ob OLA mit der Hardware kommunizieren kann.
+In der DMX Console müssen nun alle DMX Kanäle bedienbar sein und die
+entsprechenden Geräte darauf reagieren.</p>
+</li>
+</ul>
+<p><strong>ClubDMX prüfen</strong></p>
+<p>Wenn im vorigen Schritt ClubDMX gestoppt wurde, dann jetzt wieder starten mit
+dem Befehl  <code class="docutils literal notranslate"><span class="pre">clubdmx</span> <span class="pre">start</span></code>. Im Terminal werden nun nur wenige Meldungen
+ausgegeben, die Hinweise auf das korrekte Funktionieren geben.</p>
+<ul>
+<li><p>Ist die Webseite erreichbar?</p>
+<p>Im Browser die Seite &lt;PI-IP&gt;:5000 aufrufen.</p>
+<p>Ist die Seite erreichbar? Erscheint im Browser eine Fehlermeldung?</p>
+</li>
+<li><p>Mehr Hinweise am Terminal erhalten</p>
+<p>Im Normalfall wird ClubDMX als Daemon ausgeführt, das bedeutet, dass nur der
+Start im Terminal festgestellt werden kann. Ab nun wird das Programm im
+Hintergrund ausgeführt, Fehlermeldungen kommen also nicht aufs Terminal.</p>
+<p>Gunicorn im Teminal und nicht als Daemon starten:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">clubdmx</span> <span class="n">stop</span>
+<span class="n">export</span> <span class="n">GUNICORNSTART</span><span class="o">=</span><span class="s2">&quot;/home/pi/.local/bin/gunicorn&quot;</span>
+<span class="n">clubdmx</span> <span class="n">start</span>
+</pre></div>
+</div>
+<p>Nun sieht man die Meldungen von ClubDMX auf dem Terminal. Das kann sicher
+hilfreich bei der Fehlersuche sein.</p>
+<p>Falls Gunicorn in einem anderen als dem oben genannten Verzeichnis
+installiert wurde, dann muss zuerst der Pfad zu Gunicorn ermittelt werden.</p>
+</li>
+<li><p>Gunicorn finden</p>
+<p>Gunicorn ist ein Python Package, das als Webserver für ClubDMX in Verwendung ist.
+Packages können an unterschiedlichen Stellen installiert werden, was uns als User
+grundsätzlich nicht kümmern muss. Allerdings sieht es etwas anders aus, wenn ein
+Start-Skript einen exakten Pfad benötigt, weil zum Zeitpunkt des Startens noch kein
+Suchpfad definiert ist.</p>
+<p>Genau das ist beim Autostart von ClubDMX der Fall. Daher ist es nötig, dem Skript
+app_start.sh mitzuteilen, wo sich Gunicorn befindet. In der Regel wird sich
+Gunicorn im Verzeichnis <em>/home/pi/.local/bin</em> befinden, aber das kann auch anders sein.</p>
+<p>Mit dem Befehl</p>
+<p><code class="docutils literal notranslate"><span class="pre">find</span> <span class="pre">/</span> <span class="pre">-name</span> <span class="pre">&quot;gunicorn*&quot;</span> <span class="pre">2&gt;/dev/null</span></code></p>
+<p>erhält man die Auskunft über den Speicherort von Gunicorn. Für den Fall, dass
+ein anderer als der oben angegebene Pfad ermittelt wird, dann muss
+die Environment-Variable <em>GUNICORNSTART</em> gesetzt werden (siehe
+<em>Anmerkungen</em> weiter oben).</p>
+</li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">nano</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">environment</span>
+<span class="c1"># hier eintragen, Beispiel:</span>
+<span class="n">export</span> <span class="n">GUNICORNSTART</span><span class="o">=</span><span class="s2">&quot;/usr/bin/gunicorn3&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+              <div class="related bottom">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="grundlagen.html" title="Previous document">Grundlagen</a>
+        </li>
+        <li>
+          <a href="history.html" title="Next document">Entwicklungsschritte</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="inhalt.html">ClubDMX Doku</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Inhalt:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="readme.html">README</a></li>
+<li class="toctree-l1"><a class="reference internal" href="features.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="erste_schritte.html">Erste Schritte</a></li>
+<li class="toctree-l1"><a class="reference internal" href="einrichten.html">Einrichtung</a></li>
+<li class="toctree-l1"><a class="reference internal" href="arbeiten.html">Mit ClubDMX arbeiten</a></li>
+<li class="toctree-l1"><a class="reference internal" href="benutzer.html">Benutzer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="patch.html">Patch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="grundlagen.html">Grundlagen</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Software einrichten</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#troubles-bei-der-installation">Troubles bei der Installation?</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">Entwicklungsschritte</a></li>
+<li class="toctree-l1"><a class="reference internal" href="impressum.html">Impressum</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="inhalt.html">Documentation overview</a><ul>
+      <li>Previous: <a href="grundlagen.html" title="vorheriges Kapitel">Grundlagen</a></li>
+      <li>Next: <a href="history.html" title="nächstes Kapitel">Entwicklungsschritte</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Schnellsuche</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Los" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Gunther Seiser.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.5.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/software_installation.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

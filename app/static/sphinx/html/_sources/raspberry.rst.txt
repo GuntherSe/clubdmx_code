@@ -1,3 +1,8 @@
+.. Einrichtung des Raspi wird in Github erklärt:
+  `<https://github.com/GuntherSe/clubdmx_code/blob/master/install.md>`
+
+  Dieser Text ist dazu die Grundlage.
+
 .. _raspberry_label:
 
 Raspberry einrichten
