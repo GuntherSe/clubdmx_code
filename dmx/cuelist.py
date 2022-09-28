@@ -5,7 +5,7 @@
 class Cuelist
 
 Die Basis für die Cuelist Klasse ist in Cuelistbase definiert. Hier finden sich die
-grundlegenden Attribute und Methoden. In Klasse Cuelsit werden die Berechnungen
+grundlegenden Attribute und Methoden. In Klasse Cuelist werden die Berechnungen
 des Mix-Outputs gemacht.
 
 """
@@ -129,15 +129,16 @@ class Cuelist (Cuelistbase):
         """
         if self.is_paused or self.level == 0: # Pause - keine Auswertung
             self.update_cuelist ()
-            return
+            # return
 
+        # Multiplikator berechnen:
         curfactor = self.tmfactor (self.currentid, tm, "out")
         nextfactor = self.tmfactor (self.nextid, tm, "in")
         if curfactor["xfade"] == True: # crossfade
             self.is_fading_out = self.is_fading_in
             curfactor["out"] = 1 - nextfactor["in"]
-
         # print (f"cur: {curfactor}, next: {nextfactor}")
+
         # Übergänge berechnen:
         # 1. items, die in nextcue vorkommen:
         if self.is_fading_in:
@@ -312,7 +313,7 @@ if __name__ == "__main__":
     print ("ich bin hier: ", os.getcwd())
     patch = Patch()
     patch.set_path (os.getcwd())
-    patch.open ("LED stripe2")
+    patch.open ("LED stripe dimmer")
 
     ola   = OscOla ()
     ola.set_ola_ip ("192.168.0.11")

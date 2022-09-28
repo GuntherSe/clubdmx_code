@@ -398,11 +398,11 @@ if __name__ == "__main__":
     import pprint # pretty print
 
 
-    os.chdir ("C:\\Users\\Gunther\\OneDrive\\Programmierung\\clubdmx_rooms\\test")
+    os.chdir ("C:\\Users\\Gunther\\OneDrive\\Programmierung\\clubdmx_rooms\\develop")
     print ("ich bin hier: ", os.getcwd())
     patch = Patch()
     patch.set_path (os.getcwd())
-    patch.open ("LED stripe2")
+    patch.open ("LED stripe dimmer")
 
     ola   = OscOla ()
     ola.set_ola_ip ("192.168.0.11")
