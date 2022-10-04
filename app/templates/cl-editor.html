@@ -28,7 +28,7 @@
       {{ cl_buttons (index) }}
     </div>
   </div>
-  <div class="row mb-2">
+  <div class="row ml-2">
     <table class="table">
       <tbody>
         {{ base.cueslider ("", "", 0, 1, index) }}
@@ -75,7 +75,7 @@
         return;
       } else if (celldata.text == "Id") {
         // sortieren nach Id:
-        console.log ("sortiere nach Id");
+        // console.log ("sortiere nach Id");
         let name = $("#csvtable").attr ("file");
         let pluspath = $("#csvtable").attr ("pluspath");
         let args = {name:name, pluspath:pluspath, field:"Id"};
@@ -131,11 +131,6 @@
       url: "/cuelist/status/" + clIndexString, 
       success: function(data) {
         var jdata = $.parseJSON(data);
-        // Slider:
-        var sliderlevel = jdata["level"];
-        let numstring = clIndex.toString ();
-        $("#sl-"+numstring).slider ("option", "value", sliderlevel);
-
         // Status:
         var data = jdata["status"];
         cuelistStatus (clIndex, data);
@@ -146,6 +141,16 @@
         $(currentid).addClass ("table-info");
         $(nextid).addClass ("table-success");
   
+        // Slider:
+        var sliderlevel = jdata["level"];
+        let numstring = clIndex.toString ();
+        try {
+          $("#sl-"+numstring).slider ("option", "value", sliderlevel);
+        }
+        catch(err) {
+          console.log ("Fehler in Sliderlevel: " + err);  
+        }
+
       },
       complete: function () {
         setTimeout (periodic_cueliststatus, 500);
@@ -202,7 +207,7 @@
       periodic_cueliststatus ();
       // Leertaste = GO:
       $(document).keydown (function (event) {
-        console.log ("Key: " + event.which);
+        // console.log ("Key: " + event.which);
         var args = {index:clIndex};
         switch (event.which) {
           case 32: // leertaste

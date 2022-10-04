@@ -281,7 +281,7 @@ Nun ist ClubDMX über NGINX erreichbar.
 ## ClubDMX update: 
 
 Für das Update von ClubDMX gibt es ein Shell Script, **update.sh**. Da Änderungen in diesem Script in einer neueren Version von ClubDMX möglich sind, sollte zuerst 
-das aktuelle **update.sh** verfügbar gemacht werden, das auf Github zu finden ist:
+das aktuelle **update.sh** heruntergeladen werden, das auf Github zu finden ist:
 
 https://github.com/GuntherSe/clubdmx_code/blob/master/scripts/update.sh
 

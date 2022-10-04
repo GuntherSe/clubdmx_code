@@ -22,7 +22,43 @@ style="left:{{ left }}; top:{{ top }}; width:{{ width }}; height:{{ height }};"
 {% endblock %}
 
 {% block workspace %}
-<div class="row">
+<div class="container">
+  <div class="row">
+    <div class="col col-9">
+
+    </div>
+    <div class="col col-3">
+      <!-- Navigationspfeile -->
+      <div class="row row-cols-3">
+        <div class="col"></div>
+        <div class="col">
+          {{ base.svg_button_js ("#svg-arrow-up", "scroll-up", size="1.5em") }}
+         </div>
+         <div class="col"></div>
+      </div>
+      <div class="row row-cols-3">
+        <div class="col">
+          {{ base.svg_button_js ("#svg-arrow-left", "scroll-left", size="1.5em") }}
+        </div>
+        <div class="col"></div>
+        <div class="col">
+          {{ base.svg_button_js ("#svg-arrow-right", "scroll-right", size="1.5em") }}
+        </div>
+      </div>
+      <div class="row row-cols-3">
+        <div class="col"></div>
+        <div class="col">
+          {{ base.svg_button_js ("#svg-arrow-down", "scroll-down", size="1.5em") }}
+        </div>
+        <div class="col"></div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- <div class="row">
   <div class="col col-9"></div>
   <div class="col col-1"></div>
   <div class="col col-1">
@@ -49,7 +85,7 @@ style="left:{{ left }}; top:{{ top }}; width:{{ width }}; height:{{ height }};"
     {{ base.svg_button_js ("#svg-arrow-down", "scroll-down", size="1.5em") }}
   </div>
   <div class="col col-1"></div>
-</div>
+</div> -->
 {% endblock %}
 
 {% block css %}

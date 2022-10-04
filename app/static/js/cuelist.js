@@ -66,12 +66,6 @@ function periodic_allcueliststatus () {
     url: "/cuelist/allstatus", 
     success: function(data) {
       var jdata = $.parseJSON(data);
-      // Slider:
-      var sliderlevels = jdata["levels"];
-      var i;
-      for (i = 0; i < sliderlevels.length; i++){
-          faderStatus (i, sliderlevels);
-      };
       // Status:
       var clstatus = jdata["status"];
       var data;
@@ -79,7 +73,17 @@ function periodic_allcueliststatus () {
         data = clstatus[i] ;
         cuelistStatus (i, data);
       };
-
+      // Slider:
+      var sliderlevels = jdata["levels"];
+      var i;
+      try {
+        for (i = 0; i < sliderlevels.length; i++){
+            faderStatus (i, sliderlevels);
+        };
+      }
+      catch(err) {
+        console.log ("Fehler in Sliderlevel: " + err);
+      }
     },
     complete: function () {
       setTimeout (periodic_allcueliststatus, 500);
