@@ -129,7 +129,7 @@ class Cuelist (Cuelistbase):
         """
         if self.is_paused or self.level == 0: # Pause - keine Auswertung
             self.update_cuelist ()
-            # return
+            return
 
         # Multiplikator berechnen:
         curfactor = self.tmfactor (self.currentid, tm, "out")
@@ -219,6 +219,10 @@ class Cuelist (Cuelistbase):
         cuenr: nächste Cuenr oder '-1' -> go back
         """
         # print ("------------------ GO")
+
+        if self.level == 0:
+            return
+            
         if self.is_fading_in: # aktueller Fade noch nicht abgeschlossen
             # print ("GO between...")
             self.output_to_current ()

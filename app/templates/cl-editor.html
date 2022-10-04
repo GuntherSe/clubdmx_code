@@ -28,6 +28,14 @@
       {{ cl_buttons (index) }}
     </div>
   </div>
+  <div class="row mb-2">
+    <table class="table">
+      <tbody>
+        {{ base.cueslider ("", "", 0, 1, index) }}
+
+      </tbody>
+    </table>
+  </div>
 </div>
 {% endif %}
 {% endblock %}
@@ -124,9 +132,9 @@
       success: function(data) {
         var jdata = $.parseJSON(data);
         // Slider:
-        // var sliderlevel = jdata["level"];
-        // let numstring = clIndex.toString ();
-        //$("#sl-"+numstring).slider ("option", "value", sliderlevel);
+        var sliderlevel = jdata["level"];
+        let numstring = clIndex.toString ();
+        $("#sl-"+numstring).slider ("option", "value", sliderlevel);
 
         // Status:
         var data = jdata["status"];
@@ -171,13 +179,33 @@
     // Editor von cl-pages aufgerufen, hat einen cuelist-Index:
     if (clIndex.length) {
       clIndexString = clIndex.toString ();
+
+      // Slider:
+      var sliderwidth;
+      // Sliderbreite mit Fenserbreite verändern:
+      $(window).on('resize', function(){
+        sliderwidth = $(".col-12").width();
+        $(".slider").width (sliderwidth);
+      });
+  
+      sliderwidth = $(".col-12").width();
+  
+      // slider erzeugen:
+      $.get ("/cuelist/status/"+clIndexString, function (data) {
+        // console.log ("data: " + data);
+        var jdata = $.parseJSON(data);
+        var level = jdata["level"];
+        makeSlider(clIndex, level, "cuelistlevel");
+        $(".slider").width (sliderwidth);
+      });
+  
       periodic_cueliststatus ();
       // Leertaste = GO:
       $(document).keydown (function (event) {
         console.log ("Key: " + event.which);
         var args = {index:clIndex};
         switch (event.which) {
-          case 32: // enter
+          case 32: // leertaste
             $.get ("/cuelist/go", args);
             break;
           case 40: // down
