@@ -178,6 +178,27 @@ def get_info (item:str) -> json:
             # levels in %
         return json.dumps (attlevels)
 
+    elif item == "attributes":
+        # für die Anzeige in Stage:
+        # Erstes Attribut = Balkenhöhe
+        # Farben werden aus Mix ausgelesen
+        if globs.PYTHONANYWHERE == "true":
+            # keine threads, daher aktuelle Berechnungen machen:
+            calc_mixoutput ()
+        attributes = {}
+        headlist = globs.patch.headlist ()
+        for head in headlist:
+            # ertes Attribut = Balkenhöhe:
+            attlist = globs.patch.attriblist (head)
+            # level = int (globs.patch.attribute (head, attlist[0]))
+            # normlevel = f"{int (100*level/255)}%" # 0 <= normlevel <= 100
+            # Farbe:
+            colorlist = globs.patch.color (head)
+            attributes[head] = colorlist
+            # [normlevel, colorlist[0], colorlist[1], colorlist[2] ]
+         
+        return json.dumps (attributes)
+
     elif item == "layout":
         # Layout-Infos zu Feld 
         subdir = request.args.get ("subdir")
@@ -186,7 +207,7 @@ def get_info (item:str) -> json:
         return json.dumps (rule)
 
     elif item == "commands":
-        # commands, die püer Midi getriggert werden
+        # commands, die per Midi getriggert werden
         return json.dumps (midi_commandlist)
 
     return json.dumps("???")
@@ -194,7 +215,7 @@ def get_info (item:str) -> json:
 
 @common.route ("/getheads")
 def getheads ():
-    """ die Heads ald Liste liefern 
+    """ die Heads als Liste liefern 
     """
     heads = globs.patch.headlist ()
     return json.dumps (heads)

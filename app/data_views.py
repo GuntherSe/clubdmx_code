@@ -16,6 +16,7 @@ import globs
 from csvfileclass import Csvfile
 from ola import get_ip_address
 from filedialog_util  import dir_explore 
+from stage import get_stage_filename
 
 data = Blueprint ("data", __name__, url_prefix="", 
                   static_folder="static", template_folder="templates")
@@ -158,6 +159,9 @@ def gettable () ->json:
 
     if fullname != "" and fullname != "undefined+undefined":
         session[storename] = fullname
+    elif storename == "visiblestage":
+        # Sprung von Stage_view
+        fullname = get_stage_filename ()
     else:
         if storename in session:
             fullname = session[storename]

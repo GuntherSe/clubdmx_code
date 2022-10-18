@@ -8,6 +8,14 @@
 style="left:{{ left }}; top:{{ top }}; width:{{ width }}; height:{{ height }};"
 {% endmacro %}
 
+{% macro get_checkbox (field) %}
+  {% if itemview[field] == "checked" -%}
+    <input id="view{{ field }}" type="checkbox" checked/>
+  {%- else -%}
+    <input id="view{{ field }}" type="checkbox" />
+  {%- endif %}  
+  <label for="view{{ field }}" class="ml-2">{{ field }}</label>
+  {% endmacro %}
 
 {% block header %}
   <h2> {% block title %} Bühne {% endblock %} </h2>
@@ -25,8 +33,14 @@ style="left:{{ left }}; top:{{ top }}; width:{{ width }}; height:{{ height }};"
 <div class="container">
   <div class="row">
     <div class="col col-9">
-
+      <!-- Anzeige-Elemente auswählen -->
+      {{ get_checkbox ('Name') }}
+      <br>
+      {{ get_checkbox ('Text') }}
+      <br>
+      {{ get_checkbox ('Comment') }}
     </div>
+
     <div class="col col-3">
       <!-- Navigationspfeile -->
       <div class="row row-cols-3">
@@ -55,37 +69,8 @@ style="left:{{ left }}; top:{{ top }}; width:{{ width }}; height:{{ height }};"
 
     </div>
   </div>
-
 </div>
 
-<!-- <div class="row">
-  <div class="col col-9"></div>
-  <div class="col col-1"></div>
-  <div class="col col-1">
-    {{ base.svg_button_js ("#svg-arrow-up", "scroll-up", size="1.5em") }}
-   </div>
-   <div class="col col-1"></div>
-</div>
-
-<div class="row">
-  <div class="col col-9"></div>
-  <div class="col col-1">
-    {{ base.svg_button_js ("#svg-arrow-left", "scroll-left", size="1.5em") }}
-  </div>
-  <div class="col col-1"></div>
-  <div class="col col-1">
-    {{ base.svg_button_js ("#svg-arrow-right", "scroll-right", size="1.5em") }}
-  </div>
-</div>
-
-<div class="row">
-  <div class="col col-9"></div>
-  <div class="col col-1"></div>
-  <div class="col col-1">
-    {{ base.svg_button_js ("#svg-arrow-down", "scroll-down", size="1.5em") }}
-  </div>
-  <div class="col col-1"></div>
-</div> -->
 {% endblock %}
 
 {% block css %}
@@ -122,9 +107,9 @@ style="left:{{ left }}; top:{{ top }}; width:{{ width }}; height:{{ height }};"
           </div>
           <div class="color-indicator"></div>
         {% endif %}
-        <div class="itemName edit_div text-wrap">{{ item.Name }}</div>
-        <div class="itemText edit_div text-wrap">{{ item.Text }}</div>
-        <div class="itemComment edit_div text-wrap">{{ item.Comment }}</div>
+        <div class="itemName edit_div ">{{ item.Name }}</div>
+        <div class="itemText edit_div ">{{ item.Text }}</div>
+        <div class="itemComment edit_div ">{{ item.Comment }}</div>
       </div>
       {% endfor %}
     </div> 
@@ -141,6 +126,27 @@ style="left:{{ left }}; top:{{ top }}; width:{{ width }}; height:{{ height }};"
       initStageMouse ();
     };
    
+    // Text der Stage-Elemente ein/ausschalten:
+    function updateStageElements (fieldName, bVisible, sendToServer) {
+      // fieldName sichtbar oder unsichtbar schalten
+      var fieldSelectorVal = "";
+      switch (fieldName) {
+        case "Name": 
+          fieldSelectorVal = ".itemName";
+          break;
+        case "Text":
+          fieldSelectorVal = ".itemText";
+          break;
+        case "Comment":
+          fieldSelectorVal = ".itemComment";
+          break;
+      }
+      $(fieldSelectorVal).css ("display", bVisible ? "" : "none");
+      if (sendToServer) {
+        $.get ("/stage/itemviewmode", {field:fieldName, value:bVisible});
+      };
+    }
+
     $(document).ready ( function () {  
       initStageMouse ();
       // selectableStageElements ();
@@ -174,7 +180,28 @@ style="left:{{ left }}; top:{{ top }}; width:{{ width }}; height:{{ height }};"
         var width = $("#csvtable").width ();
         $("#csvtable").scrollLeft (stageleft + width/2);
       });
-      
+
+      // Item-Texte ein/aus nach Checkboxen-Wert:
+      if (!$("#viewName").prop ("checked") ) {
+        updateStageElements ("Name", false, false)
+      };
+      if (!$("#viewText").prop ("checked") ) {
+        updateStageElements ("Text", false, false)
+      };
+      if (!$("#viewComment").prop ("checked") ) {
+        updateStageElements ("Comment", false, false)
+      };
+
+      // Checkboxen ein/aus auswerten:
+      $("#viewName").on ("change", function (evt) {
+        updateStageElements ("Name", evt.target.checked, true);
+      });
+      $("#viewText").on ("change", function (evt) {
+        updateStageElements ("Text", evt.target.checked, true);
+      });
+      $("#viewComment").on ("change", function (evt) {
+        updateStageElements ("Comment", evt.target.checked, true);
+      });
     });  
 
   </script>

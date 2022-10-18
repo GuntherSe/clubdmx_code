@@ -147,54 +147,54 @@ function selectableStageElements () {
       selected: function( event, ui ) {
         $(ui.selected).addClass('highlight')
         .addClass('ui-selected')
-        .resizable({containment: "#csvtable", 
-          minWidth: 30, minHeight:30,
-          start: function () {
-            // stageleft = $("#csvtable").scrollLeft ();
-            // stagetop = $("#csvtable").scrollTop ();
-            // console.log ("StageW: "+stageleft+", H: "+stagetop);
-            delta_w = 0;
-            delta_h = 0;
-            // console.log ("ParseW: "+this.style.width+", H: "+this.style.height);
-            start_w = $(this).outerWidth(true);
-            start_h = $(this).outerHeight(true);
-            // console.log ("StartW: "+start_w+", H: "+start_h);
-          },
-          resize: function () {
-            // Größe berechnen:
+        // .resizable({containment: "#csvtable", 
+        //   minWidth: 30, minHeight:30,
+        //   start: function () {
+        //     // stageleft = $("#csvtable").scrollLeft ();
+        //     // stagetop = $("#csvtable").scrollTop ();
+        //     // console.log ("StageW: "+stageleft+", H: "+stagetop);
+        //     delta_w = 0;
+        //     delta_h = 0;
+        //     // console.log ("ParseW: "+this.style.width+", H: "+this.style.height);
+        //     start_w = $(this).outerWidth(true);
+        //     start_h = $(this).outerHeight(true);
+        //     // console.log ("StartW: "+start_w+", H: "+start_h);
+        //   },
+        //   resize: function () {
+        //     // Größe berechnen:
             
-            newwidth  = $(this).outerWidth(true);
-            newheight = $(this).outerHeight(true);
-            // console.log ("W: "+newwidth+", H: "+newheight);
-            delta_w = newwidth - start_w;
-            delta_h = newheight - start_h;
-            start_w = newwidth;
-            start_h = newheight;
-            // console.log ("delta: "+delta_w+", "+delta_h);
-            // Größe ändern:
-            $(".highlight").each ( function () {
-              tmpw = Math.max (30, $(this).outerWidth(true) + delta_w) ;
-              tmph = Math.max (30, $(this).outerHeight(true) + delta_h) ;
-              // console.log ("newwidth: "+tmpw+" height: "+tmph);
-              $(this).css ({"width": tmpw, "height": tmph});
-            }) ;
-          },
-          stop: function( event, ui ) {
-            var data = {};
-            var item;
-            $(".highlight").each (function (index) {
-              item = {};
-              item ["row_num"] = $(this).attr ("row_num");
-              item ["Width"]   = $(this).outerWidth(true);
-              item ["Height"]  = $(this).outerHeight(true);
-              data[index.toString()] = item;
-            });
-            // console.log ("Data: "+JSON.stringify (data));
-            $.get ("/stage/update_item", {"data":JSON.stringify (data)});
-            // Buttons anzeigen:
-            $(".csvchanges").removeClass ("d-none"); 
-          }
-        })
+        //     newwidth  = $(this).outerWidth(true);
+        //     newheight = $(this).outerHeight(true);
+        //     // console.log ("W: "+newwidth+", H: "+newheight);
+        //     delta_w = newwidth - start_w;
+        //     delta_h = newheight - start_h;
+        //     start_w = newwidth;
+        //     start_h = newheight;
+        //     // console.log ("delta: "+delta_w+", "+delta_h);
+        //     // Größe ändern:
+        //     $(".highlight").each ( function () {
+        //       tmpw = Math.max (30, $(this).outerWidth(true) + delta_w) ;
+        //       tmph = Math.max (30, $(this).outerHeight(true) + delta_h) ;
+        //       // console.log ("newwidth: "+tmpw+" height: "+tmph);
+        //       $(this).css ({"width": tmpw, "height": tmph});
+        //     }) ;
+        //   },
+        //   stop: function( event, ui ) {
+        //     var data = {};
+        //     var item;
+        //     $(".highlight").each (function (index) {
+        //       item = {};
+        //       item ["row_num"] = $(this).attr ("row_num");
+        //       item ["Width"]   = $(this).outerWidth(true);
+        //       item ["Height"]  = $(this).outerHeight(true);
+        //       data[index.toString()] = item;
+        //     });
+        //     // console.log ("Data: "+JSON.stringify (data));
+        //     $.get ("/stage/update_item", {"data":JSON.stringify (data)});
+        //     // Buttons anzeigen:
+        //     $(".csvchanges").removeClass ("d-none"); 
+        //   }
+        // })
         .draggable({
           containment: "#csvtable", 
           scroll:true,
@@ -269,7 +269,7 @@ function selectableStageElements () {
       unselected: function( e, ui ) {
         $( ui.unselected ).removeClass("highlight")
           .draggable ("destroy")
-          .resizable ("destroy");
+          // .resizable ("destroy");
         //resizeStage ();
         var content = $("#sessiondata").attr ("topcuecontent");
         //console.log ("topcue: "+ content);
@@ -288,8 +288,8 @@ function removeSelectableStage () {
     selectableStageEnabled = false;
     $(".stage-element").off ()
       .removeClass("ui-selected highlight")
-      .removeClass ("ui-resizable ui-draggable ui-draggable-handle") ;
-    $(".ui-resizable-handle").remove ();
+      .removeClass ("ui-draggable ui-draggable-handle") ;
+    // $(".ui-resizable-handle").remove ();
     $("#csvtable")
     .removeClass ("ui-selectable").selectable ("destroy");
       
@@ -387,16 +387,19 @@ function selection_headslider () {
   });
 }
 
-
 function periodic_attribstatus () {
   $.ajax ({
-    url: "/getinfo/firstattribute", 
+    url: "/getinfo/attributes", 
     success: function(data){
-      var attlevels = $.parseJSON(data);
-      var cssclass;
-      for (var key in attlevels) {
+      var attributes = $.parseJSON(data);
+      var cssclass, color;
+      for (var key in attributes) {
         cssclass = ".head-" + key;
-        $(cssclass).css ("width", attlevels[key]);
+        color = "rgb("  + attributes[key][1] + "," 
+                        + attributes[key][2] + ","
+                        + attributes[key][3] + ")";
+        $(cssclass).css ("height", attributes[key][0])
+                   .css ("background-color", color) ;        
       }
     },
     complete: function () {
@@ -404,6 +407,25 @@ function periodic_attribstatus () {
     }
   }); // ende $.ajax 
 }
+
+
+// function periodic_attribstatus () {
+//   $.ajax ({
+//     url: "/getinfo/firstattribute", 
+//     success: function(data){
+//       var attlevels = $.parseJSON(data);
+//       var cssclass;
+//       for (var key in attlevels) {
+//         cssclass = ".head-" + key;
+//         $(cssclass).css ("height", attlevels[key]);        
+//         // $(cssclass).css ("width", attlevels[key]);
+//       }
+//     },
+//     complete: function () {
+//       setTimeout (periodic_attribstatus, 1000);
+//     }
+//   }); // ende $.ajax 
+// }
 
 // ----------------------------------------------------------------------------
 

@@ -62,9 +62,11 @@ function selectTextcell() {
     
 //---> save after ENTER > start
 $(document).keydown(function (event){
-  if ( event.which == 13 ) {  // enter
-    event.preventDefault();
-    editcell.blur();
+  if (editcell != undefined) {
+    if ( event.which == 13 ) {  // enter
+      event.preventDefault();
+      editcell.blur();
+    };
   // } else if ( event.which == 27 ) { // ESC
   //   editcell.blur ();
   //   editcell = undefined;

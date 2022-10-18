@@ -3,6 +3,28 @@
 
 """ 
 Globale Objekte
+
+Die folgenden Sessionvariablen werden verwendet:
+selected_fadertable     basic_views
+selected_buttontable    basic_views
+selected_cuelist
+editmode                
+docpage
+bootstraptheme
+csvclipboard
+stagename               stage
+headstring              stage
+singleheadindex         stage
+visible + <datapath>    csv_views, data_views, room_views
+datatab                 dataform
+UPLOADPATH              fileupload
+history
+nexturl
+retry_the_form          forms, formutils, patchform
+modalactive             forms
+usbdrive                forms, room_views
+usbcheck                forms, room_views
+
 """
 
 import os

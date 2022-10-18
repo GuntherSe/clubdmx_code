@@ -65,7 +65,14 @@
     /* color: blue; 
     */
 }
+.ui-selecting {
+    background: #ccc;
+}
 
+.ui-selected.highlight {
+    border-width: 3px;
+    border-color: orange;
+}
 html, body {
   height: 100%;
   
@@ -187,6 +194,10 @@ und: https://codepen.io/sosuke/pen/Pjoqqp
 
 
 /* Stage, Stage_Mobil */
+/* .stage-canvas {
+  display:flex;
+}
+ */
 .stage, .mob-stage {
   border: 3px solid;
   border-radius: 5px;
@@ -204,11 +215,11 @@ und: https://codepen.io/sosuke/pen/Pjoqqp
 }
 .stage-element {
   position: absolute;
-  height: 120px;
-  width:  150px;
-  background-color: transparent;
-  border: 1px solid transparent ;
-  border-radius: 6px;
+  height: 40px;
+  width:  40px;
+  background-color: lightgrey;
+  border: 1px solid grey;
+  border-radius: 10px;
 }
 .mobil-element {
   position: relative; 
@@ -220,51 +231,43 @@ und: https://codepen.io/sosuke/pen/Pjoqqp
 
 
 /* Head: */
-.stage-element.head > .itemName { 
+.head > .itemName { 
   position: absolute;
-  text-align: left; 
   top: 0px;
-  left: 25px;
+  right: 5px;
+  text-align: right; 
   color: blueviolet;
 }
-.stage-element.head > .itemText {
+.head > .itemText {
   position: absolute;
+  top: 2rem;
+  right: 5px;
   text-align: left;
-  top: 82px;
-  left: 5px;
   color:rgb(42, 33, 173)
 }
-.stage-element.head > .itemComment {
+.head > .itemComment {
   position: absolute;
-  text-align: left;
-  top: 30px;
-  left: 25px;
+  text-align: right;
+  bottom: 5px;
+  right: 5px;
   font-size: 0.8rem;
   color:rgb(42, 33, 173)
 }
-.stage-element.head > .intensity-container {
+.head > .intensity-container {
   position: absolute;
   top: 5px;
   left: 5px;
-  /* height: 70px; */
-  width: 15px;
-  height: 80px;
-  border: 2px solid grey ;
-  /* border-radius: 2px; */
-  /* padding: 1px; */
+  width: 70px;
+  border-radius: 3px;
+  padding: 1px;
   background-color:slategray;
 }
 .intensity-indicator {
-  position: absolute;
   background-color: white;
-  width: 100%;
-  /* height: 14px; */
-  border: -1px solid grey ;
-  /* border-radius: -1px; */
-  bottom: 0;
-  height: 0%;
+  height: 14px;
+  border-radius: 2px;
 }
-.stage-element.head > .color-indicator {
+.head > .color-indicator {
   display: none;
   position: absolute;
   bottom: 5px;
@@ -274,41 +277,6 @@ und: https://codepen.io/sosuke/pen/Pjoqqp
   border-radius: 50%;
   background-color: black;
 }
-
-/* mobile-Stage */
-.mobil-element.head > .itemName { 
-  position: absolute;
-  top: 0px;
-  right: 5px;
-  text-align: right; 
-  color: blueviolet;
-}
-.mobil-element.head > .itemText {
-  position: absolute;
-  top: 2rem;
-  right: 5px;
-  text-align: left;
-  color:rgb(42, 33, 173)
-}
-.mobil-element.head > .itemComment {
-  position: absolute;
-  text-align: right;
-  bottom: 5px;
-  right: 5px;
-  font-size: 0.8rem;
-  color:rgb(42, 33, 173)
-}
-.mobil-element.head > .intensity-container {
-  position: absolute;
-  top: 5px;
-  left: 5px;
-  width: 15px;
-  height: 65px;
-  border: 1px solid grey ;
-  padding: 1px;
-  background-color:slategray;
-}
-
 
 /* Text: */
 .text > .itemName { 
@@ -322,17 +290,16 @@ und: https://codepen.io/sosuke/pen/Pjoqqp
 .text > .itemText {
   position: absolute;
   left: 5px;
-  top: 1.5rem;
+  top: 2rem;
   text-align: left;
   margin: 5px;
   color:rgb(42, 33, 173)
 }
 .text > .itemComment {
   position: absolute;
-  text-align: left;
-  top: 3rem;
-  left: 5px;
-  margin: 5px;
+  text-align: right;
+  bottom: 5px;
+  right: 5px;
   font-size: 0.8rem;
   color:rgb(42, 33, 173)
 }
@@ -345,7 +312,6 @@ und: https://codepen.io/sosuke/pen/Pjoqqp
 /* Gruppe: */
 .stage-element.gruppe, .mobil-element.gruppe {
   background-color: lightyellow;
-  border: 1px solid grey;
 }
 
 .gruppe > .itemName { 
@@ -369,15 +335,5 @@ und: https://codepen.io/sosuke/pen/Pjoqqp
   text-align: left;
   bottom: 5px;
   left: 5px;
-  margin: 5px;
   color:rgb(42, 33, 173)
-}
-
-.ui-selecting {
-  background: #ccc;
-}
-
-.ui-selected.highlight {
-  border-width: 3px;
-  border-color: orange;
 }

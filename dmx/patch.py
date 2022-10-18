@@ -81,9 +81,9 @@ class Patch (Mix):
     def _get_pdict (self):
         """ Patchfile einlesen und in PatchDict eintragen
 
-Struktur: {HeadIndex : ['HeadNr', 'HeadType', 'Addr',
-                     'Name', 'Gel', 'Comment'], ...}
-"""
+        Struktur: {HeadIndex : ['HeadNr', 'HeadType', 'Addr',
+                            'Name', 'Gel', 'Comment'], ...}
+        """
         self.pdict = {}  # Dict der in Patch gefundenen Heads, PatchDict
         filename = self.file.name()
         if not os.path.isfile (filename): # Default _pfields
@@ -291,8 +291,8 @@ Struktur: {HeadIndex : ['HeadNr', 'HeadType', 'Addr',
         
     def open (self, fname:str) -> bool:
         """ fname öffnen,
-entsprechende Dict-Methoden anwenden,
-"""
+        entsprechende Dict-Methoden anwenden,
+        """
         ret = {"category":"danger"}
         csvfile = Csvfile (os.path.join(Patch.PATCHPATH, fname))
         openname = csvfile.name ()
@@ -314,8 +314,8 @@ entsprechende Dict-Methoden anwenden,
     def save (self, newname=None):
         """ Patch Änderungen in Änderungsdatei speichern
 
-Änderungen in 'Patchfile'.ccsv oder 'newname'.csv speichern
-"""
+        Änderungen in 'Patchfile'.ccsv oder 'newname'.csv speichern
+        """
 
         if newname == None:
             self.file.backup()
@@ -341,7 +341,7 @@ entsprechende Dict-Methoden anwenden,
                 
     def dir (self, path=None):
         """ Patch Dir als Liste ausgeben
-"""
+        """
         if (path == "head"):
             return os.listdir (Patch.HEADPATH)
         else:    
@@ -351,8 +351,8 @@ entsprechende Dict-Methoden anwenden,
 
     def add_head (self):
         """ einen neuen Head einfügen
-HeadNr ist 1 + max(pdict.keys())
-"""
+        HeadNr ist 1 + max(pdict.keys())
+        """
         hindex = self.pfields().index("HeadType")
         if self.pdict: # kein leeres pdict
             maxi = max(self.pdict.keys()) + 1
@@ -379,8 +379,8 @@ HeadNr ist 1 + max(pdict.keys())
 
     def remove_head (self, hindex:int) ->None:
         """ Head entfernen
-hindex = HeadIndex (nicht: HeadNr)
-"""
+        hindex = HeadIndex (nicht: HeadNr)
+        """
         if isinstance(hindex, str):
             hindex = int(hindex)
             
@@ -493,7 +493,7 @@ hindex = HeadIndex (nicht: HeadNr)
                     
     def attribtype (self, headnr:str, attrib:str) ->str:
         """ liefert Attributtyp: 'HTP' oder 'LTP'
-"""
+        """
         heads = self.get_headindex (headnr)
         if heads:
             hindex = heads[0]
@@ -514,7 +514,80 @@ hindex = HeadIndex (nicht: HeadNr)
         else:
             return None
                  
-            
+
+    # def offset (self, headindex:int, attrib:str) ->int:
+    #     """ liefert für attrib Abstand von der Startadresse
+    #     """
+    #     if headindex in self.pdict.keys():
+    #         tindex = int (self.pfields().index("HeadType"))
+    #         hdtype = self.pdict[headindex][tindex] # z.B. "Dimmer"
+    #         # print ("patch-hdtype: ", hdtype)
+    #         row = self.hdict[hdtype]
+    #         fn = row["fieldnames"] # fieldnames im Headfile
+    #         try:
+    #             offset = row[attrib][fn.index("Addr")]
+    #             return int(offset)
+    #         except:
+    #             return None
+    #     else:
+    #         return None
+
+
+    def color (self, headnr:str) ->list:
+        """ Farbwerte des Head in aktuellem Mix
+
+        Intensity: Bei virtuellem Dimmer der Intensity-Wert, bei RGB-Heads ohne
+        virtuellem Dimmer = max (Red, Blue, Green), 0 <= Intensity <= 100
+        """        
+        rgbcolor = [100,255,255,255] # Intensity, Red, Green, Blue
+        heads = self.get_headindex (headnr)
+        if heads:
+            hindex = heads[0]
+        else:
+            hindex = None
+        attriblist = self.attriblist (headnr)
+        if hindex in self.pdict.keys():
+            # Startadresse:
+            # aindex = int(self.pfields().index("Addr"))
+            # startaddr = self.pdict[hindex][aindex]
+            # uni,chan = startaddr.split (sep='-')
+            # for attrib in ["Red", "Green", "Blue"]:
+            #     # Farbe aus Mix ablesen und in rgbcolor eintragen:
+            #     if attrib in attriblist:
+            #         offset = self.offset (hindex, attrib)
+            #         channel = int(chan) + offset
+            #         rgbcolor[1+offset] = self.mixval (int(uni),channel)
+            if "Red" in attriblist:
+                rgbcolor[1] = self.attribute (headnr, "Red")
+            if "Green" in attriblist:
+                rgbcolor[2] = self.attribute (headnr, "Green")
+            if "Blue" in attriblist:
+                rgbcolor[3] = self.attribute (headnr, "Blue")
+            if "Amber" in attriblist:
+                attlevel = int (self.attribute (headnr, "Amber"))
+                rgbcolor[1] = max (rgbcolor[1], attlevel)
+                rgbcolor[2] = max (rgbcolor[2], int(attlevel * 0.75))
+            if "White" in attriblist:
+                attlevel = int (self.attribute (headnr, "White")) * 0.8
+                rgbcolor[1] = max (rgbcolor[1], attlevel)
+                rgbcolor[2] = max (rgbcolor[2], attlevel)
+                rgbcolor[3] = max (rgbcolor[3], attlevel)
+                
+        
+            # Head-Typ == virtual Dimmer, RGB-LED oder anderes?
+            if "Red" in attriblist:
+                mixtype = self.attribtype (headnr, "Red")
+                if mixtype == "vLTP":
+                    level = int (self.attribute (headnr, "Intensity"))
+                else:
+                    level = max (rgbcolor[1], rgbcolor[2], rgbcolor[3])
+            else: # kein LED - dann level == Wert des ersten Attributs
+                level = self.attribute (headnr, attriblist[0])
+
+            rgbcolor[0] = f"{int (level/2.55)}%"
+               
+        return rgbcolor
+
 # ------------------------------------------------------------------------------
 # Unit Test:        
 if __name__ == "__main__":
@@ -554,6 +627,7 @@ if __name__ == "__main__":
                8 = Test attribtype
                9 = zeige Head-Details
               10 = Test set_attribute (Switch) 
+               c = Farbwerte des Heads
 """        
     print (infotxt)
     try:
@@ -648,6 +722,9 @@ if __name__ == "__main__":
                 print ("Head: 1")
                 val = input ("Switch: ")
                 patch.set_attribute ("1", "Switch", val)
+            elif i == 'c':
+                val = input ("Head: ")
+                print (patch.color (val))
             else:
                 pass
     finally:

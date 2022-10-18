@@ -76,8 +76,6 @@ def check_px (items:list):
             num = item["Height"]
             item["Height"] = int_to_pix (num)
         
-            
-
 # --- Stage-Seiten ------------------------------------------------
 
 @stage.route("/show")
@@ -118,6 +116,15 @@ def show(mode=""):
 
     items = csvfile.to_dictlist ()
     check_px (items)
+
+    # Sichtbarkeit der Felder:
+    itemview = {}
+    for field in ["Name", "Text", "Comment"] :
+        if "itemview"+field in session:
+            itemview[field] = session["itemview"+field]
+        else:
+            itemview[field] = "checked"
+
     return render_template ("stage.html", shortname = csvfile.shortname(), 
                              fieldnames = csvfile.fieldnames (), 
                              items     = items,
@@ -125,6 +132,7 @@ def show(mode=""):
                              pluspath  = csvfile.pluspath(),
                              changes   = changes,
                              option    = "stage",
+                             itemview  = itemview,
                              excludebuttons=[])
 
 
@@ -142,6 +150,24 @@ def update_item ():
         csvfile.update_line (value)
     return "ok"
 
+
+@stage.route ("/itemviewmode")
+def itemviewmode () :
+    """ Sichtbarkeit der Textstrings steuern
+    
+    Die Sichtbarkeit der Felder Name, Text und Comment kann ein oder aus
+    sein. Default == ein.
+    """
+    field = request.args.get ("field")
+    value = request.args.get ("value")
+
+    if field in ["Name", "Text", "Comment"] :
+        if value == "false":
+            session["itemview"+field] = ""
+        else:
+            session["itemview"+field] = "checked"
+    return "ok"
+    
 
 @stage.route ("/headmodal", methods=['GET','POST'])
 def headmodal ():
@@ -328,8 +354,8 @@ def import_patch ():
             stageheads.append (item["Name"])
 
     # liste der neuen Head-Elemente erzeugen:
-    distx = 140 # x-Abstand
-    disty = 110 # y-Abstand
+    distx = 90 # x-Abstand
+    disty = 160 # y-Abstand
     max_in_row = 6 # maximale Elemente pro Reihe
     inserttop = 20 + maxtop + maxheight
     newheads = []
