@@ -99,7 +99,10 @@ fi
 echo "Aktuellen ClubDMX Code entfernen und neuen Code installieren."
 rm -r $codepath/app
 rm -r $codepath/dmx
-rm -r $codepath/scripts
+if [ -d "$codepath/scripts" ]; then
+  rm -r $codepath/scripts
+fi
+
 rm -r $updatesource/.git 2> /dev/null
 sudo -u $realuser cp -R $updatesource/. $codepath/
 rm -r tmpupdate
