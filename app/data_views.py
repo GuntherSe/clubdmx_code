@@ -98,6 +98,12 @@ def dataedit_cuefader ():
 def dataedit_head ():
     return render_template ("data/dataedit.html", spath="head")
 
+@data.route ("/dataedit_midibutton")
+@login_required
+@standarduser_required
+def dataedit_midibutton ():
+    return render_template ("data/dataedit.html", spath="midibutton")
+
 @data.route ("/dataedit_stage")
 @login_required
 @standarduser_required
