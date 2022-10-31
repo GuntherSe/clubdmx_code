@@ -78,11 +78,14 @@ def cueedit ():
     levels  = []
     labels  = [] # Fader-Beschriftung 
     for line in tmpcue.cuecontent():
+        level = globs.topcue.has_key (line[0], line[1])
+        if level == False:
+            level = int (line[2])
         # in topcue eintragen:
-        globs.topcue.add_item (line[0], line[1], line[2])
+        globs.topcue.add_item (line[0], line[1], level)
         heads.append (line[0])
         attribs.append (line[1])
-        levels.append (int (line[2]))          # Level
+        levels.append (level)          # Level
         labels.append (line[0] + '-' + line[1])
     ret["heads"]   = heads
     ret["attribs"] = attribs

@@ -219,6 +219,7 @@ def topsave (option:str):
 def update_cue () ->dict:
     """ topcue in Cue integrieren, 
     alle Cues mit 'filename' in Fadertabelle und Buttontabelle updaten
+    in allen Cuelisten currentcue und outcue updaten
     return: Message
     """
     filename = request.args.get ("filename")
@@ -234,6 +235,10 @@ def update_cue () ->dict:
     for item in globs.buttontable:
         if item.file.shortname() == filename:
             globs.topcue.merge_to_cue (item)
+    for item in globs.cltable:
+        if item.currentcue.file.shortname() == filename:
+            globs.topcue.merge_to_cue (item.currentcue)
+            globs.topcue.merge_to_cue (item.outcue)
 
     flash (ret["message"], category=ret["category"])
     return "ok"

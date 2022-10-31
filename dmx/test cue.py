@@ -13,7 +13,7 @@ from cue import Cue
 from patch import Patch
 from ola import OscOla
 
-os.chdir ("C:\\Users\\Gunther\\OneDrive\\Programmierung\\clubdmx_rooms\\test")
+os.chdir ("C:\\Users\\Gunther\\OneDrive\\Programmierung\\clubdmx_rooms\\develop")
 print ("ich bin hier: ", os.getcwd())
 patch = Patch()
 patch.set_path (os.getcwd())

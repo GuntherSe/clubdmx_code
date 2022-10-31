@@ -321,6 +321,18 @@ class Cue ():
         # print (self.content)
 
 
+    def has_key (self, head:str, attrib:str) ->bytes:
+        """ prüfen, ob key in Cue enthalten ist
+
+        key: headnr-attrib
+        return: level, wenn key gefunden, sonst 0
+        """
+        # head, attrib = key.split (sep='-')
+        for row in self.content:
+            if row[0] == head and row[1] == attrib:
+                return row[2]
+        return False
+
 # ------------------------------------------------------------------------------
 # Level ändern:
 

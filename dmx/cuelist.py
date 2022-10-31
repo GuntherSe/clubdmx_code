@@ -4,9 +4,9 @@
 """ 
 class Cuelist
 
-Die Basis für die Cuelist Klasse ist in Cuelistbase definiert. Hier finden sich die
-grundlegenden Attribute und Methoden. In Klasse Cuelist werden die Berechnungen
-des Mix-Outputs gemacht.
+Die Basis für die Cuelist Klasse ist in Cuelistbase definiert. Hier finden sich 
+die grundlegenden Attribute und Methoden. In Klasse Cuelist werden die 
+Berechnungen des Mix-Outputs gemacht.
 
 """
 
@@ -14,16 +14,11 @@ import time
 import os
 import os.path
 import threading
-# import csv
-
-# from csvfileclass import Csvfile
 
 from patch import Patch
 from ola import OscOla
 from cue import Cue
 from cuelistbase import Cuelistbase
-
-
 
 class Cuelist (Cuelistbase):
 
@@ -63,6 +58,12 @@ class Cuelist (Cuelistbase):
         except: # instances-Liste kann neu erzeugt werden
             pass
 
+
+    def is_fading (self) ->bool:
+        """ True wenn fading_in oder fading_out """
+        if self.is_fading_in or self.is_fading_out:
+            return True
+        return False
 
     def tmfactor (self, id:float, tm:"time", direction:str) -> dict:
         """ Fadefaktor berechnen
@@ -179,11 +180,12 @@ class Cuelist (Cuelistbase):
         # current Cue und next Cue evtl updaten:
         if self.is_fading_in and nextfactor["in"] == 1:
             self.is_fading_in = False
+            self.is_starting = False
         if self.is_fading_out and curfactor["out"] == 0:
             self.is_fading_out = False
         fading_done = (not self.is_fading_in) and (not self.is_fading_out)
 
-        if fading_done and not self.is_loaded: # and not self.currentpos == -1:
+        if fading_done and not self.is_loaded and not self.is_starting:
             self.is_loaded = True
             # print ("\rFading Done.\nCMD: ", end='')
 
@@ -223,33 +225,29 @@ class Cuelist (Cuelistbase):
         if self.level == 0:
             return
             
-        if self.is_fading_in: # aktueller Fade noch nicht abgeschlossen
-            # print ("GO between...")
+        if self.is_fading (): # aktueller Fade noch nicht abgeschlossen
+            print ("GO between...")
             self.output_to_current ()
 
-        # nextpos bestimmen:
-        if cuenr == "":
+        if cuenr == "": # next nicht angegeben
+            # nextprep wurde bei calc_cuecontent erhöht.
+            # wenn set_nextprep aufgerufen und cuenr == currentcue
             if not self.is_paused:
-                if self.nextprep == self.currentpos: # next nicht angegeben
+                if self.nextprep == self.currentpos or self.is_fading (): 
                     self.increment_nextprep ()
-                self.nextpos = self.nextprep
-                # self.increment_nextpos ()
-                # bei GO nach Pause bleibt nextpos gleich
+            # self.nextpos = self.nextprep
+            # self.increment_nextpos ()
+            # bei GO nach Pause bleibt nextpos gleich
         elif cuenr == "-1": # go back
             if self.is_paused:
                 # self.nextpos = self.currentpos
                 self.nextprep = self.currentpos
-                # self.setnextcue (self.nextpos)
-            else:
-                self.decrement_nextprep ()
-        else: # nächste cuenr angegeben
-            try:
-                id = float (cuenr) # evtl Error
-                pos = self._idlist.index (id) # evtl ValueError
-                self.nextprep = pos # cuenr vorhanden
-            except: # cuenr nicht vorhanden: stehen bleiben
+            elif self.is_fading ():
                 self.nextprep = self.currentpos
-
+            else:
+                self.decrement_nextprep () # eine pos retour
+        else: # nächste cuenr angegeben
+            self.set_nextprep (cuenr)
 
         if self.is_paused:
             self.start_tm = time.time () - self.elapsed_tm
@@ -304,7 +302,7 @@ class Cuelist (Cuelistbase):
                 Cue.contrib.remove_key (self.outcue.count, key)
         # self.outcue.content[:] = [item for item in self.outcue.content \
         #     if item[0]+item[1] in self.currentkeys]
-
+        # self.outcue.content.clear ()
 
 # --- Test -----------------------------------------------------------------
 if __name__ == "__main__":
@@ -330,7 +328,7 @@ if __name__ == "__main__":
 
     list1 = Cuelist (patch)
     list1.open ("list1")
-    list1.level = 1.0
+    list1.level = 0.0
 
     pp = pprint.PrettyPrinter(depth=6)
 
@@ -354,7 +352,8 @@ if __name__ == "__main__":
             g <Nr> = GO zu Cue <Nr>
             b = GO back
             p = Pause 
-
+            v = Level = 0
+            f = Level = 1
     """
 
     print (infotxt)
@@ -389,6 +388,7 @@ if __name__ == "__main__":
             elif i == '2':
                 pp.pprint (list1.currentcue.cuecontent())    
             elif i == '3':
+                print (f"next id:{list1.nextid}, ", end='')
                 print (f"nächste Pos: {list1.nextprep}")
             elif i == '+':
                 list1.increment_nextprep ()
@@ -408,6 +408,10 @@ if __name__ == "__main__":
             elif i == 'p':
                 list1.pause ()
                 print ("Pause. Weiter mit g oder b.")
+            elif i == 'v':
+                list1.level = 0
+            elif i == 'f':
+                list1.level = 1
             else:
                 pass
     finally:

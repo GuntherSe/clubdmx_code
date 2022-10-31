@@ -37,6 +37,28 @@ from ola import OscOla
 from cue import Cue
 
 
+class Outcue (Cue):
+    """ class Outcue hat dynamisch generierten content. 
+    Daher wird der content auch nicht mittels Aoto-Update nachgeladen.
+    """
+
+    def __init__(self, patch):
+        Cue.__init__(self, patch)
+
+    def __set_level (self, newlevel):
+        self._level = newlevel
+        if newlevel == 0:
+            self.rem_cuemix ()
+        else:
+            tm = time.time()
+            Cue.contrib.add (self.count, "faderlevel", self._level, tm)
+            if not self._active:
+                self.cuecontent_to_contrib ()
+
+    def __get_level (self):
+        return self._level
+
+    level = property(__get_level, __set_level)
 
 class Cuelistbase ():
 
@@ -49,6 +71,7 @@ class Cuelistbase ():
     def __init__ (self, patch):
         self.__class__.instances.append (self)
         if Cuelistbase.init_done == 0:
+            Cuelistbase.init_done = 1
             if Cuelistbase.CUELISTPATH == "":
                 path = os.path.dirname(os.path.realpath(__file__))
                 self.set_path (path)
@@ -63,7 +86,7 @@ class Cuelistbase ():
                           # diese Id's sind vom Typ float
 
         self.cuedict = {} # Dict, das die Cue-Informationen enthält
-        self.outcue = Cue (patch) # dieser content wird an contrib geschickt
+        self.outcue = Outcue (patch) # dieser content wird an contrib geschickt
         self.outcue.level = 0.0
         self.location = "pages"
         # self.text = ""
@@ -81,11 +104,12 @@ class Cuelistbase ():
         self.nextprep = 0   # Nächste Position in Vorbereitung, 
                             # nextpos wird erst bei go festgelegt
         # Status:
-        self.is_fading_in = True
+        self.is_starting = True # True bis nach erstem Fade-in
+        self.is_fading_in = False
         self.is_fading_out = False
         self.fadein_percent = 0
         self.fadeout_percent = 100
-        self.is_loaded = False  # True: keine Fades, currentcue am output
+        self.is_loaded = True  # True: keine Fades, currentcue am output
         self.is_paused = False # True: Zeitfunktionen (Fade, Stay) pausieren
         self.elapsed_tm = 0.0 # vergangene Zeit beim Drücken von Pause
         self.start_tm = time.time ()
@@ -186,12 +210,41 @@ class Cuelistbase ():
 
     def decrement_nextprep (self):
         """ nextprep um 1 vermindern oder zum Ende der cuelist springen
+
         nextpos wird erst bei GO aktualisiert
         """
-        if self.nextprep > 0:
+        if self.nextprep >= 1:
             self.nextprep -= 1
         else: # zum Ende springen
             self.nextprep = len (self._idlist) -1
+        
+        if self.nextprep == self.currentpos:
+            self.decrement_nextprep ()
+
+
+    def set_nextprep (self, cuenr):
+        """ nextprep auf 'num' setzen
+        
+        dabei prüfen, ob num in idlist vorhanden. sonst ignorieren
+        """
+        try:
+            id = float (cuenr) # evtl Error
+            pos = self._idlist.index (id) # evtl ValueError
+            self.nextprep = pos # cuenr vorhanden
+        except: # cuenr nicht vorhanden: stehen bleiben
+            self.nextprep = self.currentpos
+            # um nextprep in calc_cuecontent zu erhöhen
+
+    def start_firstcue (self):
+        """ nach open ersten Cue starten 
+        """
+        for line in self.currentcue.content:
+            self.outcue.content.append (line)
+            self.outcue.add_item (line[0], line[1], line[2])
+        staytm = self.cuedict[self.currentid]["Stay"]
+        if staytm != -1:
+            self.go_time = time.time () + staytm
+
 
 # File Methoden: --------------------------------------------------------------
     def open (self, fname = ""):
@@ -202,12 +255,14 @@ class Cuelistbase ():
         if fname:
             openname = os.path.join (Cuelistbase.CUELISTPATH, fname)
             self.file.name (openname)
-        self.get_cuelist ()
+        check = self.get_cuelist ()
 
-        # ersten Cue starten:
-        self.is_fading_in = True
-        self.start_tm = time.time ()
-        # self.go ()
+        # wenn _idlist vorhanden und reset, dann ersten Cue starten:
+        if check:
+            self.setcurrentcue (self.currentpos)
+            self.start_firstcue ()
+        # self.is_fading_in = True
+        # self.start_tm = time.time ()
 
 
     def get_cuelist (self, reset_ids = True) ->int:
@@ -216,6 +271,7 @@ class Cuelistbase ():
         Struktur: {'1':{'Id':'1','Cue':'cue1','Fadein':'fade1', ...}
                    '1.10':{'Id':'1.10','Cue':'cue2', ...}
                    ...}
+        return: Anzahl der Cuelist-Zeilen
         """
         filename = self.file.name ()
         if os.path.isfile (filename) and \
@@ -245,6 +301,11 @@ class Cuelistbase ():
             self.filetime = os.path.getmtime (filename)
         else:
             pass
+
+        if reset_ids:
+            return len (self._idlist)
+        else:
+            return 0
 
 
     def setcurrentcue (self, pos):
@@ -315,8 +376,8 @@ class Cuelistbase ():
             fname = "_neu"
             self.nextcue.open (fname)
         else: 
-            self.setnextcue (0)
-            self.nextprep = 0
+            self.setnextcue (1)
+            self.nextprep = 1
 
 
     def check_tm_value (self, row:float, col:str, empty_allowed=False):
@@ -470,6 +531,7 @@ if __name__ == "__main__":
             elif i == '2':
                 pp.pprint (list1.currentcue.cuecontent())    
             elif i == '3':
+                print (f"next id:{list1.nextid}, ", end='')
                 print (f"nächste Pos: {list1.nextprep}")
             elif i == '+':
                 list1.increment_nextprep ()
