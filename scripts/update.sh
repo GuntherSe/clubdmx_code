@@ -111,12 +111,12 @@ cd $codepath
 dos2unix ./scripts/*.sh
 chmod +x ./scripts/*.sh
 
-# Python-Extensions update:
-echo "Python Extensions updaten..."
+# Python-Extensions installieren:
+echo "Python Extensions installieren..."
 if [ "$OSVERSION" = "raspi" ]; then
-  sudo -u $realuser ./scripts/python_setup.sh upgrade $OSVERSION
+  sudo -u $realuser ./scripts/python_setup.sh install $OSVERSION
 elif [ "$OSVERSION" = "debian" ]; then
-  sudo -u $realuser ./scripts/python_setup.sh upgrade $OSVERSION
+  sudo -u $realuser ./scripts/python_setup.sh install $OSVERSION
 else
   echo "$OSVERSION ist keine gültige os_version (raspi oder debian). "
   exit 1

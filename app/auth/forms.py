@@ -8,7 +8,7 @@ from wtforms.validators import ValidationError, DataRequired, EqualTo
 from auth.models import User
 
 role_choices = [("basic", "Basic"),
-                ("guest", "Gast-nicht verwenden!"),
+                # ("guest", "Gast-nicht verwenden!"),
                 ("standard", "Standard"),
                 ("admin", "Administrator")]
 

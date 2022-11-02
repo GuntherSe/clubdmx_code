@@ -59,7 +59,7 @@ After playing as user *basic* a while go ahead an log in as user "Standard". Now
 
 User *basic* has the password *basic*
 
-User *Standard* has the password "Standard2021*
+User *Standard* has the password *Standard2021*
 
 ## Getting started with real hardware
 
