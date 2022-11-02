@@ -12,6 +12,7 @@ from flask_login import login_required
 from apputils import standarduser_required, admin_required, redirect_url
 from apputils import calc_mixoutput
 from common_views import check_clipboard
+from midiutils import press_pausebutton, pausebutton_monitor
 
 import globs
 
@@ -258,6 +259,7 @@ def go () -> str:
     index = int(butt)
     if index in range (len (globs.cltable)):
         globs.cltable[index].go ()
+        pausebutton_monitor (index)
     return "ok"
 
 
@@ -266,8 +268,9 @@ def pause () -> str:
     """ Pause-Button drücken """
     butt = request.args.get ("index")
     index = int(butt)
-    if index in range (len (globs.cltable)):
-        globs.cltable[index].pause ()
+    press_pausebutton (index)
+    # if index in range (len (globs.cltable)):
+    #     globs.cltable[index].pause ()
     return "ok"
 
 

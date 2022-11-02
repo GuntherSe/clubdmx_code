@@ -269,6 +269,8 @@ class Cuelist (Cuelistbase):
         if not self.is_paused:
             self.is_paused = True
             self.elapsed_tm = time.time () - self.start_tm
+        else:
+            self.go ()
 
 
     def output_to_current (self):

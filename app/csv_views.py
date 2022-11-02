@@ -18,6 +18,7 @@ from cue import Cue
 from csvfileclass import Csvfile   
 from cuebutton import Cuebutton
 from startup import load_config
+from midiutils import get_midicommandlist
 # from startup_levels import fader_locations, button_locations
 from startup_func import make_cuelistpages, make_fadertable, make_cuebuttons
 
@@ -44,7 +45,8 @@ def evaluate_option (option:str):
         make_fadertable ()
         make_cuebuttons ()
     elif option == "midibutton":
-        print ("Midibuttons neu einlesen.")
+        # print ("Midibuttons neu einlesen.")
+        get_midicommandlist ()
     elif option == "cuebutton":
         make_cuebuttons ()
     elif option == "pages":
