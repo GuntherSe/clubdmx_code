@@ -92,7 +92,7 @@ else
     fi
   else
     echo "$ZIPFILE nicht gefunden. Update konnte nicht durchgeführt werden."
-  fi
+    exit 1  fi
 # echo "Update Source = $updatesource"
 fi
 
