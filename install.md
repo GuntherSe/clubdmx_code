@@ -23,7 +23,7 @@ Raspi-Config:
 
 Anschließend im Terminal:
 
-    sudo apt-get install dos2unix nginx git
+    sudo apt install dos2unix nginx git pip
 
 dos2unix ist ein Tool zum Umwandeln von Textdateien mit Windows-Zeilenenden in ein Linux-Format.
 Siehe: https://www.digitalmasters.info/de/das-zeilenende-unter-linux-windows-und-os-x-im-griff/
@@ -32,7 +32,11 @@ NGINX ist ein Proxy-Server, der die ClubDMX-Webseite zur Verfügung stellt. Mehr
 
 ### Debian Installation:
 
-Zur Installation von Debian ist nichts Spezielles anzumerken. Download des Installers von https://www.debian.org/index.de.html und los gehts. dos2unix ist vorläufig das einzige zusätzliche Paket, das zu installieren ist (siehe oben).
+Zur Installation von Debian ist nichts Spezielles anzumerken. Download des Installers von https://www.debian.org/index.de.html und los gehts. 
+
+Zusätzliche Pakete anschließend im Terminal installieren:
+
+    sudo apt install dos2unix nginx git pip libasound2-dev libjack-dev
 
 ### Windows Installation: 
 
@@ -42,9 +46,9 @@ Hier gibt es keine Anleitung zur Installation von Windows. Wir gehen mal davon a
 
 OLA steht für **Open Lighting Architecture** und es stellt die Verbindung zwischen ClubDMX und der DMX Hardware bzw. der Ethernet Schnittstellen her. OLA läuft auf Linux (und auf MacOS, aber dazu kann ich keine Informationen liefern). Die folgenden Installationsschritte gelten also für Raspberry und Debian.
 
-Zur Installation von OLA gibt es zwei Möglichkeiten: Die Paket-Installation einer ziemlich sicher älteren Version mit apt-get und die Installation der neuesten Version von Github.
+Zur Installation von OLA gibt es zwei Möglichkeiten: Die Paket-Installation einer ziemlich sicher älteren Version mit apt und die Installation der neuesten Version von Github.
 
-### Paketinstallation mit apt-get
+### Paketinstallation mit apt
 
     sudo nano /etc/apt/sources.list
 
@@ -57,7 +61,7 @@ Anschließend neu starten.
 
 Nach dem Neustart:
 
-    sudo apt-get install ola
+    sudo apt install ola
 
 Damit ist OLA installiert
 
@@ -164,6 +168,7 @@ Für Installation am Debian Rechner:
 
 .env editieren (mit Nano oder anderem Texteditor):
 
+    cd ~/clubdmx_code
     nano .env
 
 hier eintragen: 
@@ -172,7 +177,7 @@ hier eintragen:
 
 (= beliebiger, langer String, NICHT genau dieser)
 
-Nun ist ClubDMX fertig installiert und die Installation kann **getestet** werden, durch Starten von app_start.sh. Wenn wie oben angegeben der Alias angelegt wurde, dann mit folgendem Befehl in einem Terminal:
+Nun ist ClubDMX fertig installiert und die Installation kann **getestet** werden, durch Starten von app_start.sh. Wenn wie oben angegeben der Alias angelegt wurde, dann mit folgendem Befehl in einem (neuen) Terminal:
 
     clubdmx start
 
@@ -252,8 +257,8 @@ NGINX ist ein Proxy-Server. Über diesen Server wird ClubDMX im Browser aufgeruf
 NGINX wurde bereits installiert (siehe Beginn des Dokuments).
 Falls bei der Installation Fehler auftraten, dann war es vielleicht schon installiert und muss erst vollständig entfernt werden:
 
-    sudo apt-get remove --purge nginx nginx-full nginx-common 
-    sudo apt-get install nginx
+    sudo apt remove --purge nginx nginx-full nginx-common 
+    sudo apt install nginx
 
 Kontrolle: Im Browser die IP-Adresse 127.0.0.1 eingeben. Die Nginx Default-Seite sollte sich zeigen.
 Hier sind die dazu nötigen Schritte im Detail erläutert, siehe: https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-gunicorn-and-nginx-on-ubuntu-20-04-de 

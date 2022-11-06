@@ -4,7 +4,7 @@
 """App configuration."""
 
 import shutil
-from os import environ, path, pathsep
+from os import environ, path, mkdir, pathsep
 from dotenv import load_dotenv
 from datetime import timedelta
 
@@ -19,7 +19,10 @@ class AppConfig:
     SECRET_KEY = environ.get('SECRET_KEY')
     SESSION_COOKIE_SAMESITE = 'Lax'
     UPLOAD_FOLDER = path.join (basedir, "uploads")
-    MAX_CONTENT_LENGTH = 16 * 1024 # 16kB
+    MAX_CONTENT_LENGTH = 256 * 1024 # 256KB
+
+    if not path.isdir (UPLOAD_FOLDER):
+        mkdir (UPLOAD_FOLDER)
     # https://blog.miguelgrinberg.com/post/cookie-security-for-flask-applications
     # SESSION_COOKIE_SECURE = True
     # REMEMBER_COOKIE_SECURE = True
