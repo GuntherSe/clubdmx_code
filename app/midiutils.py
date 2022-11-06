@@ -270,7 +270,10 @@ def pausebutton_monitor (index:int):
                 midiout = int(line["Midioutput"]) - 1
                 controller = int(line["Controller"]) - 1
 
-    if status: # status == 1
-        globs.midi.led_on (midiout, controller)
-    else:
-        globs.midi.led_off (midiout, controller)
+    try:
+        if status: # status == 1
+            globs.midi.led_on (midiout, controller)
+        else:
+            globs.midi.led_off (midiout, controller)
+    except: # error beim startup?
+        pass
