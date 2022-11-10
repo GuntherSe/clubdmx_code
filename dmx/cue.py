@@ -317,7 +317,7 @@ class Cue ():
                 found = z
         if found != -1:
             rem = self.content.pop (found)
-            logger.debug (rem)
+            self.logger.debug (rem)
         # print (self.content)
 
 

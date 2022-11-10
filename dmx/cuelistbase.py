@@ -36,6 +36,8 @@ from patch import Patch
 from ola import OscOla
 from cue import Cue
 
+import logging
+from loggingbase import Logbase
 
 class Outcue (Cue):
     """ class Outcue hat dynamisch generierten content. 
@@ -68,6 +70,12 @@ class Cuelistbase ():
     CUELISTPATH = ""
     init_done = 0
     
+    # ein logger für alle Cuelist-Instanzen:
+    baselogger = Logbase ()
+    logger = logging.getLogger (__name__)
+    file_handler = baselogger.filehandler ("cuelist.log")
+    logger.addHandler (file_handler)
+
     def __init__ (self, patch):
         self.__class__.instances.append (self)
         if Cuelistbase.init_done == 0:
@@ -194,6 +202,7 @@ class Cuelistbase ():
         nextid = self.nextid
         self.get_cuelist (reset_ids=False)
         if not (nextid in self._idlist):
+            self.logger.debug ("update cuelist")
             self.nextpos = 0
             self.reset_ids ()
 
@@ -283,7 +292,7 @@ class Cuelistbase ():
                 self._listfields = reader.fieldnames
                 if "Id" not in self._listfields:
                     # muss vor Einlesen geprüft werden
-                    print ("Feld 'Id' nicht in Cueliste gefunden")
+                    self.logger.error ("Feld 'Id' nicht in Cueliste gefunden")
                     return
 
                 for row in reader:
@@ -292,12 +301,17 @@ class Cuelistbase ():
                         self.cuedict[num] = row
                         self._idlist.append (num)
                     except:
-                        print (f"{row['Id']} ist keine Dezimalzahl.")
+                        self.logger.warning (f"{row['Id']} ist keine Dezimalzahl.")
 
             self._idlist = sorted (self._idlist)
             self.verify()
             if reset_ids:
                 self.reset_ids ()
+                num_ids = len (self._idlist)
+                info = f"get cuelist {self.file.shortname()}, {num_ids} neue ID's"
+            else:
+                info = f"get cuelist {self.file.shortname()}. IDs bleiben gleich."
+            self.logger.debug (info)
             self.filetime = os.path.getmtime (filename)
         else:
             pass
@@ -321,12 +335,14 @@ class Cuelistbase ():
             for item in self.currentcue.cuecontent ():
                 self.currentkeys.append (item[0]+item[1]) # head-attrib ohne Bindestrich
                 self.currentlevels.append (item[2])
-        # print ("Currentkeys: ", self.currentkeys)
+        self.logger.debug (f"Currentkeys: {self.currentkeys}")
 
 
     def setnextcue (self, pos):
-        """ Infos zu nextcue ermitteln 
+        """ Infos zu nextcue ermitteln
+
         zuerst nextid, dann die Infos dazu ermitteln
+        pos: Position in self._idlist 
         """
         if 0 <= pos < len (self._idlist):
             self.nextpos = pos
@@ -336,7 +352,7 @@ class Cuelistbase ():
             self.nextkeys.clear ()
             for item in self.nextcue.cuecontent ():
                 self.nextkeys.append (item[0]+item[1]) # head-attrib ohne Bindestrich
-        # print ("Nextkeys: ", self.nextkeys)
+        self.logger.debug (f"Nextkeys: {self.nextkeys}" )
 
     def verify (self):
         """ Cueliste prüfen 
@@ -347,7 +363,7 @@ class Cuelistbase ():
             "Stay", "Text", "Comment"]
         for fieldname in required:
             if fieldname not in self._listfields:
-                print (f"Feld '{fieldname}' nicht gefunden. ")
+                self.logger.error (f"Feld '{fieldname}' nicht gefunden. ")
                 ret = False
 
         # Zeitwerte prüfen und in float wandeln:
@@ -365,6 +381,7 @@ class Cuelistbase ():
         """ current Cue und next Cue auf Ausgangswerte setzen
         Damit wird beim __init__ ein Einfaden des ersten Cues ausgelöst.
         """
+        self.logger.debug ("Reset IDs...")
         # current Cue:
         self.currentpos = 0 #-1
         self.currentid = 0.0 

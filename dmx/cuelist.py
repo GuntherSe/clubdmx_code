@@ -128,7 +128,8 @@ class Cuelist (Cuelistbase):
         hängt ab von: start_tm, tm, currentcue, nextcue
 
         """
-        if self.is_paused or self.level == 0: # Pause - keine Auswertung
+        if not self.is_starting and (self.is_paused or self.level == 0): 
+            # Pause - keine Auswertung
             self.update_cuelist ()
             return
 
@@ -187,6 +188,7 @@ class Cuelist (Cuelistbase):
 
         if fading_done and not self.is_loaded and not self.is_starting:
             self.is_loaded = True
+            self.logger.debug ("Fading done.")
             # print ("\rFading Done.\nCMD: ", end='')
 
             self.fadeout_percent = 100
@@ -226,7 +228,7 @@ class Cuelist (Cuelistbase):
             return
             
         if self.is_fading (): # aktueller Fade noch nicht abgeschlossen
-            print ("GO between...")
+            self.logger.debug ("GO between...")
             self.output_to_current ()
 
         if cuenr == "": # next nicht angegeben
@@ -235,9 +237,8 @@ class Cuelist (Cuelistbase):
             if not self.is_paused:
                 if self.nextprep == self.currentpos or self.is_fading (): 
                     self.increment_nextprep ()
-            # self.nextpos = self.nextprep
-            # self.increment_nextpos ()
             # bei GO nach Pause bleibt nextpos gleich
+            self.logger.debug ("GO next...")
         elif cuenr == "-1": # go back
             if self.is_paused:
                 # self.nextpos = self.currentpos
@@ -246,12 +247,15 @@ class Cuelist (Cuelistbase):
                 self.nextprep = self.currentpos
             else:
                 self.decrement_nextprep () # eine pos retour
+            self.logger.debug ("GO back...")
         else: # nächste cuenr angegeben
             self.set_nextprep (cuenr)
+            self.logger.debug (f"GO to {cuenr}...")
 
         if self.is_paused:
             self.start_tm = time.time () - self.elapsed_tm
             self.is_paused = False
+            self.logger.debug ("Pause aus...")
             # alle anderen Statuswerte bleiben gleich
             return
 
@@ -277,6 +281,7 @@ class Cuelist (Cuelistbase):
         """output Cue wird current Cue, wenn GO während fading_in 
         getriggert wird
         """
+        self.logger.debug ("output to current")
         # output Cue kopieren:
         for item in self.outcue.cuecontent ():
             # item kommt von current Cue
@@ -297,6 +302,7 @@ class Cuelist (Cuelistbase):
         Nach dem Fade ausführen, um überzählige Null-Items zu entfernen
         Contrib aktualisieren
         """
+        self.logger.debug ("current to output")
         # self.outcue.content[:] = [item for item in self.currentcue.content]
         outkeys = [line[0]+'-'+line[1] for line in self.currentcue.content]
         for key in Cue.contrib.contribs[self.outcue.count].copy().keys():
