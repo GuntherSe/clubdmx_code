@@ -31,6 +31,7 @@ Anzeigen:
 {% endmacro %}
 
 {% macro formbody () %}
+<p>{{ text }}</p>
 <div class="modal-body" >
   {% for field in modalform %}
   {{ render_bs_field (field ,

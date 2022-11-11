@@ -266,24 +266,30 @@ def usb (action:str):
         flash (msg["message"], category=msg["category"])
         return  redirect (redirect_url())
 
-    # Titel:
+    # Titel und evtl Info-Text:
     if action == "backup":
         title = "Backup auf USB"
+        text = "Die aktuelle Datenbank wird auf USB-Stick gesichert."
         submit_text = "backup"
     elif action == "backupnew":
         title = "leeren Raum (Datenstruktur) auf USB"
+        text = "Raum '_neu' auf USB-Stick erzeugen."
         submit_text = "backup"
     elif action == "restore":
         title = "Restore von USB"
+        text = "Der ausgewählte Raum wird in den bestehenden Raum integriert."
         submit_text = "wählen"
     elif action == "dbbackup":
         title = "Benutzer-Datenbank Backup auf USB"
+        text = "Der Name der Datenbank = Computername"
         submit_text = "backup"
     elif action == "dbrestore":
         title = "Restore Benutzer-Datenbank von USB"
+        text = "Die Datenbank mit dem Computernamen wird verwendet."
         submit_text = "wählen"
     else:
         title = "USB-Aktion"
+        text = "keine gültige USB-Aktion gewählt."
         submit_text = "schließen"
 
     # USB Laufwerk vorhanden?
@@ -299,6 +305,7 @@ def usb (action:str):
                                                 modalform  = usbform,
                                                 endpoint = endpoint,
                                                 body  = "formbody",
+                                                text = text,
                                                 submit_text = submit_text)
 
 
