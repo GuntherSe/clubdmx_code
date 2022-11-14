@@ -258,6 +258,7 @@ class Room (Roombase):
                             found = True
 
         os.chdir (curdir)
+        self.get_layout_files ()
         self.check_fields ()
         
         if found:

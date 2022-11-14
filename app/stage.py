@@ -264,6 +264,8 @@ def headfader ():
         retheadlist.append (retheads[att])
     # for key in retlevels.keys():
     #     retlevels[key] = str (retlevels[key])
+    if not len (retheadlist): # keine heads gefunden
+        ret["errortext"] = f"Die gewählten Elemente sind nicht im Patch!"
 
     ret["attribs"] = retattribs
     ret["levels"]  = retlevels

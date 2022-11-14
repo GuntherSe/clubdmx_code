@@ -375,12 +375,20 @@ function selection_headslider () {
         var attribs    = jdata["attribs"];
         var levels     = jdata["levels"];
         var headstring = jdata["headstring"];
+        var errortext  = jdata["errortext"];
         $(".selectDiv").html ("Selektion: " + headstring);
-        $("#faderspace").html (jdata["table"]);
-        // console.log ("Levels: " +JSON.stringify (levels));
-        for (var i=0; i < attribs.length; i++){
-            makeCueAttribSlider (heads[i], attribs[i], 
-                levels[attribs[i]], '/stage/headfader' );
+        if (errortext.length) {
+          var formattedtext = "<div class='alert alert-danger'>" 
+            + errortext 
+            + "</div>";
+          $("#faderspace").html (formattedtext);
+        } else {
+          $("#faderspace").html (jdata["table"]);
+          // console.log ("Levels: " +JSON.stringify (levels));
+          for (var i=0; i < attribs.length; i++){
+              makeCueAttribSlider (heads[i], attribs[i], 
+                  levels[attribs[i]], '/stage/headfader' );
+          };
         };
       }) ;
     };

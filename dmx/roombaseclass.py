@@ -167,6 +167,18 @@ class Roombase:
                         # raise OSError (message)
                         return ret
 
+        self.get_layout_files ()
+        ret["category"]= "success"
+        ret["message"] = "check ok"
+        self.logger.info ("Room check Path ok.")
+        return ret
+
+    
+    def get_layout_files (self):
+        """ aktuelle Tabellenstruktur in Raum kopieren
+        
+        die '_neu.csv'-Files aus den Subdirs werden in den Raum kopiert
+        """
         if self.PATH != self.codepath: # neuer Raum
             # _neu.csv Files kopieren:
             for subdir in self.subdirs:
@@ -178,10 +190,6 @@ class Roombase:
             dst = os.path.join (self.PATH, "head")
             copytree (src, dst)
 
-        ret["category"]= "success"
-        ret["message"] = "check ok"
-        self.logger.info ("Room check Path ok.")
-        return ret
 
     def rename (self, newname:str):
         """ Raumverzeichnis umbenennen
