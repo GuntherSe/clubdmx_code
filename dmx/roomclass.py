@@ -218,9 +218,11 @@ class Room (Roombase):
         curdir = os.getcwd ()
         os.chdir (self.rootpath())
         c = Csvname ()
+        found = False
 
         # Entpacken in aktuellen Pfad:
         final_dir = self.path ()
+        self.logger.info (f"entpacken nach {final_dir}...")
         extension = c.CHGEXT
 
         # # Entpacken in originalen Pfad:
@@ -253,10 +255,18 @@ class Room (Roombase):
                             else:
                                 dstfile = os.path.join (dstpath, item)
                             shutil.copy (srcfile, dstfile)
+                            found = True
 
         os.chdir (curdir)
-        ret["category"] = "success"
-        ret["message"]  = f"{zipfile} wurde entpackt."  
+        self.check_fields ()
+        
+        if found:
+            ret["category"] = "success"
+            ret["message"]  = f"{zipfile} wurde entpackt."  
+        else:
+            ret["category"] = "warning"
+            ret["message"]  = f"{zipfile} wurde entpackt, es wurden keine "\
+                              + "Dateien gefunden."    
         ret["extract_dir"] = final_dir
         return ret
 
