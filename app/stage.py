@@ -266,6 +266,8 @@ def headfader ():
     #     retlevels[key] = str (retlevels[key])
     if not len (retheadlist): # keine heads gefunden
         ret["errortext"] = f"Die gewählten Elemente sind nicht im Patch!"
+    else:
+        ret["errortext"] = ""
 
     ret["attribs"] = retattribs
     ret["levels"]  = retlevels

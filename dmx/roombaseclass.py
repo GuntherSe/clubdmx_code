@@ -185,6 +185,11 @@ class Roombase:
                 src = os.path.join (self.codepath, subdir, "_neu.csv")
                 dst = os.path.join (self.PATH, subdir, "_neu.csv")
                 shutil.copy2 (src, dst)
+                tmp = os.path.join (self.PATH, subdir, "_neu.ccsv")
+                try: # evtl vorhandenes ccsv löschen
+                    os.remove (tmp)
+                except OSError:
+                    pass
             # Heads von codepath in Raum kopieren
             src = os.path.join (self.codepath, "head")
             dst = os.path.join (self.PATH, "head")
