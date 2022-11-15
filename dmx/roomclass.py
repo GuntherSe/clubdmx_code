@@ -322,7 +322,7 @@ class Room (Roombase):
                         writer = csv.writer (pf)
                         writer.writerow (fieldnames)
                         writer.writerows (newcontent)
-
+                    self.logger.info ("Datenbankfehler korrigiert.")
 
 
 
