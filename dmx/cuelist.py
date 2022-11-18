@@ -117,6 +117,8 @@ class Cuelist (Cuelistbase):
             # Verbleibende Zeit:
             # total_tm = max (waitintm+fadeintm, waitouttm+fadeouttm)
             # self.remain_tm = self.start_tm + total_tm - tm
+        else:
+            outfactor = 0.0  
         return {"in":infactor, "out":outfactor, "xfade":xfade}
 
 
@@ -223,7 +225,7 @@ class Cuelist (Cuelistbase):
         cuenr: nächste Cuenr oder '-1' -> go back
         """
         # print ("------------------ GO")
-
+        self.update_cuelist ()
         if self.level == 0:
             return
             

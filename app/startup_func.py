@@ -243,7 +243,7 @@ def make_cuelistpages (with_savedlevels:bool=False) :
     currentlevels = backup_currentlevels ("cuelist") # aktuelle Level
     csvlevels_requested = check_levelrequest (with_savedlevels)
 
-    fadernum = globs.SHIFT # unterscheidet fader von cuefader
+    fadernum = globs.SHIFT # unterscheidet cuefader von cuelistfader
     filename = globs.cfg.get("pages")
     fullname = os.path.join (globs.room.pagespath() , filename)
     csvfile = Csvfile (fullname)

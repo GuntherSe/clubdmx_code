@@ -41,12 +41,12 @@ from loggingbase import Logbase
 
 class Outcue (Cue):
     """ class Outcue hat dynamisch generierten content. 
-    Daher wird der content auch nicht mittels Aoto-Update nachgeladen.
+    Daher wird der content auch nicht mittels Auto-Update nachgeladen.
     """
 
     def __init__(self, patch):
         Cue.__init__(self, patch)
-
+        
     def __set_level (self, newlevel):
         self._level = newlevel
         if newlevel == 0:
@@ -227,7 +227,7 @@ class Cuelistbase ():
         else: # zum Ende springen
             self.nextprep = len (self._idlist) -1
         
-        if self.nextprep == self.currentpos:
+        if self.nextprep == self.currentpos and len(self._idlist) > 1:
             self.decrement_nextprep ()
 
 
@@ -253,6 +253,8 @@ class Cuelistbase ():
         staytm = self.cuedict[self.currentid]["Stay"]
         if staytm != -1:
             self.go_time = time.time () + staytm
+        if self.level == 0:
+            self.outcue.rem_cuemix ()
 
 
 # File Methoden: --------------------------------------------------------------
@@ -379,7 +381,8 @@ class Cuelistbase ():
 
     def reset_ids (self):
         """ current Cue und next Cue auf Ausgangswerte setzen
-        Damit wird beim __init__ ein Einfaden des ersten Cues ausgelöst.
+
+        Bei leerer Cueliste wird Cue _neu als current Cue festgelegt
         """
         self.logger.debug ("Reset IDs...")
         # current Cue:
