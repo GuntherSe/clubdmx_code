@@ -231,17 +231,21 @@ class Cuelistbase ():
             self.decrement_nextprep ()
 
 
-    def set_nextprep (self, cuenr):
-        """ nextprep auf 'num' setzen
+    def set_nextprep (self, cuenr) ->bool:
+        """ nextprep auf 'cuenr' setzen
         
-        dabei prüfen, ob num in idlist vorhanden. sonst ignorieren
+        dabei prüfen, ob cuenr in idlist vorhanden. sonst ignorieren
         """
         try:
             id = float (cuenr) # evtl Error
             pos = self._idlist.index (id) # evtl ValueError
+            if pos == self.currentpos:
+                return False
             self.nextprep = pos # cuenr vorhanden
+            return True
         except: # cuenr nicht vorhanden: stehen bleiben
-            self.nextprep = self.currentpos
+            return False
+            # self.nextprep = self.currentpos
             # um nextprep in calc_cuecontent zu erhöhen
 
     def start_firstcue (self):

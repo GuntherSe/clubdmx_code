@@ -237,7 +237,7 @@ class Cuelist (Cuelistbase):
             # nextprep wurde bei calc_cuecontent erhöht.
             # wenn set_nextprep aufgerufen und cuenr == currentcue
             if not self.is_paused:
-                if self.nextprep == self.currentpos or self.is_fading (): 
+                if self.is_fading (): 
                     self.increment_nextprep ()
             # bei GO nach Pause bleibt nextpos gleich
             self.logger.debug ("GO next...")
@@ -251,8 +251,11 @@ class Cuelist (Cuelistbase):
                 self.decrement_nextprep () # eine pos retour
             self.logger.debug ("GO back...")
         else: # nächste cuenr angegeben
-            self.set_nextprep (cuenr)
-            self.logger.debug (f"GO to {cuenr}...")
+            ret = self.set_nextprep (cuenr)
+            if ret:
+                self.logger.debug (f"GO to {cuenr}...")
+            else:
+                return
 
         if self.is_paused:
             self.start_tm = time.time () - self.elapsed_tm

@@ -205,22 +205,22 @@
       });
   
       periodic_cueliststatus ();
-      // Leertaste = GO:
-      $(document).keydown (function (event) {
-        // console.log ("Key: " + event.which);
+      $(document).keyup ( function (event) {
+        event.preventDefault();
         var args = {index:clIndex};
+        //console.log ("Key: " + event.which);
         switch (event.which) {
           case 32: // leertaste
-            $.get ("/cuelist/go", args);
-            break;
+           $.get ("/cuelist/go", args);
+           break;
           case 40: // down
-            $.get ("/cuelist/plus", args);
-            break;
+           $.get ("/cuelist/plus", args);
+           break;
           case 38: // up
-            $.get ("/cuelist/minus", args);
-            break;
+           $.get ("/cuelist/minus", args);
+           break;
         };
-      }); 
+      });
 //    } else {
 //      console.log ("kein Cuelist-Index.")
     };

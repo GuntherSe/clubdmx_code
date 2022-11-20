@@ -221,6 +221,7 @@ def evaluate_osc (address, *arg):
                     cl.go ()
                 elif len (args) >= 2: # args > 2 ignorieren
                     # print (f"go: {num}, next = {args[1]}")
+                    args[1] = round (args[1], 2)
                     cl.go (args[1])
 
         elif command == "/pause":
