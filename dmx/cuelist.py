@@ -130,7 +130,7 @@ class Cuelist (Cuelistbase):
         hängt ab von: start_tm, tm, currentcue, nextcue
 
         """
-        if not self.is_starting and (self.is_paused or self.level == 0): 
+        if (not self.is_starting) and (self.is_paused or self.level == 0): 
             # Pause - keine Auswertung
             self.update_cuelist ()
             return

@@ -15,7 +15,7 @@ The website is written in Responsive Design and adopts to the size of the screen
 
 ### Open Lighting Architecture
 
-The DMX connection is carried out by [OLA](https://www.openlighting.org/) . With it there is a lot of hardware options available, for example Enttec DMX USB Pro and DMX King. OLA establishes various ethernet protocols like ArtNet, sACN and others. An overview of the wide range of possibilities for DMX output is here:
+The DMX connection is carried out by [OLA](https://www.openlighting.org/) . There is a lot of hardware options available, for example Enttec DMX USB Pro and DMX King. OLA establishes various ethernet protocols like ArtNet, sACN and others. An overview of the wide range of possibilities for DMX output is here:
 <https://www.openlighting.org/ola/> .
 
 ### Scenes/Cues
@@ -25,7 +25,7 @@ The first and basic goal in the development of ClubDMX was to enable an easy han
 ClubDMX offers various possibilities for **Cues**:
 * Cues with Fader
 * Cues with Button
-* One Cue with top priority for handling the the hardware devices and creating new Cues
+* One Cue with top priority for direct handling the the hardware devices and creating new Cues
 * Cuelists as collections of Cues, with fade-times and wait-times.
 
 ### Data stored in CSV files
