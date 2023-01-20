@@ -109,12 +109,14 @@ class Cuelistbase ():
         self.nextid = 0.0 # float
         self.nextpos = 0 # Position des next Cue in self._idlist
         self.nextkeys = []
+        self.nextlevels = []
         self.nextprep = 0   # Nächste Position in Vorbereitung, 
                             # nextpos wird erst bei go festgelegt
         # Status:
         self.is_starting = True # True bis nach erstem Fade-in
         self.is_fading_in = False
         self.is_fading_out = False
+        self.fading_done = False
         self.fadein_percent = 0
         self.fadeout_percent = 100
         self.is_loaded = True  # True: keine Fades, currentcue am output
@@ -356,8 +358,10 @@ class Cuelistbase ():
             fname = self.cuedict[self.nextid]["Filename"]
             self.nextcue.open (fname)
             self.nextkeys.clear ()
+            self.nextlevels.clear ()
             for item in self.nextcue.cuecontent ():
                 self.nextkeys.append (item[0]+item[1]) # head-attrib ohne Bindestrich
+                self.nextlevels.append (item[2])
         self.logger.debug (f"Nextkeys: {self.nextkeys}" )
 
     def verify (self):

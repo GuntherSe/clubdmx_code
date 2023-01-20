@@ -6,6 +6,7 @@ logs/
 .app.csv
 .app.db
 _todo.txt
+erledigt.txt
 
 scripts/.require_pyanywhere(installed).txt
 scripts/schema.sql

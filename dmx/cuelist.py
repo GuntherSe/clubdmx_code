@@ -65,12 +65,11 @@ class Cuelist (Cuelistbase):
             return True
         return False
 
-    def tmfactor (self, id:float, tm:"time", direction:str) -> dict:
+    def tmfactor (self, id:float, tm:"time") -> dict: #, direction:str) -> dict:
         """ Fadefaktor berechnen
         
         id: ID des Cues
         tm: aktuelle Zeit
-        direction: 'in' oder 'out'
         return: {in:float zw. 0 und 1, out: Float zw. 0 und 1, xfade:bool}
         """
         infactor = 0.0 # default
@@ -78,47 +77,56 @@ class Cuelist (Cuelistbase):
         xfade = False # default
 
         if id in self._idlist:
-            if direction == "in":
+            # if direction == "in":
             # Zeitfaktor für fade-in:
-                waitintm = self.cuedict[id]["Waitin"]
-                fadeintm = self.cuedict[id]["Fadein"]
-                if tm <  self.start_tm + waitintm: # in der Wartezeit
-                    infactor = 0.0
+            waitintm = self.cuedict[id]["Waitin"]
+            fadeintm = self.cuedict[id]["Fadein"]
+            if tm <  self.start_tm + waitintm: # in der Wartezeit
+                infactor = 0.0
+            else:
+                if fadeintm > 0:
+                    x = (tm - (self.start_tm + waitintm)) / fadeintm
+                    if x < 0: # kann beim startup/Einlesen vorkommen
+                        x = 0.0
+                    infactor = min (1.0, x)
                 else:
-                    if fadeintm > 0:
-                        x = (tm - (self.start_tm + waitintm)) / fadeintm
-                        if x < 0: # kann beim startup/Einlesen vorkommen
-                            x = 0.0
-                        infactor = min (1.0, x)
-                    else:
-                        infactor = 1.0
+                    infactor = 1.0
 
-            elif direction == "out":
+            # elif direction == "out":
             # Zeitfaktor für Fade-out:
-                waitouttm = self.cuedict[id]["Waitout"]
-                fadeouttm = self.cuedict[id]["Fadeout"]
-                if fadeouttm == -1.0 and waitouttm == 0: # crossfade
-                    xfade = True
-                    # outfactor wird nicht benötigt
-                elif fadeouttm == -1.0: # fadeout nicht angegeben
-                    fadeouttm = self.cuedict[id]["Fadein"]
+            waitouttm = self.cuedict[id]["Waitout"]
+            fadeouttm = self.cuedict[id]["Fadeout"]
+            if fadeouttm == -1.0 and waitouttm == 0 and waitintm == 0: 
+                # crossfade
+                xfade = True
+            if fadeouttm == -1.0: # fadeout nicht angegeben, waitouttm > 0
+                fadeouttm = self.cuedict[id]["Fadein"]
 
-                if tm < self.start_tm + waitouttm:
-                    outfactor = 1.0
+            if tm < self.start_tm + waitouttm:
+                outfactor = 1.0
+            else:
+                if fadeouttm > 0:
+                    x = (tm - (self.start_tm + waitouttm)) / fadeouttm
+                    if x < 0: 
+                        x = 0.0
+                    outfactor = max (0.0, 1-x)
                 else:
-                    if fadeouttm > 0:
-                        x = (tm - (self.start_tm + waitouttm)) / fadeouttm
-                        if x < 0: 
-                            x = 0.0
-                        outfactor = max (0.0, 1-x)
-                    else:
-                        outfactor = 0.0
+                    outfactor = 0.0
 
             # Verbleibende Zeit:
             # total_tm = max (waitintm+fadeintm, waitouttm+fadeouttm)
             # self.remain_tm = self.start_tm + total_tm - tm
         else:
             outfactor = 0.0  
+
+        # fade-in abgeschlossen (fade-in + wait-in) und 
+        # fade-out abgeschlossen (wait-out + fade-out):
+        if (tm > self.start_tm + waitintm + fadeintm) \
+                and tm > (self.start_tm + waitouttm + fadeouttm): 
+            self.fading_done = True
+        else:
+            self.fading_done = False
+
         return {"in":infactor, "out":outfactor, "xfade":xfade}
 
 
@@ -136,59 +144,74 @@ class Cuelist (Cuelistbase):
             return
 
         # Multiplikator berechnen:
-        curfactor = self.tmfactor (self.currentid, tm, "out")
-        nextfactor = self.tmfactor (self.nextid, tm, "in")
-        if curfactor["xfade"] == True: # crossfade
-            self.is_fading_out = self.is_fading_in
-            curfactor["out"] = 1 - nextfactor["in"]
-        # print (f"cur: {curfactor}, next: {nextfactor}")
+        curfactor = self.tmfactor (self.nextid, tm) #, "out")
+        # nextfactor = self.tmfactor (self.nextid, tm, "in")
+        # if curfactor["xfade"] == True: # crossfade
+        #     self.is_fading_out = self.is_fading_in
+            # curfactor["out"] = 1 - curfactor["in"]
 
         # Übergänge berechnen:
-        # 1. items, die in nextcue vorkommen:
-        if self.is_fading_in:
-            self.fadein_percent = int (nextfactor["in"] * 100) 
-            for item in self.nextcue.cuecontent ():
-                itemkey = item[0] + item[1] # head + attribute
-                nextlevel = int (item[2])
-                if itemkey not in self.currentkeys: # Fade in 
-                    level = nextfactor["in"] * nextlevel
-                elif curfactor["xfade"] == True: # crossfade
-                    index = self.currentkeys.index (itemkey)
-                    curlevel = int (self.currentlevels[index])
-                    level = curlevel + nextfactor["in"] * (nextlevel - curlevel)
-                else: # max aus fadeout und fadein
-                    index = self.currentkeys.index (itemkey)
-                    curlevel = int (self.currentlevels[index])
-                    level = max (curlevel * curfactor["out"],  
-                                nextlevel * nextfactor["in"] )
 
-                self.outcue.line_to_cuecontent ([item[0],item[1],
-                    str(int(level))])
-                # print (f"Fading in: {item[0]} {item[1]} {int(level)}")
-        
-        # 2. items, die nur in currentcue vorkommen:
+        # 1. items, die nur in currentcue vorkommen:
         if self.is_fading_out: # and not (itemkey in self.nextkeys):
             self.fadeout_percent = int (curfactor["out"] * 100)
-            for item in self.currentcue.cuecontent ():
-                itemkey = item[0] + item[1]
-                if itemkey not in self.nextkeys:
-                    level = curfactor["out"] * int (item[2])
-                    self.outcue.line_to_cuecontent ([item[0],item[1],
+            only_out = [i for i in self.currentkeys \
+                if i not in self.nextkeys]
+            for item in only_out:
+                curindex  = self.currentkeys.index (item)
+                curlevel = int (self.currentlevels[curindex])
+                level = curfactor["out"] * curlevel
+                cueitem = self.currentcue.content[curindex]
+                self.outcue.line_to_cuecontent ([cueitem[0],cueitem[1],
                         str(int(level))])
-                    # print (f"Fading out: {item[0]} {item[1]} {int(level)}")
 
+        # 2. items, die nur in nextcue vorkommen:
+        if self.is_fading_in:
+            self.fadein_percent = int (curfactor["in"] * 100) 
+            only_in = [i for i in self.nextkeys \
+                if i not in self.currentkeys]
+            for item in only_in :
+                nextindex = self.nextkeys.index (item)
+                nextlevel = int (self.nextlevels[nextindex])
+                level = curfactor["in"] * nextlevel
+                cueitem = self.nextcue.content[nextindex]
+                self.outcue.line_to_cuecontent ([cueitem[0],cueitem[1],
+                        str(int(level))])
+
+        # 3. items, die in currentcue und nextcue vorkommen:
+        if self.is_fading_in and self.is_fading_out:
+            intersect = [i for i in self.nextkeys \
+                if i in self.currentkeys]
+            for item in intersect:
+                curindex  = self.currentkeys.index (item)
+                nextindex = self.nextkeys.index (item)
+                nextlevel = int (self.nextlevels[nextindex])
+                curlevel = int (self.currentlevels[curindex])
+                if curfactor["xfade"] == True: # crossfade
+                    level = curlevel + curfactor["in"] * (nextlevel - curlevel)
+                else: # max aus fadeout und fadein
+                    level = max (curlevel * curfactor["out"],  
+                                nextlevel * curfactor["in"] )
+                cueitem = self.currentcue.content[curindex]
+                self.outcue.line_to_cuecontent ([cueitem[0],cueitem[1],
+                    str(int(level))])
+        
         #Test:
         # print (f"\rxFade: {self.fadein_percent} {self.fadeout_percent}", end='')
 
         # current Cue und next Cue evtl updaten:
-        if self.is_fading_in and nextfactor["in"] == 1:
+        # if self.is_fading_in and curfactor["in"] == 1: # Fading-in done
+        #     self.is_fading_in = False
+        #     self.is_starting = False
+        # if self.is_fading_out and curfactor["out"] == 0:
+        #     self.is_fading_out = False
+        # fading_done = (not self.is_fading_in) and (not self.is_fading_out)
+        if self.fading_done:
             self.is_fading_in = False
             self.is_starting = False
-        if self.is_fading_out and curfactor["out"] == 0:
             self.is_fading_out = False
-        fading_done = (not self.is_fading_in) and (not self.is_fading_out)
 
-        if fading_done and not self.is_loaded and not self.is_starting:
+        if self.fading_done and not self.is_loaded and not self.is_starting:
             self.is_loaded = True
             self.logger.debug ("Fading done.")
             # print ("\rFading Done.\nCMD: ", end='')
@@ -215,7 +238,10 @@ class Cuelist (Cuelistbase):
             
         # Stay-Time abgelaufen:
         if (self.go_time != -1) and (tm > self.go_time):
-            self.go_time = -1
+            if self.is_starting:
+                self.is_starting = False
+            else:
+                self.go_time = -1
             self.go ()
 
 
