@@ -50,12 +50,20 @@ Zur Installation von OLA gibt es zwei Möglichkeiten: Die Paket-Installation ein
 
 ### Paketinstallation mit apt
 
+Die Installation für Raspi und Debian unterscheidet sich fast nicht.
+
     sudo nano /etc/apt/sources.list
 
-hier eintragen:
+hier eintragen (Raspi):
 
     #ola:
     deb http://apt.openlighting.org/raspbian wheezy main
+
+beziehungsweise für Debian:
+
+    #ola:
+    deb http://apt.openlighting.org/debian wheezy main
+
 
 Anschließend neu starten.
 
@@ -152,6 +160,12 @@ Shell Script Files ausführbar machen:
     chmod +x *.sh
 
 ## Python Module
+
+(im home-Verzeichnis:)
+
+    sudo apt-get install python3-venv
+    python3 -m venv .venv
+    source .venv/bin/activate
 
 (wir befinden uns im ClubDMX-Skriptverzeichnis, ~/clubdmx_code/scripts)
 

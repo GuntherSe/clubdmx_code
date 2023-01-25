@@ -25,6 +25,15 @@ cd $codepath
 export PYTHONPATH="${PWD}/app:${PWD}/dmx"
 
 case "$1" in
+  venv)
+    gunicornstart="$HOME/.venv/bin/gunicorn"
+    echo "Starte ClubDMX zum Testen"
+    touch test1running
+    $gunicornstart  -b 0.0.0.0:5000  wsgi:app
+    # Anmerkung: mit pgrep -fl wsgi.py erhält man die PID
+    ;;
+
+
   start)
     echo "Starte ClubDMX zum Testen"
     touch test1running
