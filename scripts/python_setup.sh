@@ -12,8 +12,12 @@
 # Falls eine Virtual Environment verwendet wird, dann muss diese vor dem
 # Ausführen dieses Skripts aktiviert werden!
 
-codepath="${CLUBDMX_CODEPATH:-$HOME/clubdmx_code}"
-cd $codepath
+# Vor dem Ausführen des Scripts ins Code-Verzeichnis wechseln!
+# codepath="${CLUBDMX_CODEPATH:-$HOME/clubdmx_code}"
+# cd $codepath
+
+# check venv:
+which python3
 
 if [ -z "$2" ]; then
   REQFILE="./scripts/requirements.txt"
@@ -30,14 +34,14 @@ case "$1" in
   ;;
 
   install)
-  echo "Python Eyxtensions installieren. Verwende $REQFILE."
+  echo "Python Extensions installieren. Verwende $REQFILE."
   # setup Python mit den nötigen Erweiterungen:
   python3 -m pip  install -r $REQFILE
   ;;
 
   upgrade)
   # Upgrade:
-  echo "Python Eyxtensions upgrade. Verwende $REQFILE."
+  echo "Python Extensions upgrade. Verwende $REQFILE."
   python3 -m pip  install -r $REQFILE --upgrade
   ;;
 

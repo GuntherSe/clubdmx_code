@@ -122,16 +122,31 @@ if [ -z "$VIRTUALENV" ]; then
   echo "Python Extensions installieren..."
 else
   echo "Python Extensions in $VIRTUALENV installieren..."
-  sudo -u $realuser source $realhome/$VIRTUALENV/bin/activate
+  source $realhome/$VIRTUALENV/bin/activate
 fi
 if [ "$OSVERSION" = "raspi" ]; then
-  sudo -u $realuser ./scripts/python_setup.sh install $OSVERSION
+  ./scripts/python_setup.sh install $OSVERSION
 elif [ "$OSVERSION" = "debian" ]; then
-  sudo -u $realuser ./scripts/python_setup.sh install $OSVERSION
+  ./scripts/python_setup.sh install $OSVERSION
 else
   echo "$OSVERSION ist keine gültige os_version (raspi oder debian). "
   exit 1
 fi
+
+# if [ -z "$VIRTUALENV" ]; then
+#   echo "Python Extensions installieren..."
+# else
+#   echo "Python Extensions in $VIRTUALENV installieren..."
+#   sudo -u $realuser source $realhome/$VIRTUALENV/bin/activate
+# fi
+# if [ "$OSVERSION" = "raspi" ]; then
+#   sudo -u $realuser ./scripts/python_setup.sh install $OSVERSION
+# elif [ "$OSVERSION" = "debian" ]; then
+#   sudo -u $realuser ./scripts/python_setup.sh install $OSVERSION
+# else
+#   echo "$OSVERSION ist keine gültige os_version (raspi oder debian). "
+#   exit 1
+# fi
 
 # vor dem Start:
 echo "Raum-Verzeichnis für neue Version updaten..."

@@ -39,11 +39,7 @@ if [ -z $VIRTUALENV ]; then
 else
   echo "Verwende Virtualenv $VIRTUALENV"
   sudo -u $realuser python3 nginxfiles.py $VIRTUALENV
-
-  # source $VIRTUALENV/bin/activate
-  # export CLUBDMX_VENV=$VIRTUALENV
 fi
-
 
 # echo "Files kopieren, benötigt SUDO Rechte!"
 cp service.txt /etc/systemd/system/clubdmx.service
