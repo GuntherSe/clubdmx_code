@@ -23,7 +23,7 @@ Raspi-Config:
 
 Anschließend im Terminal:
 
-    sudo apt install dos2unix nginx git pip
+    sudo apt install dos2unix nginx git pip pmount
 
 dos2unix ist ein Tool zum Umwandeln von Textdateien mit Windows-Zeilenenden in ein Linux-Format.
 Siehe: https://www.digitalmasters.info/de/das-zeilenende-unter-linux-windows-und-os-x-im-griff/
@@ -34,9 +34,15 @@ NGINX ist ein Proxy-Server, der die ClubDMX-Webseite zur Verfügung stellt. Mehr
 
 Zur Installation von Debian ist nichts Spezielles anzumerken. Download des Installers von https://www.debian.org/index.de.html und los gehts. 
 
+Nach der Installation muss der eigene User zur sudoer-Gruppe hinzugefügt werden, ebenso zur Gruppe plugdev:
+
+    su -
+    usermod -aG sudo <username>
+    usermod -aG plugdev <username>
+
 Zusätzliche Pakete anschließend im Terminal installieren:
 
-    sudo apt install dos2unix nginx git pip libasound2-dev libjack-dev
+    sudo apt install dos2unix nginx git pip libasound2-dev libjack-dev pmount
 
 ### Windows Installation: 
 
@@ -159,20 +165,24 @@ Shell Script Files ausführbar machen:
     dos2unix *.sh
     chmod +x *.sh
 
-## Python Module
+## Python Pakete
 
-(im home-Verzeichnis:)
+### Virtual Environment
 
-    sudo apt-get install python3-venv
+Um mehrere Python-Programme mit unterschiedlichen Paketen zu verwenden, werden Virtual Environments verwendet. Falls nur ClubDMX auf diesem Rechner läuft, kann darauf auch verzichtet werden. Im allgemeinen wird es als "good practice" betrachtet, Virtual Environments zu verwenden. Wir installieren eine Virtual Environment im Verzeichnis *.venv* und aktivieren es vor der Installation der Python Pakete.
+
+    sudo apt install python3-venv
+    cd ~
     python3 -m venv .venv
     source .venv/bin/activate
 
-(wir befinden uns im ClubDMX-Skriptverzeichnis, ~/clubdmx_code/scripts)
+(wir wechseln ins ClubDMX-Skriptverzeichnis, ~/clubdmx_code/scripts)
 
 Alle nötigen Module installieren:
 
 Für Installation am Raspberry:
 
+    cd ~/clubdmx_code/scripts
     ./python_setup.sh install raspi
 
 Für Installation am Debian Rechner:
@@ -235,7 +245,8 @@ Für das erste Login gilt in Windows dieselbe Anleitung wie in der Linux-Install
 
 ## Wichtige Anmerkungen:
 
-python_setup.sh kann auch für das Upgrade der Extensions verwendet werden, der entsprechende Befehl lautet für den Raspberry:
+python_setup.sh kann auch für das Upgrade der Extensions verwendet werden (Virtual Environment vorher aktivieren). 
+Der entsprechende Befehl lautet für den Raspberry:
 
     ./scripts/python_setup.sh upgrade raspi 
 
@@ -243,10 +254,8 @@ und für Debian:
 
     ./scripts/python_setup.sh upgrade debian 
 
-**app_start.sh**: Der Start der App ist, obwohl die Raspberries bzw. Linux-Rechner nach dem selben Schema installiert wurden, unterschiedlich zu bewerkstelligen. Vermutlich liegt es daran, ob die Installation als root oder als regulärer User gemacht wird.
-Das muss beim Start der App berücksichtigt werden, indem die Environment-Variable GUNICORNSTART gesetzt wird.
-
-Zum Testen der Installation im Terminal kann Gunicorn ohne Pfadangabe verwendet werden.
+**app_start.sh**: Der Start der App ist, obwohl die Raspberries bzw. Linux-Rechner nach dem selben Schema installiert wurden, unterschiedlich zu bewerkstelligen. Zum Beispiel muss die Virtual Evironment angegeben werden.
+Das muss beim Start der App berücksichtigt werden, indem Environment-Variablen gesetzt werden und/oder Optionen angegeben werden.
 
 ## Autostart:
 
@@ -259,7 +268,7 @@ hier eintragen vor der letzten Zeile (= exit 0):
     # olad start:
     su pi -c "olad -f" 
 
-Anmerkung: Wenn beim Einschalten auch der Netzwerk-Router hochgestartet wird (z.B. im Jazzit Saal), dann muss der Netzwerk-Dienst mit Zeitverzögerung neu gestartet werden. Dabei kann auch OLA neugestartet werden. Die folgende Zeile wird in /etc/rc.local eingetragen:
+Anmerkung: Wenn beim Einschalten auch der Netzwerk-Router hochgefahren wird (z.B. im Jazzit Saal), dann muss der Netzwerk-Dienst mit Zeitverzögerung neu gestartet werden. Dabei kann auch OLA neugestartet werden. Die folgende Zeile wird in /etc/rc.local eingetragen:
 
     bash -c “sleep 90 && sudo systemctl restart networking && curl http://127.0.0.1:9090/reload”
 
@@ -285,7 +294,7 @@ Falls ClubDMX noch im Test läuft, dann beenden mit:
 
 Nun wird der Start von ClubDMX mit NGINX vorbereitet:
 
-    sudo ./scripts/nginx_setup.sh
+    sudo ./scripts/nginx_setup.sh -v .venv
 
 Bei Fehlern gibt es hier Kontrollen:
 

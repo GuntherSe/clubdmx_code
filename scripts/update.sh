@@ -7,6 +7,8 @@
 # Auswahl 1: von zip-File oder von Github
 # Auswahl 2: OS-Version raspi oder debian
 # Auswahl 3: ClubDMX nach Update im Testmodus starten ja/nein
+# Auswahl 4: Virtual Environment: Wenn angegeben, dann ist es ein 
+#    Verzeichnis im Home-Laufwerk, z.B.: .venv
 # ----------------------------------------------------
 # Das Update funktioniert nur mit Root-Rechten!
 # ref: https://askubuntu.com/a/30157/8698
@@ -33,12 +35,13 @@ gunicornstart="${GUNICORNSTART:-$realhome/.local/bin/gunicorn}"
 cd $codepath
 
 # Kommandozeilenparameter prüfen:
-while getopts f:o:s: flag
+while getopts f:o:s:v: flag
 do
   case "${flag}" in
     f) ZIPFILE=${OPTARG};;
     o) OSVERSION=${OPTARG};;
     s) STARTOPT=${OPTARG};;
+    v) VIRTUALENV=${OPTARG};;
   esac
 done
 
@@ -56,6 +59,8 @@ if [ -z "$ZIPFILE" ]; then
   echo "Verwendung: $0 -o <os_version> -f [github | <zipfile>] [-s test]"
   exit 1
 fi
+
+# Virtualenv Option angegeben?
 
 # Startoption nach Update:
 if [ -z "$STARTOPT" ]; then
@@ -113,7 +118,12 @@ dos2unix ./scripts/*.sh
 chmod +x ./scripts/*.sh
 
 # Python-Extensions installieren:
-echo "Python Extensions installieren..."
+if [ -z "$VIRTUALENV" ]; then
+  echo "Python Extensions installieren..."
+else
+  echo "Python Extensions in $VIRTUALENV installieren..."
+  sudo -u $realuser source $realhome/$VIRTUALENV/bin/activate
+fi
 if [ "$OSVERSION" = "raspi" ]; then
   sudo -u $realuser ./scripts/python_setup.sh install $OSVERSION
 elif [ "$OSVERSION" = "debian" ]; then
@@ -130,12 +140,20 @@ sudo -u $realuser python3 ./dmx/rooms_check.py $roompath
 # ClubDMX neu starten:
 if [ -z "$STARTOPT" ]; then
   echo "ClubDMX neu starten."
-  echo "j" | ./scripts/nginx_setup.sh
+  if [ -z "$VIRTUALENV" ]; then
+    echo "j" | ./scripts/nginx_setup.sh
+  else
+    echo "j" | ./scripts/nginx_setup.sh -v $VIRTUALENV
+  fi
   # systemctl restart clubdmx
   # systemctl restart nginx
 else
   echo "ClubDMX im Testmodus mit Rückmeldungen starten."
   sudo -u $realuser ./scripts/app_start.sh stop
-  sudo -u $realuser ./scripts/app_start.sh start
+  if [ -z "$VIRTUALENV" ]; then
+    sudo -u $realuser ./scripts/app_start.sh start
+  else
+    sudo -u $realuser ./scripts/app_start.sh -v $VIRTUALENV start
+  fi
 fi
 

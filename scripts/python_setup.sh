@@ -8,6 +8,10 @@
 # Requirement-Datei angegeben?
 # diese Terminologie ist vorgesehen: require_'version'.txt 
 # 'version' ist die OS-Version, in der Python installiert ist
+
+# Falls eine Virtual Environment verwendet wird, dann muss diese vor dem
+# Ausführen dieses Skripts aktiviert werden!
+
 codepath="${CLUBDMX_CODEPATH:-$HOME/clubdmx_code}"
 cd $codepath
 

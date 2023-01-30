@@ -16,6 +16,9 @@
 # oder Terminal Start mit Rückeldungen: export GUNICORNSTART="gunicorn"
 # -----------------------------------------------------
 
+# Virtual Environment:
+# kann mit der Option -v angegeben werden, das ist dann ein Subdir im HOME-Verzeichnis
+
 # Konfiguration über Environment-Varialben oder Default-Werte:
 codepath="${CLUBDMX_CODEPATH:-$HOME/clubdmx_code}"
 roompath="${CLUBDMX_ROOMPATH:-$HOME/clubdmx_rooms}"
@@ -24,18 +27,30 @@ gunicornstart="${GUNICORNSTART:-$HOME/.local/bin/gunicorn}"
 cd $codepath
 export PYTHONPATH="${PWD}/app:${PWD}/dmx"
 
-case "$1" in
-  venv)
-    gunicornstart="$HOME/.venv/bin/gunicorn"
-    echo "Starte ClubDMX zum Testen"
-    touch test1running
-    $gunicornstart  -b 0.0.0.0:5000  wsgi:app
-    # Anmerkung: mit pgrep -fl wsgi.py erhält man die PID
-    ;;
+# Virtualenv Option angegeben?
+while [ True ]; do
+if [ "$1" = "-v" ]; then
+    VIRTUALENV=$2
+    shift 2
+else
+    break
+fi
+done
 
+# Kommando:
+COMMAND=( "${@}" )
+
+case "$COMMAND" in
 
   start)
     echo "Starte ClubDMX zum Testen"
+    if [ -z $VIRTUALENV ]; then
+      echo "Virtualenv nicht angegeben."
+    else
+      echo "Verwende Virtualenv $HOME/$VIRTUALENV"
+      source $HOME/$VIRTUALENV/bin/activate
+      gunicornstart="$HOME/$VIRTUALENV/bin/gunicorn"
+    fi
     touch test1running
     $gunicornstart  -b 0.0.0.0:5000  wsgi:app
     # Anmerkung: mit pgrep -fl wsgi.py erhält man die PID
@@ -44,6 +59,13 @@ case "$1" in
   service)
     # für den Start als Service
     echo "Starte ClubDMX als Service"
+    if [ -z $VIRTUALENV ]; then
+      echo "Virtualenv nicht angegeben."
+      # gunicornstart="/home/gunther/.venv/bin/gunicorn"
+    else
+      echo "Verwende Virtualenv $HOME/$VIRTUALENV"
+      gunicornstart="$HOME/$VIRTUALENV/bin/gunicorn"
+    fi
     touch test1running
     $gunicornstart --bind unix:clubdmx.sock -m 007 wsgi:app
     ;;
@@ -60,7 +82,7 @@ case "$1" in
     ;;
 
   *)
-    echo "Verwendung: $0 <start|stop|service>"
+    echo "Verwendung: $0 [-v <Virtualenv> ] <start|stop|service> "
 
     if [ -e test1running ]
     then

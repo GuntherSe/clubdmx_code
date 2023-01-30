@@ -7,10 +7,13 @@
     /etc/nginx/sites-enabled/clubdmx
     Diese Files werden entsprechend dem Code-Verzeichnis und dem User 
     angepasst.
+
+    Virtual Environment: wenn argv[1] angegeben, dann ist das der Pfad zur venv
  """
 
 import os
 import os.path
+import sys
 
 # -------------------------------------------------------------------------
 
@@ -22,6 +25,10 @@ if __name__ == '__main__':
     defaultpath = os.path.dirname (os.path.dirname(os.path.realpath(__file__)))
 
     codepath = os.getenv ("CLUBDMX_CODEPATH", defaultpath)
+    if len (sys.argv) > 1:
+        venv = sys.argv[1]
+    else:
+        venv = None
     print (f"codepath: {codepath}")
     print (f"user: {user}")
 
@@ -32,6 +39,11 @@ if __name__ == '__main__':
             for line in infile:
                 line = line.replace ("_USER", user)
                 line = line.replace ("_CLUBDMX_CODEPATH", codepath)
+                if venv:
+                    venvoption = "-v " + venv
+                    line = line.replace ("_VENV", venvoption)
+                else:
+                    line = line.replace ("_VENV", "")
                 outfile.write (line)
 
     inname = os.path.join (defaultpath, "scripts", "site_proto.txt")

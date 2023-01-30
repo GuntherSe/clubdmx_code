@@ -10,6 +10,16 @@ if ! [ "$(id -u)" = 0 ]; then
 	exit 1
 fi
 
+# Virtualenv Option angegeben?
+while [ True ]; do
+if [ "$1" = "-v" ]; then
+    VIRTUALENV=$2
+    shift 2
+else
+    break
+fi
+done
+
 if [ $SUDO_USER ]; then
     realuser=$SUDO_USER
 else
@@ -23,12 +33,22 @@ codepath="${CLUBDMX_CODEPATH:-$realhome/clubdmx_code}"
 cd $codepath/scripts
 
 echo "Files vorbereiten..."
-sudo -u $realuser python3 nginxfiles.py
+if [ -z $VIRTUALENV ]; then
+  echo "Virtualenv nicht angegeben."
+  sudo -u $realuser python3 nginxfiles.py
+else
+  echo "Verwende Virtualenv $VIRTUALENV"
+  sudo -u $realuser python3 nginxfiles.py $VIRTUALENV
+
+  # source $VIRTUALENV/bin/activate
+  # export CLUBDMX_VENV=$VIRTUALENV
+fi
+
 
 # echo "Files kopieren, benötigt SUDO Rechte!"
 cp service.txt /etc/systemd/system/clubdmx.service
 cp site.txt /etc/nginx/sites-available/clubdmx
-ln -s /etc/nginx/sites-available/clubdmx /etc/sites-enabled 2> /dev/null
+ln -s /etc/nginx/sites-available/clubdmx /etc/nginx/sites-enabled 2> /dev/null
 # nginx default-Site löschen
 rm /etc/nginx/sites-enabled/default 2> /dev/null
 
