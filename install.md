@@ -321,12 +321,12 @@ Hier auf den Button *Raw* klicken, anschließend Rechtsklick, *Seite speichern u
 
 -s: Hier kann die Startoption festgelegt werden. Wird dieser Parameter weggelassen (das ist der Standard), dann wird ClubDMX über NGINX ausgeführt. Falls Probleme beim Update auftreten sollten, dann bitte **update.sh** mit der Startoption -s test erneut ausführen. Damit wird ClubDMX im Terminal mit Rückmeldungen gestartet und Fehler können lokalisiert werden.
 
-Das Update wird nun für den Raspberry mit folgenden Befehlen im Terminal durchgeführt:
+-v: Hier wird die Virtual Environment angegeben. Wenn venv wie in der Anleitung im Verzeichnis *.venv* installiert wurde, dann sind hier die korrekten Befehle für das Update. Für den Raspberry mit folgenden Befehlen im Terminal durchführen:
 
     cd ~
     dos2unix update.sh
     chmod +x update.sh
-    sudo ./update.sh -f github -o raspi
+    sudo ./update.sh -f github -o raspi -v .venv
 
 Im Browser sind nun OLA und ClubDMX aufrufbar.
 
