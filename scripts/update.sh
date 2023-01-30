@@ -48,7 +48,7 @@ done
 # Betriebssystem ermittlen:
 if [ -z "$OSVERSION" ]; then
   echo "Die OS-Version wurde nicht angegeben."
-  echo "Verwendung: $0 -o <os_version> -f [github | <zipfile>] [-s test]"
+  echo "Verwendung: $0 -o <os_version> -f [github | <zipfile>] [-s test] [-v venv]"
   echo "os_version: raspi oder debian"
   exit 1
 fi
@@ -56,7 +56,7 @@ fi
 # zip oder git?
 if [ -z "$ZIPFILE" ]; then
   echo "Die Update-Quelle (git oder <zipfile>) wurde nicht angegeben."
-  echo "Verwendung: $0 -o <os_version> -f [github | <zipfile>] [-s test]"
+  echo "Verwendung: $0 -o <os_version> -f [github | <zipfile>] [-s test] [-v venv]"
   exit 1
 fi
 
