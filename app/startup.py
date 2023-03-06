@@ -27,7 +27,7 @@ from midiutils import eval_midiinput, get_midicommandlist
 if os.environ.get ("PYTHONANYWHERE")  != "true":
     from mido_input import Midi
 
-current_room = ""
+current_room = "" # aktueller Raumpfad
 
 logger = logging.getLogger ("clubdmx")
 
@@ -167,7 +167,7 @@ def load_config (with_savedlevels=False):
         globs.cfgbase.save_data ()
 
     # Raum-Pfad und davon abhängige Dirs:
-    get_roompath () # in global current_room gespeichert
+    get_roompath () # Pfad wird in modul-wide variable current_room gespeichert
     globs.room.set_path (current_room)
     globs.patch.set_path   (current_room)
     Cue.set_path  (current_room)
@@ -198,7 +198,6 @@ def load_config (with_savedlevels=False):
         # MIDI auswerten
         cfgdata = globs.cfg.get ("midi_on") 
         if cfgdata == "1": 
-            # globs.midi.reset_pygame ()
             globs.midiactive = True
             if Midi.paused:
                 Midi.resume ()
@@ -214,7 +213,7 @@ def load_config (with_savedlevels=False):
                 ret = globs.midi.set_indevice (i, devnum)
                 if ret["category"] != "success":
                     globs.midi.set_indevice (i, -1)
-                    globs.cfg.set ("midi_input_"+num, -1)
+                    # globs.cfg.set ("midi_input_"+num, -1)
             # MIDI-Output:
                 device = globs.cfg.get ("midi_output_"+num)
                 try:
@@ -224,7 +223,7 @@ def load_config (with_savedlevels=False):
                 ret = globs.midi.set_outdevice (i, devnum)
                 if ret["category"] != "success":
                     globs.midi.set_outdevice (i, -1)
-                    globs.cfg.set ("midi_output_"+num, -1)
+                    # globs.cfg.set ("midi_output_"+num, -1)
             globs.midi.set_eval_function (eval_midiinput)
         else:
             globs.midiactive = False

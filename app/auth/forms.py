@@ -27,7 +27,7 @@ def userbeautify (inputlist:list) -> list:
 class LoginForm(FlaskForm):
     username = StringField('Benutzername', validators=[DataRequired()])
     password = PasswordField('Passwort', validators=[DataRequired()])
-    remember_me = BooleanField('Remember Me')
+    remember_me = BooleanField('Angemeldet bleiben')
     # submit = SubmitField('Log In')
 
 

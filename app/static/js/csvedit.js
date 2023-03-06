@@ -2,24 +2,38 @@
 
 // ----------------------------------------------------------------------------
 // Mousemode ändern: mögliche Werte: 'edit', 'select'
-var MouseModeStr;
+// Mousemode steuert das Verhalten beim Klick auf ein Element.
+let MouseModeStr;
 
-function changeMousemode (id, newmode) {
+function getEditmode () {
+  // liefert den aktuellen Editmode, entweder "select" oder "edit"
+  return MouseModeStr;
+};
+
+function setEditmode (newMode) {
+  // der Editmode wird gesetzt
+  // newmode:str, Werte: edit, select
+  // zu ändern: Mousemode, Anzeige auf Website 
+  $.get ("/editmode/"+newMode, function (data) {
+    $(".edit-select-button").text (data); // data: newMode in Großbuchstaben
+    $("#sessiondata").attr ("editmode", newMode);
+    MouseModeStr = newMode;
+    initMouseMode ();
+  });
+
+};
+  
+function changeMousemode (id, newMode) {
   $(id).on ("click", function () {
-    $.get ("/editmode/"+newmode, function (data) {
-      $(".edit-select-button").text (data);
-      $("#sessiondata").attr ("editmode", newmode);
-      MouseModeStr = newmode;
-      initMouseMode ();
-    });
-  }); 
-}
+    setEditmode (newMode);
+  });
+};
 
 function initCsvtableMouse () {
   // Verhalten bei Click in CSV-Tabelle:
-  if (editmode ("select")) {
+  if (getEditmode () == "select") {
     selectableCsvLines ();
-  } else if (editmode ("edit")) {
+  } else if (getEditmode () == "edit") {
     // $("tr").removeClass ("ui-state-highlight");
     removeSelectableCsvLines ();
     editableCsvFields ();
@@ -39,21 +53,9 @@ function initMouseMode () {
 // CELL-EDIT start
 var editcell = undefined; // zu editierende Text-Zelle
 
-function editmode (str) {
-  // prüfen, welcher editmode eingeschalten ist
-  // mögliche Werte: edit, select=default
-  // if ( $("#sessiondata").attr ("editmode") == str) {
-  if ( MouseModeStr == str) {
-      return true;
-  } else {
-    return false;
-  };
-};
-    
-    
 // highlight edit-cell 
 function selectTextcell() {
-  if ( editmode ("edit") ) {
+  if ( getEditmode () == "edit" ) {
     editcell.attr ('contenteditable', 'true')
       .addClass('edit_selected')
       .focus();
@@ -148,7 +150,7 @@ function editableCsvFields () {
 
   // csv-Felder editierbar machen, nach Feldname unterscheiden:
   $(".csvcell").click (function (event) {
-    if (editcell == undefined && editmode ("edit")) {
+    if (editcell == undefined && getEditmode () == "edit") {
       event.preventDefault ();
       editcell = $(this);
       let celldata = get_celldata (editcell);

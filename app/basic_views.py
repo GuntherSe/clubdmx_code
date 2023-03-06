@@ -292,7 +292,7 @@ def exec ():
         ein Fader-Block
         ein Button-Block
     """
-    session["editmode"] = "select" # editmode select ohne message
+    # session["editmode"] = "select" # editmode select ohne message
     faderdata = get_faderdata ()
     buttondata = get_buttondata ()
     return render_template ("exec.html", 

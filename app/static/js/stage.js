@@ -76,13 +76,13 @@ function editableTextBlurred() {
 // --- Maus-Verhalten --------------------------------------------------------
 function initStageMouse () {
   // Stage:
-  if (editmode ("select")) {
+  if (getEditmode () == "select") {
     // console.log ("Stage-Maus: select");
     selectableStageElements ();
     $(".stage").css ("border-color", "orange");
     $("div.edit_div").removeClass ("emptybox").off ();
 
-  } else if (editmode ("edit")) {
+  } else if (getEditmode () == "edit") {
     // console.log ("Stage-Maus: edit");
     removeSelectableStage ();
     $("div.edit_div").click (divClicked);
@@ -100,13 +100,13 @@ function initStageMouse () {
 
 function initMobStageMouse () {
   // Stage:
-  if (editmode ("select")) {
+  if (getEditmode () == "select") {
     console.log ("Stage-Maus: select");
     selectableMobileElements ();
     $(".mob-stage").css ("border-color", "orange");
     $("div.edit_div").removeClass ("emptybox").off ();
 
-  } else if (editmode ("edit")) {
+  } else if (getEditmode () == "edit") {
     console.log ("Stage-Maus: edit");
     removeSelectableStage ();
     $("div.edit_div").click (divClicked);
@@ -415,25 +415,6 @@ function periodic_attribstatus () {
     }
   }); // ende $.ajax 
 }
-
-
-// function periodic_attribstatus () {
-//   $.ajax ({
-//     url: "/getinfo/firstattribute", 
-//     success: function(data){
-//       var attlevels = $.parseJSON(data);
-//       var cssclass;
-//       for (var key in attlevels) {
-//         cssclass = ".head-" + key;
-//         $(cssclass).css ("height", attlevels[key]);        
-//         // $(cssclass).css ("width", attlevels[key]);
-//       }
-//     },
-//     complete: function () {
-//       setTimeout (periodic_attribstatus, 1000);
-//     }
-//   }); // ende $.ajax 
-// }
 
 // ----------------------------------------------------------------------------
 

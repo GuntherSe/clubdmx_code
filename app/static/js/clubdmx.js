@@ -294,13 +294,43 @@ function csvSavediscardButtons () {
   };
 };
 
+// siehe: https://stackoverflow.com/questions/5052543/how-to-fire-ajax-request-periodically
+function periodic_commonstatus () {
+  // periodischer Aufruf zum Holen der variablen Basisdaten
+    $.ajax ({
+        url: "/getinfo/commonstatus", 
+        success: function(data){
+          var jdata = JSON.parse (data);
+          //console.log ("common: " + JSON.stringify (jdata));
+          if (jdata["editmode"] == "select") {
+            setEditmode ("select");
+          } else {
+            setEditmode ("edit");
+          };
+          initMouseMode ();
+          if (jdata["topcuecontent"] == "true") {
+            showSecondNav ();
+          } else {
+            hideSecondNav ();
+          } 
+
+        },
+        complete: function () {
+        setTimeout (periodic_commonstatus, 1000);
+        }
+    }); // ende $.ajax
+  }
+
+
+
 // --- Navigation für Topcue und CSV-Buttons: --------------------------------
 
 $(document).ready (function() {
+
+  periodic_commonstatus ();
   // Mousemode Optionen:
   changeMousemode (".mousemode-edit", "edit");
   changeMousemode (".mousemode-select", "select");
-
 
   // topcue Nav Anzeige auf allen Seiten:
   if ($("#sessiondata").attr ("topcuecontent") == "true") {

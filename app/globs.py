@@ -54,7 +54,6 @@ SHIFT = 1000 # für Fadertabellen zur Untrscheidung, siehe startup_func.py
 # Globale Objekte:
 cfgbase         = Config (os.path.join(basedir, ".app"))  
 # zuletzt verwendete Config und Raum sind hier zu finden
-# current_room    = ""
 room            = Room ()
 cfg             = Config ()       # Config
 patch           = Patch()
@@ -73,11 +72,10 @@ else:
 
 if PYTHONANYWHERE == "false":
     from mido_input import Midi
-    # from midioutput import MidiOutput
     from oscinput import OscInput
     from apputils import evaluate_osc
 
-    midiactive      = False   
+    midiactive = False   
     midi = Midi ()
 
     oscinput = OscInput ()

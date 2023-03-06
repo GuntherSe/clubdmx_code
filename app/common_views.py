@@ -130,16 +130,29 @@ def get_info (item:str) -> json:
     in JS: $.get ('/getinfo/<item>', function(data) {...
     liefert data zurück
     """
-    if item == "sliderval":       # sliderwerte übermitteln für Seitenaufbau
+    if item == "commonstatus":
+        # veränderliche Basisinfo für alle Seiten: editmode, topcuecontent
+        ret = {}
+        if "editmode" not in session:
+            session["editmode"] = "select"
+        ret["editmode"] = session["editmode"]
+        if len (globs.topcue.content):
+            ret["topcuecontent"] = "true"
+        else:
+            ret["topcuecontent"] = "false"
+
+        return json.dumps (ret)
+    
+    elif item == "sliderval":       # sliderwerte übermitteln für Seitenaufbau
         sliders = len (globs.fadertable)
         bytevals = [int (globs.fadertable[i].level *255) for i in range (sliders)]
         return json.dumps (bytevals)
 
-    elif item == "buttonval":       # faderwerte übermitteln für Seitenaufbau
-        # nicht in Verwendung?
-        buttons = len (globs.buttontable)
-        bytevals = [int (globs.buttontable[i].level *255) for i in range (buttons)]
-        return json.dumps (bytevals)
+    # elif item == "buttonval":       # faderwerte übermitteln für Seitenaufbau
+    #     # nicht in Verwendung?
+    #     buttons = len (globs.buttontable)
+    #     bytevals = [int (globs.buttontable[i].level *255) for i in range (buttons)]
+    #     return json.dumps (bytevals)
 
     elif item == "buttonstatus":  # Buttonstatus übermittlen
         buttons = len (globs.buttontable)
@@ -161,22 +174,22 @@ def get_info (item:str) -> json:
         out = render_template ("output-content.html", items = items)
         return json.dumps (out)
 
-    elif item == "firstattribute": 
-        # Wert für erstes Attribut jedes Heads
-        # das ist in der Regel Intensity
-        # verwendet in stage.html für progressbars
-        if globs.PYTHONANYWHERE == "true":
-            # keine threads, daher aktuelle Berechnungen machen:
-            calc_mixoutput ()
-        attlevels = {}
-        headlist = globs.patch.headlist ()
-        for head in headlist:
-            attlist = globs.patch.attriblist (head)
-            level = int (globs.patch.attribute (head, attlist[0]))
-            # der Default-Wert ist str
-            attlevels[head] = f"{int (100*level/255)}%"
-            # levels in %
-        return json.dumps (attlevels)
+    # elif item == "firstattribute": 
+    #     # Wert für erstes Attribut jedes Heads
+    #     # das ist in der Regel Intensity
+    #     # verwendet in stage.html für progressbars
+    #     if globs.PYTHONANYWHERE == "true":
+    #         # keine threads, daher aktuelle Berechnungen machen:
+    #         calc_mixoutput ()
+    #     attlevels = {}
+    #     headlist = globs.patch.headlist ()
+    #     for head in headlist:
+    #         attlist = globs.patch.attriblist (head)
+    #         level = int (globs.patch.attribute (head, attlist[0]))
+    #         # der Default-Wert ist str
+    #         attlevels[head] = f"{int (100*level/255)}%"
+    #         # levels in %
+    #     return json.dumps (attlevels)
 
     elif item == "attributes":
         # für die Anzeige in Stage:
@@ -256,7 +269,7 @@ def sliderlevel(index:int) -> str:
         level = request.form["level"]
         globs.fadertable[index].level = float(level) / 255
         if globs.PYTHONANYWHERE == "false" and globs.midiactive:
-            midifader_monitor ("cuefader", index, int(int(level)/2))
+            midifader_monitor ("cuefader", index, int(float(level)/2))
         # midifader_monitor (1+index, int (level)/2)
     return "ok"
 

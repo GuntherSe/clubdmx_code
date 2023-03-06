@@ -6,12 +6,11 @@
 # Repository: https://github.com/MrVallentin/mount.py
 #
 # Date Created: March 25, 2016
-# Last Modified: March 27, 2016
+# Last Modified: March 2, 2023
 #
-# Developed and tested using Python 3.5.1
+# Developed and tested using Python 3.9.1
 
 import os
-# import getpass
 import time
 
 
@@ -45,9 +44,9 @@ def list_media_devices():
 
 
 def get_device_name(device):
-    """ z.B sdb 
+    """ returns str, i.e. sdb 
     
-    device: z.B. /dev/sdb
+    device: i.e. /dev/sdb
     """
     return os.path.basename(device)
 
@@ -55,45 +54,24 @@ def get_device_block_path(device):
     return "/sys/block/%s" % get_device_name(device)
 
 def get_media_path(device):
-    """ volle Pfadangabe zum Medienlaufwerk
+    """ full path of media drive
     
-    device: z.B. sdb, /dev/sdb, /media/gunther/GS-USB
-    return: kann bei Automount (Debian) ein Subdir sein!
-        z.B /media/sdb1 oder /media/gunther/GS_2GB
+    device: i.e. sdb, /dev/sdb, /media/gunther/GS-USB
+    return: is a subdir in case of Automount (Debian)!
+        i.e. /media/sdb1 oder /media/gunther/GS_2GB
     """
     os.system ("pmount > output")
-    # device bereits gemounted:
+    # device already mounted:
     with open ("output", "r") as f:
         for line in f:
             data = line.split ()
             if  device in data[0] or device == data[2]:
                 os.remove ("output")
                 return data[2]
-    # device nicht gemounted:
+    # device not mounted:
     os.remove ("output")
     return "/media/" + device + "1"
     
-
-
-    # os.system("sudo fdisk -l %s > output" % device)
-    # with open("output", "r") as f:
-    #     data = f.read()
-    #     return data.split("\n")[-2].split()[0].strip()
-
-    # return "/media/" + get_device_name(device)
-
-# def get_partition(device):
-#     """ z.B /dev/sdb1 
-
-#     nur die erste Partition eines Laufwerks wird berücksichtigt
-#     fdisk geht nur als sudo!
-#     """
-#     return device + "1"
-#     # os.system("sudo fdisk -l %s > output" % device)
-#     # with open("output", "r") as f:
-#     #     data = f.read()
-#     #     return data.split("\n")[-2].split()[0].strip()
-
 
 def is_mounted(device):
     return os.path.ismount(get_media_path(device))
@@ -101,7 +79,6 @@ def is_mounted(device):
 
 def mount_partition(partition, name="usb"):
     path = get_media_path(name)
-    # user = getpass.getuser ()
     if not is_mounted(path):
         os.system (f"pmount {partition}")
         # os.system("sudo mkdir -p " + path)
@@ -110,7 +87,7 @@ def mount_partition(partition, name="usb"):
 def unmount_partition(name="usb"):
     path = get_media_path(name)
     if is_mounted(path):
-        # möglicher 'target is busy' Error:
+        # possible 'target is busy' Error:
         ret = 1
         while ret:
             time.sleep (0.5)
@@ -128,11 +105,9 @@ def mount(device, name=None):
         name = os.path.basename (name)
     
     mpath = get_media_path (name)
-    # partition = mpath + "1"
     if not is_mounted(mpath):
         partition = device + "1"
         os.system (f"pmount {partition}")
-
     # mount_partition(get_partition(device), name)
 
 def unmount(device, name=None):
