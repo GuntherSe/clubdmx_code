@@ -98,27 +98,32 @@ def dbbackup (dest:str) -> dict:
     return ret
 
 
-def dbrestore (src:str) -> dict:
+def dbrestore (usbsrc:str, dbname:str = "") -> dict:
     """ User-DB vom USB-Stick nach app.db kopieren 
-    src: USB_pfad
+    usbsrc: USB_pfad
+    dbname: wenn angegeben, dann diese Datenbank verwenden. Sonst hostname.db
     return: Message
     """
     ret = {}
     apppath = globs.basedir
     appdb = os.path.join (apppath, ".app.db")
-    hostname = gethostname ()
-    # print ("Hostname: ", hostname)
-    srcdbname = hostname + os.extsep + "db"
+    # Source Datenbank:
+    if dbname == "":
+        hostname = gethostname ()
+        # print ("Hostname: ", hostname)
+        srcdbname = hostname + os.extsep + "db"
+    else:
+        srcdbname = dbname
 
-    mount.mnt.mount (src)
-    mediapath = mount.mnt.get_media_path (src)
+    mount.mnt.mount (usbsrc)
+    mediapath = mount.mnt.get_media_path (usbsrc)
     srcpath = os.path.join (mediapath, "clubdmx_backup")
     srcdb = os.path.join (srcpath, srcdbname)
     if not os.path.isfile (srcdb):  # existiert nicht
         ret["category"]="danger"
         msg = f"Restore-Fehler: {srcdb} nicht gefunden" 
         ret["message"] = msg
-        mount.mnt.unmount (src)
+        mount.mnt.unmount (usbsrc)
         return ret
 
     try:
@@ -130,7 +135,7 @@ def dbrestore (src:str) -> dict:
         msg = "Restore-Fehler: " + str (why)
         ret["message"] = msg
 
-    mount.mnt.unmount (src)
+    mount.mnt.unmount (usbsrc)
     return ret
 
 

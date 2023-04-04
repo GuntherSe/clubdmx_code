@@ -307,12 +307,24 @@ function periodic_commonstatus () {
           } else {
             setEditmode ("edit");
           };
-          initMouseMode ();
+          // Buttons zu CSV-Zeilen cut/paste:
+          // if (jdata["selectedcsvdata"] == "true") {
+          //   $(".navSelect").removeClass ("d-none");
+          // } else {
+          //   $(".navSelect").addClass ("d-none");
+          // };
+          if (jdata["csvclipboard"] == "true") {
+            $(".csvClipboard").removeClass ("d-none");
+          } else {
+            $("csvClipboard").addClass ("d-none");
+          };
+          // initMouseMode ();
+          // Topcue Menü anzeigen:
           if (jdata["topcuecontent"] == "true") {
             showSecondNav ();
           } else {
             hideSecondNav ();
-          } 
+          }; 
 
         },
         complete: function () {
@@ -329,15 +341,17 @@ $(document).ready (function() {
 
   periodic_commonstatus ();
   // Mousemode Optionen:
+  initMouseMode ();
   changeMousemode (".mousemode-edit", "edit");
   changeMousemode (".mousemode-select", "select");
 
   // topcue Nav Anzeige auf allen Seiten:
-  if ($("#sessiondata").attr ("topcuecontent") == "true") {
-    showSecondNav ();
-  } else {
-    hideSecondNav ();
-  };
+  // wird durch periodic_commonstatus () durchgeführt
+  // if ($("#sessiondata").attr ("topcuecontent") == "true") {
+  //   showSecondNav ();
+  // } else {
+  //   hideSecondNav ();
+  // };
 
   $(".selectDiv").empty();
   //modaldialogToPython (".cueview", "/cuechild/cuemodal");

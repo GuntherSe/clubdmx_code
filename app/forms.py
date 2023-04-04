@@ -183,42 +183,6 @@ def csvline ():
                             form = form, fieldnames=fieldnames)
 
 
-# @forms.route ("/csvfield")
-# def csvfield ():
-#     """ Form zum Editieren eines CSV-Felds nach den im Layout definierten Regeln
-#     """
-#     class F(Form):
-#         pass
-
-#     subdir = request.args.get ("subdir")
-#     field  = request.args.get ("field")
-
-#     rule = globs.room.layout.rule (subdir + field.lower())
-#     create_field (F, field, rule)
-
-#     form = F (request.form)
-
-#     return render_template ("csvfield.html", form = form)
-    
-# @forms.route ("/csvfieldeval", methods=['POST'])
-# def csvfieldeval ():
-#     """ Form zum Editieren eines CSV-Felds nach den im Layout definierten Regeln
-#     """
-#     class F(Form):
-#         pass
-
-#     subdir = request.form ["subdir"]
-#     field  = request.form ["field"]
-#     val    = request.form ["val"]
-
-#     rule = globs.room.layout.rule (subdir + field.lower())
-#     create_field (F, field, rule)
-
-#     form = F (request.form)
-#     form[field].data = val
-#     print ("formdata: ", form.data)
-#     result = form.validate ()
-#     return "ok"
 
 @forms.route ("/usb/<action>", methods=['GET', 'POST'])
 @login_required
@@ -231,8 +195,6 @@ def usb (action:str):
     action: 'backup', 'backupnew', 'restore', 'dbbackup', 'dbrestore'
     """
     choices = get_usbchoices ()
-    # choices = onoff_choices
-    # default = "0"
     class Usbform (Form):
         device = SelectField ("USB-Stick wählen", choices=choices)
 
@@ -258,6 +220,8 @@ def usb (action:str):
         elif action == "dbbackup":
             msg = dbbackup (usbdrv)
         elif action == "dbrestore":
+            # Source Datenbank ermitteln:
+            # 
             msg = dbrestore (usbdrv)
         else:
             msg = {"message":"Diese USB-Aktion ist nicht vorgesehen", 
@@ -285,8 +249,8 @@ def usb (action:str):
         submit_text = "backup"
     elif action == "dbrestore":
         title = "Restore Benutzer-Datenbank von USB"
-        text = "Die Datenbank mit dem Computernamen wird verwendet."
-        submit_text = "wählen"
+        text = "Erster Schritt: USB-Stick wählen."
+        submit_text = "weiter"
     else:
         title = "USB-Aktion"
         text = "keine gültige USB-Aktion gewählt."

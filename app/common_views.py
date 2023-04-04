@@ -17,6 +17,7 @@ from midiutils import press_cuebutton, midifader_monitor, midi_commandlist
 import globs
 
 from csvfileclass import Csvfile
+from csvcutpaste import selecteddata
 from roomclass import Room
 from startup import load_config
 # from startup_func import fadertable_items
@@ -140,7 +141,19 @@ def get_info (item:str) -> json:
             ret["topcuecontent"] = "true"
         else:
             ret["topcuecontent"] = "false"
-
+        # Selektierte CSV-Zeilen?
+        # if len (selecteddata()):
+        #     ret["selectedcsvdata"] = "true"
+        # else:
+        #     ret["selectedcsvdata"] = "false"
+        # CSV-Clipboard enthält Daten?
+        if "csvclipboard" in session:
+            if session["csvclipboard"] == "true":
+                ret["csvclipboard"] = "true"
+            else:
+                ret["csvclipboard"] = "false"
+        else:
+            ret["csvclipboard"] = "false"
         return json.dumps (ret)
     
     elif item == "sliderval":       # sliderwerte übermitteln für Seitenaufbau

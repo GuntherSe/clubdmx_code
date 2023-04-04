@@ -152,7 +152,7 @@ In dieser Installations-Anleitung wird die Verwendung der Default-Verzeichnisse 
 
 ### Alias anlegen: 
 
-Für die Standard-Installation kann auf diesen Schritt verzichtet werden. Zu Testzwecken, Programmentwicklung und Fehlersuche erspart die Verwendung eines Alaias einiges an Tippen.
+Für die Standard-Installation kann auf diesen Schritt verzichtet werden. Zu Testzwecken, Programmentwicklung und Fehlersuche erspart die Verwendung eines Alias einiges an Tippen.
 Diese Zeile am Ende von ~/.bashrc anfügen:
 
     alias clubdmx='$HOME/clubdmx_code/scripts/app_start.sh'
@@ -176,23 +176,22 @@ Um mehrere Python-Programme mit unterschiedlichen Paketen zu verwenden, werden V
     python3 -m venv .venv
     source .venv/bin/activate
 
-(wir wechseln ins ClubDMX-Skriptverzeichnis, ~/clubdmx_code/scripts)
+(wir wechseln ins ClubDMX-Codeverzeichnis, ~/clubdmx_code)
 
 Alle nötigen Module installieren:
 
 Für Installation am Raspberry:
 
-    cd ~/clubdmx_code/scripts
-    ./python_setup.sh install raspi
+    cd ~/clubdmx_code/
+    scripts/python_setup.sh install raspi
 
 Für Installation am Debian Rechner:
 
-    ./python_setup.sh install debian
+    scripts/python_setup.sh install debian
  
 
 .env editieren (mit Nano oder anderem Texteditor):
 
-    cd ~/clubdmx_code
     nano .env
 
 hier eintragen: 
@@ -203,7 +202,7 @@ hier eintragen:
 
 Nun ist ClubDMX fertig installiert und die Installation kann **getestet** werden, durch Starten von app_start.sh. Wenn wie oben angegeben der Alias angelegt wurde, dann mit folgendem Befehl in einem (neuen) Terminal:
 
-    clubdmx start
+    clubdmx -v .venv start
 
 (Ohne das Anlegen eines Alias: *~/clubdmx_code/scripts/app_start.sh start*)
 

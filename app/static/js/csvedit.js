@@ -14,12 +14,15 @@ function setEditmode (newMode) {
   // der Editmode wird gesetzt
   // newmode:str, Werte: edit, select
   // zu ändern: Mousemode, Anzeige auf Website 
-  $.get ("/editmode/"+newMode, function (data) {
-    $(".edit-select-button").text (data); // data: newMode in Großbuchstaben
-    $("#sessiondata").attr ("editmode", newMode);
-    MouseModeStr = newMode;
-    initMouseMode ();
-  });
+  // nur ausführen, wenn newMode != MouseModeStr
+  if (newMode != MouseModeStr) {
+    $.get ("/editmode/"+newMode, function (data) {
+      $(".edit-select-button").text (data); // data: newMode in Großbuchstaben
+      $("#sessiondata").attr ("editmode", newMode);
+      MouseModeStr = newMode;
+      initMouseMode ();
+    });
+  };
 
 };
   

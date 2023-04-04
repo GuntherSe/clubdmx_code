@@ -26,7 +26,7 @@ csvcutpaste = Blueprint ("csvcutpaste", __name__, url_prefix="/csv",
 # Anm: mit Session-Cookies hauts nicht hin
 selectedrowdict = {}
 
-def clipboarddata () ->list:
+def selecteddata () ->list:
     """ die selektierten Reihen des Users liefern
     """
     if current_user.username in selectedrowdict.keys():
@@ -62,7 +62,7 @@ def remove_rows ():
     csvfile.backup ()
 
     # zu löschende Zeilen:
-    rowlist = clipboarddata ()
+    rowlist = selecteddata ()
     if len (rowlist):
         lines = [] # int
         for item in rowlist:
@@ -87,7 +87,7 @@ def copy_to_clipboard ():
     fname = request.args.get ("name")
     fname = fname.replace ('+', os.sep)
     csvfile = Csvfile (fname)
-    rowlist = clipboarddata ()
+    rowlist = selecteddata ()
     if len (rowlist):
         lines = [] # int
         for item in rowlist:
@@ -109,11 +109,12 @@ def modify_clipboard (option:str):
     # csvfile = Csvfile ("temp")
     if option == "stage":
         for item in Csvfile.clipboard:
-            left = px_to_int(item["Left"])
-            top  = px_to_int(item["Top"])
-            item["Left"] = str (left + 30) #+ "px"
-            item["Top"] =  str (top + 30) #+ "px"
-            # item["Text"] = item["Text"] + "(Kopie)"
+            if "Left" in item:
+                left = px_to_int(item["Left"])
+                item["Left"] = str (left + 30) #+ "px"
+            if "Top" in item:
+                top  = px_to_int(item["Top"])
+                item["Top"] =  str (top + 30) #+ "px"
 
     # für alle 'option': Defaults ergänzen
     for item in Csvfile.clipboard:
@@ -130,7 +131,7 @@ def paste_clipboard ():
     csvfile = Csvfile (fname)
     # Backup:
     csvfile.backup ()
-    rowlist = clipboarddata ()
+    rowlist = selecteddata ()
     if len (rowlist):
         pos = int (rowlist[0])  # vor der ersten selektierten Zeile einfügen
     else:
