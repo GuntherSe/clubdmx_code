@@ -222,7 +222,8 @@
           <!-- </a> -->
         </li>
         <li class="nav-item mx-n2" >
-          <a class="nav-link nav-topcue" href="{{ url_for('cuechild.topclear') }}">leeren</a>
+          <a class="nav-link nav-topcue" 
+            href="{{ url_for('cuechild.topclear') }}">leeren</a>
         </li>
 
         <li class="nav-item  mx-n2" >
@@ -231,6 +232,11 @@
         </li>  
 
         {{ topsave_button () }}
+
+        <li class="nav-item mx-n2" >
+          <a class="nav-link nav-topcue" 
+            href="{{ url_for('cuechild.snapshot') }}">Snapshot</a>
+        </li>
 
       </ul>
     </div> <!-- container-fluid -->

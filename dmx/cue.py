@@ -271,13 +271,13 @@ class Cue ():
         self._active = False
 
 
-    def mixoutput (self, head_attr, val):
+    def mixoutput (self, head, attr, val):
         """ Mix Output Funktion
 
         den in contrib ermittelten Wert (HTP/LTP) für das Attribut setzen
         """
         if not self.contrib.paused:
-            head,attr = head_attr.split(sep='-')
+            # head,attr = head_attr.split(sep='-')
             self.patch.set_attribute (head, attr, val)
         # print ("mix:", head, attr, val)
 

@@ -244,30 +244,12 @@ def update_cue () ->dict:
     return "ok"
 
 
-# @cuechild.route ("/update_cuefader")
-# def update_cuefader () ->dict:
-#     """ topcue in cuefader[row_num-1] integrieren 
-#     return: Message
-#     """
-#     row_num = request.args.get ("row_num")
-#     cuenr = int (row_num) -1
-#     option = request.args.get ("option")
+@cuechild.route ("/snapshot")
+def snapshot ():
+    """ Aktuellen Output in Topcue laden """
 
-#     if option == "cuefader":
-#         sliders = len (globs.fadertable)
-#         cuetable = globs.fadertable
-#     else: # option == "cuebutton"
-#         sliders = len (globs.buttontable)
-#         cuetable = globs.buttontable
+    globs.topcue.get_snapshot ()
+    flash ("Snapshot erstellt.", category="success")
+    return redirect (redirect_url())
 
-#     if cuenr in range (sliders):
-#         fname = cuetable[cuenr].file.name()
-#         csvfile = Csvfile (fname)
 
-#         globs.topcue.merge_to_cue (cuetable[cuenr])
-#         ret = globs.topcue.merge_to_csv (csvfile)
-
-#         flash (ret["message"], category=ret["category"])
-#     else:
-#         flash ("Zeilennummer nicht gefunden", category="danger")
-#     return "ok"

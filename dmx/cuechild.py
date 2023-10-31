@@ -149,3 +149,9 @@ class Topcue (Cue):
             secondcue.line_to_cuecontent (line)
 
 
+    def get_snapshot (self):
+        """ Aktuelle Contrib-Daten in Topcue mergen/anhängen"""
+
+        snapshot = self.contrib.snapshot ()
+        for item in snapshot:
+            self.line_to_cuecontent (item)

@@ -179,15 +179,17 @@ class Contrib (threading.Thread):
         # print ("tempmix: ", tempmix)
 
 
-    def cue_mix (self):
-        """ Das ist die Mix-Funktion, die htp und ltp berücksichtigt
+    def mixvalues (self) ->dict:
+        """ Mixfunktion, die HTP und LTP berücksichtigt. 
         
-        Brauche daher:  type = HTP/LTP
-                        Faderlevel
-                        Max-level für das Attribut (laut cue.csv)
+        Return: list of triples (head, attrib, value)
+        head: str
+        attrib: str
+        value: int
         """
         tempmix = {}
-        tempmix.clear()
+        ret = []
+        # tempmix.clear()
         # key = 'faderlevel' oder 'Head-Attr'
         # tempmix[key]: 
         #    für HTP (dmx-Wert, letzte fadetime, 0)
@@ -248,11 +250,31 @@ class Contrib (threading.Thread):
 
                 else:
                     pass
-
-        # an output schicken:
+        
         for key in tempmix.keys():
+            head, attrib = key.split (sep='-')
+            ret.append ([head, attrib, int (tempmix[key][0])])
+        
+        return ret
+
+    def cue_mix (self):
+        """ Mix-Funktion, die htp und ltp berücksichtigt
+        """
+        mixvals = self.mixvalues ()
+        # an output schicken:
+        for item in mixvals:
             # print ("contrib.mix: ", key, tempmix[key][0])
-            self.output_function (key, int (tempmix[key][0]))
+            self.output_function (item[0], item[1], item[2])
+
+
+    def snapshot (self) ->list:
+        """ Snapshot aus aktuellen Contrib-Werten erstellen 
+        
+        Berücksichtigt wie cue_mix die Faderlevel und HTP/LTP
+        return: list of triples (head:str, attrib:str, val:int)
+        """
+        snapshot = self.mixvalues ()
+        return snapshot
 
 
 # ---------------------------------------------------------------------

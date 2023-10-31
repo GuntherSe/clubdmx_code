@@ -308,11 +308,10 @@ function periodic_commonstatus () {
             setEditmode ("edit");
           };
           // Buttons zu CSV-Zeilen cut/paste:
-          // if (jdata["selectedcsvdata"] == "true") {
-          //   $(".navSelect").removeClass ("d-none");
-          // } else {
-          //   $(".navSelect").addClass ("d-none");
-          // };
+          // werden von der aktuellen Seite verwaltet, d.h. wenn Zeilen 
+          // ausgewählt werden, dann sind diese sichtbar.
+          // insert/clear sind per User auf allen betreffenden Seiten
+          // sichtbar (wenn Daten im Clipboard sind)
           if (jdata["csvclipboard"] == "true") {
             $(".csvClipboard").removeClass ("d-none");
           } else {

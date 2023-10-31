@@ -7,7 +7,7 @@
   <h2> {% block title %} Start {% endblock %} </h2>
 {% endblock %}
 
-{% block subtitle %} <h5>Version 1.05</h5>{% endblock %}
+{% block subtitle %} <h5>Version 1.1</h5>{% endblock %}
 {# zu Beginn eines neuen Zyklus wird die Versionsnummer erhöht,
    am Ende mit einer Kopie finalisiert #}
 
@@ -73,12 +73,13 @@
               <br><i class="px-1">SELECT</i> ermöglicht die Objektauswahl.
               <br>Aktuell: 
               <span class="edit-indicator text-uppercase font-weight-bold"></span>
-          </p>
+            </p>
             <div class="row btn-group w-100 ml-0">
               {{ idx.button_elem_js ("edit", "mousemode-edit") }}
               {{ idx.button_elem_js ("select", "mousemode-select") }}
             </div>
           </div>
+
           <h5 class="card-title mt-4">Einrichtung</h5>
           <div class="card-text">
             <p>
@@ -89,7 +90,13 @@
               {{ idx.button_elem ("Einrichtung", url_for ("dataform.config"), "12") }}
             </div>
           </div>
-        </div>
+
+          <h5 class="card-title mt-4">Snapshot</h5>
+          <div class="card-text">Den aktuellen Output speichern</div>
+          <div class="row btn-group w-100 ml-0">
+            {{ idx.button_elem ("Snapshot", url_for ("cuechild.snapshot"), "12") }}
+          </div>
+      </div>
       </div> 
     </div>
     {% endif %}
