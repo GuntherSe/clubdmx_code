@@ -230,7 +230,7 @@ function activateFileSelector () {}
 
 
 function activateUploadCsv (insert_id) {
-    // 'Upload' Button
+    // 'Upload' Button für CSV-Tabellen (Einrichtung->Datenbank)
     $(".uploadButton").on ("click", function (event) {
             
         // CSV-Datei:
@@ -262,7 +262,7 @@ function activateUploadCsv (insert_id) {
 
 // --- Room Upload --------------------------------------------------------
 function activateUploadRoom (insert_id) {
-    // 'Upload' Button
+    // 'Upload' Link in Einrichtung->Raum
     $(".roomUpload").on ("click", function (event) {
             
         $.get ("/uploadroom", function (data){
@@ -285,4 +285,31 @@ function activateUploadRoom (insert_id) {
         }); // ende $get uploadcsv
     });
 };
+
+// --- Userdb Upload --------------------------------------------------------
+function activateUploadUserdb (insert_id) {
+    // 'Upload' Link in Einrichtung->Admin
+    $(".userdbUpload").on ("click", function (event) {
+            
+        $.get ("/uploaddb", function (data){
+            var pdata = JSON.parse(data);
+            $(insert_id).html (pdata);
+            
+            // Input-Felder aktivieren:
+            $('.custom-file-input').on('change', function() { 
+                let fileName = $(this).val().split('\\').pop(); 
+                //console.log ("FileName: "+ fileName);
+                $(this).next('.custom-file-label')
+                    .addClass("selected")
+                    .html(fileName); 
+            });
+
+            // Buttons aktivieren:
+            $("#closeButton").on ("click", function (event){
+                location.reload ();
+            });
+        }); // ende $get uploadcsv
+    });
+};
+
 

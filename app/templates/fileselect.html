@@ -1,0 +1,56 @@
+{# fileselect.html 
+  Template für die Auswahl von Files zum Upload.
+  Parameter zur Ausgestaltung:
+  {{ action }} : die Route, die nach der File-Auswahl aufgeufen wird
+  {{ filetype }} : vorgesehener Dateityp = '.zip' oder leer, wenn Diretory-Auswahl
+  {{ description }} Typ von vorgesehenen Dateien ('uploadroom',  
+                                                  'uploaddb', 
+                                                  'uploadcsv')
+#}
+<div class="card mb-2">
+  <h5 class="card-header">
+    {% if description == "uploadroom" %}
+      Raumdaten (zip) hochladen
+      {% elif description == "uploadcsv" %}
+      CSV-Datei hochladen
+      {% elif description == "uploaddb" %}
+      User-Datenbank hochladen
+    {% endif %}
+  </h5>
+  <div class="card-body">
+    <p class="card-text">
+      {% if description == "uploadroom" %}
+      Die Daten der ausgewählten ZIP-Datei werden in den aktuellen 
+      Raum integriert.
+      {% elif description == "uploadcsv" %}
+        Die ausgewählte CSV-Datei wird in den Raum hochgeladen. Eine existierende 
+        CSV-Datei mit gleichem Namen wird gelöscht.
+      {% elif description == "uploaddb" %}
+        Die ausgewählte User-Datenbank ersetzt die aktuelle User-Datenbank.
+      {% endif %}
+    </p>
+    <form id='uploadForm' method='post' enctype='multipart/form-data'
+          action="{{ action }}">
+      <div class='input-group mb-3'>
+        <div class='custom-file'>
+          <input type='file' class='custom-file-input' id='inputGroupFile02'
+                  name='uploadfile' accept="{{ filetype }}">
+          <label class='custom-file-label' for='inputGroupFile02'
+            aria-describedby='submitButton'>
+            Datei wählen
+          </label>
+        </div>
+      </div>
+
+      <button class='btn btn-primary' id='submitButton'>
+        Upload
+      </button>
+      <button class='btn btn-secondary' id='closeButton'>
+        Schließen
+      </button>
+    </form>
+
+  </div>
+</div> 
+<!-- <div style="height: 10px;"></div> -->
+

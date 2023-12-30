@@ -16,15 +16,17 @@ elements-overview
   <div class="col mb-4 collapse" id="{{ _help_id() }}">
   <div class="card">
     <div class="card-body">
-    <h5 class="card-title">Übersicht zu de Admin-Tools</h5>
+    <h5 class="card-title">Übersicht zu den Admin-Tools</h5>
     <p class="card-text">
       Was ist zu finden?:
     </p>
     <p class="card-text">
-      Headfiles in Code-Datenbank übertragen
+      Headfiles in Code-Datenbank übertragen: Von der aktuellen Datenbank werden neue
+      Heads und Änderungen an bestehenden Heads in die default-Heads kopiert.
     </p>
     <p class="card-text">
-      User Datenbank auf USB backup/restore
+      User Datenbank backup/restore: Entweder über am Server angesteckten USB-Stick
+      oder über Browswer-Download  auf den Client-Rechner.
     </p>
     </div>
   </div>
@@ -39,10 +41,17 @@ elements-overview
     <div class="card-body">
       <nav class="nav flex-column">
         {% if config.PYTHONANYWHERE == "false" %}        
-          {{ idx.nav_vertical_js ("Backup der User-Datenbank auf USB", 
+          {{ idx.nav_vertical_js ("Backup (Download) der User-Datenbank auf USB", 
             "userdbBackup" )}}
-          {{ idx.nav_vertical_js ("Restore der User-Datenbank von USB", 
+          {{ idx.nav_vertical_js ("Restore (Upload) der User-Datenbank von USB", 
             "userdbRestore" )}}
+          <hr>
+          {{ idx.nav_vertical ("User-Datenbank herunterladen", 
+                                  "upload.downloaddb" )}}
+          <div id="uploaddb_point"></div>
+          {{ idx.nav_vertical_js ("Upload der User-Datenbank", 
+            "userdbUpload" )}}
+          <hr>
           {{ idx.nav_vertical ("Heads update", "room.headupdate") }}
 
           <a class="nav-link" target="_blank" href="{{ url_for ('data.ola') }}">

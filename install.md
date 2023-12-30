@@ -23,7 +23,8 @@ Raspi-Config:
 
 Anschließend im Terminal:
 
-    sudo apt install dos2unix nginx git pip pmount
+    sudo apt install dos2unix nginx git pip 
+    sudo apt install python3-venv libasound2-dev libjack-dev pmount
 
 dos2unix ist ein Tool zum Umwandeln von Textdateien mit Windows-Zeilenenden in ein Linux-Format.
 Siehe: https://www.digitalmasters.info/de/das-zeilenende-unter-linux-windows-und-os-x-im-griff/
@@ -42,7 +43,8 @@ Nach der Installation muss der eigene User zur sudoer-Gruppe hinzugefügt werden
 
 Zusätzliche Pakete anschließend im Terminal installieren:
 
-    sudo apt install dos2unix nginx git pip libasound2-dev libjack-dev pmount
+    sudo apt install dos2unix nginx git pip 
+    sudo apt install python3-venv libasound2-dev libjack-dev pmount
 
 ### Windows Installation: 
 
@@ -82,7 +84,7 @@ Damit ist OLA installiert
 ### OLA von Github installieren (die neueste Version)
 
 Hier gibt es meine Dokumentation der einzelnen Schritte:
-<https://groups.google.com/g/open-lighting/c/rDIbzhqnWxQ?pli=1>
+<https://groups.google.com/g/open-lighting/c/rDIbzhqnWxQ/m/W7c_xUznCAAJ>
 
 Siehe meinen Beitrag vom 14.7.2020.
 
@@ -155,7 +157,7 @@ In dieser Installations-Anleitung wird die Verwendung der Default-Verzeichnisse 
 Für die Standard-Installation kann auf diesen Schritt verzichtet werden. Zu Testzwecken, Programmentwicklung und Fehlersuche erspart die Verwendung eines Alias einiges an Tippen.
 Diese Zeile am Ende von ~/.bashrc anfügen:
 
-    alias clubdmx='$HOME/clubdmx_code/scripts/app_start.sh'
+    alias clubdmx='$HOME/clubdmx_code/scripts/app_start.sh - v .venv'
 
 ### Script Files
 
@@ -171,7 +173,9 @@ Shell Script Files ausführbar machen:
 
 Um mehrere Python-Programme mit unterschiedlichen Paketen zu verwenden, werden Virtual Environments verwendet. Falls nur ClubDMX auf diesem Rechner läuft, kann darauf auch verzichtet werden. Im allgemeinen wird es als "good practice" betrachtet, Virtual Environments zu verwenden. Wir installieren eine Virtual Environment im Verzeichnis *.venv* und aktivieren es vor der Installation der Python Pakete.
 
-    sudo apt install python3-venv
+In der Linux Version ab Version 6 ("Bookworm") ist das Anlegen einer Virtual Environment zwingend erforderlich.
+
+    # sudo apt install python3-venv
     cd ~
     python3 -m venv .venv
     source .venv/bin/activate
@@ -258,14 +262,14 @@ Das muss beim Start der App berücksichtigt werden, indem Environment-Variablen 
 
 ## Autostart:
 
-Falls OLA über GIT installiert wurde, dann muss der Start von OLA in /etc/rc.local eingetragen werden.
+<!-- Falls OLA über GIT installiert wurde, dann muss der Start von OLA in /etc/rc.local eingetragen werden. -->
 
-    sudo nano /etc/rc.local
+   <!-- sudo nano /etc/rc.local -->
 
-hier eintragen vor der letzten Zeile (= exit 0):
+ <!-- hier eintragen vor der letzten Zeile (= exit 0): -->
 
-    # olad start:
-    su pi -c "olad -f" 
+  <!-- # olad start: -->
+  <!-- su pi -c "olad -f"  -->
 
 Anmerkung: Wenn beim Einschalten auch der Netzwerk-Router hochgefahren wird (z.B. im Jazzit Saal), dann muss der Netzwerk-Dienst mit Zeitverzögerung neu gestartet werden. Dabei kann auch OLA neugestartet werden. Die folgende Zeile wird in /etc/rc.local eingetragen:
 
@@ -293,7 +297,8 @@ Falls ClubDMX noch im Test läuft, dann beenden mit:
 
 Nun wird der Start von ClubDMX mit NGINX vorbereitet:
 
-    sudo ./scripts/nginx_setup.sh -v .venv
+    cd ~/clubdmx_code
+    sudo scripts/nginx_setup.sh -v .venv
 
 Bei Fehlern gibt es hier Kontrollen:
 
@@ -303,6 +308,27 @@ Bei Fehlern gibt es hier Kontrollen:
     sudo journalctl -u clubdmx überprüft die Gunicorn-Protokolle von ClubDMX.
 
 Nun ist ClubDMX über NGINX erreichbar.
+
+
+# Permission denied Fehler: 
+
+Bei der Neuinstallation in Debian 12 trat ein Permission Fehler auf. Abhilfe mit
+Änderung der Datei /etc/nginx/nginx.conf
+Erste Zeile: user www-data ändern auf aktuellen User \<username>.
+
+siehe: https://stackoverflow.com/questions/70111791/nginx-13-permission-denied-while-connecting-to-upstream
+
+
+# ALSA Fehler bei der Raspi-Installation
+
+In Debian 12 tritt nach dem Neustart ein Fehler auf: Das ALSA-Modul, das für die MIDI-Verbindung zuständig ist, findet die dynamischen Bibliotheken nicht. Abhilfe:
+
+    cd /usr
+    sudo mkdir lib64
+    cd lib64
+    sudo mkdir alsa-lib
+    cd alsa-lib
+    cp /usr/lib/aarch64-linux-gnu/alsa-lib/* .
 
 
 ## ClubDMX update: 

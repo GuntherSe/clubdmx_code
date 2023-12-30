@@ -48,7 +48,7 @@ thispath  = os.path.dirname(os.path.realpath(__file__))
 basedir = os.path.dirname(thispath)
 # aktuell: /clubdmx_code
 
-ALLOWED_EXTENSIONS = set(['txt', 'csv', 'ccsv', 'zip'])
+ALLOWED_EXTENSIONS = set(['txt', 'csv', 'ccsv', 'zip', 'db'])
 SHIFT = 1000 # für Fadertabellen zur Untrscheidung, siehe startup_func.py
 
 # Globale Objekte:

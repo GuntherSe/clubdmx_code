@@ -8,7 +8,7 @@ import shutil # fürs kopieren
 
 from flask import Blueprint, request, json, flash, current_app
 from flask import redirect, url_for, render_template, session
-from flask import send_from_directory
+from flask import send_from_directory, jsonify
 
 from csvfileclass import Csvfile
 from roomclass import Room
@@ -286,14 +286,20 @@ def make_archive ():
     if os.path.isfile (dst): # dst existiert
         os.remove (dst)
     shutil.move (zipfile, dst)
+    flash (f"Archiv {filename} wurde erzeugt.", category="success")
+    
     return send_from_directory(current_app.config['UPLOAD_FOLDER'],
                                filename, as_attachment=True)
+    # flash (resp)
+    # return redirect (redirect_url ())
 
 
-@room.route ("/unpack_archive")
-@standarduser_required
-def unpack_archive ():
-    """ ZIP-Archiv hochladen und ins Raumverzeichnis entpacken
-    """
-# noch nix fertig
-    return redirect (redirect_url ())
+# unpack_archive ist eine Methode in class Room!
+# @room.route ("/unpack_archive")
+# @standarduser_required
+# def unpack_archive ():
+#     """ ZIP-Archiv hochladen und ins Raumverzeichnis entpacken
+#     """
+# # noch nix fertig
+#     flash ("Diese Funktion ist noch nicht implementiert", category="warning")
+#     return redirect (redirect_url ())
