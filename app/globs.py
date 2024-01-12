@@ -24,6 +24,8 @@ retry_the_form          forms, formutils, patchform
 modalactive             forms
 usbdrive                forms, room_views
 usbcheck                forms, room_views
+deletefile              data_views, log_views
+logname                 log_views
 
 """
 

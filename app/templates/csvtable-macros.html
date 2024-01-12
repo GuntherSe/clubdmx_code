@@ -75,7 +75,7 @@
           {% if svgid != "" %}
             <span class="ml-3">
               {{ svg_icon (svgid, size="1.1em") }}
-              <span class="ml-2">{{ text }}</span>
+              <span class="ml-2 mx-auto">{{ text }}</span>
             </span>
           {% else %}
             {{ text }}
@@ -126,7 +126,7 @@
 {# Navigation für CSV Dateien (Tabellen, Stage) 
   Tabellen und Stage haben selbe Struktur, einzelne Elemente werden angepasst
 #}
-{% macro csvnav_base (content="", addclass="") %}
+{% macro csvnav_base (navcontent="", addclass="") %}
   {% if current_user.role == "standard" or current_user.role == "admin" %}
 
   <nav class="navbar navbar-expand-lg  navbar-dark bg-secondary
@@ -157,7 +157,7 @@
     <div class="collapse navbar-collapse" id="navbarCsvContent">
       <ul class="navbar-nav mr-auto">
         {# Button Content: #}
-        {{ content }}
+        {{ navcontent }}
       </ul>
     </div>
   </nav>
@@ -189,6 +189,7 @@
   - saveasButton
   - newlineButton
   - uploadButton
+  - deleteButton
   - saveChanges
   - discardChanges
   - selectRowCut
@@ -219,6 +220,11 @@
 
   {{ button_elem ("uploadButton", "upload",
       svgid = "#svg-upload" ) }}
+
+  {% if current_user.role == "admin" %}
+    {{ button_elem ("deleteButton", "löschen",
+       svgid = "#svg-trash" ) }}
+  {% endif %}
 
   {{ csvchanges_buttons () }}
   {{ csvclipboard_buttons () }}
@@ -259,10 +265,10 @@
 
 {# Hier die kompletten Nav-Zeilen: #}
 {% macro stage_nav () %}
-  {{ csvnav_base (addclass="stage-buttons", content=stage_buttons() )}}
+  {{ csvnav_base (addclass="stage-buttons", navcontent=stage_buttons() )}}
 {% endmacro %}
 
 {% macro csv_nav () %}
-{{ csvnav_base (content=csv_buttons() )}}
+{{ csvnav_base (navcontent=csv_buttons() )}}
 {% endmacro %}
 

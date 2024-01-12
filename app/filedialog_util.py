@@ -56,7 +56,7 @@ def get_curdir (spath:str='.', basedir:str='') ->str:
         return cwd
 
 
-def list_dir (spath:str="", ftype:str="" ) ->dict:
+def list_dir (spath:str="", ftype:str="", ending:bool=False ) ->dict:
     """ list directory 'path' mit Dateityp 'ftype'
 spath: z.B. '.', 'subdir', ...
 ftype: Dateiendung, Groß-/Kleinschreibung egal, '.xyz' oder 'xyz'
@@ -76,10 +76,16 @@ return: Dict mit allen Subdirs in Liste, dann alle Dateien in Liste
             if entry.is_dir (follow_symlinks=False):
                 dirlist.append (entry.name)
             elif ftype == "":
-                filelist.append (entry.name)
+                if ending:
+                    filelist.append (entry.name)
+                else:
+                    filelist.append (os.path.splitext (entry.name)[0])
             elif entry.name.lower().endswith(ftypelow):
                                      # Groß- und Kleinschreibung egal
-                filelist.append (entry.name)
+                if ending:
+                    filelist.append (entry.name)
+                else:
+                    filelist.append (os.path.splitext (entry.name)[0])
     except:
         print ("list_dir: Suchpfad nicht gefunden:", searchdir)
     # dirlist.sort ()
@@ -91,24 +97,28 @@ return: Dict mit allen Subdirs in Liste, dann alle Dateien in Liste
     return ret
 
 def dir_explore (params:str) -> json:
-    """ params = json string
-basedir: nötig bei spath == '..', absolut-Pfad
-spath: Suchpfad, absolut oder relativ=Subdir
-ftype: Filetype (groß-klein egal) oder None
-updir: erlaubt oder nicht, bool
-Return:
-basedir: Absolut-Pfad
-table: Bootstrap Tabele
-"""
+    """  get directory contents as html table. Filtered by params.
+    
+    params = json string
+    basedir: nötig bei spath == '..', absolut-Pfad
+    spath: Suchpfad, absolut oder relativ=Subdir
+    ftype: Filetype (groß-klein egal) oder None
+    updir: erlaubt oder nicht, bool
+    ending: "true" or "false", show ending in table output
+    Returns json(dict):
+    basedir: Absolut-Pfad
+    table: Bootstrap Table
+    """
     spath = ""
     ftype = ""
     updir = False
     basedir = ""
+    ending = False
 
     #print ("dir_explore params: ", params)
     data = json.loads (params)
     # print (data);
-    
+
     try:
         temp = data["basedir"].replace ('+', os.sep)
         basedir = get_curdir (temp)
@@ -137,16 +147,26 @@ table: Bootstrap Tabele
             updir = False
     except (ValueError, KeyError, TypeError):
         pass
-    
+
+    try: 
+        ending = data["ending"]
+        if ending == "true":
+            ending = True
+        else:
+            ending = False
+    except (ValueError, KeyError, TypeError):
+        ending = False
+
     ret = {}
     ret['basedir'] = spath
-    ret['table']   = dir_to_table (spath,ftype,updir)
+    ret['table']   = dir_to_table (spath,ftype,updir,ending)
     return json.dumps (ret)
 
-def dir_to_table (spath:str=None, ftype:str=None, updir:bool=False) :
+def dir_to_table (spath:str=None, ftype:str=None, 
+                  updir:bool=False, ending:bool=False) :
     """  Tabelle aus Dir content erzeugen """
 
-    direc = list_dir (spath, ftype)
+    direc = list_dir (spath, ftype, ending)
     if __name__ == "__main__":
         return direc
     else:

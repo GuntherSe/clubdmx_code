@@ -112,7 +112,7 @@ def uploadroom () -> json:
         # submit an empty part without filename
         if fnam.filename == '':
             flash ('Kein File zum Upload ausgewählt.')
-            return redirect (request.url) 
+            return redirect (redirect_url()) 
 
         if fnam and allowed_file(fnam.filename):
             filename = secure_filename(fnam.filename)
@@ -156,7 +156,7 @@ def uploaddb () -> json:
         # submit an empty part without filename
         if fnam.filename == '':
             flash ('Kein File zum Upload ausgewählt.')
-            return redirect (request.url) 
+            return redirect (redirect_url()) 
 
         if fnam and allowed_file(fnam.filename):
             filename = secure_filename(fnam.filename)

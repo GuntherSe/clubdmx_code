@@ -3,12 +3,55 @@ Parameter zur Erzeugung eines logfiles als html-Tabelle:
     shortname
     fullname
 #}
+{% from "csvtable-macros.html" import button_elem with context %}
+
+{% macro input_elem (id, text, svgid="") -%}
+  {% set inpclass  = "form-control " ~  id %}
+  {% set cliclass = "input-group-text " ~ id ~ "text" %}
+
+  <nav class="nav-link bg-secondary text-white">
+    <form class="form-inline">
+      <div class="input-group input-group-sm">
+        <div class="input-group-prepend">
+          <span class="{{ cliclass }}" id="textId">Filter</span>
+        </div>
+        <input type="text" class="{{ inpclass }}" placeholder="{{ text }}" aria-label="Username" aria-describedby="basic-addon1">
+      </div>
+    </form>
+  </nav>
+{%- endmacro %}
+{# Logfile Nav 
+  see for reference 'csvtable-macros.html'  
+#}
+{% macro logfile_nav () -%}
+<nav class="navbar navbar-expand-lg  navbar-dark bg-secondary
+{{ addclass }} py-0 nav-csvtable ">
+
+<button class="navbar-toggler" type="button" 
+  data-toggle="collapse" data-target="#navbarCsvContent" 
+  aria-controls="navbarSupportedContent" aria-expanded="false" 
+  aria-label="Toggle navigation">
+  <span class="navbar-toggler-icon"></span>
+</button>
+
+<div class="collapse navbar-collapse" id="navbarCsvContent">
+  <ul class="navbar-nav mr-auto">
+    {# Button Content: #}
+    {{ button_elem (id="deleteButton", text="löschen", svgid = "#svg-trash")}}
+    {# { button_elem (id="filterButton", text="Filter", svgid = "#svg-plus")} #}
+    {{ input_elem (id="filterInput", text="Filter")}}
+  </ul>
+</div>
+</nav>
+
+{%- endmacro %}
+
 
 {% if  shortname|length > 1 %}
   
   {% if shortname != "undefined" %}
     <div class="alert alert-info">{{ shortname }}</div>
-    <div id="upload_point"></div>
+    {{ logfile_nav() }}
   {% endif %}
   {# das logfile: #}
   {% for line in lines %}

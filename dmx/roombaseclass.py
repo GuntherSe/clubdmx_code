@@ -376,19 +376,19 @@ class Roombase:
         dest: USB-Pfad
         return: Message
         """
-        print ("Dest: ", dest)
+        # print ("Dest: ", dest)
         mount.mnt.mount (dest)
         mediapath = mount.mnt.get_media_path (dest)
-        print ("Mediapath: ", mediapath)
+        # print ("Mediapath: ", mediapath)
         if neu:
             backuproom = Roombase ()
             destpath = os.path.join (mediapath, "clubdmx_backup", "_neu")
         else:
             backuproom = Roombase (self.PATH)
             destpath = os.path.join (mediapath, "clubdmx_backup", self.name())
-        print ("Pfad: ", destpath)
+        # print ("Pfad: ", destpath)
         backupdir = os.path.normpath (destpath)
-        print ("Backupdir: ", backupdir)
+        # print ("Backupdir: ", backupdir)
         self.logger.info (f"Backup nach {backupdir} ...")
         try:
             ret = backuproom.backup (backupdir)
@@ -438,13 +438,13 @@ class Roombase:
         roomname: String
         return: Message
         """
-        print (f"USB: {usbdrv}, Raum: {roomname}")
+        self.logger.info (f"usbrestore nach: {usbdrv}, Raum: {roomname}")
         mount.mnt.mount (usbdrv)
         mediapath = mount.mnt.get_media_path (usbdrv)
         srcpath = os.path.join (mediapath, "clubdmx_backup", roomname)
         # print ("Pfad: ", destpath)
         restoredir = os.path.normpath (srcpath)
-        print ("Restoredir: ", restoredir)
+        self.logger.debug ("Restoredir: ", restoredir)
         try:
             ret = self.restore (restoredir)
         except:

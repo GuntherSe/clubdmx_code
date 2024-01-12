@@ -74,13 +74,19 @@
     csvSavediscardButtons ();
 
     var location = $("#csvtable").attr ("loc");
+    var filename = $("#csvtable").attr ("pluspath") + "+" +
+                      $("#csvtable").attr ("file");
+    var dataPath = $("#csvtable").attr ("option");
+
     // exebuttons1, exebuttons2, cuebuttons
     filedialogToPython (".openButton", "/csv/open", 
       {"option":"cuebutton", "location":location});
 
     filedialogToPython (".saveasButton", "/csv/saveas",
       {"option":"cuebutton", "location":location});
-
+    modaldialogToPython (".deleteButton", "/delete_csv", 
+      {spath:dataPath, filename:filename});
+  
     activateUploadCsv ("#upload_point");
     activateCuedetails (); // Buttons 'ansehen' und 'Topcue'
     $("#sessiondata").attr ("history", "/cuebutton");

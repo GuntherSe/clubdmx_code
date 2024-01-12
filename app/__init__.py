@@ -59,6 +59,7 @@ def create_app (test_config=None):
     from data_views import data
     from forms import forms
     from fileupload import upload
+    from log_views import logbp
     from patchform import patchform
     from room_views import room
     from stage import stage
@@ -75,6 +76,7 @@ def create_app (test_config=None):
     app.register_blueprint (data)
     app.register_blueprint (dataform)
     app.register_blueprint (forms)
+    app.register_blueprint (logbp)
     app.register_blueprint (upload)
     app.register_blueprint (patchform)
     app.register_blueprint (room)

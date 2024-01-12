@@ -64,13 +64,30 @@ class Logbase ():
         return file_handler
 
 
-def readlogfile (fn:str) ->list:
+def readlogfile (fn:str, filterstr="") ->list:
     """ logfile lesen und als liste retournieren
     fn: Filename
     return: Liste der Zeilen
     """
     with open(fn, 'r', encoding="utf-8") as file:
         lines = [line.rstrip() for line in file]
+    if filterstr:
+        # filter loglines:
+        filtered = []
+        msgcont = False # log message continue on following lines
+        for line in lines:
+            date, msg = line.split (None, 1)
+            try:
+                year, month, day = date.split (sep='-') # no exception if begin log message
+                msgcont = False
+                if filterstr in line:
+                    filtered.append (line)
+                    msgcont = True
+            except: # continued
+                if msgcont:
+                    filtered.append (line)
+        return filtered
+    
     return lines
 
 # --- Main ----------------------------------------------------

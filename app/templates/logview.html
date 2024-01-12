@@ -29,10 +29,12 @@
   <script>
     var visibleLogfile = "";
     var dataPath, dataName;
-
+    var filterStr;
 
     function  loadLogfile (insert_id) {
-      var args = {name:visibleLogfile, path:dataPath};
+      filterStr = $(".filterInput").val();
+      console.log ("Filter: " + filterStr);
+      var args = {name:visibleLogfile, path:dataPath, filter:filterStr};
       $.get({
           url: "/getlogfile",
           data: args,
@@ -41,6 +43,12 @@
         //var pdata = $.parseJSON(data);
         var pdata = JSON.parse (data);
         $(insert_id).html (pdata);
+        $(".filterInput").val (filterStr);
+        modaldialogToPython (".deleteButton", "/delete_log", 
+            {spath:dataPath, filename:visibleLogfile});
+//        $(".filterInputtext").on("click", function () {
+//          filterstr = $(".filterInput").val();
+//        });
         
       }); // ende then
     }; // ende loadLogfile          
@@ -48,6 +56,7 @@
     function showDir (insert_id) {
       fileDialogParams.insert_str = insert_id;
       fileDialogParams.basedir = dataPath;
+      fileDialogParams.ending = "true";
       fileExplore (fileDialogParams);
     };
       

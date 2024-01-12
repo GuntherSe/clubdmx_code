@@ -74,6 +74,10 @@
     csvSavediscardButtons ();
 
     var location = $("#csvtable").attr ("loc");
+    var filename = $("#csvtable").attr ("pluspath") + "+" +
+                      $("#csvtable").attr ("file");
+    var dataPath = $("#csvtable").attr ("option");
+    
     // cuefaders oder exefaders
     filedialogToPython (".openButton", "/csv/open", 
       {"option":"cuefader", "location":location});
@@ -81,6 +85,9 @@
       {"option":"cuefader", "location":location});
 
     activateUploadCsv ("#upload_point");
+    modaldialogToPython (".deleteButton", "/delete_csv", 
+    {spath:dataPath, filename:filename});
+
     activateCuedetails ();
     $("#sessiondata").attr ("history", "/cuefader");
   }); 

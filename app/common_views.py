@@ -323,7 +323,7 @@ def viewicons ():
         return [alist[i:i+sublen] for i in range(0, len(alist), sublen)]
 
     icondir = os.path.join (common.static_folder, "icons")
-    content = list_dir (icondir, ".svg")
+    content = list_dir (icondir, ".svg", ending=True)
     items = content["file"]
     # items = []
     # for item in files:

@@ -63,6 +63,8 @@
         filedialogToPython (".saveasButton", "/csv/saveas", 
                             {spath:dataPath});
         activateUploadCsv ("#upload_point");
+        modaldialogToPython (".deleteButton", "/delete_csv", 
+            {spath:dataPath, filename:visibleTable});
 
         // Mousemode Optionen:
         // Buttons zur Umschaltung der Edit-Methoden aktivieren.
@@ -90,16 +92,39 @@
       loadTable (insert_id="#rechts");
     };        
       
-
     $('document').ready (function () {
 
       dataPath = $("#dataPath").attr ("spath");
       // console.log ("dataPath: "+ dataPath);
-      
-      // initMouseMode ();
+      // history for stage, if called by stage/show:
+      // see: https://stackoverflow.com/questions/36712575/get-url-parameter-with-jquery
+      var url = window.location.href;
+      var arguments = url.split('?')[1]
+      if (arguments) {
+        arguments = arguments.split('=');
+        arguments.shift();
+      }else {
+        arguments = "default";
+      }
+
+      if (arguments == "stage") {
+        $("#sessiondata").attr ("history", "/stage/show");
+      } else {
+        $("#sessiondata").attr ("history", "/dataform/config");
+      };
       showDir ("explore");
       loadTable (insert_id="#rechts");
-      // $("#sessiondata").attr ("history", "/dataform/config");
+      $.get ("/get_used_csv/"+dataPath).then (function (data) {
+        pdata = JSON.parse (data);
+        //console.log (pdata); > table > tbody
+        $("#exploreTable").find ("tr").each (function () {
+          for (let i = 0; i < pdata.length; ++i) {
+            if ($(this).find (".file").text().trim() == pdata[i][1]) {
+              $(this).css ("font-weight", "bold");
+            }
+          };
+        });
+      })
     });
   </script>
 

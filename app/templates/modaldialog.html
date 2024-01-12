@@ -12,6 +12,10 @@ Anzeigen:
 <p>{{ text }}</p>
 {% endmacro %}
 
+{% macro confirmbody () %}
+<p>{{ text }}</p>
+{% endmacro %}
+
 {% macro stringbody () %}
 <p>{{ text }}</p>
 <div class="input-group mb-3">
@@ -78,6 +82,8 @@ Anzeigen:
         {{ textbody() }}
         {% elif body == "stringbody" %}
         {{ stringbody() }}
+        {% elif body == "confirmbody" %}
+        {{ confirmbody() }}
         {% elif body == "filedialog" %}
         {{ filedialogbody() }}
         {% elif body == "csvbody" %}

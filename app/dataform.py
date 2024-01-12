@@ -158,7 +158,7 @@ def config ():
                     items = csvfile.to_dictlist(), 
                     changes = changes,
                     option  = "midibutton", 
-                    excludebuttons = ["uploadButton"] 
+                    excludebuttons = ["uploadButton", "deleteButton"] 
                 ))
     response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
     response.headers['Pragma'] = 'no-cache'

@@ -18,6 +18,7 @@ var fileDialogParams = {};   // Startparameter
     result:    ausgewählte Datei (voller Pfad)
     filepath:  aktueller Pfad im Resultat
     filename:  Datei ohne Pfad
+    ending:    'false' (default) oder 'true' - Extension im Filenamen enthalten
 */
 function filedialogToPython (clickid, url, args) {
     // bei Klick auf clickId wird filedialog aufgerufen:

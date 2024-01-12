@@ -135,8 +135,16 @@ def check_config (fullname:str) -> dict:
         checkconf.set ("patch", "_neu")
     if not check_csvfile (checkconf.get ("cuefaders"), "cuefader"):
         checkconf.set ("cuefaders", "_neu")
+    if not check_csvfile (checkconf.get ("exefaders"), "cuefader"):
+        checkconf.set ("exefaders", "_neu")
     if not check_csvfile (checkconf.get ("cuebuttons"), "cuebutton"):
         checkconf.set ("cuebuttons", "_neu")
+    if not check_csvfile (checkconf.get ("exebuttons1"), "cuebutton"):
+        checkconf.set ("exebuttons1", "_neu")
+    if not check_csvfile (checkconf.get ("exebuttons2"), "cuebutton"):
+        checkconf.set ("exebuttons2", "_neu")
+    if not check_csvfile (checkconf.get ("midi_buttons"), "midibutton"):
+        checkconf.set ("midi_buttons", "_neu")
     if not check_csvfile (checkconf.get ("pages"), "pages"):
         checkconf.set ("pages", "_neu")
     if not check_csvfile (checkconf.get ("stage"), "stage"):

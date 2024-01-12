@@ -4,15 +4,15 @@
 # import imp
 import os
 import os.path
-import json
+# import json
 
 from flask import Blueprint, render_template, request, json, redirect
 from flask import session, flash,  url_for #, send_from_directory
-from flask import current_app
+# from flask import current_app
 from flask_login import login_required
 
 import logging
-from loggingbase import readlogfile
+# from loggingbase import readlogfile
 
 from cuebutton import Cuebutton
 
@@ -20,7 +20,7 @@ from ola import get_ip_address
 
 from apputils import standarduser_required #, admin_required, redirect_url
 from common_views import check_clipboard
-from filedialog_util import dir_explore
+# from filedialog_util import dir_explore
 
 import globs
 
@@ -325,40 +325,3 @@ def galerie ():
     return render_template ("gallery.html", pictures = pictures)
 
 
-@basic.route ("/viewlog")
-@login_required
-@standarduser_required
-def viewlog ():
-    """ Logfile anzeigen 
-    """
-    logdir = os.path.join (globs.basedir, "logs")
-    logdir = logdir.replace (os.sep, '+')
-    return render_template ("viewlog.html", logdir=logdir)
-
-
-@basic.route ("/getlogfile")
-def getlogfile () ->json:
-    """ Logfile  in HTML 
-
-    return im JSON-Format
-    """
-    # aktuell angezeigtes logfile in session speichern:
-    fullname = request.args.get ("name")
-
-    if fullname != "" and fullname != "undefined":
-        session["logname"] = fullname
-    else:
-        if "logname" in session:
-            fullname = session["logname"]
-        else:
-            return "kein Logfile ausgewählt."
-    
-    fullname = fullname.replace ('+', os.sep) # '+' in '/' umwandeln
-    path, shortname = os.path.split (fullname)
-    loglines = readlogfile (fullname)
-
-    table = render_template ("logfile.html",
-                    shortname = shortname, 
-                    fullname = fullname,
-                    lines = loglines)
-    return json.dumps (table)

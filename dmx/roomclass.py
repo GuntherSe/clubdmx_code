@@ -50,6 +50,31 @@ class Room (Roombase):
         return sorted (ret, key=lambda x: x.lower())
 
 
+    def used_cuelists (self) -> list:
+        """ in diesem Raum benutzte Cuelists als Liste """
+        ret = []
+        cuelistpath = self.cuelistpath()
+        ret.append (os.path.join (cuelistpath, "_neu")) 
+        for key in self.layout.keys ():
+            layline = self.layout.line(key)
+            if  layline["Fieldtype"] == "file" and layline["Option"] == "cuelist":
+                # searchpath == cuelistpath
+                searchpath = os.path.join (self.path(), layline["Subdir"])
+                filelist = os.listdir (searchpath)
+                # print (filelist)
+                for item in filelist:
+                    fullname = os.path.join (searchpath, item)
+                    csvfile = Csvfile (fullname)
+                    csvlines = csvfile.to_dictlist ()
+                    for l in csvlines:
+                        fname = l[layline["Field"]]
+                        root, ext = os.path.splitext (fname)
+                        search = os.path.join (cuelistpath, root)
+                        if search not in ret:
+                            ret.append (search)
+        return sorted (ret, key=lambda x: x.lower())
+
+
     def unused_cues (self) -> list:
         """ in diesem Raum nicht benutzte Cues """
         ret = []

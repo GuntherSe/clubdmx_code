@@ -175,6 +175,11 @@
     filedialogToPython (".saveasButton", "/csv/saveas", {"option":"cuelist"});
 
     activateUploadCsv ("#upload_point");
+    var filename = $("#csvtable").attr ("pluspath") + "+" +
+                      $("#csvtable").attr ("file");
+    var dataPath = $("#csvtable").attr ("option");
+    modaldialogToPython (".deleteButton", "/delete_csv", 
+          {spath:dataPath, filename:filename});
 
     // Buttons aktivieren:
     activateCuelistbuttons (); // Bedienbuttons: GO, PAUSE etc.
