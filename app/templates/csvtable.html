@@ -14,7 +14,8 @@ Parameter zur Erzeugung einer HTML-Tabelle:
 {% if  shortname|length > 1 %}
   
   {% if shortname != "undefined" %}
-    <div class="alert alert-info">{{ shortname }}</div>
+    <!-- <div class="alert alert-info">{{ shortname }}</div> -->
+    <div id="fileName" filename="{{ shortname }}"></div>
     <div id="upload_point"></div>
     <!-- buttons -->
     {{ tbl.csv_nav() }}

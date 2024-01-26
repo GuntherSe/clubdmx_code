@@ -6,7 +6,7 @@ from flask_login import UserMixin
 from flask import flash, redirect, url_for
 
 from app import db, login
-
+import globs
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -34,5 +34,8 @@ def load_user(id):
 def unauthorized():
     """Redirect unauthorized users to Login page."""
     flash ('Du musst angemeldet sein...')
+    if globs.PYTHONANYWHERE == "true":
+        flash ("Benutzer: Standard, Passwort: Standard2021", category="warning")
+        flash ("Benutzer: basic, Passwort: basic", category="warning")
     return redirect(url_for('auth.login'))
 

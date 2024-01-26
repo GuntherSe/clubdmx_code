@@ -33,7 +33,7 @@
 
     function  loadLogfile (insert_id) {
       filterStr = $(".filterInput").val();
-      console.log ("Filter: " + filterStr);
+      //console.log ("Filter: " + filterStr);
       var args = {name:visibleLogfile, path:dataPath, filter:filterStr};
       $.get({
           url: "/getlogfile",
@@ -43,12 +43,18 @@
         //var pdata = $.parseJSON(data);
         var pdata = JSON.parse (data);
         $(insert_id).html (pdata);
+        // highlight filename in dirlist:
+        var fname = $("#fileName").attr ("filename");
+        if (fname.length) {
+          $(".file").each (function () {
+            if ($(this).text().trim() == fname) {
+              $(this).addClass ("ui-state-highlight");
+            }
+          });
+        };
         $(".filterInput").val (filterStr);
         modaldialogToPython (".deleteButton", "/delete_log", 
             {spath:dataPath, filename:visibleLogfile});
-//        $(".filterInputtext").on("click", function () {
-//          filterstr = $(".filterInput").val();
-//        });
         
       }); // ende then
     }; // ende loadLogfile          
@@ -61,10 +67,13 @@
     };
       
     // Neudefinition für explore:
-    function activateFileSelector () {
+    function activateFileSelector (selector) {
       visibleLogfile = fileDialogParams.filepath + '+' 
                      + fileDialogParams.result;
       loadLogfile (insert_id="#rechts");
+      // highlight selected file:
+      $(".file").removeClass ("ui-state-highlight");
+      selector.addClass ("ui-state-highlight");
     };        
       
 

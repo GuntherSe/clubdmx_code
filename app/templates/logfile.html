@@ -50,7 +50,8 @@ Parameter zur Erzeugung eines logfiles als html-Tabelle:
 {% if  shortname|length > 1 %}
   
   {% if shortname != "undefined" %}
-    <div class="alert alert-info">{{ shortname }}</div>
+    <!-- <div class="alert alert-info">{{ shortname }}</div> -->
+    <div id="fileName" filename="{{ shortname }}"></div>
     {{ logfile_nav() }}
   {% endif %}
   {# das logfile: #}

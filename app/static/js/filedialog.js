@@ -216,7 +216,7 @@ function fileExplore (par){
             var spath = $(this).text();
             $("#filename").attr ("value",spath);
             fileDialogParams.result = spath;
-            activateFileSelector ();
+            activateFileSelector ($(this));
             //console.log ("datei:"+ $("#filename").attr("value"));
         });
     });
@@ -225,7 +225,7 @@ function fileExplore (par){
 
 // activateFileSelector() wird zur Anzeige des ausgewählten Files verwendet.
 // kann für explore umdefiniert werden:
-function activateFileSelector () {}
+function activateFileSelector (selector) {}
 
 // --- Buttons für CSV-Tabellen ----------------------------------------------
 

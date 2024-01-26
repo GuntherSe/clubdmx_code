@@ -59,7 +59,7 @@
         //var pdata = $.parseJSON(data);
         var pdata = JSON.parse (data);
         $(insert_id).html (pdata);
-        
+
         filedialogToPython (".saveasButton", "/csv/saveas", 
                             {spath:dataPath});
         activateUploadCsv ("#upload_point");
@@ -74,6 +74,16 @@
 
         csvSavediscardButtons ();
 
+        // highlight filename in dirlist:
+        var fname = $("#fileName").attr ("filename");
+        if (fname.length) {
+          $(".file").each (function () {
+            if ($(this).text().trim() == fname) {
+              $(this).addClass ("ui-state-highlight");
+            }
+          });
+        };
+        
       }); // ende then
     }; // ende loadTable           
 
@@ -86,10 +96,13 @@
     };
       
     // Neudefinition für explore:
-    function activateFileSelector () {
+    function activateFileSelector (selector) {
       visibleTable = fileDialogParams.filepath + '+' 
                      + fileDialogParams.result;
       loadTable (insert_id="#rechts");
+      // highlight selected file:
+      $(".file").removeClass ("ui-state-highlight");
+      selector.addClass ("ui-state-highlight");
     };        
       
     $('document').ready (function () {

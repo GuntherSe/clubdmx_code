@@ -353,6 +353,16 @@ Hier auf den Button *Raw* klicken, anschließend Rechtsklick, *Seite speichern u
     chmod +x update.sh
     sudo ./update.sh -f github -o raspi -v .venv
 
+Für zukünftige Updates empfiehlt es sich, einen Alias anzulegen, um die 
+Parameter beim nächsten mal auch richtig aufzurufen.
+
+### Alias anlegen
+
+Eine Zeile mit den entsprechenden Parametern am Ende von ~/.bashrc anfügen:
+
+    alias update='sudo $HOME/clubdmx_code/scripts/update.sh - v .venv -f github -o debian'
+
+
 Im Browser sind nun OLA und ClubDMX aufrufbar.
 
 Die nach der Installation verfügbaren Webseiten:
