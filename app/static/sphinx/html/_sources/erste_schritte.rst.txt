@@ -9,49 +9,47 @@ installiertes ClubDMX zum Leben zu erwecken.
 - Anmelden
 
 - Leeren Raum oder bestehenden Raum laden 
-   ``Einrichtung -> Raum -> neuen Raum anlegen``
+  ``Einrichtung -> Raum -> neuen Raum anlegen``
 
 - Patch nach vorhandener Hardware erstellen:
 
-   Patch *_neu* speichern als \<neuer Patchname\>
+  Patch *_neu* speichern als \<neuer Patchname\>
 
-   ``neue Zeile(n)`` erstellt einen oder mehrere neue Heads. 
-   Im Formular die entsprechenden Daten eingeben.
+  ``neue Zeile(n)`` erstellt einen oder mehrere neue Heads. 
+  Im Formular die entsprechenden Daten eingeben.
 
-   Für weitere Hinweise siehe :ref:`neupatchlabel`
+  Für weitere Hinweise siehe :ref:`neupatchlabel`
 
 - Config:
 
-   Config *_neu* speichern als \<neuer Configname\>
+  Config *_neu* speichern als \<neuer Configname\>
 
-   Falls ClubDMX und OLA am selben Rechner laufen, dann ist die OLA-Adresse die 
-   Default-Adresse ``127.0.0.1``. Falls nicht, dann 
-   in ``Einrichtung -> Config -> OLA-Adresse`` die IP-Adresse
-   eintragen. Entsprechend der vorhandenen Hardware die Anzahl der
-   Universen eintragen.
+  Falls ClubDMX und OLA am selben Rechner laufen, dann ist die OLA-Adresse die 
+  Default-Adresse ``127.0.0.1``. Falls nicht, dann 
+  in ``Einrichtung -> Config -> OLA-Adresse`` die IP-Adresse
+  eintragen. Entsprechend der vorhandenen Hardware die Anzahl der
+  Universen eintragen.
 
 - OLA: 
 
-   Wenn die OLA IP-Adresse korrekt ist, dann kann über
-   ``Einrichtung -> Config -> OLA einrichten``
-   zur OLA Administration gewechselt werden. 
+  Wenn die OLA IP-Adresse korrekt ist, dann kann über
+  ``Einrichtung -> Config -> OLA einrichten``
+  zur OLA Administration gewechselt werden. 
 
-   TODO: Seite zur OLA Einrichtung...
-
-   Die Verbindung zur Hardware kann in
-   ``ola.html -> Universes -> <uniname> -> DMX Console`` getestet werden.
+  Die Verbindung zur Hardware kann in
+  ``ola.html -> Universes -> <uniname> -> DMX Console`` getestet werden.
 
 - Stage: 
 
-   Stage *_neu* speichern als \<neuer Stagename\>
+  Stage *_neu* speichern als \<neuer Stagename\>
 
-   ``Import Patch`` legt für jeden in der Stage noch nicht vorhandenen Head
-   ein Symbol an, mit Headnummer, Name und Kommentar aus dem Patch.
+  ``Import Patch`` legt für jeden in der Stage noch nicht vorhandenen Head
+  ein Symbol an, mit Headnummer, Name und Kommentar aus dem Patch.
 
 - Heads verwenden, um Cues, Fader und Buttons zu erzeugen.
 
-   In ``Stage -> Single`` können die Geräte einzeln getestet werden.
+  In ``Stage -> Single`` können die Geräte einzeln getestet werden.
 
-   In ``Info -> DMX Output`` kann das errechnete DMX-Signal 
-   angesehen werden.
+  In ``Info -> DMX Output`` kann das errechnete DMX-Signal 
+  angesehen werden.
 

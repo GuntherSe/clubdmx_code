@@ -20,7 +20,7 @@ Siehe
 
 Hier ist lediglich eine kurze Zusammenfassung der nötigen Arbeitsschritte.
 
-* Raspberry Bullseye neu installieren
+* Raspberry OS neu installieren
   
 * OLA installieren
 

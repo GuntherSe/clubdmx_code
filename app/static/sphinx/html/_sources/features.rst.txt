@@ -46,8 +46,8 @@ Daten in CSV-Dateien
 
 Die Programmdaten werden in CSV-Dateien gespeichert. Das sind Textdateien,
 die mit jedem Editor (Notepad, Excel, Libre Office, ...) bearbeitet werden 
-können. Natürlich ist auch eine Bearbeitung in ClubDMX gegeben. 
-Es stehen Zeilen- und Zellen-Bearbeitungsoptionen zur Verfügung.
+können. Natürlich ist auch ein Editor in ClubDMX integriert. 
+Es stehen Zeilen- und Zellen-Bearbeitungsoptionen (Cut/Paste) zur Verfügung.
 
 
 Angepasst an Benutzer 
@@ -63,7 +63,7 @@ MIDI
 
 Zusätzlich zur Webseite kann ClubDMX auch über MIDI bedient werden. 
 Vorzugsweise über 
-ein Korg NanoKontrol-2. Die Buttons und Fader des NanoKontrol2 können mit den 
+ein Korg NanoKontrol2. Die Buttons und Fader des NanoKontrol2 können mit den 
 Buttons und Fadern von ClubDMX verbunden werden. 
 Bis zu vier Midi-Geräte können als Input
 und/oder Output gleichzeitig verwendet werden.

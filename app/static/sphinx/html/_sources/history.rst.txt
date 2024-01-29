@@ -256,6 +256,8 @@ Die Entwicklungsschritte
   - Stage: Geräte können zu **Gruppen** zusammengefasst werden. Mit dem 
     Gruppensymbol werden alle Geräte der Gruppe selektiert.
 
+  - Stage: Die Farben der LED-Geräte werden angezeigt.
+
   - Midi: 4 Midi-Inputs, 4 Midi-Outputs. Mit Midi verwendbar sind neben Fadern 
     und Buttons auch die Cuelisten: Level, Tasten (Go, Pause, Cue-Auswahl). 
     Der Clear-Button (=Topcue leeren) ist ebenfalls über Midi bedienbar.
@@ -267,6 +269,19 @@ Die Entwicklungsschritte
 
   - Logfiles: Startup und Laden des Raums/der Config wird in Logdateien 
     protokolliert.
+
+* Version 1.1
+  
+  - Snapshot: Der aktuelle Mix wird in den Topcue geladen und kann somit als 
+    neuer Cue gespeichert werden.
+  
+  - Datenbank: in Verwendung befindliche Dateien werden **fett** markiert.
+  
+  - Löschen-Button für CSV- und Log-Dateien
+
+  - Logging: Filterfunktion in der Anzeige der Log-Dateien
+
+  - Verbesserungen beim Upload/Download 
 
 
   

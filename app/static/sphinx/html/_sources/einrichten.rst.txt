@@ -64,13 +64,13 @@ Patch, Cues, Fader, Buttons, Stage etc.
 
 Es gibt einige Möglichkeiten zur Erzeugung eines neuen Raums. 
     
-  Einen neuen Raum anlegen, 
+*  Einen neuen Raum anlegen, 
 
-  einen bestehenden Raum unter einem anderen Namen sichern, 
+*  einen bestehenden Raum unter einem anderen Namen sichern, 
 
-  einen auf USB-Stick gepeicherten Raum laden (restore),
+*  einen auf USB-Stick gepeicherten Raum laden (restore),
 
-  einen gezippten Raum hochladen.
+*  einen gezippten Raum hochladen.
 
 .. image:: _static/setup_room_page.jpg
 
