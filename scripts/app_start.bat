@@ -17,7 +17,7 @@ set PYTHONPATH=%cd%\app;%cd%\dmx
 
 set CLUBDMX_ROOMPATH=%cd%\..\clubdmx_rooms
 
-python wsgi.py
+py wsgi.py
 REM flask run --host=0.0.0.0 --port=5000
 
 pause

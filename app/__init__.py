@@ -11,7 +11,7 @@ import globs
 from threading import Thread
 from datetime import datetime
 
-from flask import Flask #, json, request
+from flask import Flask, session #, json, request
 
 from startup_levels import autosave_cuelevels
 from startup import load_config
@@ -111,6 +111,10 @@ def create_app (test_config=None):
         """ Datum in html verfügbar machen 
         """
         return {'now': datetime.utcnow() }
+
+    @app.before_request
+    def make_session_permanent():
+        session.permanent = True
 
 
     load_config (with_savedlevels=True)

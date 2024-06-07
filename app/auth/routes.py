@@ -33,7 +33,7 @@ def login():
         # basic-User hat immer Editmode select:
         # if user.role == "basic":
         session["editmode"] = "select" # default für alle Rollen
-        session.permanent = True
+        # session.permanent = True
         return redirect(redirect_url())
 
     return render_template('auth/login.html', title='Login', form=form)

@@ -43,7 +43,7 @@ Nach der Installation muss der eigene User zur sudoer-Gruppe hinzugefügt werden
 
 Zusätzliche Pakete anschließend im Terminal installieren:
 
-    sudo apt install dos2unix nginx git pip 
+    sudo apt install dos2unix nginx git python3-pip 
     sudo apt install python3-venv libasound2-dev libjack-dev pmount
 
 ### Windows Installation: 
@@ -70,7 +70,7 @@ hier eintragen (Raspi):
 beziehungsweise für Debian:
 
     #ola:
-    deb http://apt.openlighting.org/debian wheezy main
+    deb http://apt.openlighting.org/debian squeeze main
 
 
 Anschließend neu starten.
@@ -157,7 +157,7 @@ In dieser Installations-Anleitung wird die Verwendung der Default-Verzeichnisse 
 Für die Standard-Installation kann auf diesen Schritt verzichtet werden. Zu Testzwecken, Programmentwicklung und Fehlersuche erspart die Verwendung eines Alias einiges an Tippen.
 Diese Zeile am Ende von ~/.bashrc anfügen:
 
-    alias clubdmx='$HOME/clubdmx_code/scripts/app_start.sh - v .venv'
+    alias clubdmx='$HOME/clubdmx_code/scripts/app_start.sh -v .venv'
 
 ### Script Files
 
@@ -360,7 +360,7 @@ Parameter beim nächsten mal auch richtig aufzurufen.
 
 Eine Zeile mit den entsprechenden Parametern am Ende von ~/.bashrc anfügen:
 
-    alias update='sudo $HOME/clubdmx_code/scripts/update.sh - v .venv -f github -o debian'
+    alias update='sudo $HOME/clubdmx_code/scripts/update.sh -v .venv -f github -o debian'
 
 
 Im Browser sind nun OLA und ClubDMX aufrufbar.
