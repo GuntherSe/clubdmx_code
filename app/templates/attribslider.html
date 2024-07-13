@@ -7,17 +7,27 @@ Parameter:
     title   = Titel
 #}
 
+{#
+{% macro sliderelem_old (index) %}
+<div class="col mx-auto"> <!-- col -->
+  <div class="sliderelement">
+      {{ labels[index] }}
+  </div>
+  <div id="attrib-{{ heads[index] }}{{ attribs[index] }}" 
+        class="attribslider mx-auto">
+  </div>
+</div>
+{% endmacro %}
+#}
+
 {% macro sliderelem (index) %}
 <div class="col mx-auto"> <!-- col -->
   <div class="sliderelement">
-    <!--   style="margin-bottom:10px; margin-top:20px; flex: 0 0 auto;" -->
       {{ labels[index] }}
   </div>
-  <!-- <div style="min-height: 4px;"></div> -->
-  <div id="attrib-{{ heads[index] }}{{ attribs[index] }}" 
-        class="attribslider mx-auto">
-        <!-- style="height:150px; padding:10px;"> -->
-  </div>
+  <input type="range" min="0" max="255" orient="vertical"
+    id="attrib-{{ heads[index] }}{{ attribs[index] }}" 
+    class="attribslider mx-auto" />
 </div>
 {% endmacro %}
 

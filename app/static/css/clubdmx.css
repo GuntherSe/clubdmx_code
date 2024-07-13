@@ -30,6 +30,48 @@
   /* position: fixed; */
 }
 
+/* Slider */
+.cuefader{
+  width: 100%; /* Width of the outside container */
+}
+
+/* The slider itself */
+.inputslider {
+  -webkit-appearance: none;  /* Override default CSS styles */
+  appearance: none;
+  width: 100%; /* Full-width */
+  height: 15px; /* Specified height */
+  background: #d3d3d3; /* Grey background */
+  outline: none; /* Remove outline */
+  opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
+  -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+  transition: opacity .2s;
+}
+
+/* Mouse-over effects */
+.inputslider:hover {
+  opacity: 1; /* Fully shown on mouse-over */
+}
+
+/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
+.inputslider::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Override default look */
+  appearance: none;
+  width: 15px; /* Set a specific slider handle width */
+  height: 40px; /* Slider handle height */
+  border-radius: 5px;
+  background: rgb(61,61,180); /* Green background */
+  cursor: pointer; /* Cursor on hover */
+}
+
+.inputslider::-moz-range-thumb {
+  width: 15px; /* Set a specific slider handle width */
+  height: 40px; /* Slider handle height */
+  border-radius: 5px;
+  background: rgb(61,61,180); /* Green background */
+  cursor: pointer; /* Cursor on hover */
+}
+
 .cuefader.ui-slider .ui-slider-handle {
   top: -.6em;
   height: 2em;
@@ -50,25 +92,46 @@
   flex: 0 0 auto;
 }
 
-.attribslider.ui-slider {
-    height: 150px;
-    margin-bottom: 20px;
-    margin-left: 12px;
+.attribslider {
+  writing-mode: vertical-lr;
+  direction: rtl;
+  appearance: none;
+  -webkit-appearance: none;
+  vertical-align: bottom;
+  width: 16px;
+  height: 150px;
+  outline: none; /* Remove outline */
+  background: #d3d3d3; /* Grey background */
+  opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
+  -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+  transition: opacity .2s;
 }
 
-.attribslider.ui-slider .ui-slider-handle {
-    background: rgb(61, 61, 180);
-    width: 2em;
-    height: 1em;
-    left: -.6em;
-    border-radius: 5px;
-    /* color: blue; 
-    */
+.attribslider:hover {
+  opacity: 1; /* Fully shown on mouse-over */
 }
+
+.attribslider::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Override default look */
+  appearance: none;
+  width: 40px; /* Set a specific slider handle width */
+  height: 15px; /* Slider handle height */
+  border-radius: 5px;
+  background: rgb(61, 61, 180);
+  cursor: pointer; /* Cursor on hover */
+}
+
+.attribslider::-moz-range-thumb {
+  width: 40px; /* Set a specific slider handle width */
+  height: 15px; /* Slider handle height */
+  border-radius: 5px;
+  background: rgb(61, 61, 180);
+  cursor: pointer; /* Cursor on hover */
+}
+
 
 html, body {
   height: 100%;
-  
   width: 100%;
 }
 /* Formular */

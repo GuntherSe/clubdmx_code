@@ -64,7 +64,7 @@ def topview ():
     excludebuttons = ["openButton", "saveasButton", "newlineButton",
                       "uploadButton", "saveChanges", "discardChanges",
                       "selectRowCut", "selectCopy", "selectPaste",
-                      "clearClipboard"]
+                      "clearClipboard", "deleteButton"]
 
     return render_template ("modaldialog.html", body="csvbody",
                                                 title="Topcue-Daten",

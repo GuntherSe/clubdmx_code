@@ -386,7 +386,7 @@ function selection_headslider () {
           $("#faderspace").html (jdata["table"]);
           // console.log ("Levels: " +JSON.stringify (levels));
           for (var i=0; i < attribs.length; i++){
-              makeCueAttribSlider (heads[i], attribs[i], 
+              activateAttribSlider (heads[i], attribs[i], 
                   levels[attribs[i]], '/stage/headfader' );
           };
         };

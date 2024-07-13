@@ -165,6 +165,13 @@ def cuefader ():
     return render_template ("cuefader.html", data = data )
 
 
+@basic.route ("/testfader")
+def testfader ():
+    """ Test Fader """
+    data = get_faderdata ()
+    return render_template ("test_fader.html", data = data)
+
+
 @basic.route ("/fadertable")
 @basic.route ("/fadertable/<sel>")
 @login_required

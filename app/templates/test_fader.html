@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+
+{% import "csvtable-macros.html" as tbl with context %}
+{% import "base-macros.html" as base with context %}
+
+
+{% block header %}
+  <h2> {% block title %} Test Fader {% endblock %} </h2>
+{% endblock %}
+
+{% block subtitle %}
+  {{ base.subtitle_with_button ("",
+    svgid = "#svg-gear",
+    endpoint = url_for ('basic.fadertable') )
+  }}
+{% endblock %}
+
+{% block css %}
+<style>
+.cuefader{
+  width: 100%; /* Width of the outside container */
+}
+
+/* The slider itself */
+.inputslider {
+  -webkit-appearance: none;  /* Override default CSS styles */
+  appearance: none;
+  width: 100%; /* Full-width */
+  height: 15px; /* Specified height */
+  background: #d3d3d3; /* Grey background */
+  outline: none; /* Remove outline */
+  opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
+  -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+  transition: opacity .2s;
+}
+
+/* Mouse-over effects */
+.inputslider:hover {
+  opacity: 1; /* Fully shown on mouse-over */
+}
+
+/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
+.inputslider::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Override default look */
+  appearance: none;
+  width: 25px; /* Set a specific slider handle width */
+  height: 25px; /* Slider handle height */
+  border-radius: 50%;
+  background: rgb(96, 45, 179); /* Green background */
+  cursor: pointer; /* Cursor on hover */
+}
+
+.inputslider::-moz-range-thumb {
+  width: 25px; /* Set a specific slider handle width */
+  height: 25px; /* Slider handle height */
+  border-radius: 50%;
+  background: rgb(96, 45, 179); /* Green background */
+  cursor: pointer; /* Cursor on hover */
+} 
+</style>
+{% endblock %}
+
+{% block content %}
+  <!-- <div class="slidecontainer">
+    <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+  </div> -->
+  <!-- Exefaders -->
+
+  {% set title1 = "Fader im Executer: " ~ data.exefaders.shortname %}
+  {{ base.fadertable (title1, data.exefaders, filebuttons="cue") }}
+  <!-- Cuefaders -->
+  {% set title2 = "Zusätzliche Fader: " ~ data.cuefaders.shortname %}
+  {{ base.fadertable (title2, data.cuefaders, filebuttons="cue")}}
+
+</div>
+
+{% endblock %}
+
+{% block javascript %}
+<script>
+
+  $("document").ready( function() {
+    
+    var sliderwidth;
+    // Sliderbreite mit Fenserbreite verändern:
+    $(window).on('resize', function(){
+      sliderwidth = $(".col-8").width();
+      $(".slider").width (sliderwidth);
+    });
+
+    sliderwidth = $(".col-8").width();
+    // slider erzeugen:
+    var sliderlevels;
+    $.get ("/getinfo/sliderval", function (data) {
+      sliderlevels = $.parseJSON(data);
+      var i;
+      for (i = 0; i < sliderlevels.length; i++){
+        activateSlider (i, sliderlevels, "cuefader");
+      };
+      $(".slider").width (sliderwidth);
+    });
+
+    initMouseMode ();
+    activateCuedetails ();
+    // editableCsvFields ();
+    // periodic_faderstatus ();
+    
+    
+//    var slider = document.getElementById("myRange");
+//    var output = document.getElementById("demo");
+//    output.innerHTML = slider.value; // Display the default slider value
+    
+    // Update the current slider value (each time you drag the slider handle)
+//    slider.oninput = function() {
+//      output.innerHTML = this.value;
+//    } 
+
+  }); 
+</script>
+{% endblock %}
+
+
+

@@ -129,7 +129,9 @@
 <tr class="row" >
   {% if filebuttons == "false" %}
   <td class="col col-sm-12 col-md-9 border-0">
-    <div id="sl-{{ index }}" class="cuefader"></div>
+    <div id="sl-{{ index }}" class="cuefader">
+      <input type="range" min="0" max="255" class="inputslider" id="slider-{{ index }}">
+    </div>
   </td>
 
   {# kleiner als md #}
@@ -143,7 +145,9 @@
 
   {% else %}
   <td class="col-sm-12 col-md-8 border-0">
-    <div id="sl-{{ index }}" class="cuefader"></div>
+    <div id="sl-{{ index }}" class="cuefader">
+      <input type="range" min="0" max="255" class="inputslider" id="slider-{{ index }}">
+    </div>
   </td>
 
   {# kleiner als md #}

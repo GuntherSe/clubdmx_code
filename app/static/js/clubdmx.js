@@ -72,7 +72,27 @@ function hideSecondNav () {
 // ---------------------------------------------------------------------
 // Slider in cuefader und executer:
 // Funktion zum Slider erzeugen:
-function makeSlider (num, sliderlevel, fadertype) {
+// function makeSlider (num, sliderlevel, fadertype) {
+//   var numstring = num.toString();
+//   var cmdstring;
+//   if (fadertype == "cuefader") {
+//     // cuefader
+//     cmdstring = "/sliderlevel/" + numstring;
+//   } else {
+//     // cuelist level fader
+//     cmdstring = "/cuelistlevel/" + numstring;
+//   }
+//   $("#sl-"+numstring)
+//     .slider({value:sliderlevel[num],
+//               max:255,
+//               slide: function (event, ui){
+//                   var sliderval = {level:ui.value};
+//                   $.post (cmdstring, sliderval);
+//               }
+//     });
+// }
+
+function activateSlider (num, sliderlevel, fadertype) {
   var numstring = num.toString();
   var cmdstring;
   if (fadertype == "cuefader") {
@@ -82,21 +102,21 @@ function makeSlider (num, sliderlevel, fadertype) {
     // cuelist level fader
     cmdstring = "/cuelistlevel/" + numstring;
   }
-  $("#sl-"+numstring)
-    .slider({value:sliderlevel[num],
-              max:255,
-              slide: function (event, ui){
-                  var sliderval = {level:ui.value};
-                  $.post (cmdstring, sliderval);
-              }
-    });
+  $("#slider-"+numstring)
+    .val(sliderlevel[num])
+    .on ("input", function () {
+      var sliderval = {level:this.value};
+      $.post (cmdstring, sliderval);
+    }
+  );  
 }
 
 function faderStatus (num, statusarray) {
   // level aus der fadertable wird auf Fader übertragen
   var numstring = num.toString ();
   var level = statusarray[num] ;
-  $("#sl-"+numstring).slider ("option", "value", level);
+//  $("#sl-"+numstring).slider ("option", "value", level);
+  $("#slider-"+numstring).val (level);
 }
 
 function periodic_faderstatus () {
@@ -227,25 +247,38 @@ function saveEditButton (filename) {
 };
 
 
-function makeCueAttribSlider (head, attrib, level, url) {
+function activateAttribSlider (head, attrib, level, url) {
   // Slider fürs Cue-Edit erzeugen
   // siehe: cuefader.html, stage.html
-  // console.log ("makeCueAttribSlider:" + head +" "+ attrib +" "+ level);
   $('#attrib-'+head+attrib)
-      .slider({
-          orientation:"vertical",
-          range: "min",
-          value:level,
-          min: 0,
-          max:255,
-          slide: function (event, ui){
-              //console.log (attrib + ": level: " + ui.value);
-              var args = {head:head, attrib:attrib, level:ui.value};
-              $.post (url, args);
-              $("#sessiondata").attr ("topcuecontent", "true");
-          }
-      });
+    .val (level)
+    .on ("input", function () {
+      var args = {head:head, attrib:attrib, level:this.value};
+      $.post (url, args);
+      $("#sessiondata").attr ("topcuecontent", "true");
+    });
 };
+      
+
+// function makeCueAttribSlider (head, attrib, level, url) {
+//   // Slider fürs Cue-Edit erzeugen
+//   // siehe: cuefader.html, stage.html
+//   // console.log ("makeCueAttribSlider:" + head +" "+ attrib +" "+ level);
+//   $('#attrib-'+head+attrib)
+//       .slider({
+//           orientation:"vertical",
+//           range: "min",
+//           value:level,
+//           min: 0,
+//           max:255,
+//           slide: function (event, ui){
+//               //console.log (attrib + ": level: " + ui.value);
+//               var args = {head:head, attrib:attrib, level:ui.value};
+//               $.post (url, args);
+//               $("#sessiondata").attr ("topcuecontent", "true");
+//           }
+//       });
+// };
       
 
 function modaldialogToPython (clickid, url, args) {

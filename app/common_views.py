@@ -74,10 +74,6 @@ def check_clipboard ():
 
 
 # --- Tests: --------------------------------------------------------
-@common.route ("/testtable")
-def testtable ():
-    return render_template ("data/dataedit.html", spath="testtbl")
-
 @common.route ("/test")
 def test ():
     """ Test cuebutton-table 
@@ -100,6 +96,11 @@ def test ():
 @common.route ("/testsvg")
 def testsvg ():
     return render_template ("testsvg.html")
+
+
+@common.route ("/testtable")
+def testtable ():
+    return render_template ("data/dataedit.html", spath="testtbl")
 
 
 @common.route ("/contrib")

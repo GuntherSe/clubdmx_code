@@ -282,6 +282,12 @@ Die Entwicklungsschritte
   - Logging: Filterfunktion in der Anzeige der Log-Dateien
 
   - Verbesserungen beim Upload/Download 
+  
+* Version 1.2
+
+  - Fader sind nun Touchscreen-tauglich
+
+  - Verbesserungen bei Verwendung von User-Daten
 
 
   

@@ -145,7 +145,8 @@
         var sliderlevel = jdata["level"];
         let numstring = clIndex.toString ();
         try {
-          $("#sl-"+numstring).slider ("option", "value", sliderlevel);
+          $("#slider-"+numstring).val (sliderlevel);
+          //$("#sl-"+numstring).slider ("option", "value", sliderlevel);
         }
         catch(err) {
           console.log ("Fehler in Sliderlevel: " + err);  
@@ -205,7 +206,7 @@
         // console.log ("data: " + data);
         var jdata = $.parseJSON(data);
         var level = jdata["level"];
-        makeSlider(clIndex, level, "cuelistlevel");
+        activateSlider(clIndex, level, "cuelistlevel");
         $(".slider").width (sliderwidth);
       });
   

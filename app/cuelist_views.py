@@ -110,7 +110,7 @@ def pagessetup () -> json:
                     changes = changes,
                     option  = "pages", 
                     filebuttons = "cuelist",
-                    excludebuttons = [] )
+                    excludebuttons = ["deleteButton"] )
 
 
 @clview.route ("/editor")
@@ -127,7 +127,7 @@ def editor () ->json:
     # Name:
     index = request.args.get ("index")
     if index:
-        excludebuttons = ["openButton", "saveasButton"]
+        excludebuttons = ["openButton", "saveasButton", "deleteButton"]
         name = request.args.get ("filename") # muss angegeben sein
         session["selected_cuelist"] = name
     else:
@@ -138,18 +138,6 @@ def editor () ->json:
         else:
             name = "_neu"
 
-    # Name:
-    # filename = request.args.get ("filename")
-    # if filename:
-    #     name = filename
-    #     session["selected_cuelist"] = name
-    # elif name:
-    #     session["selected_cuelist"] = name
-    # elif "selected_cuelist" in session:
-    #     name = session["selected_cuelist"]
-    # else:
-    #     name = "_neu"
-    
     filename = os.path.join (globs.room.cuelistpath(),name)
 
     csvfile = Csvfile (filename)
