@@ -3,16 +3,15 @@
 
 """ MIDI Input """
 
-# import pygame
-# import pygame.midi
-import mido
+# import mido
 import threading
 import time
 
-import midi_devices as mdev
+# import midi_devices as mdev
 from mido_output import MidiDevice, MidiOutput
+from usbmonitor import USBMonitor
+from usbmonitor.attributes import ID_MODEL
 
-TEST = False
 
 class Midi (MidiOutput, threading.Thread):
     """ class Midi 
@@ -22,6 +21,9 @@ class Midi (MidiOutput, threading.Thread):
 
     paused = False
     pause_cond = threading.Condition (threading.Lock ())
+
+    # Create the USBMonitor instance
+    monitor = USBMonitor()
 
     def __init__ (self):
         threading.Thread.__init__ (self, target=self.run)
@@ -50,13 +52,6 @@ class Midi (MidiOutput, threading.Thread):
                             self.in_ports[i].eval_msg (msg)
             time.sleep (0.02)
 
-    # def run (self):
-    #     """ callback an die in_ports zuweisen
-    #     """
-    #     self.paused = False
-    #     for i in range (4):
-    #         if self.in_ports[i].device_id != -1:
-    #             self.in_ports[i].port.callback = self.in_ports[i].receive
 
     @classmethod
     def pause (cls):
@@ -103,7 +98,7 @@ class Midi (MidiOutput, threading.Thread):
     def set_indevice (self, pos:int, num:int) ->str:
         """ Midigerät zuweisen
         
-        pos: Position in self.out_devices, 0 <= pos < 4
+        pos: Position in self.in_devices, 0 <= pos < 4
         num: Devicenummer neu oder ändern
         return: {"message":str, "category": "error" oder "success"}
         """
@@ -142,43 +137,34 @@ class Midi (MidiOutput, threading.Thread):
         return ret
 
 
-    def receive_midi (self, msg):
-        """ midi-input mittels eval weiterverarbeiten
-
-        msg: mido Message
-        eval: print oder andere eval-Funktion
+    def reconnect (self, *args):
+        """ Midi Geräte neu verbinden
         """
-        print (msg.bytes ())
+        print (f"args: {args}")
+        tmp_in_ids = []
+        for dev in self.in_ports:
+            tmp_in_ids.append (dev.device_id)
+        # print (f"In IDs: {tmp_in_ids}")
+        devices = self.list_devices (mode="input")
 
+        for count, dev in enumerate (tmp_in_ids):
+            if dev != -1:
+                self.in_ports[count].clear ()
+                self.in_ports[count].set_device (devices, dev)
+                self.in_ports[count].index = count
 
-        # for i in range (len (self.in_ports)): # alle MidiInputs
-        #     device = self.in_ports[i]
+        tmp_out_ids = []
+        for dev in self.out_ports:
+            tmp_out_ids.append (dev.device_id)
+        # print (f"Out IDs: {tmp_out_ids}")
+        devices = self.list_devices (mode="output")
 
-        #     if pygame.midi.get_init () and \
-        #         device.midi_device and device.device_id != -1:
-        #         if device.midi_device.poll():
-        #             msg = device.midi_device.read(100) # mehrere messages einlesen, sonst träge
-        #             if TEST:
-        #                 print (msg)
-        #             msglen = len(msg) # anzahl midi-messages
-        #             for cnt in range (msglen):
-        #                 controller = msg[cnt][0][1]
-        #                 value = msg[cnt][0][2]
-        #                 if controller in device.faders: # fader gefunden
-        #                     fader = device.faders.index (controller)
-        #                     if value != device.fader_buffer[fader]:
-        #                         device.fader_buffer[fader] = value
-        #                         device.fader_update[fader] = 1
-        #                 elif controller in device.buttons: # button
-        #                     button = device.buttons.index(controller)
-        #                     self.eval (i, "button", button, value)
-        #                     # print (button, value)
-        #             for cnt in range (len(device.fader_update)):
-        #                 if device.fader_update[cnt] == 1:
-        #                     device.fader_update[cnt] = 0
-        #                     self.eval (i, "fader", cnt, device.fader_buffer[cnt])
-
-
+        for count, dev in enumerate (tmp_out_ids):
+            if dev != -1:
+                self.out_ports[count].clear ()
+                self.out_ports[count].set_device (devices, dev)
+                self.out_ports[count].index = count
+        
 
 # --- Test -------------------------------------------------------------------
 if __name__ == "__main__":
@@ -198,6 +184,11 @@ Kommandos: x = Exit
 """
 
     mididev = Midi ()
+    # Start the daemon
+    mididev.monitor.start_monitoring(on_connect= mididev.reconnect,
+                                     on_disconnect=None)
+
+
     # midiout = MidiOutput ()
     print (infotxt)
 
@@ -226,6 +217,12 @@ Kommandos: x = Exit
             elif i == 's':
                 for dev in mididev.in_ports:
                     print (dev)
+            elif i == 'a':
+                for dev in mididev.out_ports:
+                    print (dev)
+            elif i == 'r':
+                mididev.reconnect ()
+                
 
             elif cmd[0] == 'k':
                 try:

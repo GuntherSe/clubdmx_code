@@ -20,8 +20,9 @@ from csvfileclass import Csvfile
 midi_commandlist =  ["TopcueClear", "CuelistGo", "CuelistPause", 
                 "CuelistPlus", "CuelistMinus", "CuelistBack"]
 # Sammlung der Infos zu Midi-Commands abseits von den Commands, die in den
-# Cues eingetragen sind.
-# Ist der Inhalt der Midibutton-Tabelle als Dict
+# diversen csv-Tabellen eingetragen sind: cuefader, cuebutton, cuelist-pages
+# 
+# Der Inhalt der Midibutton-Tabelle als Dict ist hier:
 midi_commanddict = {}
 
 def command_choices () ->list:

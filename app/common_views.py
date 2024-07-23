@@ -142,11 +142,6 @@ def get_info (item:str) -> json:
             ret["topcuecontent"] = "true"
         else:
             ret["topcuecontent"] = "false"
-        # Selektierte CSV-Zeilen?
-        # if len (selecteddata()):
-        #     ret["selectedcsvdata"] = "true"
-        # else:
-        #     ret["selectedcsvdata"] = "false"
         # CSV-Clipboard enthält Daten?
         if "csvclipboard" in session:
             if session["csvclipboard"] == "true":
@@ -161,12 +156,6 @@ def get_info (item:str) -> json:
         sliders = len (globs.fadertable)
         bytevals = [int (globs.fadertable[i].level *255) for i in range (sliders)]
         return json.dumps (bytevals)
-
-    # elif item == "buttonval":       # faderwerte übermitteln für Seitenaufbau
-    #     # nicht in Verwendung?
-    #     buttons = len (globs.buttontable)
-    #     bytevals = [int (globs.buttontable[i].level *255) for i in range (buttons)]
-    #     return json.dumps (bytevals)
 
     elif item == "buttonstatus":  # Buttonstatus übermittlen
         buttons = len (globs.buttontable)
@@ -187,23 +176,6 @@ def get_info (item:str) -> json:
                     items.append (f"{uni}-{i+1}:{mix[i]}")
         out = render_template ("output-content.html", items = items)
         return json.dumps (out)
-
-    # elif item == "firstattribute": 
-    #     # Wert für erstes Attribut jedes Heads
-    #     # das ist in der Regel Intensity
-    #     # verwendet in stage.html für progressbars
-    #     if globs.PYTHONANYWHERE == "true":
-    #         # keine threads, daher aktuelle Berechnungen machen:
-    #         calc_mixoutput ()
-    #     attlevels = {}
-    #     headlist = globs.patch.headlist ()
-    #     for head in headlist:
-    #         attlist = globs.patch.attriblist (head)
-    #         level = int (globs.patch.attribute (head, attlist[0]))
-    #         # der Default-Wert ist str
-    #         attlevels[head] = f"{int (100*level/255)}%"
-    #         # levels in %
-    #     return json.dumps (attlevels)
 
     elif item == "attributes":
         # für die Anzeige in Stage:
@@ -232,6 +204,9 @@ def get_info (item:str) -> json:
     elif item == "commands":
         # commands, die per Midi getriggert werden
         return json.dumps (midi_commandlist)
+    
+    elif item == "midicontrollers":
+        return json.dumps (globs.midi.in_buttons)
 
     return json.dumps("???")
 

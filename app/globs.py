@@ -79,6 +79,10 @@ if PYTHONANYWHERE == "false":
 
     midiactive = False   
     midi = Midi ()
+    # Start the daemon to detect Midi connections
+    midi.monitor.start_monitoring(on_connect= midi.reconnect,
+                                     on_disconnect=None)
+
 
     oscinput = OscInput ()
     oscinput.set_eval_function (evaluate_osc)

@@ -17,6 +17,7 @@ scripts/update von zip.txt
 
 dmx/.vscode/
 dmx/backup/
+app/backup
 app/static/sphinx/doctrees/
 uploads/
 
