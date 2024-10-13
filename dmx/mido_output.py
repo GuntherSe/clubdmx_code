@@ -3,12 +3,12 @@
 
 """ Klassen MidiDevice und MidiOutput """
 
-# import pygame
-# import pygame.midi
-# from time  import sleep
 import mido
 
 import midi_devices as mdev
+
+import logging
+from loggingbase import Logbase
 
 class MidiDevice ():
     """ Datensammlung zu einem Midi-Gerät """
@@ -63,7 +63,7 @@ class MidiDevice ():
                 return {"name":mdev.NO_MIDI_DEVICE, "result":"false"} 
 
             self.device_id = devindex  # int >= 0
-            self.name = devlist[devindex][2]       # str
+            self.name = devlist[devindex][3]       # str
 
             for key in mdev.midi_device_dict.keys():
                 if ':' in description: # Linux
@@ -131,6 +131,13 @@ class MidiDevice ():
 
 class MidiOutput ():
     """ MIDI Output Klasse """
+
+    # ein logger für Midi:
+    baselogger = Logbase ()
+    logger = logging.getLogger (__name__)
+    file_handler = baselogger.filehandler ("midi.log")
+    logger.addHandler (file_handler)
+
 
     def __init__ (self):
         self.out_ports = [MidiDevice() for i in range (4)] # verwendete Geräte
@@ -225,6 +232,8 @@ class MidiOutput ():
         else:
             self.clear (pos)
             ret["message"] = f"Midi-Output-Gerät {num} nicht zugewiesen"
+
+        self.logger.debug (f"Output {pos+1} : {ret['message']}")
         return ret
 
 

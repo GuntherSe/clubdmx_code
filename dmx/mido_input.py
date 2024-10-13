@@ -157,6 +157,8 @@ class Midi (MidiOutput, threading.Thread):
         else:
             self.clear (pos)
             ret["message"] = f"Midi-Input-Gerät {num} nicht zugewiesen"
+        
+        self.logger.debug (f"Input {pos+1} : {ret['message']}")
         return ret
 
 
