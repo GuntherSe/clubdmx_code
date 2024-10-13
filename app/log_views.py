@@ -30,7 +30,8 @@ def logview ():
     """
     logdir = os.path.join (globs.basedir, "logs")
     logdir = logdir.replace (os.sep, '+')
-    return render_template ("logview.html", logdir=logdir)
+    loglevel = os.environ.get ("LOGLEVEL", "WARNING")
+    return render_template ("logview.html", logdir=logdir, loglevel=loglevel)
 
 
 @logbp.route ("/getlogfile")
