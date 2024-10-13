@@ -374,6 +374,11 @@ $(document).ready (function() {
   periodic_commonstatus ();
   // Mousemode Optionen:
   initMouseMode ();
+  $(document).on ("keydown", function (event) {
+    if (event.which == 113) { // F2
+      toggleMousemode ();
+    };
+  })
   changeMousemode (".mousemode-edit", "edit");
   changeMousemode (".mousemode-select", "select");
 

@@ -70,7 +70,7 @@ hier eintragen (Raspi):
 beziehungsweise für Debian:
 
     #ola:
-    deb http://apt.openlighting.org/debian squeeze main
+    deb http://apt.openlighting.org/debian wheezy main
 
 
 Anschließend neu starten.

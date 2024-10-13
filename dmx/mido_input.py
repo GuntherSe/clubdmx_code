@@ -10,7 +10,8 @@ import time
 # import midi_devices as mdev
 from mido_output import MidiDevice, MidiOutput
 from usbmonitor import USBMonitor
-from usbmonitor.attributes import ID_MODEL
+# see: https://pypi.org/project/usb-monitor/
+# from usbmonitor.attributes import ID_MODEL
 
 
 class Midi (MidiOutput, threading.Thread):
@@ -22,7 +23,7 @@ class Midi (MidiOutput, threading.Thread):
     paused = False
     pause_cond = threading.Condition (threading.Lock ())
 
-    # Create the USBMonitor instance
+    # Create the USBMonitor instance, watch for plugin USB devices:
     monitor = USBMonitor()
 
     def __init__ (self):
@@ -86,13 +87,35 @@ class Midi (MidiOutput, threading.Thread):
             return f"{pos} nicht gültig."
 
 
-    def clear_lists (self):
+    def clear_lists (self, group:str="all", lo:int=0, hi:int=1000):
         """ Listen der verwendeten Fader und Buttons leeren 
+
+        group: 'all', 'fader' or 'button'
         """
-        self.in_buttons = [{} for i in range (4)] # verwendete Buttons
-        self.in_faders = [{} for i in range (4)] # verwendete Fader
-        self.out_buttons = [[] for i in range (4)] # verwendete Buttons
-        self.out_faders = [[] for i in range (4)] # verwendete Fader
+        if group == "all":
+            self.in_faders = [{} for i in range (4)] # verwendete Fader
+            self.out_faders = [{} for i in range (4)] # verwendete Fader
+            self.in_buttons = [{} for i in range (4)] # verwendete Buttons
+            self.out_buttons = [{} for i in range (4)] # verwendete Buttons
+        elif group == "button":
+            for line in self.in_buttons:
+                for key in line.copy():
+                    if lo <= line[key] < hi:
+                        del line[key]
+            for line in self.out_buttons:
+                for key in line.copy():
+                    if lo <= line[key] < hi:
+                        del line[key]
+        elif group == "fader":
+            for line in self.in_faders:
+                for key in line.copy():
+                    if lo <= line[key] < hi:
+                        del line[key]
+            for line in self.out_faders:
+                for key in line.copy():
+                    if lo <= line[key] < hi:
+                        del line[key]
+
 
 
     def set_indevice (self, pos:int, num:int) ->str:
@@ -111,10 +134,10 @@ class Midi (MidiOutput, threading.Thread):
             return ret
 
         # midi_device bereits zugewiesen:
-        if newdev.device_id == num: # keine Änderung
-            ret["message"] = "keine Änderung."
-            ret["category"] = "success"
-            return ret
+        # if newdev.device_id == num: # keine Änderung
+        #     ret["message"] = "keine Änderung."
+        #     ret["category"] = "success"
+        #     return ret
 
         if newdev.device_id != -1 : # midi_device vorhanden
             newdev.clear ()
@@ -139,8 +162,11 @@ class Midi (MidiOutput, threading.Thread):
 
     def reconnect (self, *args):
         """ Midi Geräte neu verbinden
+
+        Diese Testfunktion wird nur lokal verwendet. In Club-DMX wird die
+        Funktion connect_midi () verwendet, siehe startup.py
         """
-        print (f"args: {args}")
+        # print (f"args: {args}")
         tmp_in_ids = []
         for dev in self.in_ports:
             tmp_in_ids.append (dev.device_id)

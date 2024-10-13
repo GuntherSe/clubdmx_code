@@ -104,44 +104,85 @@ def press_pausebutton (index:int):
 
 # --- MIDI Funktionen ---
 # nur importieren, wenn PYTHONANYWHERE == "false"
-def eval_midiinput (*data):
-    """ midicontroller an requests schicken
-    wird als output-Funktion für Midicontroller verwendet
-    in Midicontroller.poll: self.output (index, type, cnt, self.fader_buffer[cnt
-    data[0]: Geräte-Nummer
-    data[1]: "fader" oder "button"
-    data[2]: controller-Nummer ab 0
-    data[3]: Wert in 0 .. 127
+def eval_midi (pos, msg):
+    """ Midi Inputs auswerten 
+    
+    pos: Position in self.in_ports 0 <= pos < 4
+    msg:   mido-Message
     """
     if not len (globs.fadertable): # beim Neu-Laden von config möglich
         return
-    # index:int=data[0], type:str=data[1], fader:int=data[2], level:int=data[3]
-    if data[1]=="fader" and data[2] in globs.midi.in_faders[data[0]]:
-        fader =  globs.midi.in_faders[data[0]][data[2]]
-        if fader < globs.SHIFT: # cuefader
-            globs.fadertable[fader].level = data[3] / 127
-            midifader_monitor ("cuefader", fader ,data[3])
-        elif globs.SHIFT <= fader < 2*globs.SHIFT: # level von cueist
-            globs.cltable[fader-globs.SHIFT].level = data[3] / 127
-            midifader_monitor ("cuelist", fader-globs.SHIFT ,data[3])
-        else: # Zusatz
-            pass
-            # print (f"Special Midifader: {data[2]}, {data[3]}")
-    elif data[1]=="button" and data[2] in globs.midi.in_buttons[data[0]]:
-        index = globs.midi.in_buttons[data[0]][data[2]]
-        if index < globs.SHIFT: #cuebutton
-            if data[3]: # nur 'drücken' auswerten, nicht 'loslassen'
-                press_cuebutton (index)
-            else: # nur relevant, wenn Buttontype == Taster
-                # dann auch Loslassen auswerten
-                if index in range (len (globs.buttontable)):
-                    buttontype = globs.buttontable[index].type
-                    if buttontype == "Taster":
-                        press_cuebutton (index)
-        # keine Werte zwischen SHIFT und 2*SHIFT
-        else: # Zusatz-Buttons
-            # print (f"Special Midibutton: {data}")
-            eval_midicommand (data[0], data[2], data[3])
+    if msg.type == "control_change":
+        # in_faders = globs.midi.in_faders[pos]
+        if msg.control in globs.midi.in_ports[pos].faders: # Fader erkannt
+            ctrlindex = globs.midi.in_ports[pos].faders.index (msg.control)
+            if ctrlindex in globs.midi.in_faders[pos]:
+                fader = globs.midi.in_faders[pos][ctrlindex]
+                if fader < globs.SHIFT: # cuefader
+                    globs.fadertable[fader].level = msg.value / 127
+                    midifader_monitor ("cuefader", fader , msg.value)
+                elif globs.SHIFT <= fader < 2*globs.SHIFT: # cuelist
+                    globs.cltable[fader-globs.SHIFT].level = msg.value / 127
+                    midifader_monitor ("cuelist", fader-globs.SHIFT ,msg.value)
+                else: # Zusatz
+                    pass
+        elif msg.control in globs.midi.in_ports[pos].buttons: # Button erkannt
+            ctrlindex = globs.midi.in_ports[pos].buttons.index (msg.control)
+            if ctrlindex in globs.midi.in_buttons[pos]:
+                button = globs.midi.in_buttons[pos][ctrlindex]
+
+                if button < globs.SHIFT: #cuebutton
+                    if msg.value: # nur 'drücken' auswerten, nicht 'loslassen'
+                        press_cuebutton (button)
+                    else: # nur relevant, wenn Buttontype == Taster
+                        # dann auch Loslassen auswerten
+                        if button in range (len (globs.buttontable)):
+                            buttontype = globs.buttontable[button].type
+                            if buttontype == "Taster":
+                                press_cuebutton (button)
+                # keine Werte zwischen SHIFT und 2*SHIFT
+                else: # Zusatz-Buttons
+                    # print (f"Special Midibutton: {data}")
+                    eval_midicommand (pos, ctrlindex, msg.value)
+
+
+# def eval_midiinput (*data):
+#     """ midicontroller an requests schicken
+#     wird als output-Funktion für Midicontroller verwendet
+#     in Midicontroller.poll: self.output (index, type, cnt, self.fader_buffer[cnt
+#     data[0]: Geräte-Nummer
+#     data[1]: "fader" oder "button"
+#     data[2]: controller-Nummer ab 0
+#     data[3]: Wert in 0 .. 127
+#     """
+#     if not len (globs.fadertable): # beim Neu-Laden von config möglich
+#         return
+#     if data[1]=="fader" and data[2] in globs.midi.in_faders[data[0]]:
+#         fader =  globs.midi.in_faders[data[0]][data[2]]
+#         if fader < globs.SHIFT: # cuefader
+#             globs.fadertable[fader].level = data[3] / 127
+#             midifader_monitor ("cuefader", fader ,data[3])
+#         elif globs.SHIFT <= fader < 2*globs.SHIFT: # cuelist
+#             globs.cltable[fader-globs.SHIFT].level = data[3] / 127
+#             midifader_monitor ("cuelist", fader-globs.SHIFT ,data[3])
+#         else: # Zusatz
+#             pass
+#             # print (f"Special Midifader: {data[2]}, {data[3]}")
+#     elif data[1]=="button" and data[2] in globs.midi.in_buttons[data[0]]:
+#         index = globs.midi.in_buttons[data[0]][data[2]]
+#         if index < globs.SHIFT: #cuebutton
+#             if data[3]: # nur 'drücken' auswerten, nicht 'loslassen'
+#                 press_cuebutton (index)
+#             else: # nur relevant, wenn Buttontype == Taster
+#                 # dann auch Loslassen auswerten
+#                 if index in range (len (globs.buttontable)):
+#                     buttontype = globs.buttontable[index].type
+#                     if buttontype == "Taster":
+#                         press_cuebutton (index)
+#         # keine Werte zwischen SHIFT und 2*SHIFT
+#         else: # Zusatz-Buttons
+#             # print (f"Special Midibutton: {data}")
+#             eval_midicommand (data[0], data[2], data[3])
 
 
 def cuebutton_monitor (index:int, status:int):
@@ -181,6 +222,7 @@ def get_midicommandlist ():
     Command-Zuordnungen kommen aus Tabelle, definiert in globs.midi_buttons
     """
     midi_commanddict.clear ()
+    globs.midi.clear_lists ("button", lo=2*globs.SHIFT, hi=3*globs.SHIFT)
     if globs.PYTHONANYWHERE == "false":
         filename = globs.cfg.get ("midi_buttons")
         csvfile = Csvfile (os.path.join (globs.room.midibuttonpath(), filename))
@@ -193,21 +235,27 @@ def get_midicommandlist ():
             ctype = content[count]["Type"] # 'Button' oder 'Fader'
             incnr, outcnr, ctrl = check_midicontroller (incnr,outcnr,ctrl)
             # Eintrag in command-Dict:
-            if ctrl:
-                key = str(incnr-1) + '-' + str(ctrl-1)
-                midi_commanddict[key] = content[count]
+            # if ctrl:
+            #     key = str(incnr-1) + '-' + str(ctrl-1)
+            #     midi_commanddict[key] = content[count]
             # Midi-Input:
             if incnr and ctrl:
+                key = str(incnr-1) + '-' + str(ctrl-1)
+                midi_commanddict[key] = content[count]
                 if ctype == "Button":
                     globs.midi.in_buttons[incnr-1][ctrl-1] = count + 2*globs.SHIFT
                 else:
                     globs.midi.in_faders[incnr-1][ctrl-1] = count + 2*globs.SHIFT
             # Midi-Output:
             if outcnr and ctrl:
+                key = str(outcnr-1) + '-' + str(ctrl-1)
+                midi_commanddict[key] = content[count]
                 if ctype == "Button":
-                    globs.midi.out_buttons[outcnr-1].append (ctrl-1)
+                    # globs.midi.out_buttons[outcnr-1].append (ctrl-1)
+                    globs.midi.out_buttons[outcnr-1][ctrl-1] = count + 2*globs.SHIFT
                 else:    
-                    globs.midi.out_faders[outcnr-1].append (ctrl-1)
+#                    globs.midi.out_faders[outcnr-1].append (ctrl-1)
+                    globs.midi.out_faders[outcnr-1][ctrl-1] = count + 2*globs.SHIFT
 
 
 def eval_midicommand (device:int, ctrl:int, val:int):
@@ -231,6 +279,12 @@ def eval_midicommand (device:int, ctrl:int, val:int):
             index = -1
         if line["Command"] == "TopcueClear" and val:
             globs.topcue.clear ()
+            # send val to midi output:
+            outdevice = line["Midioutput"]
+            if outdevice:
+                out = int (outdevice)-1
+                if 0 <= out < 4:
+                    globs.midi.level (out, ctrl, val)
         elif line["Command"] == "CuelistGo" and val:
             if index in range (len (globs.cltable)):
                 globs.cltable[index].go ()

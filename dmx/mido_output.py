@@ -47,7 +47,7 @@ class MidiDevice ():
     def set_device (self, devlist:list, devindex:int):
         """ Werte zuweisen 
         
-        devlist: Liste mit Device-Daten
+        devlist: Liste mit Device-Daten, siehe MidiOutput:list_devices()
         devindex: Index in devlist
         result: {"name":self.name, "result":"true" oder "false"}
         """
@@ -102,29 +102,40 @@ class MidiDevice ():
     def eval_msg (self, msg):
         """ midi-input mittels eval weiterverarbeiten
 
+        self.index an eval-Funktion übermitteln
         msg: mido Message
         eval: print oder andere eval-Funktion
         """
         # print (self.index, msg.type, msg.control, msg.value)
+        self.eval (self.index, msg)
+        # print (f"MIDI: {self.index} {msg}")
+        return
+    
+        # if msg.type == "control_change":
+        #     controller = msg.control
+        #     value = msg.value
 
-        controller = msg.control
-        value = msg.value
-
-        if controller in self.faders: # fader gefunden
-            fader = self.faders.index (controller)
-            self.eval (self.index, "fader", fader, value)
-        elif controller in self.buttons: # button
-            button = self.buttons.index(controller)
-            self.eval (self.index, "button", button, value)
-
+        #     if controller in self.faders: # fader gefunden
+        #         fader = self.faders.index (controller)
+        #         self.eval (self.index, "fader", fader, value)
+        #     elif controller in self.buttons: # button
+        #         button = self.buttons.index(controller)
+        #         self.eval (self.index, "button", button, value)
+        # elif msg.type == "note_on" or msg.type == "note_off":
+        #     self.eval (self.index, msg.type, msg.channel, 
+        #                msg.note,
+        #                msg.time, 
+        #                msg.velocity)
+        # else:
+        #     self.eval (self.index, msg.type, msg)
 
 class MidiOutput ():
     """ MIDI Output Klasse """
 
     def __init__ (self):
         self.out_ports = [MidiDevice() for i in range (4)] # verwendete Geräte
-        self.out_buttons = [[] for i in range (4)] # verwendete Buttons
-        self.out_faders = [[] for i in range (4)] # verwendete Fader
+        self.out_buttons = [{} for i in range (4)] # verwendete Buttons
+        self.out_faders = [{} for i in range (4)] # verwendete Fader
         self.msg_function = print 
 
 
@@ -192,10 +203,10 @@ class MidiOutput ():
             ret["message"] = f"{pos} nicht gültig."
             return ret
 
-        if newdev.device_id == num: # keine Änderung
-            ret["message"] = "keine Änderung."
-            ret["category"] = "success"
-            return ret
+        # if newdev.device_id == num: # keine Änderung
+        #     ret["message"] = "keine Änderung."
+        #     ret["category"] = "success"
+        #     return ret
 
         if newdev.device_id != -1: # midi_device vorhanden
             newdev.clear ()
@@ -254,14 +265,18 @@ class MidiOutput ():
 
 
     def level (self, pos:int, num:int, lev:int):
-        """ Level an Fader-Monitor schicken 
+        """ Level an Fader-Monitor schicken
+
+        pos: Position in self.out_ports, 0 <= pos < 4
+        num: Controller Nummer ab 0
+        lev: Level 0 <= lev <= 127
         """
         device = self.out_ports[pos]
         if not device.port:
             return
         if isinstance (num, str):
             num = int (num)
-        if 0 < num <= len (device.faders):
+        if 0 <= num < len (device.faders):
             msg = mido.Message ("control_change", 
                 control=device.faders[num], value=lev)
             device.port.send (msg)

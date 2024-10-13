@@ -8,11 +8,13 @@ import sys
 from flask import Blueprint, render_template, request, json, redirect
 from flask import session, flash, url_for #, send_from_directory
 from flask_login import login_required
+# from flask_cachecontrol import dont_cache
 # from cuebutton import Cuebutton
 
 from apputils import standarduser_required, admin_required, redirect_url
 from apputils import calc_mixoutput
 from midiutils import press_cuebutton, midifader_monitor, midi_commandlist
+from midicheck import midi_controller_list
 
 import globs
 
@@ -102,6 +104,7 @@ def testsvg ():
 def testtable ():
     return render_template ("data/dataedit.html", spath="testtbl")
 
+# --- 
 
 @common.route ("/contrib")
 @login_required
@@ -206,7 +209,7 @@ def get_info (item:str) -> json:
         return json.dumps (midi_commandlist)
     
     elif item == "midicontrollers":
-        return json.dumps (globs.midi.in_buttons)
+        return json.dumps (midi_controller_list())
 
     return json.dumps("???")
 
@@ -314,3 +317,25 @@ def viewicons ():
     return render_template ("viewicons.html", itemtable=itemtable)
 
     
+@common.route ("/midicontrollers")
+@login_required
+# @dont_cache ()
+def midicontrollers ():
+    """ list all used midi controllers 
+    """
+    items = sorted (midi_controller_list (), 
+                    key=lambda x: int (x["Controller"]))
+    title = "Verwendete Midicontroller"
+    fieldnames = ["Midiinput",
+                  "Midioutput",
+                  "Controller",
+                  "Type",
+                  "Text",
+                  "Parameter"]
+
+    return render_template ("common_table.html",
+                            style = "table-sm table-striped table-responsive",
+                            items = items,
+                            title = title,
+                            fieldnames = fieldnames)
+

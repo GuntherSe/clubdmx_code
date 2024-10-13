@@ -53,6 +53,14 @@
           });
         };
         $(".filterInput").val (filterStr);
+        $(".filterInput").on ("keydown", function (event) {
+          if (event.which == 13) {  // Enter 
+            event.preventDefault ();
+            loadLogfile (insert_id="#rechts");
+          } 
+        });
+        $(".filterInput").focus ();
+        
         modaldialogToPython (".deleteButton", "/delete_log", 
             {spath:dataPath, filename:visibleLogfile});
         

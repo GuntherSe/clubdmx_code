@@ -73,6 +73,8 @@ def make_fadertable (with_savedlevels:bool=False) :
 
     locations = fader_locations
     new_fadertable = []
+    # aud Midi-Fadertabellen cuefader entfernen:
+    globs.midi.clear_lists ("fader", hi=globs.SHIFT)
 
     # sollen csv-gespeicherte Levels geladen werden?
     csvlevels_requested = check_levelrequest (with_savedlevels)
@@ -122,8 +124,8 @@ def make_fadertable (with_savedlevels:bool=False) :
                     globs.midi.in_faders[incnr-1][fnr-1] = fadernum-1                    
                 # Midi-Output:
                 if outcnr and fnr:
-                    # globs.midiout_faders[outcnr-1][fnr-1] = fadernum-1   
-                    globs.midi.out_faders[outcnr-1].append (fnr-1)
+                    globs.midi.out_faders[outcnr-1][fnr-1] = fadernum-1   
+                    # globs.midi.out_faders[outcnr-1].append (fnr-1)
         
             # nun Levels:    
             if csvlevels_requested:        
@@ -153,6 +155,8 @@ def make_cuebuttons (with_savedlevels:bool=False):
 
     locations = button_locations
     new_buttontable = []
+    # Midi-Buttontabellen löschen:
+    globs.midi.clear_lists ("button", hi=globs.SHIFT)
 
     # sollen csv-gespeicherte Levels geladen werden?
     csvlevels_requested = check_levelrequest (with_savedlevels)
@@ -208,8 +212,8 @@ def make_cuebuttons (with_savedlevels:bool=False):
                     globs.midi.in_buttons[incnr-1][butnr-1] = butnum-1
                 # Midi-Output:
                 if outcnr and butnr:
-                    # globs.midiout_buttons[outcnr-1][butnr-1] = butnum-1   
-                    globs.midi.out_buttons[outcnr-1].append (butnr-1)
+                    globs.midi.out_buttons[outcnr-1][butnr-1] = butnum-1   
+                    # globs.midi.out_buttons[outcnr-1].append (butnr-1)
 
             # nun Levels:     
             if csvlevels_requested:
@@ -238,6 +242,8 @@ def make_cuelistpages (with_savedlevels:bool=False) :
     falls in config angegeben, dann Levels einlesen
     """
     new_cltable = []
+    # aud Midi-Fadertabellen cuefader entfernen:
+    globs.midi.clear_lists ("fader", lo=globs.SHIFT, hi=2*globs.SHIFT)
 
     # sollen csv-gespeicherte Levels geladen werden?
     currentlevels = backup_currentlevels ("cuelist") # aktuelle Level
@@ -299,8 +305,8 @@ def make_cuelistpages (with_savedlevels:bool=False) :
                 globs.midi.in_faders[incnr-1][fnr-1] = fadernum-1
             # Midi-Output:
             if outcnr and fnr:
-                # globs.midiout_faders[outcnr-1][fnr-1] = fadernum-1   
-                globs.midi.out_faders[outcnr-1].append (fnr-1) 
+                globs.midi.out_faders[outcnr-1][fnr-1] = fadernum-1   
+                # globs.midi.out_faders[outcnr-1].append (fnr-1) 
 
         # nun Levels:    
         if csvlevels_requested:        

@@ -23,7 +23,6 @@ function setEditmode (newMode) {
       initMouseMode ();
     });
   };
-
 };
   
 function changeMousemode (id, newMode) {
@@ -32,14 +31,27 @@ function changeMousemode (id, newMode) {
   });
 };
 
+function toggleMousemode () {
+  // umschalten zwischen "edit" und "select"
+  if (MouseModeStr == "edit") {
+    setEditmode ("select")
+  } else {
+    setEditmode ("edit")
+  };
+};
+
 function initCsvtableMouse () {
   // Verhalten bei Click in CSV-Tabelle:
   if (getEditmode () == "select") {
     selectableCsvLines ();
+    //$("table").focusout ();
+    $(".csvcell").blur ();
   } else if (getEditmode () == "edit") {
     // $("tr").removeClass ("ui-state-highlight");
     removeSelectableCsvLines ();
     editableCsvFields ();
+    $(".csvrow").removeClass('ui-state-highlight')
+                .removeClass('ui-selected');
     // Buttons:
     $(".navSelect").addClass ("d-none");
     $(".csvClipboard").addClass ("d-none"); 
@@ -54,7 +66,7 @@ function initMouseMode () {
 
 // ----------------------------------------------------------------------------
 // CELL-EDIT start
-var editcell = undefined; // zu editierende Text-Zelle
+let editcell = undefined; // zu editierende Text-Zelle
 
 // highlight edit-cell 
 function selectTextcell() {

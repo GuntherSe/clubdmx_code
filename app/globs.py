@@ -40,6 +40,7 @@ from cuebutton    import Cuebutton
 from cuelist      import Cuelist
 from cuechild     import Topcue
 from roomclass    import Room
+from startup      import connect_midi
 
 # Daten-Verzeichnisstruktur:
 # Das Verzeichnis, in dem sich globs.py befindet, ist der thispath
@@ -80,7 +81,7 @@ if PYTHONANYWHERE == "false":
     midiactive = False   
     midi = Midi ()
     # Start the daemon to detect Midi connections
-    midi.monitor.start_monitoring(on_connect= midi.reconnect,
+    midi.monitor.start_monitoring(on_connect= connect_midi,
                                      on_disconnect=None)
 
 

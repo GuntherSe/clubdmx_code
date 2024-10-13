@@ -22,7 +22,7 @@ from cuelist import Cuelist
 from startup_func import del_cuetables
 from startup_func import make_cuebuttons, make_fadertable, make_cuelistpages
 from startup_levels import activate_startcue
-from midiutils import eval_midiinput, get_midicommandlist
+from midiutils import eval_midi, get_midicommandlist
 
 if os.environ.get ("PYTHONANYWHERE")  != "true":
     from mido_input import Midi
@@ -159,6 +159,47 @@ def check_config (fullname:str) -> dict:
     return ret
 
 
+def connect_midi (*args):
+    """ Midi Geräte verbinden
+    
+    wird auch aufgerufen, wenn USB-Gerät neu angesteckt wird
+    """
+    cfgdata = globs.cfg.get ("midi_on") 
+    if cfgdata == "1": 
+        globs.midiactive = True
+        if Midi.paused:
+            Midi.resume ()
+        # MIDI-Input:
+        for i in range (4): # max 4 Midi-Controller
+            num = str (1+i)
+            device = globs.cfg.get("midi_input_"+num)
+            # if device:
+            try:
+                devnum = int(device)
+            except:
+                devnum = -1 # kein Midi
+            ret = globs.midi.set_indevice (i, devnum)
+            if ret["category"] != "success":
+                globs.midi.set_indevice (i, -1)
+                # globs.cfg.set ("midi_input_"+num, -1)
+        # MIDI-Output:
+            device = globs.cfg.get ("midi_output_"+num)
+            try:
+                devnum = int(device)
+            except:
+                devnum = -1 # kein Midi
+            ret = globs.midi.set_outdevice (i, devnum)
+            if ret["category"] != "success":
+                globs.midi.set_outdevice (i, -1)
+                # globs.cfg.set ("midi_output_"+num, -1)
+        globs.midi.set_eval_function (eval_midi)
+    else:
+        globs.midiactive = False
+        if Midi.paused == False:
+            Midi.pause ()
+
+
+
 def load_config (with_savedlevels=False):
     """ cfg initialisieren bzw. neu laden
     
@@ -203,40 +244,8 @@ def load_config (with_savedlevels=False):
     globs.ola.set_ola_ip (cfgdata)
 
     if globs.PYTHONANYWHERE == "false":
-        # MIDI auswerten
-        cfgdata = globs.cfg.get ("midi_on") 
-        if cfgdata == "1": 
-            globs.midiactive = True
-            if Midi.paused:
-                Midi.resume ()
-            # MIDI-Input:
-            for i in range (4): # max 4 Midi-Controller
-                num = str (1+i)
-                device = globs.cfg.get("midi_input_"+num)
-                # if device:
-                try:
-                    devnum = int(device)
-                except:
-                    devnum = -1 # kein Midi
-                ret = globs.midi.set_indevice (i, devnum)
-                if ret["category"] != "success":
-                    globs.midi.set_indevice (i, -1)
-                    # globs.cfg.set ("midi_input_"+num, -1)
-            # MIDI-Output:
-                device = globs.cfg.get ("midi_output_"+num)
-                try:
-                    devnum = int(device)
-                except:
-                    devnum = -1 # kein Midi
-                ret = globs.midi.set_outdevice (i, devnum)
-                if ret["category"] != "success":
-                    globs.midi.set_outdevice (i, -1)
-                    # globs.cfg.set ("midi_output_"+num, -1)
-            globs.midi.set_eval_function (eval_midiinput)
-        else:
-            globs.midiactive = False
-            if Midi.paused == False:
-                Midi.pause ()
+        connect_midi ()
+
         # OSC Input:
         cfgdata = globs.cfg.get ("osc_input")
         if cfgdata == "1":
