@@ -131,6 +131,7 @@ class Midi (MidiOutput, threading.Thread):
             newdev = self.in_ports[pos] # MidiDevice 
         else:
             ret["message"] = f"{pos} nicht gültig."
+            self.logger.debug (f"Input Nummer {pos+1} nicht gültig.")
             return ret
 
         # midi_device bereits zugewiesen:
