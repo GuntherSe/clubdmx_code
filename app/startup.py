@@ -237,8 +237,8 @@ def load_config (with_savedlevels=False):
     cfgdata = globs.cfg.get("patch")
     ret = globs.patch.open (cfgdata)
 
-    cfgdata = globs.cfg.get("universes")
-    globs.patch.set_universes (int(cfgdata))
+    # cfgdata = globs.cfg.get("universes")
+    # globs.patch.set_universes (int(cfgdata))
 
     cfgdata = globs.cfg.get("ola_ip")
     globs.ola.set_ola_ip (cfgdata)

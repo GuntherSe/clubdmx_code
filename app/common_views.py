@@ -166,17 +166,16 @@ def get_info (item:str) -> json:
         return json.dumps (buttonstat)
     
     elif item == "mix": # Mix output 
-        unis = globs.cfg.get ("universes")
         items = []
+        unis = globs.patch.get_unis ()
         if globs.PYTHONANYWHERE == "true":
             # keine threads, daher aktuelle Berechnungen machen:
             calc_mixoutput ()
-        for uni in range (1,int(unis)+1):
+        for uni in unis:
             mix = globs.patch.show_mix (uni)
-            # print (f"mix-{uni}: {mix}")
-            for i in range (len (mix)):
-                if mix[i]:
-                    items.append (f"{uni}-{i+1}:{mix[i]}")
+            for i, val in enumerate (mix):
+                if val:
+                    items.append (f"{uni}-{i+1}:{val}")
         out = render_template ("output-content.html", items = items)
         return json.dumps (out)
 

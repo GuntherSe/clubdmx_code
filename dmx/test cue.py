@@ -5,25 +5,32 @@
 
 import os
 import os.path
-import time
-import csv
+# import time
+# import csv
 import pprint # pretty print
 
 from cue import Cue
 from patch import Patch
 from ola import OscOla
 
-os.chdir ("C:\\Users\\Gunther\\OneDrive\\Programmierung\\clubdmx_rooms\\develop")
+roompath = os.environ.get ("ROOMPATH")
+if roompath:
+    os.chdir (roompath)
 print ("ich bin hier: ", os.getcwd())
 patch = Patch()
 patch.set_path (os.getcwd())
-patch.open ("LED stripe")
+patchfile = os.environ.get ("PATCHFILE")
+patch.open (patchfile)
 ola   = OscOla ()
-ola.set_ola_ip ("192.168.0.11")
+olaip = os.environ.get ("OLAIP", default="127.0.0.1")
+ola.set_ola_ip (olaip)
 print("Verbinde zu OLA-device: {0}".format (ola.ola_ip))
+# set Universes:
+# unis = patch.get_unis ()
+# ola.set_unis (unis)
 ola.start_mixing()
 
-patch.set_universes (2)
+# patch.set_universes (2)
 Cue.set_path (os.getcwd())
 cue1 = Cue (patch)
 cue1.open ("led stripe red")

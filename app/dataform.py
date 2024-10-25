@@ -65,7 +65,7 @@ def config ():
         patch        = SelectField ("Patch", choices=patch_choices,
                         default=cur["patch"])
         ola_ip       = StringField  ("OLA-Adresse", default=cur["ola_ip"])
-        universes    = IntegerField ("Universes", default=cur["universes"])
+        # universes    = IntegerField ("Universes", default=cur["universes"])
         pages        = SelectField ("Cuelist-Tabelle", choices=pages_choices,
                         default=cur["pages"])
         stage         = SelectField ("Stage", choices=stage_choices,
