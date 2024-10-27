@@ -45,14 +45,6 @@ class Mix :
         Mix._ola_unis[mix-1] = olanum
 
 
-    # def olanum (self, num:int) -> int:
-    #     """ get Ola universum Id of Mix 
-        
-    #     num: mix number, count from 1
-    #     """
-    #     return Mix._ola_unis[num-1]
-    
-
     def reset_mix (self):
         """ alle Mixwerte auf 0
         """

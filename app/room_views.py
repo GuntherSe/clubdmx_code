@@ -10,7 +10,7 @@ from flask import Blueprint, request, json, flash, current_app
 from flask import redirect, url_for, render_template, session
 from flask import send_from_directory #, jsonify
 
-from csvfileclass import Csvfile
+from csvnameclass import Csvname
 from roomclass import Room
 from startup import load_config
 from apputils import standarduser_required, admin_required, redirect_url
@@ -46,14 +46,27 @@ def change ():
 
         newpath = newpath.replace ('+', os.sep) # '+' in '/' umwandeln
         globs.room.set_path (newpath)
+        flash ("in neuen Raum wechseln.", category="success")
         # Raum prüfen:
         globs.room.check_fields ()
         globs.cfgbase.set ("room", newpath)
-        globs.cfgbase.set ("config", "_neu")
+        # hier einfügen: config Name festlegen
+        head, tail = os.path.split (newpath)
+        # wenn config mit Namen 'tail' existiert,
+        # dann diese config laden.
+        # sonst config '_neu' laden und als 'tail' sichern .
+        fname = os.path.join (globs.room.configpath(), tail)
+        cfgfile = Csvname (fname)
+        if cfgfile.exists ():
+            globs.cfgbase.set ("config", tail)
+        else:
+            newname = os.path.join (globs.room.configpath(), "_neu")
+            cfgfile.name (newname)
+            cfgfile.backup (tail)
+        globs.cfgbase.set ("config", tail)
         globs.cfgbase.save_data ()
         load_config (with_savedlevels=True)
-        flash ("in neuen Raum wechseln.", category="success")
-        flash ("und nun Konfiguration öffnen!", category="danger")
+        flash (f"und nun Konfiguration {tail} öffnen!", category="info")
         clear_session_subdirs () 
         if "stagename" in session: 
             session.pop ("stagename")
@@ -74,19 +87,37 @@ def change ():
 @room.route ("/rename", methods = ["GET","POST"])
 @admin_required
 def rename ():
-    """ Raum umbenennen """
+    """ Raum umbenennen 
+    
+    Falls config-Name == Raumverzeichnis-Name, dann config umbenennen
+    """
 
     if request.method == 'POST':
-        newpath = request.form ["name"]
+        newroom = request.form ["name"]
 
-        if newpath and newpath != "undefined":
-            confname = globs.cfg.file.name ()
-            globs.room.rename (newpath)
-            globs.cfgbase.set ("room", globs.room.path())
-            globs.cfgbase.save_data ()
-            globs.cfg.open (confname)
-            load_config (with_savedlevels=True)
-            flash (f"Raum umbenannt: {newpath}")
+        if newroom and newroom != "undefined":
+            # currentconfname = globs.cfg.file.name ()
+            oldroomname = globs.room.name()
+            ret = globs.room.rename (newroom)
+            if ret["category"] == "success":
+                globs.cfgbase.set ("room", globs.room.path())
+                # config umbenennen, wenn config-Name == room-Name:
+                currentcfg = globs.cfg.file.shortname()
+                if currentcfg == oldroomname:
+                    fname = os.path.join (globs.room.configpath(), newroom)
+                    cfgfile = Csvname (fname)
+                    if cfgfile.exists (): # löschen und aktuelle config umbenennen
+                        cfgfile.remove ()
+                    globs.cfg.file.rename (newroom)
+                    globs.cfgbase.set ("config", newroom)
+                # else: Config bleibt gleich
+                globs.cfgbase.save_data ()
+
+                # globs.cfg.open (cfgfile.name()) # notwendig?
+                load_config (with_savedlevels=True)
+                flash (f"Raum umbenannt: {newroom}")
+            else:
+                flash ("Raum konnte nicht umbenannt werden.", category="danger")
             return "ok"
         else:
             flash ("kein Name angegeben.", category="danger")
@@ -119,6 +150,17 @@ def saveas ():
         globs.room.set_path (newpath)
         # da gleiche config, kann load_config entfallen
         globs.cfgbase.set ("room", globs.room.path())
+        # config umbenennen:
+        currentcfg = globs.cfg.file.shortname()
+        if currentcfg == oldname:
+            fname = os.path.join (globs.room.configpath(), newpath)
+            cfgfile = Csvname (fname)
+            if cfgfile.exists (): # löschen und aktuelle config umbenennen
+                cfgfile.remove ()
+            globs.cfg.file.rename (newpath)
+            globs.cfgbase.set ("config", newpath)
+        # else: Config bleibt gleich
+
         globs.cfgbase.save_data ()
         flash (f"Raum {oldname} gesichert unter {newname}.")
         return "ok"
@@ -168,10 +210,10 @@ def new ():
     """ neuen Raum erstellen """
 
     if request.method == 'POST':
-        newpath = request.form ["name"]
+        newroom = request.form ["name"]
 
-        if newpath and newpath != "undefined":
-            fullpath = os.path.join (globs.room.rootpath(), newpath)
+        if newroom and newroom != "undefined":
+            fullpath = os.path.join (globs.room.rootpath(), newroom)
             if os.path.isdir (fullpath): # bereits vorhanden -> leeren
                 globs.room.set_path (fullpath)
                 globs.room.empty ()
@@ -179,10 +221,15 @@ def new ():
                 newproj = Room (fullpath)
 
             globs.cfgbase.set ("room", fullpath)
-            globs.cfgbase.set ("config", "_neu")
+            # config Name = room Name:
+            newname = os.path.join (globs.room.configpath(), "_neu")
+            cfgfile = Csvname (newname)
+            cfgfile.backup (newroom)
+            globs.cfgbase.set ("config", newroom)
             globs.cfgbase.save_data ()
+
             load_config ()
-            flash (f"in neuen Raum wechseln: {newpath}", category="success")
+            flash (f"in neuen Raum wechseln: {newroom}", category="success")
             clear_session_subdirs ()
             return "ok"
         else:

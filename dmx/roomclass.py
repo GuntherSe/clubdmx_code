@@ -7,10 +7,10 @@ import shutil # fürs kopieren
 import tempfile
 import csv
 from csvnameclass import Csvname
-from csvfileclass import dict_to_list
+from csvfileclass import dict_to_list, Csvfile
 
 from roombaseclass import Roombase
-from csvfileclass import Csvfile
+# from csvfileclass import Csvfile
 
 # Liste aller Files in einem Directory:
 # siehe: https://stackoverflow.com/questions/3207219/how-do-i-list-all-files-of-a-directory

@@ -5,8 +5,6 @@
 
 import os
 import os.path
-# import time
-# import csv
 import pprint # pretty print
 
 from cue import Cue
@@ -25,12 +23,8 @@ ola   = OscOla ()
 olaip = os.environ.get ("OLAIP", default="127.0.0.1")
 ola.set_ola_ip (olaip)
 print("Verbinde zu OLA-device: {0}".format (ola.ola_ip))
-# set Universes:
-# unis = patch.get_unis ()
-# ola.set_unis (unis)
 ola.start_mixing()
 
-# patch.set_universes (2)
 Cue.set_path (os.getcwd())
 cue1 = Cue (patch)
 cue1.open ("led stripe red")

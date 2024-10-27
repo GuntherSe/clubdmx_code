@@ -4,7 +4,7 @@
 """ Diverse Tests """
 
 import os
-import os.path
+# import os.path
 import time
 import csv
 
