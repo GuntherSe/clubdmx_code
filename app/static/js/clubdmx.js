@@ -227,7 +227,7 @@ function activateCuedetails () {
           var levels  = jdata["levels"];
           // console.log ("Levels: " +JSON.stringify (levels));
           for (var i=0; i < heads.length; i++){
-              makeCueAttribSlider (heads[i], attribs[i], levels[i],
+              activateAttribSlider (heads[i], attribs[i], levels[i],
                                   '/cue/cueedit' );
           };
         }); // on shown
