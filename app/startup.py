@@ -72,7 +72,7 @@ def get_roompath ():
     current_room = roompath
    
 
-def create_unique (subdir:str) -> str:
+def create_unique (subdir:str, nname:str) -> str:
     """ create unique filename 
     
     see: http://code.activestate.com/recipes/577200-make-unique-file-name/
@@ -80,7 +80,7 @@ def create_unique (subdir:str) -> str:
     global current_room    
 
     def check_fn (i):
-        fname = os.path.join (current_room, subdir, f"{subdir}-{i}") 
+        fname = os.path.join (current_room, subdir, f"{nname}-{i}") 
         c = Csvname (fname)
         if not c.exists ():
             return c.shortname()
@@ -98,14 +98,14 @@ def create_unique (subdir:str) -> str:
     return None
 
 
-def check_csvfile (name:str, subdir:str) -> str:
+def check_csvfile (name:str, subdir:str, nname:str) -> str:
     """ File auf Existenz prüfen 
     
     name '_neu' in default-Namen ändern: subdir-'unique_postfix'
     """
     global current_room    
     if name == "_neu":
-        unique = create_unique (subdir)
+        unique = create_unique (subdir, nname)
         logger.warning (f"{subdir}/{unique} neu erzeugt.") 
         return unique
     else:
@@ -116,7 +116,7 @@ def check_csvfile (name:str, subdir:str) -> str:
             logger.info (f"{subdir}/{name} vorhanden.") 
             return None
         else:
-            unique = create_unique (subdir)
+            unique = create_unique (subdir, nname)
             logger.warning (f"{subdir}/{name} neu erzeugt.") 
         return unique
 
@@ -167,34 +167,34 @@ def check_config (fullname:str) -> dict:
         tmpcsv.remove ()
 
     # Files prüfen:
-    chk = check_csvfile (checkconf.get ("patch"), "patch")
+    chk = check_csvfile (checkconf.get ("patch"), "patch", "patch")
     if chk:
         checkconf.set ("patch", chk)
-    chk = check_csvfile (checkconf.get ("cuefaders"), "cuefader")
+    chk = check_csvfile (checkconf.get ("cuefaders"), "cuefader", "fader")
     if chk:
         checkconf.set ("cuefaders", chk)
-    chk = check_csvfile (checkconf.get ("exefaders"), "cuefader")
+    chk = check_csvfile (checkconf.get ("exefaders"), "cuefader", "exefader")
     if chk:
         checkconf.set ("exefaders", chk)
-    chk = check_csvfile (checkconf.get ("cuebuttons"), "cuebutton")
+    chk = check_csvfile (checkconf.get ("cuebuttons"), "cuebutton", "button")
     if chk:
         checkconf.set ("cuebuttons", chk)
-    chk = check_csvfile (checkconf.get ("exebuttons1"), "cuebutton")
+    chk = check_csvfile (checkconf.get ("exebuttons1"), "cuebutton", "button-oben")
     if chk:
         checkconf.set ("exebuttons1", chk)
-    chk = check_csvfile (checkconf.get ("exebuttons2"), "cuebutton")
+    chk = check_csvfile (checkconf.get ("exebuttons2"), "cuebutton", "button-unten")
     if chk:
         checkconf.set ("exebuttons2", chk)
-    chk = check_csvfile (checkconf.get ("midi_buttons"), "midibutton")
+    chk = check_csvfile (checkconf.get ("midi_buttons"), "midibutton", "midibutton")
     if chk:
         checkconf.set ("midi_buttons", chk)
-    chk = check_csvfile (checkconf.get ("pages"), "pages")
+    chk = check_csvfile (checkconf.get ("pages"), "pages", "pages")
     if chk:
         checkconf.set ("pages", chk)
-    chk = check_csvfile (checkconf.get ("stage"), "stage")
+    chk = check_csvfile (checkconf.get ("stage"), "stage", "stage")
     if chk:
         checkconf.set ("stage", chk)
-    chk = check_csvfile (checkconf.get ("startcue"), "cue")
+    chk = check_csvfile (checkconf.get ("startcue"), "cue", "startcue")
     if chk:
         checkconf.set ("startcue", chk)
 

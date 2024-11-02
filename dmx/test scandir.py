@@ -6,10 +6,7 @@ import os.path
 
 # https://stackoverflow.com/questions/33135038/how-do-i-use-os-scandir-to-return-direntry-objects-recursively-on-a-directory
 
-try:
-    from os import scandir
-except ImportError:
-    from scandir import scandir  # use scandir PyPI module on Python < 3.5
+from os import scandir
 
 
 def scantree(path):

@@ -198,8 +198,6 @@ class Midi (MidiOutput, threading.Thread):
 # --- Test -------------------------------------------------------------------
 if __name__ == "__main__":
     
-    # TEST = True
-
     infotxt = """
 ---- MIDI Input Test -----
 
@@ -226,7 +224,7 @@ Kommandos: x = Exit
         while i != 'x':
             i = input ("CMD: ")
             cmd = i.split ()
-            if i == '#':
+            if i == '#' or i == '':
                 print (infotxt)
             elif i == 'q':
                 mididev.pause ()

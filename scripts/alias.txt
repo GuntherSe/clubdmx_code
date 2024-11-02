@@ -1,3 +1,5 @@
-Diese Zeile am Ende von .bashrc anfügen:
+Diese Zeilen am Ende von .bashrc anfügen (Debian):
 
-alias clubdmx='$HOME/clubdmx_code/scripts/app_start.bash'
+alias clubdmx='$HOME/clubdmx_code/scripts/app_start.sh'
+alias update='sudo $HOME/clubdmx_code/scripts/update.sh -f github -o debian -v .venv'
+alias activate="source $HOME/.venv/bin/activate"

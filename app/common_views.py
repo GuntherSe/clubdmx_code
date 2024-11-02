@@ -76,6 +76,13 @@ def check_clipboard ():
 
 
 # --- Tests: --------------------------------------------------------
+@common.route ("/empty")
+def empty ():
+    """ genereiere leere Seite
+    """
+    return render_template ("empty_page.html")
+
+
 @common.route ("/test")
 def test ():
     """ Test cuebutton-table 
@@ -209,6 +216,13 @@ def get_info (item:str) -> json:
     
     elif item == "midicontrollers":
         return json.dumps (midi_controller_list())
+    
+    elif item == "midi":
+        ret = {}
+        indevices = globs.midi.list_devices (mode="input")
+        ret["indevices"] = indevices
+        ret["mididata"] = "noch nix mit midi"
+        return json.dumps (ret)
 
     return json.dumps("???")
 
@@ -337,4 +351,12 @@ def midicontrollers ():
                             items = items,
                             title = title,
                             fieldnames = fieldnames)
+
+
+@common.route ("/midiwatcher")
+@login_required
+def midiwatcher ():
+    """ Midi Aktivität anzeigen
+    """
+    return render_template ("midiwatcher.html")
 

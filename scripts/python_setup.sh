@@ -16,6 +16,8 @@
 # codepath="${CLUBDMX_CODEPATH:-$HOME/clubdmx_code}"
 # cd $codepath
 
+# NICHT vergessen: .venv aktivieren!
+
 # check venv:
 which python3
 

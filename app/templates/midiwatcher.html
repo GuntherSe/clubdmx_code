@@ -1,0 +1,72 @@
+<!-- gallery.html -->
+{% extends 'base.html' %}
+
+{% import "index-macros.html" as idx %}
+
+{% block header %}
+  <h2>{% block title %}Midi Watcher{% endblock %}</h2>
+{% endblock %}
+{% block subtitle %}
+{% endblock %}
+
+{% block css %}
+<style>
+  div.midicontent {
+    margin: 5px;
+    padding: 5px;
+    /* width: 500px; */
+    height: 200px;
+    overflow: auto;
+    text-align: justify;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="center" class="container-fluid">
+  <h3>Midi Aktivität</h3>
+  <div id="indevices"></div>
+  <div id="midiwatch" class="midicontent"></div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+  let count = 1;
+
+  function formatIndevice (device){
+    // Midi indevice: count, name, mode, longname
+    let ret = "<p>Count: " + device[0] 
+      + ", Name: " + device[1] 
+      + ", Long Name: " + device[3] + "</p>";
+    return ret;
+  }
+
+  function periodic_midistatus () {
+    // siehe: https://stackoverflow.com/questions/5052543/how-to-fire-ajax-request-periodically
+    // aktuellen Mix vom Server holen:       
+    $.ajax ({
+      url: "/getinfo/midi", 
+      success: function(data){
+        var jdata = $.parseJSON(data);
+        let devicelist = ""
+        for (var item in jdata["indevices"]) {
+          devicelist =  devicelist.concat (formatIndevice (jdata["indevices"][item]))
+        }
+        $("#indevices").html (devicelist)
+        $("#midiwatch").append ("<p>" + jdata["mididata"] + " " + count +"</p>");
+        count = count + 1;
+        $("#midiwatch").scrollTop($("#midiwatch")[0].scrollHeight);
+      },
+      complete: function () {
+        setTimeout (periodic_midistatus, 100);
+      }
+    }); // ende $.ajax
+  }
+
+  $("document").ready (function () {
+
+    periodic_midistatus ();
+  });     // ende document ready
+</script>
+{% endblock %}

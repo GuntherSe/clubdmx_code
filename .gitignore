@@ -19,6 +19,9 @@ scripts/update_PAW.txt
 dmx/.vscode/
 dmx/backup/
 dmx/test unique filename.py
+dmx/test.py
+dmx/test midi.py
+dmx/test sort.py
 app/backup
 app/static/sphinx/doctrees/
 uploads/
