@@ -21,7 +21,7 @@ from cue import Cue
 from cuelist import Cuelist
 from startup_func import del_cuetables
 from startup_func import make_cuebuttons, make_fadertable, make_cuelistpages
-from startup_levels import activate_startcue
+from startup_levels import activate_startcue, backup_currentlevels
 from midiutils import eval_midi, get_midicommandlist
 
 if os.environ.get ("PYTHONANYWHERE")  != "true":
@@ -198,27 +198,6 @@ def check_config (fullname:str) -> dict:
     if chk:
         checkconf.set ("startcue", chk)
 
-    # if not check_csvfile (checkconf.get ("patch"), "patch"):
-    #     checkconf.set ("patch", "_neu")
-    # if not check_csvfile (checkconf.get ("cuefaders"), "cuefader"):
-    #     checkconf.set ("cuefaders", "_neu")
-    # if not check_csvfile (checkconf.get ("exefaders"), "cuefader"):
-    #     checkconf.set ("exefaders", "_neu")
-    # if not check_csvfile (checkconf.get ("cuebuttons"), "cuebutton"):
-    #     checkconf.set ("cuebuttons", "_neu")
-    # if not check_csvfile (checkconf.get ("exebuttons1"), "cuebutton"):
-    #     checkconf.set ("exebuttons1", "_neu")
-    # if not check_csvfile (checkconf.get ("exebuttons2"), "cuebutton"):
-    #     checkconf.set ("exebuttons2", "_neu")
-    # if not check_csvfile (checkconf.get ("midi_buttons"), "midibutton"):
-    #     checkconf.set ("midi_buttons", "_neu")
-    # if not check_csvfile (checkconf.get ("pages"), "pages"):
-    #     checkconf.set ("pages", "_neu")
-    # if not check_csvfile (checkconf.get ("stage"), "stage"):
-    #     checkconf.set ("stage", "_neu")
-    # if not check_csvfile (checkconf.get ("startcue"), "cue"):
-    #     checkconf.set ("startcue", "_neu")
-    
     # sichern
     checkconf.save_data ()
     ret["message"] = "Config ok."
@@ -267,12 +246,13 @@ def connect_midi (*args):
 
 
 
-def load_config (with_savedlevels=False):
+def load_config (with_currentlevels=False):
     """ cfg initialisieren bzw. neu laden
     
     cfgbase: hier sind der Name der Config-Datei und der Raum-Pfad gespeichert
-    with_savedlevels==True:  levels von CSV-File 
-    with_savedlevels==False: levels sind 0
+    with_savedlevels==True:  aktuelle Level wiederherstellen
+    with_savedlevels==False: Levels sind 0, z.B. bei Öffnen einer Config
+    Start-Option 'Levels speichern': Levels von CSV-Datei laden
     """
     global current_room
     # config-Name:
@@ -289,7 +269,11 @@ def load_config (with_savedlevels=False):
     Cue.set_path  (current_room)
     Cuelist.set_path (current_room)
 
-    # zur Absturzvermeidung: fadertable und buttontable löschen:
+    if with_currentlevels:
+        faderlevels = backup_currentlevels ("fader")
+        buttonlevels = backup_currentlevels ("button")
+        cuelistlevels = backup_currentlevels ("cuelist")
+    # zur Absturzvermeidung: fadertable, buttontable und cltable löschen:
     # damit gibt es auch keine aktuellen Levels
     del_cuetables ()
 
@@ -335,12 +319,15 @@ def load_config (with_savedlevels=False):
     if start_with_cue == "1":
         # savecuelevels auf 0 setzen, nur eine der beiden Optionen sinnvoll:
         globs.cfg.set ("savecuelevels", "0")
-        # suchen und Auswerten des Startcues erst nachdem
-        # die Fadertabelle erzeugt ist.
 
-    make_fadertable (with_savedlevels=with_savedlevels)
-    make_cuebuttons (with_savedlevels=with_savedlevels)
-    make_cuelistpages (with_savedlevels=with_savedlevels)
+    if with_currentlevels:
+        make_fadertable (faderlevels)
+        make_cuebuttons (buttonlevels)
+        make_cuelistpages (cuelistlevels)
+    else:
+        make_fadertable (with_currentlevels=False)
+        make_cuebuttons (with_currentlevels=False)
+        make_cuelistpages (with_currentlevels=False)
 
     if start_with_cue == "1":
         activate_startcue ()

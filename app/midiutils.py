@@ -146,45 +146,6 @@ def eval_midi (pos, msg):
                     eval_midicommand (pos, ctrlindex, msg.value)
 
 
-# def eval_midiinput (*data):
-#     """ midicontroller an requests schicken
-#     wird als output-Funktion für Midicontroller verwendet
-#     in Midicontroller.poll: self.output (index, type, cnt, self.fader_buffer[cnt
-#     data[0]: Geräte-Nummer
-#     data[1]: "fader" oder "button"
-#     data[2]: controller-Nummer ab 0
-#     data[3]: Wert in 0 .. 127
-#     """
-#     if not len (globs.fadertable): # beim Neu-Laden von config möglich
-#         return
-#     if data[1]=="fader" and data[2] in globs.midi.in_faders[data[0]]:
-#         fader =  globs.midi.in_faders[data[0]][data[2]]
-#         if fader < globs.SHIFT: # cuefader
-#             globs.fadertable[fader].level = data[3] / 127
-#             midifader_monitor ("cuefader", fader ,data[3])
-#         elif globs.SHIFT <= fader < 2*globs.SHIFT: # cuelist
-#             globs.cltable[fader-globs.SHIFT].level = data[3] / 127
-#             midifader_monitor ("cuelist", fader-globs.SHIFT ,data[3])
-#         else: # Zusatz
-#             pass
-#             # print (f"Special Midifader: {data[2]}, {data[3]}")
-#     elif data[1]=="button" and data[2] in globs.midi.in_buttons[data[0]]:
-#         index = globs.midi.in_buttons[data[0]][data[2]]
-#         if index < globs.SHIFT: #cuebutton
-#             if data[3]: # nur 'drücken' auswerten, nicht 'loslassen'
-#                 press_cuebutton (index)
-#             else: # nur relevant, wenn Buttontype == Taster
-#                 # dann auch Loslassen auswerten
-#                 if index in range (len (globs.buttontable)):
-#                     buttontype = globs.buttontable[index].type
-#                     if buttontype == "Taster":
-#                         press_cuebutton (index)
-#         # keine Werte zwischen SHIFT und 2*SHIFT
-#         else: # Zusatz-Buttons
-#             # print (f"Special Midibutton: {data}")
-#             eval_midicommand (data[0], data[2], data[3])
-
-
 def cuebutton_monitor (index:int, status:int):
     """ Button-Status per LED am Midioutput anzeigen 
 

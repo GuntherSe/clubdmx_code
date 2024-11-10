@@ -314,7 +314,7 @@ def delete_csv ():
             if len (used):
                 for item in used:
                     if item[1] == shortname:
-                        load_config (with_savedlevels=True)
+                        load_config (with_currentlevels=True)
                         # Spezialfall Cuelist:
                         if args["spath"] == "cuelist":
                             flash (f"Die Cueliste '{shortname}' wurde geleert.")

@@ -117,7 +117,7 @@ def create_app (test_config=None):
         session.permanent = True
 
 
-    load_config (with_savedlevels=True)
+    load_config ()
 
     if globs.PYTHONANYWHERE == "false":
         # in PYTHONANYWHERE keine Threads!

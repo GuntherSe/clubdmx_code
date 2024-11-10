@@ -1,18 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# import imp
 import os
 import os.path
-# import json
 
 from flask import Blueprint, render_template, request, json, redirect
 from flask import session, flash,  url_for #, send_from_directory
-# from flask import current_app
 from flask_login import login_required
 
 import logging
-# from loggingbase import readlogfile
 
 from cuebutton import Cuebutton
 
@@ -20,14 +16,12 @@ from ola import get_ip_address
 
 from apputils import standarduser_required #, admin_required, redirect_url
 from common_views import check_clipboard
-# from filedialog_util import dir_explore
 
 import globs
 
 from csvfileclass import Csvfile
 from startup_levels import button_locations, fader_locations
 from startup_func import fadertable_items
-# from filedialog_util import list_dir
 
 
 basic = Blueprint ("basic", __name__, url_prefix="", 

@@ -18,8 +18,7 @@ from midiutils import check_midicontroller
 from startup_levels import backup_currentlevels, restore_currentlevels
 from startup_levels import button_locations, fader_locations
 
-logger = logging.getLogger ("logger."+__name__)
-logger.setLevel(logging.DEBUG)
+logger = logging.getLogger ("clubdmx")
 
 def del_cuetables ():
     """ fadertable, buttontable, cltable löschen 
@@ -36,14 +35,11 @@ def del_cuetables ():
     globs.cltable.clear ()
 
 
-def check_levelrequest (with_savedlevels:bool) ->bool:
-    """ Prüfen, ob csv-Levels eingelesen werden sollen
-    """
-    if  with_savedlevels == True:
-        savelevels = globs.cfg.get("savecuelevels") 
-        if savelevels == "1":
-            return True
+def csvlevel_requested () -> bool:
+    if globs.cfg.get("savecuelevels") == '1':
+        return True
     return False
+
 
 def fadertable_items (location:str)   ->list:
     """ alle Cues aus der Fadertabelle mit location==location
@@ -62,14 +58,17 @@ def fadertable_items (location:str)   ->list:
 
 # --- Fader-info ------------------------------------------------------
 
-def make_fadertable (with_savedlevels:bool=False) :
+def make_fadertable (currentlevels:dict={}, with_currentlevels:bool=True) :
     """ Liste mit Fader-Cues erzeugen
 
     location: entweder 'cuefaders' oder 'exefaders'
     fadertable:  globale Liste der Cue-Fader (aus exefader und cuefader)
-    falls in config angegeben, dann Levels einlesen
+    Levels: 
+      with_currentlevels -> currentlevels beibehalten 
+      cfg ('savecuelevels') == '1' -> aus CSV-Datei einlesen 
     """
-    currentlevels = backup_currentlevels ("fader") # aktuelle Level
+    if with_currentlevels and not len (currentlevels):
+        currentlevels = backup_currentlevels ("fader") # aktuelle Level
 
     locations = fader_locations
     new_fadertable = []
@@ -77,7 +76,7 @@ def make_fadertable (with_savedlevels:bool=False) :
     globs.midi.clear_lists ("fader", hi=globs.SHIFT)
 
     # sollen csv-gespeicherte Levels geladen werden?
-    csvlevels_requested = check_levelrequest (with_savedlevels)
+    with_csvlevels = csvlevel_requested ()
     fadernum = 0
     for loc in locations:
         filename = globs.cfg.get(loc)
@@ -91,12 +90,11 @@ def make_fadertable (with_savedlevels:bool=False) :
             logger.error (f"'Filename' nicht in {filename}")
             continue
         
-        if csvlevels_requested: 
+        if with_csvlevels: 
             try: # nur zur Fehler-Ausgabe
                 levelindex = fieldnames.index ("Level")
             except:
                 logger.error (f"'Level' nicht in {filename}")
-
 
         for count in range (len (content)):
             newcue = Cue (globs.patch)
@@ -128,30 +126,31 @@ def make_fadertable (with_savedlevels:bool=False) :
                     # globs.midi.out_faders[outcnr-1].append (fnr-1)
         
             # nun Levels:    
-            if csvlevels_requested:        
+            if with_csvlevels:        
                 try:
                     level = float (content[count]["Level"])
                 except: # Default 0.0
                     level = 0.0
                 newcue.level = level
 
-    if with_savedlevels == False: # aktuelle Levels wiederherstellen
+    if with_currentlevels: # aktuelle Levels wiederherstellen
         restore_currentlevels (new_fadertable, currentlevels)
     globs.fadertable = new_fadertable
 
 
 # --- Cue-Buttons -------------------------------------------------------------
-def make_cuebuttons (with_savedlevels:bool=False):
+def make_cuebuttons (currentlevels:dict={}, with_currentlevels:bool=True):
     """ Button-Liste erzeugen
+    
     Die Liste ist  Cuebutton:instances
     Buttons finden sich in cuebutton.html, executer.html
-    location: cuebuttons, exebuttons1, exebuttonx2
-    with_savedlevels
-        True: in File gespeicherte Levels laden, falls
-              cfg.savecuelevels == 1
-        False: aktuelle Levels wiederherstellen
+    location: cuebuttons, exebuttons1, exebuttons2
+    Levels: 
+      with_currentlevels -> currentlevels beibehalten 
+      cfg ('savecuelevels') == '1' -> aus CSV-Datei einlesen 
     """
-    currentlevels = backup_currentlevels ("button") # aktuelle Level
+    if with_currentlevels and not len (currentlevels):
+        currentlevels = backup_currentlevels ("button") # aktuelle Level
 
     locations = button_locations
     new_buttontable = []
@@ -159,7 +158,7 @@ def make_cuebuttons (with_savedlevels:bool=False):
     globs.midi.clear_lists ("button", hi=globs.SHIFT)
 
     # sollen csv-gespeicherte Levels geladen werden?
-    csvlevels_requested = check_levelrequest (with_savedlevels)
+    with_csvlevels = csvlevel_requested ()
     butnum = 0    # zählt Buttons in allen locations
 
     for loc in locations:
@@ -173,7 +172,7 @@ def make_cuebuttons (with_savedlevels:bool=False):
             logger.error (f"Feld 'Filename' nicht in {filename}")
             continue
         
-        if csvlevels_requested: 
+        if with_csvlevels: 
             try: # nur zur Fehler-Ausgabe
                 levelindex = fieldnames.index ("Level")
             except:
@@ -216,7 +215,7 @@ def make_cuebuttons (with_savedlevels:bool=False):
                     # globs.midi.out_buttons[outcnr-1].append (butnr-1)
 
             # nun Levels:     
-            if csvlevels_requested:
+            if with_csvlevels:
                 try:
                     level = float (content[count]["Level"])
                 except: # Defaultwert eintragen
@@ -228,7 +227,7 @@ def make_cuebuttons (with_savedlevels:bool=False):
                 else:
                     newbut.status = 0
                
-    if with_savedlevels == False: # aktuelle Levels wiederherstellen
+    if with_currentlevels: # aktuelle Levels wiederherstellen
         restore_currentlevels (new_buttontable, currentlevels, type="button")
 
     Cuebutton.instances = new_buttontable
@@ -236,18 +235,22 @@ def make_cuebuttons (with_savedlevels:bool=False):
 
 # --- Cuelist-Tabelle erzeugen ------------------------------------------------
 
-def make_cuelistpages (with_savedlevels:bool=False) :
+def make_cuelistpages (currentlevels:dict={}, with_currentlevels:bool=True) :
     """ Liste mit Pages an Cuelisten erzeugen
 
-    falls in config angegeben, dann Levels einlesen
+    Levels: 
+      with_currentlevels -> currentlevels beibehalten 
+      cfg ('savecuelevels') == '1' -> aus CSV-Datei einlesen 
     """
     new_cltable = []
     # aud Midi-Fadertabellen cuefader entfernen:
     globs.midi.clear_lists ("fader", lo=globs.SHIFT, hi=2*globs.SHIFT)
 
     # sollen csv-gespeicherte Levels geladen werden?
-    currentlevels = backup_currentlevels ("cuelist") # aktuelle Level
-    csvlevels_requested = check_levelrequest (with_savedlevels)
+    if with_currentlevels and not len (currentlevels):
+        currentlevels = backup_currentlevels ("cuelist") # aktuelle Level
+
+    with_csvlevels = csvlevel_requested ()
 
     fadernum = globs.SHIFT # unterscheidet cuefader von cuelistfader
     filename = globs.cfg.get("pages")
@@ -261,7 +264,7 @@ def make_cuelistpages (with_savedlevels:bool=False) :
         logger.error (f"'Filename' nicht in {filename}")
         return
     
-    if csvlevels_requested: 
+    if with_csvlevels: 
         try: # nur zur Fehler-Ausgabe
             levelindex = fieldnames.index ("Level")
         except:
@@ -309,14 +312,14 @@ def make_cuelistpages (with_savedlevels:bool=False) :
                 # globs.midi.out_faders[outcnr-1].append (fnr-1) 
 
         # nun Levels:    
-        if csvlevels_requested:        
+        if with_csvlevels:        
             try:
                 level = float (pagelist[count]["Level"])
             except: # Default 0.0
                 level = 0.0
             newcl.level = level
 
-    if with_savedlevels == False: # aktuelle Levels wiederherstellen
+    if with_currentlevels: # aktuelle Levels wiederherstellen
         restore_currentlevels (new_cltable, currentlevels)
         
     Cuelist.instances = new_cltable

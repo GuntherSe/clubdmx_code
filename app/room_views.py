@@ -65,7 +65,7 @@ def change ():
             cfgfile.backup (tail)
         globs.cfgbase.set ("config", tail)
         globs.cfgbase.save_data ()
-        load_config (with_savedlevels=True)
+        load_config ()
         flash (f"und nun Konfiguration {tail} öffnen!", category="info")
         clear_session_subdirs () 
         if "stagename" in session: 
@@ -89,7 +89,8 @@ def change ():
 def rename ():
     """ Raum umbenennen 
     
-    Falls config-Name == Raumverzeichnis-Name, dann config umbenennen
+    Falls config-Name == Raumverzeichnis-Name, dann config umbenennen.
+    Damit ist der Default-Configname vorhanden.
     """
 
     if request.method == 'POST':
@@ -114,7 +115,7 @@ def rename ():
                 globs.cfgbase.save_data ()
 
                 # globs.cfg.open (cfgfile.name()) # notwendig?
-                load_config (with_savedlevels=True)
+                load_config (with_currentlevels=True) # notwendig?
                 flash (f"Raum umbenannt: {newroom}")
             else:
                 flash ("Raum konnte nicht umbenannt werden.", category="danger")
@@ -315,7 +316,7 @@ def discard_changes ():
     """ alle Änderungen in csv-Dateien verwerfen """
     ret = globs.room.discard_changes ()
     if ret["count"] != 0:
-        load_config () # config neu laden.
+        load_config (with_currentlevels=True) # config neu laden.
     flash (ret["message"], category=ret["category"])
     return redirect (redirect_url ())
 

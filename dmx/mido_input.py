@@ -134,12 +134,6 @@ class Midi (MidiOutput, threading.Thread):
             self.logger.debug (f"Input Nummer {pos+1} nicht gültig.")
             return ret
 
-        # midi_device bereits zugewiesen:
-        # if newdev.device_id == num: # keine Änderung
-        #     ret["message"] = "keine Änderung."
-        #     ret["category"] = "success"
-        #     return ret
-
         if newdev.device_id != -1 : # midi_device vorhanden
             newdev.clear ()
 
@@ -197,7 +191,7 @@ class Midi (MidiOutput, threading.Thread):
 
 # --- Test -------------------------------------------------------------------
 if __name__ == "__main__":
-    
+
     infotxt = """
 ---- MIDI Input Test -----
 

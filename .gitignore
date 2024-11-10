@@ -22,6 +22,7 @@ dmx/test unique filename.py
 dmx/test.py
 dmx/test midi.py
 dmx/test sort.py
+dmx/Kommandozeile.txt
 app/backup
 app/static/sphinx/doctrees/
 uploads/

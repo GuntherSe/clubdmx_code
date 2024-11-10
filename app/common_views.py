@@ -130,7 +130,7 @@ def contrib ():
 @login_required
 def reload ():
     """ config neu laden """
-    load_config (with_savedlevels=True)
+    load_config (with_currentlevels=True)
     return redirect (redirect_url())
 
 

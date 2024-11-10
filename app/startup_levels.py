@@ -19,8 +19,7 @@ button_locations = ["cuebuttons", "exebuttons1", "exebuttons2"]
 fader_locations  = ["cuefaders", "exefaders"]
 cuelist_locations = ["pages"]
 
-logger = logging.getLogger ("logger."+__name__)
-logger.setLevel(logging.DEBUG)
+logger = logging.getLogger ("clubdmx")
 
 
 def activate_startcue ():
@@ -67,7 +66,9 @@ def activate_startcue ():
 
 def backup_currentlevels (table:str) ->dict:
     """ aktuelle cuelevels sichern 
+    
     für jeden Cue einen eintrag in levels: Cue.count:Cue.level
+    table: fader, button oder cuelist
     """
     levels = {}
     if table == "fader":

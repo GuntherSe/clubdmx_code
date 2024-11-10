@@ -136,7 +136,7 @@ def topsave (option:str):
                 newline["Filename"] = filename
                 newline["Text"] = filename
                 csvfile.add_lines ([newline])
-                make_fadertable (with_savedlevels=True)
+                make_fadertable ()
                 flash (f"neuen Fader {filename} angelegt.", category="success")
 
             elif option == "button":
@@ -160,7 +160,7 @@ def topsave (option:str):
                 newline["Filename"] = filename
                 newline["Text"] = filename
                 csvfile.add_lines ([newline])
-                make_cuebuttons (with_savedlevels=True)
+                make_cuebuttons ()
                 flash (f"neuen Button {filename} angelegt.", category="success")
 
             elif option == "cuelist":

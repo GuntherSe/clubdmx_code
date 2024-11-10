@@ -61,3 +61,10 @@ midibutton,Midioutput,int,,0 4,0,0: kein Midi-Output,,
 midibutton,Controller,int,,1 127,,,,
 midibutton,Command,command,,,,,,true
 midibutton,Parameter,text,,,,,,
+midihardware,Type,list,,Button Fader,,,,true
+midihardware,Number,int,,1 128,,,,true
+midihardware,Command,list,,control_change note_on,control_change,Midi Message,,true
+midihardware,Channel,int,,0 15,0,,,true
+midihardware,Param1,int,,0 127,,"control, note, ...",,true
+midihardware,Param2,int,,0 127,,"velocity, ...",,
+midihardware,Comment,Text,,,,,Beschreibung,

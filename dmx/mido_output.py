@@ -22,9 +22,6 @@ class MidiDevice ():
         self.faders = []  # Kontrollerliste der Fader am Gerät
         # zur späteren Verwendung in Klasse Midi:
         self.index = -1 # Port-Nummer (0-3)
-        # Liste der Midi-Fader timestamps:
-        self.fader_buffer  = []
-        self.fader_update  = []
         self.eval = print   # Auswertung des Midi-Inputs
 
 
@@ -40,8 +37,6 @@ class MidiDevice ():
         self.name = mdev.NO_MIDI_DEVICE
         self.port = None
         self.index = -1
-        self.fader_buffer.clear ()
-        self.fader_update.clear ()
 
 
     def set_device (self, devlist:list, devindex:int):
@@ -80,15 +75,6 @@ class MidiDevice ():
             self.faders  = mdev.default_faders
             return {"name":self.name, "result":"true" } 
 
-            # self.name = devlist[devindex][1]       # str
-            # if self.name in mdev.midi_device_dict.keys():
-            #     self.buttons = mdev.midi_device_dict [self.name][1]
-            #     self.faders  = mdev.midi_device_dict [self.name][0]
-            # else:
-            #     self.buttons = mdev.default_buttons
-            #     self.faders  = mdev.default_faders
-            # return {"name":self.name, "result":"true" } 
-
         else:
             return {"name":mdev.NO_MIDI_DEVICE, "result":"false"} 
 
@@ -106,29 +92,9 @@ class MidiDevice ():
         msg: mido Message
         eval: print oder andere eval-Funktion
         """
-        # print (self.index, msg.type, msg.control, msg.value)
         self.eval (self.index, msg)
-        # print (f"MIDI: {self.index} {msg}")
         return
     
-        # if msg.type == "control_change":
-        #     controller = msg.control
-        #     value = msg.value
-
-        #     if controller in self.faders: # fader gefunden
-        #         fader = self.faders.index (controller)
-        #         self.eval (self.index, "fader", fader, value)
-        #     elif controller in self.buttons: # button
-        #         button = self.buttons.index(controller)
-        #         self.eval (self.index, "button", button, value)
-        # elif msg.type == "note_on" or msg.type == "note_off":
-        #     self.eval (self.index, msg.type, msg.channel, 
-        #                msg.note,
-        #                msg.time, 
-        #                msg.velocity)
-        # else:
-        #     self.eval (self.index, msg.type, msg)
-
 class MidiOutput ():
     """ MIDI Output Klasse """
 
@@ -143,16 +109,16 @@ class MidiOutput ():
         self.out_ports = [MidiDevice() for i in range (4)] # verwendete Geräte
         self.out_buttons = [{} for i in range (4)] # verwendete Buttons
         self.out_faders = [{} for i in range (4)] # verwendete Fader
-        self.msg_function = print 
+    #     self.msg_function = print 
 
 
-    def set_msg_function (self, newfunc):
-        """ messages umleiten """
-        self.msg_function = newfunc
+    # def set_msg_function (self, newfunc):
+    #     """ messages umleiten """
+    #     self.msg_function = newfunc
 
-    def message (self, args):
-        """ message ausgeben """
-        self.msg_function (args)
+    # def message (self, args):
+    #     """ message ausgeben """
+    #     self.msg_function (args)
 
 
     def list_devices (self, mode:str="input") ->list:
@@ -209,11 +175,6 @@ class MidiOutput ():
         else:
             ret["message"] = f"{pos} nicht gültig."
             return ret
-
-        # if newdev.device_id == num: # keine Änderung
-        #     ret["message"] = "keine Änderung."
-        #     ret["category"] = "success"
-        #     return ret
 
         if newdev.device_id != -1: # midi_device vorhanden
             newdev.clear ()
@@ -319,12 +280,8 @@ Kommandos: x = Exit
         while i != 'x':
             i = input ("CMD: ")
             cmd = i.split ()
-            if i == '#':
+            if i == '#' or i == '':
                 print (infotxt)
-            elif i == 'a':
-                ret = mididev.list_devices ()
-                for item in ret:
-                    print (item)
             elif i == 'i':
                 ret = mididev.list_devices ("input")
                 for item in ret:

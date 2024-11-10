@@ -122,7 +122,7 @@ def uploadroom () -> json:
         # 2) zip in room.rootpath() entpacken:
             ret = globs.room.unpack_archive (uploaded_file)
             if ret["extract_dir"] == globs.room.path(): # aktueller Raum?
-                load_config (with_savedlevels=True)
+                load_config (with_currentlevels=True)
 
             os.remove (uploaded_file)                
             flash (f"{filename} wurde hochgeladen und entpackt.")

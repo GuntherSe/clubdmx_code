@@ -36,7 +36,7 @@ def evaluate_option (option:str):
         make_fadertable ()
         make_cuebuttons ()
     elif option == "config":
-        load_config ()
+        load_config (with_currentlevels=True)
     elif option == "cuefader":
         make_fadertable ()
     # cue: automatisches Update, wenn level == 0
@@ -175,7 +175,7 @@ def open ():
             globs.cfgbase.save_data()
             globs.cfg.open (fullname)
             # config neu laden:
-            load_config (with_savedlevels=True)
+            load_config ()
             flash ("Konfiguration geladen.", category="success")
             return "ok"
 
@@ -184,7 +184,7 @@ def open ():
             loc = args["location"]
             globs.cfg.set (loc, fileroot)
             globs.cfg.save_data ()
-            make_fadertable (loc)
+            make_fadertable ()
             flash ("Fader-Tabelle geladen.", category="success")
             return "ok"
 
@@ -192,7 +192,7 @@ def open ():
             loc = args["location"]
             globs.cfg.set (loc, fileroot)
             globs.cfg.save_data ()
-            make_cuebuttons (loc)
+            make_cuebuttons ()
             flash ("Button-Tabelle geladen.", category="success")
             return "ok"
 
@@ -275,7 +275,7 @@ def saveas ():
             ret = csvfile.backup (fullname)
             globs.cfg.set (loc, fileroot)
             globs.cfg.save_data ()
-            make_fadertable (loc) #   fileroot)
+            make_fadertable () #   fileroot)
 
         elif option == "cuebutton": # Cueinfotabelle ausgewählt
             loc = args["location"]
@@ -284,7 +284,7 @@ def saveas ():
             ret = csvfile.backup (fullname)
             globs.cfg.set (loc, fileroot)
             globs.cfg.save_data ()
-            make_cuebuttons (loc)
+            make_cuebuttons ()
 
         elif option == "patch": # patchtabelle ausgewählt
             current = globs.patch.file.name ()

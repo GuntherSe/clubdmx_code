@@ -1,0 +1,43 @@
+Type,Number,Command,Channel,Param1,Param2,Comment
+Fader,1,control_change ,0,2,,Slider 1
+Fader,2,control_change ,0,3,,Slider 2
+Fader,3,control_change ,0,4,,Slider 3
+Fader,4,control_change ,0,5,,Slider 4
+Fader,5,control_change ,0,6,,Slider 5
+Fader,6,control_change ,0,8,,Slider 6
+Fader,7,control_change ,0,9,,Slider 7
+Fader,8,control_change ,0,12,,Slider 8
+Fader,9,control_change ,0,13,,Slider 9
+Fader,10,control_change ,0,14,,Poti 1
+Fader,11,control_change ,0,15,,Poti 2
+Fader,12,control_change ,0,16,,Poti 3
+Fader,13,control_change ,0,17,,Poti 4
+Fader,14,control_change ,0,18,,Poti 5
+Fader,15,control_change ,0,19,,Poti 6
+Fader,16,control_change ,0,20,,Poti 7
+Fader,17,control_change ,0,21,,Poti 8
+Fader,18,control_change ,0,22,,Poti 9
+Button,1,control_change ,0,23,,Up 1
+Button,2,control_change ,0,33,,Down 1
+Button,3,control_change ,0,24,,Up 2
+Button,4,control_change ,0,34,,Down 2
+Button,5,control_change ,0,25,,Up 3
+Button,6,control_change ,0,35,,Down 3
+Button,7,control_change ,0,26,,Up 4
+Button,8,control_change ,0,36,,Down 4
+Button,9,control_change ,0,27,,Up 5
+Button,10,control_change ,0,37,,Down 5
+Button,11,control_change ,0,28,,Up 6
+Button,12,control_change ,0,38,,Down 6
+Button,13,control_change ,0,29,,Up 7
+Button,14,control_change ,0,39,,Down 7
+Button,15,control_change ,0,30,,Up 8
+Button,16,control_change ,0,40,,Down 8
+Button,17,control_change ,0,31,,Up 9
+Button,18,control_change ,0,41,,Down 9
+Button,19,control_change ,0,47,,rew
+Button,20,control_change ,0,45,,play
+Button,21,control_change ,0,48,,ff
+Button,22,control_change ,0,49,,repeat
+Button,23,control_change ,0,46,,stop
+Button,24,control_change ,0,44,,rec

@@ -123,7 +123,7 @@ def config ():
         for key,val in configform.data.items():
             globs.cfg.set (key, val)
         globs.cfg.save_data ()
-        load_config (with_savedlevels=True)
+        load_config (with_currentlevels=True)
         flash ("Config ok.")
         return  redirect (redirect_url())
 
