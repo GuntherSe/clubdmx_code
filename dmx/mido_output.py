@@ -37,15 +37,24 @@ class MidiDevice ():
         self.name = mdev.NO_MIDI_DEVICE
         self.port = None
         self.index = -1
+        self.buttons.clear ()
+        self.faders.clear ()
 
 
-    def set_device (self, devlist:list, devindex:int):
+    def set_device (self, devlist:list, count:int):
         """ Werte zuweisen 
         
         devlist: Liste mit Device-Daten, siehe MidiOutput:list_devices()
-        devindex: Index in devlist
+        count: erster Wert in Device-Daten
+        Device-Daten: [(count, name, mode, description), ...]
         result: {"name":self.name, "result":"true" oder "false"}
         """
+        devindex = -1
+        for i, val in enumerate (devlist):
+            if val[0] == count:
+                devindex = i
+                break
+
         if devindex in range (len (devlist)):
             miditype  = devlist[devindex][2]       # 'input' oder 'output'
             description = devlist[devindex][3]     # str
