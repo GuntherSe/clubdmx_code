@@ -75,9 +75,9 @@ class MidiDevice ():
                 else: # Windows
                     split = description.split ()
 
-                if key in split:
-                    self.buttons = mdev.midi_device_dict [key][1]
-                    self.faders  = mdev.midi_device_dict [key][0]
+                if key in split: # copy list
+                    self.buttons = mdev.midi_device_dict [key][1][:]
+                    self.faders  = mdev.midi_device_dict [key][0][:]
                     return {"name":self.name, "result":"true" } 
 
             self.buttons = mdev.default_buttons
