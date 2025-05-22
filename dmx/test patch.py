@@ -54,6 +54,7 @@ Kommandos: x = Exit
             9 = zeige Head-Details
             10 = Test set_attribute (Switch) 
             c = Farbwerte des Heads
+            def = Defaultwerte des Heads
 """        
 print (infotxt)
 try:
@@ -151,13 +152,10 @@ try:
         elif i == 'c':
             val = input ("Head: ")
             print (patch.color (val))
+        elif i == "def":
+            val = input ("Head: ")
+            print (patch.defaults (val))
         else:
             pass
 finally:
     print ("exit...")
-
-
-
-
-
-            

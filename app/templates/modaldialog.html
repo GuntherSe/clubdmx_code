@@ -140,6 +140,9 @@ Anzeigen:
         {% if submit_text|length > 0 %}
         <button id="saveCueButton" type="button" data-dismiss="modal"
             class="btn btn-primary">{{ submit_text }}</button>
+        {% else %} {# Stage Head selection #}
+        <button id="defaultAttributeButton" type="button"
+            class="btn btn-secondary">Default Attrib</button>
         {% endif %}
         <button type="button" class="btn btn-secondary" data-dismiss="modal">
           schließen</button>

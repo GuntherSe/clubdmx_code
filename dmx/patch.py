@@ -625,3 +625,15 @@ class Patch (Mix):
                
         return rgbcolor
 
+
+    def defaults (self, headnr:str) ->list:
+        """ set default value for headnr
+        """
+        ret = []
+        hddetails = self.headdetails (headnr)
+        hdtype = hddetails[0]["HeadType"]
+        dindex = self.hdict[hdtype]["fieldnames"].index ("Default")
+        for att in self.attriblist (headnr):
+        #    ret[att] = self.hdict[hdtype][att][dindex]
+            ret.append ([headnr, att, self.hdict[hdtype][att][dindex]])
+        return ret

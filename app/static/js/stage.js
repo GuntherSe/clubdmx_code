@@ -390,6 +390,10 @@ function selection_headslider () {
                   levels[attribs[i]], '/stage/headfader' );
           };
         };
+        $("#defaultAttributeButton").on ("click", function () {
+          var args = {heads:selectedHeads};
+          $.get ("/stage/defaultattrib", args);
+        });
       }) ;
     };
   });

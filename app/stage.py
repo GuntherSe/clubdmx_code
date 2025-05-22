@@ -298,6 +298,18 @@ def headdetails ():
     return json.dumps (ret)
 
 
+@stage.route ("/defaultattrib")
+@login_required
+def default_attributes ():
+    """ set attribute's defaults for all selected heads 
+    """
+    hd = request.args.get ("heads")
+    heads = hd.split()
+    for head in heads:
+        defaults = globs.patch.defaults (head)
+        for item in defaults:
+            globs.topcue.line_to_cuecontent (item)
+    return "ok"
 
 
 
@@ -426,7 +438,6 @@ def singleindex ():
         return str (session["singleheadindex"])
     else:
         return "0"
-
 
 
 # -------------------------------------------------------------------------
