@@ -73,7 +73,8 @@ def make_fadertable (currentlevels:dict={}, with_currentlevels:bool=True) :
     locations = fader_locations
     new_fadertable = []
     # aud Midi-Fadertabellen cuefader entfernen:
-    globs.midi.clear_lists ("fader", hi=globs.SHIFT)
+    if globs.PYTHONANYWHERE == "false":
+        globs.midi.clear_lists ("fader", hi=globs.SHIFT)
 
     # sollen csv-gespeicherte Levels geladen werden?
     with_csvlevels = csvlevel_requested ()
@@ -155,7 +156,8 @@ def make_cuebuttons (currentlevels:dict={}, with_currentlevels:bool=True):
     locations = button_locations
     new_buttontable = []
     # Midi-Buttontabellen löschen:
-    globs.midi.clear_lists ("button", hi=globs.SHIFT)
+    if globs.PYTHONANYWHERE == "false":
+        globs.midi.clear_lists ("button", hi=globs.SHIFT)
 
     # sollen csv-gespeicherte Levels geladen werden?
     with_csvlevels = csvlevel_requested ()
@@ -243,8 +245,9 @@ def make_cuelistpages (currentlevels:dict={}, with_currentlevels:bool=True) :
       cfg ('savecuelevels') == '1' -> aus CSV-Datei einlesen 
     """
     new_cltable = []
-    # aud Midi-Fadertabellen cuefader entfernen:
-    globs.midi.clear_lists ("fader", lo=globs.SHIFT, hi=2*globs.SHIFT)
+    # aus Midi-Fadertabellen cuefader entfernen:
+    if globs.PYTHONANYWHERE == "false":
+        globs.midi.clear_lists ("fader", lo=globs.SHIFT, hi=2*globs.SHIFT)
 
     # sollen csv-gespeicherte Levels geladen werden?
     if with_currentlevels and not len (currentlevels):
