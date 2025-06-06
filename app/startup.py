@@ -101,7 +101,7 @@ def create_unique (subdir:str, nname:str) -> str:
 def check_csvfile (name:str, subdir:str, nname:str) -> str:
     """ File auf Existenz prüfen 
     
-    name '_neu' in default-Namen ändern: subdir-'unique_postfix'
+    name '_neu' in default-Namen ändern: nname-'unique_postfix'
     """
     global current_room    
     if name == "_neu":

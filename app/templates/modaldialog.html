@@ -29,7 +29,7 @@ Anzeigen:
 
 {% macro filedialogbody () %}
 <div class="modal-body" id="filetree">
-  <div class="alert alert-info" id="modalexploreDir">Dir Path</div>
+  <div class="alert alert-info text-wrap text-break" id="modalexploreDir">Dir Path</div>
   <div id="modalexploreTable">Dir Table</div>
 </div>
 {% endmacro %}
@@ -142,7 +142,7 @@ Anzeigen:
             class="btn btn-primary">{{ submit_text }}</button>
         {% else %} {# Stage Head selection #}
         <button id="defaultAttributeButton" type="button"
-            class="btn btn-secondary">Default Attrib</button>
+            class="btn btn-primary">Default Attrib</button>
         {% endif %}
         <button type="button" class="btn btn-secondary" data-dismiss="modal">
           schließen</button>

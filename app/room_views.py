@@ -225,7 +225,7 @@ def new ():
             # config Name = room Name:
             newname = os.path.join (globs.room.configpath(), "_neu")
             cfgfile = Csvname (newname)
-            cfgfile.backup (os.path.join (fullpath, newroom))
+            cfgfile.backup (os.path.join (fullpath, "config", newroom))
             globs.cfgbase.set ("config", newroom)
             globs.cfgbase.save_data ()
 

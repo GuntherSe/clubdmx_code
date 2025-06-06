@@ -286,11 +286,27 @@ function modaldialogToPython (clickid, url, args) {
 // Modaldaten werden geholt
 // mit Drücken des selectButton werden die Daten
 // an den Server gepostet, anschließend: location.reload
+  // function stringSelect (e) {
+  //         var newname = $("#input-text").first().val();
+  //         var data = {selectButton:"true", name:newname};
+  //         // neu 6.2.2021:
+  //         data.args = JSON.stringify (args);
+  //         $.post (url, data, function () {
+  //             location.reload (); 
+  //         });
+  // };
+
   $(clickid).on ("click", function () {
     $.get (url, args, function (data) {
       $("#dialogModal").html (data);
       $("#viewModal").modal ();
       // auswerten bei Strings:
+      // $("#selectButton").on ('click', stringSelect ());
+      // $(document).keypress (function (e) {
+      //   if (e.keycode == 13 || e.which == 13) { // enter
+      //     stringSelect ();
+      //   };
+      // });
       $("#selectButton").on ('click', function(){
           var newname = $("#input-text").first().val();
           var data = {selectButton:"true", name:newname};
@@ -299,6 +315,17 @@ function modaldialogToPython (clickid, url, args) {
           $.post (url, data, function () {
               location.reload (); 
           });
+      });
+      $(document).keypress (function (e) {
+        if (e.keycode == 13 || e.which == 13) {
+          var newname = $("#input-text").first().val();
+          var data = {selectButton:"true", name:newname};
+          // neu 6.2.2021:
+          data.args = JSON.stringify (args);
+          $.post (url, data, function () {
+              location.reload (); 
+          });
+        };
       });
       $(".close-modal").on ("click", function(){
           //console.log ("Modal close");

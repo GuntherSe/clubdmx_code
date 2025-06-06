@@ -191,6 +191,7 @@ function fileExplore (par){
 
         $(".dir").on ("click", function(){
             var spath = $(this).text();
+            $("#filename").attr ("value",spath);
             params.spath = spath;
             params.basedir = basedir;
             if (spath == "..") {

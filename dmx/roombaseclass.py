@@ -355,9 +355,18 @@ class Roombase:
         # path = self.rootpath ()  
         # dest = os.path.join (path, newname)
         if os.path.isdir (dest) and dest!=self.PATH and dest!=self.codepath: 
-            shutil.rmtree (dest, ignore_errors=True)
-            ret["category"]= "success"
-            ret["message"] = f"löschen von {dest} ok."
+            try:
+                shutil.rmtree (dest) #, ignore_errors=True)
+                ret["category"]= "success"
+                ret["message"] = f"löschen von {dest} ok."
+            except OSError as err:
+                message = f"Raum löschen, Fehler: {err}"
+                ret["message"] = message
+                ret["category"]="danger"
+                self.logger.error (message)
+                # raise OSError (message)
+                return ret
+
         else:
             ret["category"]= "danger"
             # Grund angeben fürs nicht Löschen:
