@@ -102,7 +102,11 @@ Anzeigen:
       <div class="modal-footer">
         <div class="input-group mb-3">
           <div class="input-group-prepend">
-          <span class="input-group-text" id="basic-addon1">Datei</span>
+            {%if text %}
+              <span class="input-group-text" id="basic-addon1">{{ text }}</span>
+            {% else %}
+              <span class="input-group-text" id="basic-addon1">Datei</span>
+            {% endif %}
           <input type="text" class="form-control" id="filename"
           aria-label="filename" aria-describedby="basic-addon1">
           </div>

@@ -15,6 +15,7 @@ scripts/site.txt
 scripts/service.txt
 scripts/update von zip.txt
 scripts/update_PAW.txt
+scripts/require_win_py39.txt
 
 dmx/.vscode/
 dmx/backup/

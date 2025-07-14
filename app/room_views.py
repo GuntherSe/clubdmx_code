@@ -80,7 +80,7 @@ def change ():
     ret["spath"] = rootpath
     ret["updir"] = "true"
     ret["dialogbox"] = render_template ("modaldialog.html", body="filedialog",
-                       title = "Raum wählen")
+                       title = "Raum wählen", text="Raum")
     return json.dumps (ret)
 
 

@@ -9,7 +9,7 @@ import os
 import globs
 
 from threading import Thread
-from datetime import datetime
+from datetime import date 
 
 from flask import Flask, session #, json, request
 
@@ -110,7 +110,7 @@ def create_app (test_config=None):
     def inject_now ():
         """ Datum in html verfügbar machen 
         """
-        return {'now': datetime.utcnow() }
+        return {'now': date.today()} 
 
     @app.before_request
     def make_session_permanent():

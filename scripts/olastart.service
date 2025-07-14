@@ -1,0 +1,15 @@
+[Unit]
+Description=Sevice to start OLA
+After=network.target
+
+[Service]
+User=gunther
+Group=olad
+WorkingDirectory=/home/gunther/.ola
+Type=forking
+ExecStart=/usr/local/bin/olad -f
+RemainAfterExit=true
+
+[Install]
+WantedBy=multi-user.target
+
