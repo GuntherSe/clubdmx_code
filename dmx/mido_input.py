@@ -30,7 +30,7 @@ class Midi (MidiOutput, threading.Thread):
         threading.Thread.__init__ (self, target=self.run)
         MidiOutput.__init__ (self)
 
-        self.setDaemon (True)
+        self.daemon = True
 
         self.in_ports = [MidiDevice() for i in range (4)] # verwendete Geräte
         self.in_buttons = [{} for i in range (4)] # verwendete Buttons

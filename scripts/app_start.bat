@@ -2,13 +2,13 @@
 echo Starte ClubDMX...
 pushd %~dp0
 
-echo %cd%
 rem ins code-Verzeichnis wechseln:
 cd ..
+echo %cd%
 
 rem development oder production:
-set FLASK_ENV=production
-rem set FLASK_ENV=development
+rem set FLASK_ENV=production
+set FLASK_ENV=development
 
 set FLASK_DEBUG=0
 set FLASK_APP=wsgi.py

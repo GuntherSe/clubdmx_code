@@ -54,8 +54,8 @@ class OscOla (Mix):
         Mix.__init__(self)
 
         self.timeout = 0.05 # 0.05
-        self.mix_thread = threading.Thread(target=self.run)
-        self.mix_thread.setDaemon (True)
+        self.mix_thread = threading.Thread(target=self.run, daemon=True)
+        # self.mix_thread.setDaemon (True)
         # self.__mixing = False
         self.paused = False
         # self.pause_cond = threading.Condition (threading.Lock ())

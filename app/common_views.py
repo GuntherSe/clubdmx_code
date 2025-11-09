@@ -7,7 +7,7 @@ import sys
 
 from flask import Blueprint, render_template, request, json, redirect
 from flask import session, flash, url_for #, send_from_directory
-from flask_login import login_required
+from flask_login import login_required #, current_user
 # from flask_cachecontrol import dont_cache
 # from cuebutton import Cuebutton
 
@@ -57,19 +57,18 @@ def editmode (mode:str=""):
     select: Objektauswahl, z.B. Zeile in CSV oder Head in Stage
     """
     modes = ["edit","select"] #,"view"]
-    modetext = ["EDIT", "SELECT"] #, "AUS"]
     if mode in modes:
         session["editmode"] = mode
-        i = modes.index (mode)
-        return modetext[i]
-    else:
-        return "SELECT"
+        globs.sync_data.append ({"event_name":"update editmode",
+                    "data":{"mode":mode, 
+                            "user":session["username"]}})
+    return "ok"
 
 # --- Clipboard ---------------------------------------------------
 def check_clipboard ():
     """ session['csvclipboard'] auf  'true' setzen oder löschen
     """
-    if Csvfile.clipboard:
+    if len (Csvfile.clipboard):
         session["csvclipboard"] = "true"
     else:
         session.pop ("csvclipboard", None)
@@ -145,13 +144,13 @@ def get_info (item:str) -> json:
     if item == "commonstatus":
         # veränderliche Basisinfo für alle Seiten: editmode, topcuecontent
         ret = {}
-        if "editmode" not in session:
-            session["editmode"] = "select"
-        ret["editmode"] = session["editmode"]
-        if len (globs.topcue.content):
-            ret["topcuecontent"] = "true"
-        else:
-            ret["topcuecontent"] = "false"
+        # if "editmode" not in session:
+        #     session["editmode"] = "select"
+        # ret["editmode"] = session["editmode"]
+        # if len (globs.topcue.content):
+        #     ret["topcuecontent"] = "true"
+        # else:
+        #     ret["topcuecontent"] = "false"
         # CSV-Clipboard enthält Daten?
         if "csvclipboard" in session:
             if session["csvclipboard"] == "true":

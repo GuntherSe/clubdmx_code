@@ -12,6 +12,7 @@ from threading import Thread
 from datetime import date 
 
 from flask import Flask, session #, json, request
+from flask_socketio import SocketIO #, emit
 
 from startup_levels import autosave_cuelevels
 from startup import load_config
@@ -26,13 +27,15 @@ login = LoginManager()
 login.login_view = 'auth.login'
 login.login_message = 'Melde dich an.'
 
-
+socketio = SocketIO ()
 
 def create_app (test_config=None):
         
     app = Flask(__name__,  instance_relative_config=True)
     # globale Variablen von app.config erhalten:
     app.config.from_object ("app_settings.AppConfig")
+    socketio.init_app (app, cors_allowed_origins="*") #, logger=True, engineio_logger=True)
+
 
     # Ausnahme PYTHONANYWHERE: 
     # hier auswerten, damit startup funktioniert.
@@ -122,8 +125,8 @@ def create_app (test_config=None):
     if globs.PYTHONANYWHERE == "false":
         # in PYTHONANYWHERE keine Threads!
         # Auto-Save Cuelevels:
-        save_thread = Thread(target=autosave_cuelevels)
-        save_thread.setDaemon (True)
+        save_thread = Thread(target=autosave_cuelevels, daemon=True)
+        # save_thread.setDaemon (True)
         save_thread.start()
 
         print("Sende an OLA-Device: {0}".format (globs.ola.ola_ip))

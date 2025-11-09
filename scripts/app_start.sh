@@ -67,7 +67,8 @@ case "$COMMAND" in
       gunicornstart="$HOME/$VIRTUALENV/bin/gunicorn"
     fi
     touch test1running
-    $gunicornstart --bind unix:clubdmx.sock -m 007 wsgi:app
+    # $gunicornstart --bind unix:clubdmx.sock -m 007 wsgi:app
+    $gunicornstart --worker-class eventlet -w 1 --bind 0.0.0.0:5000 wsgi:app
     ;;
 
   stop)

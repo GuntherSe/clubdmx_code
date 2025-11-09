@@ -15,7 +15,7 @@ from flask_login import current_user
 import globs
 
 from csvfileclass import Csvfile
-from apputils import redirect_url
+from apputils import redirect_url, set_clipboard_status
 from csv_views import evaluate_option 
 from stage import px_to_int
 
@@ -73,6 +73,7 @@ def remove_rows ():
 
         if ret["tablechanged"] == "true":
             session["csvclipboard"] = "true"
+            set_clipboard_status (1)
             flash (ret["message"], category="success")
     else:
         flash ("Zeilen nicht gelöscht.", category="danger")
@@ -95,6 +96,7 @@ def copy_to_clipboard ():
             lines.append (line)
         ret = csvfile.copy_to_clipboard (lines)
         session["csvclipboard"] = "true"
+        set_clipboard_status (1)
         flash (ret["message"], category="success")
     else:
         flash ("Keine Auswahl an Zeilen.", category="info")
@@ -142,6 +144,7 @@ def paste_clipboard ():
     evaluate_option (option)
 
     if ret["tablechanged"] == "true":
+        set_clipboard_status (1)
         flash (ret["message"], category="success")
     else:
         flash ("Clipboard leer?", category="info")
@@ -154,6 +157,7 @@ def clear_clipboard ():
     """ Csvfile.clipboard leeren
     """
     Csvfile.clipboard.clear ()
+    set_clipboard_status (0)
     session.pop ("csvclipboard", None)
     flash ("Clipboard geleert.", category="info")
     return redirect (redirect_url())

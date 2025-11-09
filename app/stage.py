@@ -11,7 +11,7 @@ from flask import url_for, flash, redirect, session, make_response
 from flask_login import login_required, current_user
 
 from apputils import standarduser_required, redirect_url
-from apputils import calc_mixoutput
+from apputils import calc_mixoutput, set_topcue_status
 
 from csvfileclass import Csvfile
 from csvnameclass import Csvname
@@ -206,6 +206,7 @@ def headfader ():
         attrib = request.form["attrib"]
         level  = request.form["level"]
         heads  = hd.split ('-') # am Ende steht leider ''
+        set_topcue_status (1)
         for head in heads:
             if len (head):
                 globs.topcue.add_item (head, attrib, level)

@@ -125,12 +125,14 @@
   {% endif %}
 {%- endmacro %}
 
-{% macro cueslider (text, filename, row, col, index, filebuttons="false") -%}
+{% macro cueslider (text, filename, row, col, index, fadertype, 
+                    level, filebuttons="false") -%}
 <tr class="row" >
   {% if filebuttons == "false" %}
   <td class="col col-sm-12 col-md-9 border-0">
     <div id="sl-{{ index }}" class="cuefader">
-      <input type="range" min="0" max="255" class="inputslider" id="slider-{{ index }}">
+      <input type="range" min="0" max="255" class="inputslider" 
+      id="{{ fadertype }}-{{ index }}">
     </div>
   </td>
 
@@ -146,7 +148,8 @@
   {% else %}
   <td class="col-sm-12 col-md-8 border-0">
     <div id="sl-{{ index }}" class="cuefader">
-      <input type="range" min="0" max="255" class="inputslider" id="slider-{{ index }}">
+      <input type="range" min="0" max="255" class="inputslider" 
+      id="{{ fadertype }}-{{ index }}" value="{{ level }}">
     </div>
   </td>
 
@@ -194,7 +197,8 @@
       <tbody>
         {% for item in items %}
           {{ cueslider (item.Text, item.Filename, 
-                loop.index, 1+d["textcolumn"], item.Index, filebuttons) }}
+                loop.index, 1+d["textcolumn"], item.Index,
+                d["fadertype"], item.Level, filebuttons) }}
         {% endfor %}
       </tbody>  
     </table>
@@ -221,9 +225,13 @@
     group:    Auswahl-Gruppe
     footer:   Fußzeile ein/aus
 #}
-{% macro cuebutton (text, filename, type, group, index, footer) -%}
+{% macro cuebutton (text, filename, type, group, index, status, footer) -%}
 
-<div class="card h-100">
+{% if status %}
+  <div class="card h-100 active">
+{% else %}
+  <div class="card h-100">
+{% endif %}
   <div class="card-body cuebutton px-2" id="but-{{ index }}"  index="{{ index }}">
     <h5 class="card-title text" id="cuetext-{{ index }}" >{{ text }}</h5>
   </div>
@@ -280,7 +288,7 @@
 
           <div class="col {{ buttonsize }} mb-3">
           {{ cuebutton (item.Text, item.Filename, item.Type, item.Group,
-            item.Index, footer = filebuttons) }}
+            item.Index, item.Status, footer = filebuttons) }}
           </div>
           {% endfor %}
       </div>

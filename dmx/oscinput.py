@@ -102,8 +102,9 @@ class OscInput (threading.Thread):
             # self.server = osc_server.ThreadingOSCUDPServer ( 
             self.server = osc_server.BlockingOSCUDPServer ( 
                 ("0.0.0.0", self.in_port), self.dispatcher)
-            threading.Thread.__init__ (self, target=self.server.serve_forever)
-            self.setDaemon (True)
+            threading.Thread.__init__ (self, target=self.server.serve_forever,
+                                       daemon=True)
+            # self.setDaemon (True)
 
             # Thread starten:
             self.start ()

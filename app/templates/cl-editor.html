@@ -31,7 +31,7 @@
   <div class="row mx-2">
     <table class="table">
       <tbody>
-        {{ base.cueslider ("", "", 0, 1, index) }}
+        {{ base.cueslider ("", "", 0, 1, index, "cuelistfader") }}
 
       </tbody>
     </table>
@@ -142,15 +142,15 @@
         $(nextid).addClass ("table-success");
   
         // Slider:
-        var sliderlevel = jdata["level"];
-        let numstring = clIndex.toString ();
-        try {
-          $("#slider-"+numstring).val (sliderlevel);
-          //$("#sl-"+numstring).slider ("option", "value", sliderlevel);
-        }
-        catch(err) {
-          console.log ("Fehler in Sliderlevel: " + err);  
-        }
+        //var sliderlevel = jdata["level"];
+        //let numstring = clIndex.toString ();
+        //try {
+        //  $("#slider-"+numstring).val (sliderlevel);
+            //$("#sl-"+numstring).slider ("option", "value", sliderlevel);
+        //}
+        //catch(err) {
+        //  console.log ("Fehler in Sliderlevel: " + err);  
+        //}
 
       },
       complete: function () {
@@ -205,8 +205,8 @@
       $.get ("/cuelist/status/"+clIndexString, function (data) {
         // console.log ("data: " + data);
         var jdata = $.parseJSON(data);
-        var level = jdata["level"];
-        activateSlider(clIndex, level, "cuelistlevel");
+        var level = [jdata["level"]];
+        activateSlider(clIndex, level, "cuelistfader");
         $(".slider").width (sliderwidth);
       });
   

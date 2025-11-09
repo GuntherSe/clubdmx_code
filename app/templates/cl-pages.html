@@ -21,7 +21,7 @@
           <tr class="row pt-2"></tr>
           {{ base.cueslider (item.Text, item.Filename, 
                 loop.index, 1+d["textcolumn"], item.Index, 
-                filebuttons) }}
+                "cuelistfader", item.Level, filebuttons) }}
           <tr class="row">
             <td class="col col-sm-12 col-md-9 border-0">
               {{ cl.cl_status  (item.Index) }}
@@ -87,19 +87,20 @@
     });
 
     sliderwidth = $(".col-8").width();
+    $(".slider").width (sliderwidth);
 
     // slider erzeugen:
-    $.get ("/cuelist/allstatus", function (data) {
+//    $.get ("/cuelist/allstatus", function (data) {
       // console.log ("data: " + data);
-      var jdata = $.parseJSON(data);
-      var sliderlevels = jdata["levels"];
+//      var jdata = $.parseJSON(data);
+//      var sliderlevels = jdata["levels"];
 
-      var i;
-      for (i = 0; i < sliderlevels.length; i++){
-        activateSlider(i, sliderlevels, "cuelistlevel");
-      };
-      $(".slider").width (sliderwidth);
-    });
+//      var i;
+//      for (i = 0; i < sliderlevels.length; i++){
+//        activateSlider(i, sliderlevels, "cuelistfader");
+//      };
+    //  $(".slider").width (sliderwidth);
+//    });
     periodic_allcueliststatus ();
 
     // Buttons aktivieren:

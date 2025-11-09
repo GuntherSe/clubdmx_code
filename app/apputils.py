@@ -17,7 +17,7 @@ import shutil
 from socket import gethostname
 
 import mount as mount
-
+from csvfileclass import Csvfile
 # if os.environ.get ("PYTHONANYWHERE")  != "true":
 #     from midioutput import MidiOutput
 
@@ -139,6 +139,42 @@ def dbrestore (usbsrc:str, dbname:str = "") -> dict:
     return ret
 
 
+# --- Topcue Status ---------------------------------------------------
+def set_topcue_status (status:int):
+    """ Status des topcue.content an Website schicken
+
+    Eintrag in sysnc_data. Der Aufruf dieser Funktion kommt vor der
+    Änderung des Topcue-Status. Damit ist gewährleistet, dass die 
+    sync_data Liste nur bei Änderungen beschickt wird.    
+    """
+    if status == 1:
+        if not len (globs.topcue.content):
+            # socketio.emit ("update topcue status", {"status":"true"})
+            globs.sync_data.append ({"event_name":"update topcue status",
+                            "data":{"status":"true"}})
+    else:
+        if len (globs.topcue.content):
+            # socketio.emit ("update topcue status", {"status":"false"})
+            globs.sync_data.append ({"event_name":"update topcue status",
+                            "data":{"status":"false"}})
+
+# --- Clipboard Status --------------------------------------------------
+def set_clipboard_status (status:int):
+    """ Status des Clipboard an Website schicken
+    
+    Eintrag in sync_data
+    """
+    if status == 1:
+        if not len (Csvfile.clipboard):
+            globs.sync_data.append ({"event_name":"update clipboard status",
+                            "data":{"status":"true"}})
+    else:
+        if len (Csvfile.clipboard):
+            globs.sync_data.append ({"event_name":"update clipboard status",
+                            "data":{"status":"false"}})
+
+
+
 def calc_mixoutput ():
     """ global mix berechnen
 
@@ -207,9 +243,11 @@ def evaluate_osc (address, *arg):
             if args[0] not in globs.patch.attriblist(head):
                 return
             if 0.0 <= val <= 1.0:
+                set_topcue_status (1)
                 globs.topcue.add_item (head, args[0], int(val * 255))
         elif command == "/clear":
             # topcue clear
+            set_topcue_status (0)
             globs.topcue.clear()
             # session.pop ("topcuecontent", None)
         elif command == "/go":

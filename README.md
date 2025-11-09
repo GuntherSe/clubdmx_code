@@ -55,7 +55,7 @@ There is a demo of ClubDMX on [pythonanywhere.com](https://guntherseiser.pythona
 
 I suggest that you login as user *basic* next. This gives you the opportunity to use ClubDMX as intended and prepared by a *standard* or *admin* user. 
 
-After playing as user *basic* a while go ahead an log in as user "Standard". Now you get the opportunity to set up a room, a certain show or whatever environment you plan.
+After playing as user *basic* a while, go ahead and log in as user "Standard". Now you get the opportunity to set up a room, a certain show or whatever environment you plan.
 
 User *basic* has the password *basic*
 

@@ -31,6 +31,7 @@ logname                 log_views
 
 import os
 import os.path
+from collections import deque
 
 from configclass  import Config
 from ola          import OscOla
@@ -53,6 +54,10 @@ basedir = os.path.dirname(thispath)
 
 ALLOWED_EXTENSIONS = set(['txt', 'csv', 'ccsv', 'zip', 'db'])
 SHIFT = 1000 # für Fadertabellen zur Untrscheidung, siehe startup_func.py
+
+sync_data = deque ()  # data to be synchronized. structure: 
+                # [{event_name:str, data}, ...]
+
 
 # Globale Objekte:
 cfgbase         = Config (os.path.join(basedir, ".app"))  

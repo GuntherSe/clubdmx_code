@@ -31,9 +31,8 @@ def login():
             return redirect(url_for('auth.login'))
         login_user(user, remember=form.remember_me.data)
         # basic-User hat immer Editmode select:
-        # if user.role == "basic":
         session["editmode"] = "select" # default für alle Rollen
-        # session.permanent = True
+        session["username"] = form.username.data
         return redirect(redirect_url())
 
     return render_template('auth/login.html', title='Login', form=form)
@@ -43,7 +42,6 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('basic.index'))
-
 
 
 @auth.route('/register', methods=['GET', 'POST'])

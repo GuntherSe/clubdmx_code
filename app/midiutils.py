@@ -13,8 +13,8 @@ import globs
 import os
 import os.path
 
-from flask  import session
 from csvfileclass import Csvfile
+from apputils import set_topcue_status
 
 # Strings zur Identifizierung der Midi-Kommandos:
 midi_commandlist =  ["TopcueClear", "CuelistGo", "CuelistPause", 
@@ -73,20 +73,40 @@ def press_cuebutton (index:int) -> int:
            (das ist auch der index in globs.buttontable.instances)
     return: 1 = on, 0 = off
     """
-    ret = 0
+    status = 0
     buttons = len (globs.buttontable)
     if index in range (buttons):
-        ret = globs.buttontable[index].go()
-        if globs.PYTHONANYWHERE == "false" and globs.midiactive:
-            buttontype = globs.buttontable[index].type
-            buttongroup = globs.buttontable[index].group
-            if buttontype == "Auswahl":
-                for count in range (buttons):
-                    item = globs.buttontable[count]
-                    if item.type == "Auswahl" and item.group == buttongroup:
-                        cuebutton_monitor (count, 0)
-            cuebutton_monitor (index, ret)
-    return ret
+        status = globs.buttontable[index].go()
+        # if globs.PYTHONANYWHERE == "false" and globs.midiactive:
+        buttontype = globs.buttontable[index].type
+        buttongroup = globs.buttontable[index].group
+        if buttontype == "Auswahl":
+            for count in range (buttons):
+                item = globs.buttontable[count]
+                if item.type == "Auswahl" and item.group == buttongroup:
+                    cuebutton_monitor (count, 0)
+        cuebutton_monitor (index, status)
+    return status
+
+
+def cuebutton_monitor (index:int, status:int):
+    """ Button-Status in Website und per LED am Midioutput anzeigen  
+
+    index: index in globs.buttontable
+    status 0 oder 1
+    """
+    message = {"index":index, "status":status}
+    globs.sync_data.append ({"event_name":"update buttonstatus",
+                             "data":message})
+
+    if globs.PYTHONANYWHERE == "false" and globs.midiactive:
+        outnum = globs.buttontable[index].midioutput
+        button = globs.buttontable[index].midicontroller
+        if outnum != -1 and  button != -1 :
+            if status: # status == 1
+                globs.midi.led_on (outnum, button)
+            else:
+                globs.midi.led_off (outnum, button)
 
 
 def press_pausebutton (index:int):
@@ -120,9 +140,17 @@ def eval_midi (pos, msg):
                 fader = globs.midi.in_faders[pos][ctrlindex]
                 if fader < globs.SHIFT: # cuefader
                     globs.fadertable[fader].level = msg.value / 127
+                    message = {"who":"cuefader-"+str(fader), 
+                               "data":str(msg.value * 2)}
+                    globs.sync_data.append ({"event_name":"update slidervalue",
+                                       "data":message})
                     midifader_monitor ("cuefader", fader , msg.value)
                 elif globs.SHIFT <= fader < 2*globs.SHIFT: # cuelist
                     globs.cltable[fader-globs.SHIFT].level = msg.value / 127
+                    message = {"who":"cuelistfader-"+str(fader), 
+                               "data":str(msg.value * 2)}
+                    globs.sync_data.append ({"event_name":"update slidervalue",
+                                       "data":message})
                     midifader_monitor ("cuelist", fader-globs.SHIFT ,msg.value)
                 else: # Zusatz
                     pass
@@ -144,21 +172,6 @@ def eval_midi (pos, msg):
                 else: # Zusatz-Buttons
                     # print (f"Special Midibutton: {data}")
                     eval_midicommand (pos, ctrlindex, msg.value)
-
-
-def cuebutton_monitor (index:int, status:int):
-    """ Button-Status per LED am Midioutput anzeigen 
-
-    index: index in globs.buttontable
-    status 0 oder 1
-    """
-    outnum = globs.buttontable[index].midioutput
-    button = globs.buttontable[index].midicontroller
-    if outnum != -1 and  button != -1 :
-        if status: # status == 1
-            globs.midi.led_on (outnum, button)
-        else:
-            globs.midi.led_off (outnum, button)
 
 
 def midifader_monitor (table: str, index:int, level:int):
@@ -239,6 +252,7 @@ def eval_midicommand (device:int, ctrl:int, val:int):
         else:
             index = -1
         if line["Command"] == "TopcueClear" and val:
+            set_topcue_status (0)
             globs.topcue.clear ()
             # send val to midi output:
             outdevice = line["Midioutput"]

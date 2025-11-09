@@ -28,7 +28,7 @@ class Cuelist (Cuelistbase):
         if not Cuelist.running:
             Cuelist.running = True
             Cuelist.fade_thread = threading.Thread (target=Cuelist.run)
-            Cuelist.fade_thread.setDaemon (True)
+            Cuelist.fade_thread.daemon = True
             if not os.environ.get ("PYTHONANYWHERE") == "true":
                 Cuelist.fade_thread.start ()
 

@@ -74,16 +74,16 @@ function periodic_allcueliststatus () {
         cuelistStatus (i, data);
       };
       // Slider:
-      var sliderlevels = jdata["levels"];
-      var i;
-      try {
-        for (i = 0; i < sliderlevels.length; i++){
-            faderStatus (i, sliderlevels);
-        };
-      }
-      catch(err) {
-        console.log ("Fehler in Sliderlevel: " + err);
-      }
+      // var sliderlevels = jdata["levels"];
+      // var i;
+      // try {
+      //   for (i = 0; i < sliderlevels.length; i++){
+      //       faderStatus (i, sliderlevels);
+      //   };
+      // }
+      // catch(err) {
+      //   console.log ("Fehler in Sliderlevel: " + err);
+      // }
     },
     complete: function () {
       setTimeout (periodic_allcueliststatus, 500);
@@ -91,6 +91,23 @@ function periodic_allcueliststatus () {
   }); // ende $.ajax
 }
   
+// An event handler for a change of value 
+$('input.inputslider').on('input', function(event) {
+    socket.emit('slider value changed', {
+        who: $(this).attr('id'),
+        fadertype: "cuelistfader",
+        data: $(this).val()
+    });
+    return false;
+});
+
+// socket.on('update slidervalue', function(msg) {
+//     //console.log('slider value updated');
+//     let elem = $('#' + msg.who);
+//     if (elem.is (":focus") ) {} else {
+//       elem.val(msg.data);}
+// });
+
 
 // ----------------------------------------------------------------------------
 // Filebutton 'ansehen'

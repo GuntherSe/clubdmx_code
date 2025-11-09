@@ -31,10 +31,10 @@ class Contrib (threading.Thread):
 """
 
     def __init__(self):
-        threading.Thread.__init__ (self, target=self.run)
+        threading.Thread.__init__ (self, target=self.run, daemon=True)
         self.paused = False
         self.pause_cond = threading.Condition (threading.Lock ())
-        self.setDaemon (True)
+        # self.setDaemon (True)
 
         self.contribs = {}
         self.output_function = print

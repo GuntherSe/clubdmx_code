@@ -8,17 +8,13 @@ import csv
 
 from flask import Blueprint, render_template, request, json 
 from flask import session
-# from flask_login import login_required
-# from apputils import standarduser_required, admin_required, redirect_url
 from common_views import check_clipboard
+from apputils import set_topcue_status
 
 import globs
 
 from cue import Cue
 from csvfileclass import Csvfile   
-# from cuebutton import Cuebutton
-# from startup_func import make_fadertable, get_cuebuttons
-# from csv_views import evaluate_option
 
 cueview = Blueprint ("cueview", __name__, url_prefix="/cue", 
                      static_folder="static", template_folder="templates")
@@ -63,7 +59,9 @@ def cueedit ():
         head   = request.form["head"]
         attrib = request.form["attrib"]
         level  = request.form["level"]
+        set_topcue_status (1)
         globs.topcue.add_item (head, attrib, level)
+
         # print (f"Head: {head}, Attribut: {attrib}, Level: {level}")
         return "ok"
 
@@ -77,11 +75,14 @@ def cueedit ():
     attribs = [] # pro Zeile in Cue 'head','attrib','level'
     levels  = []
     labels  = [] # Fader-Beschriftung 
+    globs.sync_data.append ({"event_name":"update clipboard status",
+                    "data":{"status":"true"}})
     for line in tmpcue.cuecontent():
         level = globs.topcue.has_key (line[0], line[1])
         if level == False:
             level = int (line[2])
         # in topcue eintragen:
+        set_topcue_status (1)
         globs.topcue.add_item (line[0], line[1], level)
         heads.append (line[0])
         attribs.append (line[1])

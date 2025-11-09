@@ -153,6 +153,7 @@ class Cuelistbase ():
             item["Text"] = inst.outcue.text
             item["Filename"] = inst.file.shortname()
             item["Index"] = cls.instances.index (inst)
+            item["Level"] = int (inst.level * 255)
             # Status:
             # item["current_id"] = str (cls.currentid)
             ret.append (item)

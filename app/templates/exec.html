@@ -89,8 +89,17 @@
       $(".slider").width (sliderwidth);
     });
 
-    periodic_faderstatus ();
-    periodic_buttonstatus ();
+    $('input.inputslider').on('input', function(event) {
+        socket.emit('slider value changed', {
+            who: $(this).attr('id'),
+            fadertype: "cuefader",
+            data: $(this).val()
+        });
+        return false;
+    });
+
+    // periodic_faderstatus ();
+    // periodic_buttonstatus ();
 
   });     // ende document ready
 

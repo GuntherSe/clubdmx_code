@@ -102,61 +102,66 @@ function activateSlider (num, sliderlevel, fadertype) {
     // cuelist level fader
     cmdstring = "/cuelistlevel/" + numstring;
   }
-  $("#slider-"+numstring)
-    .val(sliderlevel[num])
-    .on ("input", function () {
-      var sliderval = {level:this.value};
-      $.post (cmdstring, sliderval);
-    }
-  );  
+  $("#"+ fadertype + "-" + +numstring)
+    .val(sliderlevel[num]);
+    // .on ("input", function () {
+    //   var sliderval = {level:this.value};
+    //   $.post (cmdstring, sliderval);
+    //   }
+    // );  
 }
 
-function faderStatus (num, statusarray) {
-  // level aus der fadertable wird auf Fader übertragen
-  var numstring = num.toString ();
-  var level = statusarray[num] ;
-//  $("#sl-"+numstring).slider ("option", "value", level);
-  $("#slider-"+numstring).val (level);
-}
+// function faderStatus (num, statusarray) {
+//   // level aus der fadertable wird auf Fader übertragen
+//   var numstring = num.toString ();
+//   var level = statusarray[num] ;
+// //  $("#sl-"+numstring).slider ("option", "value", level);
+//   $("#slider-"+numstring).val (level);
+// }
 
-function periodic_faderstatus () {
-  // siehe: https://stackoverflow.com/questions/5052543/how-to-fire-ajax-request-periodically
-  // aktuelle Faderwerte der Cuefader am Schieberegler zeigen:       
-  var sliderlevels;
-  // var sliderwidth = $(".col-8").width();
-  $.ajax ({
-    url: "/getinfo/sliderval", 
-    success: function(data){
-      sliderlevels = $.parseJSON(data);
-      var i;
-      for (i = 0; i < sliderlevels.length; i++){
-          faderStatus (i, sliderlevels);
-          // $(".slider").width (sliderwidth);
-      };
-    },
-    complete: function () {
-      setTimeout (periodic_faderstatus, 1000);
-    }
-  }); // ende $.ajax
-}
+// function periodic_faderstatus () {
+//   // siehe: https://stackoverflow.com/questions/5052543/how-to-fire-ajax-request-periodically
+//   // aktuelle Faderwerte der Cuefader am Schieberegler zeigen:       
+//   var sliderlevels;
+//   // var sliderwidth = $(".col-8").width();
+//   $.ajax ({
+//     url: "/getinfo/sliderval", 
+//     success: function(data){
+//       sliderlevels = $.parseJSON(data);
+//       var i;
+//       for (i = 0; i < sliderlevels.length; i++){
+//           faderStatus (i, sliderlevels);
+//           // $(".slider").width (sliderwidth);
+//       };
+//     },
+//     complete: function () {
+//       setTimeout (periodic_faderstatus, 1000);
+//     }
+//   }); // ende $.ajax
+// }
 
 
 // ----------------------------------------------------------------------------
 // Buttons in cuebuttons und executer:
 
 function activateCuebuttons () {
-  $(".cuebutton").click ( function (){
-    var status;
-    var parentcard = $(this).parent (".card");
-    if ( parentcard.hasClass ("active") ) {
-      parentcard.removeClass ("active");
-    } else {
-      parentcard.addClass ("active");
-    };
-    var index = $(this).attr ("index");
-    //console.log ("Button: " + index);
-    var args = {index:index};
-    $.get ("/buttonpress", args);
+  $(".cuebutton").click ( function (event){
+    // var status;
+    // var parentcard = $(this).parent (".card");
+    // if ( parentcard.hasClass ("active") ) {
+    //   parentcard.removeClass ("active");
+    // } else {
+    //   parentcard.addClass ("active");
+    // };
+    // var index = $(this).attr ("index");
+    // var args = {index:index};
+    // $.get ("/buttonpress", args);
+
+    socket.emit ("cuebutton pressed", {
+      id: $(this).attr ("id"),
+      index: $(this).attr("index")
+    });
+    return false;
   });
 }
 
@@ -362,11 +367,11 @@ function periodic_commonstatus () {
         success: function(data){
           var jdata = JSON.parse (data);
           //console.log ("common: " + JSON.stringify (jdata));
-          if (jdata["editmode"] == "select") {
-            setEditmode ("select");
-          } else {
-            setEditmode ("edit");
-          };
+          // if (jdata["editmode"] == "select") {
+          //   setEditmode ("select");
+          // } else {
+          //   setEditmode ("edit");
+          // };
           // Buttons zu CSV-Zeilen cut/paste:
           // werden von der aktuellen Seite verwaltet, d.h. wenn Zeilen 
           // ausgewählt werden, dann sind diese sichtbar.
@@ -379,11 +384,11 @@ function periodic_commonstatus () {
           };
           // initMouseMode ();
           // Topcue Menü anzeigen:
-          if (jdata["topcuecontent"] == "true") {
-            showSecondNav ();
-          } else {
-            hideSecondNav ();
-          }; 
+          // if (jdata["topcuecontent"] == "true") {
+          //   showSecondNav ();
+          // } else {
+          //   hideSecondNav ();
+          // }; 
 
         },
         complete: function () {
@@ -393,32 +398,89 @@ function periodic_commonstatus () {
   }
 
 
+// siehe socketio_basic:
+var ip = location.host;
+// alert ("IP des Host: " + ip);
+var socket = io.connect(ip);
+
+socket.on('after connect', function(msg) {
+    console.log('After connect', msg);
+});
+
+socket.on('update slidervalue', function(msg) {
+    //console.log('slider value updated');
+    let elem = $('#' + msg.who);
+    if (elem.is (":focus") ) {} else {
+      elem.val(msg.data);}
+});
+
+socket.on('update buttonstatus', function(msg) {
+    console.log('button status updated');
+    let but_id = "but-"+msg.index;
+    let status = msg.status;
+    var parentcard = $("#"+but_id).parent (".card");
+    if ( status == 0 ) {
+      parentcard.removeClass ("active");
+    } else {
+      parentcard.addClass ("active");
+    };
+});
+
+socket.on ("update clipboard status", function (msg) {
+  if (msg.status == "true") {
+    $(".csvClipboard").removeClass ("d-none");
+  } else {
+    $("csvClipboard").addClass ("d-none");
+  };
+});
+
+
+socket.on ("update topcue status", function (msg) {
+  if (msg.status == "true") {
+    showSecondNav ();
+  } else {
+    hideSecondNav ();
+  }; 
+});
+
 
 // --- Navigation für Topcue und CSV-Buttons: --------------------------------
 
 $(document).ready (function() {
 
-  periodic_commonstatus ();
+  let session = $("#sessiondata");
+  // Topcue:
+  if (session.attr ("topcuecontent") == "true") {
+    showSecondNav ();
+  } else {
+    hideSecondNav ();
+  }; 
+  // Clipboard:
+  if (session.attr ("csvclipboard") == "true") {
+    $(".csvClipboard").removeClass ("d-none");
+  } else {
+    $("csvClipboard").addClass ("d-none");
+  };
+  // editmode:
+  if (session.attr ("editmode") == "select") {
+    setEditmode ("select");
+  } else if (session.attr ("editmode") == "edit"){
+    setEditmode ("edit");
+  };
+
+  // periodic_commonstatus ();
   // Mousemode Optionen:
   initMouseMode ();
+
   $(document).on ("keydown", function (event) {
     if (event.which == 113) { // F2
       toggleMousemode ();
     };
   })
-  changeMousemode (".mousemode-edit", "edit");
-  changeMousemode (".mousemode-select", "select");
-
-  // topcue Nav Anzeige auf allen Seiten:
-  // wird durch periodic_commonstatus () durchgeführt
-  // if ($("#sessiondata").attr ("topcuecontent") == "true") {
-  //   showSecondNav ();
-  // } else {
-  //   hideSecondNav ();
-  // };
+  enableChangeMousemode (".mousemode-edit", "edit");
+  enableChangeMousemode (".mousemode-select", "select");
 
   $(".selectDiv").empty();
-  //modaldialogToPython (".cueview", "/cuechild/cuemodal");
   modaldialogToPython ("#showCueModal", "/cuechild/cuemodal");
   modaldialogToPython (".topview", "/cuechild/topview");
   filedialogToPython  (".topsavecue", "/cuechild/topsave/cue");

@@ -15,17 +15,28 @@ function setEditmode (newMode) {
   // newmode:str, Werte: edit, select
   // zu ändern: Mousemode, Anzeige auf Website 
   // nur ausführen, wenn newMode != MouseModeStr
-  if (newMode != MouseModeStr) {
-    $.get ("/editmode/"+newMode, function (data) {
-      $(".edit-select-button").text (data); // data: newMode in Großbuchstaben
-      $("#sessiondata").attr ("editmode", newMode);
-      MouseModeStr = newMode;
-      initMouseMode ();
-    });
+  if ( newMode != MouseModeStr) {
+    $.get ("/editmode/"+newMode); //, function () {
+    //   $(".edit-select-button").text (newMode.toUpperCase()); 
+    //   $("#sessiondata").attr ("editmode", newMode);
+    //   MouseModeStr = newMode;
+    //   initMouseMode ();
+    // });
+    // socket.emit ("editmode changed", { mode: newMode });
   };
 };
-  
-function changeMousemode (id, newMode) {
+
+socket.on('update editmode', function(msg) {
+    let newMode = msg.mode
+    if (msg.user == $("#sessiondata").attr ("user")) { // per User
+      $("#sessiondata").attr ("editmode", newMode);
+      MouseModeStr = newMode;
+      $(".edit-select-button").text (newMode.toUpperCase()); 
+      initMouseMode ();
+    }
+});
+
+function enableChangeMousemode (id, newMode) {
   $(id).on ("click", function () {
     setEditmode (newMode);
   });

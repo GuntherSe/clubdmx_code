@@ -54,7 +54,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="">
   <meta name="author" content="GS">
-  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
 
   <title>{% block title %}{% endblock %}-ClubDMX</title>
   <!-- hier theme -->
@@ -83,6 +83,7 @@
   </div>
   <!-- Session-Daten: -->
   <div id="sessiondata" 
+    user="{{ session['username'] }}"
     editmode="{{ get_editmode() }}"
     topcuecontent="{{ topcue_content }}"
     modalactive="{{ get_modalactive() }}"
@@ -161,6 +162,7 @@
   <script src="/static/js/popper.js"></script>
   <script src="/static/js/bootstrap.min.js"></script>
   <!-- <script src="/static/js/webmidi.iife.js"></script> -->
+   <script src="/static/js/socket.io.min.js"></script>
 
   <script src="/static/js/clubdmx.js"></script>
   <script src="/static/js/csvedit.js"></script>

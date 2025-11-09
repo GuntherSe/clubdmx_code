@@ -91,6 +91,7 @@ def get_faderdata () ->dict:
         d["fieldnames"] = [x for x in csvfile.fieldnames()]
         # _fieldnames sind geschützt
         d["option"]     = "cuefader"
+        d["fadertype"]  = "cuefader" # vs. cuelistfader
         d["loc"]        = loc
         d["items"]      = fadertable_items (loc)
         d["textcolumn"] = csvfile.fieldnames().index("Text")
@@ -178,6 +179,7 @@ def fadertable (sel:str=""):
     """
     # data = get_faderdata ()
 
+    logger.debug (f"SESSION'editmode' = {session['editmode']}")
     if sel:
         session["selected_fadertable"] = sel
     elif "selected_fadertable" in session:
@@ -293,7 +295,6 @@ def exec ():
         ein Fader-Block
         ein Button-Block
     """
-    # session["editmode"] = "select" # editmode select ohne message
     faderdata = get_faderdata ()
     buttondata = get_buttondata ()
     return render_template ("exec.html", 

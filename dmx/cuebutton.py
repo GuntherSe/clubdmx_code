@@ -41,8 +41,9 @@ class Cuebutton (Cue):
 
         if not Cuebutton.running:
             Cuebutton.running = True
-            Cuebutton.fade_thread = threading.Thread (target=Cuebutton.run)
-            Cuebutton.fade_thread.setDaemon (True)
+            Cuebutton.fade_thread = threading.Thread (target=Cuebutton.run,
+                                                      daemon=True)
+            # Cuebutton.fade_thread.setDaemon (True)
             if not os.environ.get ("PYTHONANYWHERE") == "true":
                 Cuebutton.fade_thread.start ()
 
@@ -105,6 +106,7 @@ class Cuebutton (Cue):
                 item["Fade_in"] = inst.fade_in
                 item["Fade_out"] = inst.fade_out
                 item["Index"] = cls.instances.index (inst)
+                item["Status"] = inst.status
                 ret.append (item)
         return ret
 

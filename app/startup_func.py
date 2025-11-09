@@ -52,6 +52,7 @@ def fadertable_items (location:str)   ->list:
             item["Text"] = inst.text
             item["Filename"] = inst.file.shortname()
             item["Index"] = globs.fadertable.index (inst)
+            item["Level"] = int (inst.level * 255)
             ret.append (item)
     return ret
 

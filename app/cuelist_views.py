@@ -58,6 +58,7 @@ def get_cldata () -> dict:
     data["fieldnames"] = [x for x in csvfile.fieldnames()]
     # _fieldnames sind geschützt
     data["option"]     = "pages"
+    data["fadertype"]  = "cuelistfader"
     data["items"]      = Cuelist.items ()
     data["textcolumn"] = csvfile.fieldnames().index("Text")
     data["filebuttons"] = "cuelist"
@@ -326,8 +327,6 @@ def details () ->json:
     excludebuttons = ["openButton", "saveasButton", "newlineButton",
                         "uploadButton", "saveChanges", "discardChanges"]
                         
-    # session["editmode"] = "edit"
-
     table = render_template ("modaldialog.html", 
                     body = "csvbody",
                     title      = csvfile.shortname(),

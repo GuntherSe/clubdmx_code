@@ -18,7 +18,9 @@ dmx_path = os.path.join (thispath, "dmx")
 sys.path.insert (1, app_path)
 sys.path.insert (1, dmx_path)
 
-from app import create_app, db
+from app import create_app, db, socketio
+from flask_socketio import emit
+
 from auth.models import User
 
 import logging
@@ -41,9 +43,21 @@ app = create_app ()
 def make_shell_context():
     return {'db': db, 'User': User}    
 
+import socketio_handlers
+
+# @socketio.on('connect')
+# def test_connect():
+#     emit('after connect',  {'data':'Lets dance'})
+    
+# @socketio.on('slider value changed')
+# def value_changed(message):
+#     values[message['who']] = message['data']
+#     emit('update slidervalue', message, broadcast=True)
+
 # --- Main ----------------------------------------------------
 
 if __name__ == "__main__":
 
-    app.run(host='0.0.0.0') #, threaded=True)
+    # app.run(host='0.0.0.0') #, threaded=True)
+    socketio.run (app, host='0.0.0.0')
 
