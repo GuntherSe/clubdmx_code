@@ -34,7 +34,9 @@ def create_app (test_config=None):
     app = Flask(__name__,  instance_relative_config=True)
     # globale Variablen von app.config erhalten:
     app.config.from_object ("app_settings.AppConfig")
-    socketio.init_app (app, cors_allowed_origins="*") #, logger=True, engineio_logger=True)
+    socketio.init_app (app, cors_allowed_origins="*",
+                        always_connect=True,async_mode="threading")
+                        # #, logger=True, engineio_logger=True)
 
 
     # Ausnahme PYTHONANYWHERE: 
@@ -45,7 +47,7 @@ def create_app (test_config=None):
         app.config["PYTHONANYWHERE"] = val
     else:
         globs.PYTHONANYWHERE = "false"
-        app.config["PYTHONANYWHERE"] = "false"
+        app.config["PYTHONANYWHERE"] = "false",
 
     # User-Datenbank:
     db.init_app(app)

@@ -52,7 +52,7 @@ case "$COMMAND" in
       gunicornstart="$HOME/$VIRTUALENV/bin/gunicorn"
     fi
     touch test1running
-    $gunicornstart  -b 0.0.0.0:5000  wsgi:app
+    $gunicornstart  -w 1 --threads 100 -b 0.0.0.0:5000  wsgi:app
     # Anmerkung: mit pgrep -fl wsgi.py erhält man die PID
     ;;
     
@@ -68,7 +68,7 @@ case "$COMMAND" in
     fi
     touch test1running
     # $gunicornstart --bind unix:clubdmx.sock -m 007 wsgi:app
-    $gunicornstart --worker-class eventlet -w 1 --bind 0.0.0.0:5000 wsgi:app
+    $gunicornstart  -w 1 --threads 100 --bind 0.0.0.0:5000 wsgi:app
     ;;
 
   stop)
@@ -80,6 +80,13 @@ case "$COMMAND" in
   update)
     echo "Update ClubDMX"
     echo "Zum Update das Script update.sh verwenden!"
+    ;;
+
+  test)
+    echo "Zum Basis-Test mit Python (ohne Gunicorn)"
+      source $HOME/$VIRTUALENV/bin/activate
+      export LOGLEVEL="debug"
+      python wsgi.py
     ;;
 
   *)
