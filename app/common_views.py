@@ -186,7 +186,7 @@ def get_info (item:str) -> json:
         return json.dumps (out)
 
     elif item == "attributes":
-        # für die Anzeige in Stage:
+        # für die Anzeige in Stage beim Reload, sonst über socket:
         # Erstes Attribut = Balkenhöhe
         # Farben werden aus Mix ausgelesen
         if globs.PYTHONANYWHERE == "true":

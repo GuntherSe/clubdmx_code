@@ -419,12 +419,45 @@ function periodic_attribstatus () {
     }
   }); // ende $.ajax 
 }
+function attribstatus () {
+  // Attribute anzeigen
+  $.get ("/getinfo/attributes", function(data) {
+    var attributes = $.parseJSON(data);
+    var cssclass, color, height;
+    for (var key in attributes) {
+      cssclass = ".head-" + key;
+      color = "rgb("  + attributes[key][1] + "," 
+                      + attributes[key][2] + ","
+                      + attributes[key][3] + ")";
+      height =  attributes[key][0] / 2.55; 
+      $(cssclass).css ("height", height.toString()+"%" )
+                  .css ("background-color", color) ;        
+    };
+  });
+};
 
+socket.on("update attribute", function (message) {
+  // geänderte Attribute anzeigen
+  let head = message.head;
+  // let attrib = message.attr;
+  let val = message.val;
+  var cssclass, color;
+  cssclass = ".head-" + head;
+  height = val[0] / 2.55;
+  color = "rgb("  + val[1] + "," 
+                  + val[2] + ","
+                  + val[3] + ")";
+  $(cssclass).css ("height", height.toString()+"%")
+            .css ("background-color", color) ;        
+  
+  // console.log ("Attributes: " + head + " " + attrib + " " + val);
+});
 // ----------------------------------------------------------------------------
 
 $(document).ready ( function () {  
   // initStageMouse ();
   resizeStage ();
+  attribstatus ();
 
   $(".stage, .mob-stage").on ("selectablestop", function( ) { 
     selectedHeads = "";
@@ -434,6 +467,7 @@ $(document).ready ( function () {
       selection_headslider ();
     };
   });
+
   
   // --- Stage-Buttons: ----------------------------------------------------
   filedialogToPython (".openButton", "/csv/open", {"option":"stage"});

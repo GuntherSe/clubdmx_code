@@ -65,8 +65,6 @@ class Outcue (Cue):
 class Cuelistbase ():
 
     instances = []
-    timeout = 0.02 # 0.02
-    running = False
     CUELISTPATH = ""
     init_done = 0
     
@@ -75,9 +73,11 @@ class Cuelistbase ():
     logger = logging.getLogger (__name__)
     file_handler = baselogger.filehandler ("cuelist.log")
     logger.addHandler (file_handler)
+    view_function = None
 
     def __init__ (self, patch):
         self.__class__.instances.append (self)
+        self.__class__.view_function = self.__class__.terminal_view
         if Cuelistbase.init_done == 0:
             Cuelistbase.init_done = 1
             if Cuelistbase.CUELISTPATH == "":
@@ -124,6 +124,8 @@ class Cuelistbase ():
         self.elapsed_tm = 0.0 # vergangene Zeit beim Drücken von Pause
         self.start_tm = time.time ()
         self.go_time = -1 # Zeit für Go nach Stay-Time
+        # Viewdata:
+        self.oldview = []
 
 
     def __repr__(self):
@@ -159,6 +161,21 @@ class Cuelistbase ():
             ret.append (item)
         return ret
     
+    @classmethod
+    def set_vievfunction (cls, newfunc):
+        """ Viewfunktion neu definieren
+
+        Viewfunktion ist für alle Instanzen von Cuelistbase, 
+        daher classmethod
+        """
+        cls.view_function = newfunc
+
+    @classmethod
+    def terminal_view (cls, *args):
+        """ View-Daten am Terminal ausgeben 
+        """
+        print (args)
+
 
     def line (self, pos:int) -> dict:
         """ liefert cuelist[pos] als dict 
@@ -195,6 +212,31 @@ class Cuelistbase ():
         return ret
 
 
+    def get_viewdata (self) ->list:
+        """ Daten für Cuelist-Ansicht als Liste 
+        """
+        if self.is_paused:
+            pause = "true"
+        else:
+            pause = "false"
+        line = self.line (self.currentpos)
+        curid = line["Id"]
+        curtext = line["Text"]
+        line = self.line (self.nextprep)
+        nextid = line["Id"]
+        nexttext = line["Text"]
+        
+        return [self.__class__.instances.index(self),
+                self.fadein_percent,
+                self.fadeout_percent,
+                pause,
+                curid,
+                curtext,
+                nextid,
+                nexttext,
+                self.start_tm]
+
+
     def update_cuelist (self):
         """ cueliste updaten 
         wenn Fades abgeschlossen sind
@@ -218,6 +260,7 @@ class Cuelistbase ():
             self.nextprep += 1
         else:
             self.nextprep = 0 # beginnt von vorn
+        self.view_function (self.get_viewdata())
 
 
     def decrement_nextprep (self):
@@ -232,6 +275,7 @@ class Cuelistbase ():
         
         if self.nextprep == self.currentpos and len(self._idlist) > 1:
             self.decrement_nextprep ()
+        self.view_function (self.get_viewdata())
 
 
     def set_nextprep (self, cuenr) ->bool:
@@ -299,10 +343,10 @@ class Cuelistbase ():
             with open (filename, 'r',encoding='utf-8') as pf: # zum Lesen öffnen und einlesen
                 reader = csv.DictReader (pf, restval= '')
                 self._listfields = reader.fieldnames
-                if "Id" not in self._listfields:
+                if not self._listfields or "Id" not in self._listfields:
                     # muss vor Einlesen geprüft werden
                     self.logger.error ("Feld 'Id' nicht in Cueliste gefunden")
-                    return
+                    return 0
 
                 for row in reader:
                     try: # kann in float konvertiert werden:
@@ -373,7 +417,7 @@ class Cuelistbase ():
         required = ["Id", "Filename", "Fadein", "Fadeout", "Waitin", "Waitout", \
             "Stay", "Text", "Comment"]
         for fieldname in required:
-            if fieldname not in self._listfields:
+            if not self._listfields or fieldname not in self._listfields:
                 self.logger.error (f"Feld '{fieldname}' nicht gefunden. ")
                 ret = False
 
@@ -487,16 +531,28 @@ if __name__ == "__main__":
     """
     import pprint # pretty print
 
-
-    os.chdir ("C:\\Users\\Gunther\\OneDrive\\Programmierung\\clubdmx_rooms\\develop")
+    roompath = os.environ.get ("ROOMPATH")
+    if roompath:
+        os.chdir (roompath)
     print ("ich bin hier: ", os.getcwd())
-    patch = Patch()
+
+    patch = Patch ()
     patch.set_path (os.getcwd())
-    patch.open ("LED stripe dimmer")
+    patchname = os.environ.get ("PATCHFILE")
+    if patchname:
+        patch.open (patchname)
+    else:
+        print ("Environment-Variable PATCHFILE nicht angegeben.")
+        exit (1)
 
     ola   = OscOla ()
-    ola.set_ola_ip ("192.168.0.11")
-    print("Verbinde zu OLA-device: {0}".format (ola.ola_ip))
+    olaname = os.environ.get ("OLAIP")
+    if olaname:
+        ola.set_ola_ip (olaname)
+        print("Verbinde zu OLA-device: {0}".format (ola.ola_ip))
+    else:
+        print ("Environment-Variable PATCHFILE nicht angegeben.")
+        exit (1)
     ola.start_mixing()
 
     patch.set_universes (2)
@@ -520,6 +576,7 @@ if __name__ == "__main__":
             d = zeige Patch Dict
             m = Zeige Mix Universum 1
             s = Status
+            p = Print Viewdata
 
             1 = zeige current Cue Info
             2 = zeige current Cue content
@@ -551,6 +608,8 @@ if __name__ == "__main__":
                 print (list1.outcue.cuecontent())
             elif i == 's':
                 pp.pprint (list1.status ())
+            elif i == 'p':
+                list1.view_function ()
             elif i == '1':
                 try:
                     print (f"current id:{list1.currentid}, ", end='')

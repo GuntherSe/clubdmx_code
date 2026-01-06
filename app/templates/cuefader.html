@@ -40,24 +40,14 @@
   $("document").ready (function () {
     
     var sliderwidth;
+    sliderwidth = $(".col-8").width();
+    $(".slider").width (sliderwidth);
+
     // Sliderbreite mit Fenserbreite verändern:
     $(window).on('resize', function(){
       sliderwidth = $(".col-8").width();
       $(".slider").width (sliderwidth);
     });
-
-    sliderwidth = $(".col-8").width();
-    $(".slider").width (sliderwidth);
-    // slider erzeugen:
-  //  var sliderlevels;
-  //  $.get ("/getinfo/sliderval", function (data) {
-  //    sliderlevels = $.parseJSON(data);
-  //    var i;
-  //    for (i = 0; i < sliderlevels.length; i++){
-  //      activateSlider(i, sliderlevels, "cuefader");
-  //    };
-  //    $(".slider").width (sliderwidth);
-  //  });
 
     // An event handler for a change of value 
     $('input.inputslider').on('input', function(event) {
@@ -69,10 +59,12 @@
         return false;
     });
   
+    // init sliderposition:
+    socket.emit ("get slider position", {fadertype: "cuefader"});
     initMouseMode ();
     activateCuedetails ();
+
     // editableCsvFields ();
-    // periodic_faderstatus ();
 
   });     // ende document ready
 </script>

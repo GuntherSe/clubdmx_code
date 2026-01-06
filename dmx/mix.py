@@ -13,7 +13,7 @@ class Mix :
     For example, if i use OLA Univeerse 3, _ola_unis = [3], and the 
     mix values are located in _mix[0][0], _mix[0][1], etc
     """
-    _mix = [] # list of mix values
+    _mix = [[]] # list of mix values (list of lists)
     _ola_unis = []  # Zuordnung mix - OLA Univesum
                     # default: [1,2, ...]
     _universes = 1
@@ -48,7 +48,7 @@ class Mix :
     def reset_mix (self):
         """ alle Mixwerte auf 0
         """
-        Mix._mix = [0 for i in range (Mix._universes)]
+        Mix._mix = [[] for i in range (Mix._universes)]
         for uni in range (Mix._universes):  # 512 * config.universes DMX Werte
             Mix._mix[uni]  = [0 for i in range (512)] # in Lp berechnete Werte
 
@@ -98,7 +98,7 @@ class Mix :
         except:
             pass
         
-    def mixval (self, uni:int, chan:int):
+    def mixval (self, uni:int, chan:int) ->int:
         """ Mix-Wert von uni - chan liefern
 
         uni, chan ab 1
@@ -156,6 +156,7 @@ if __name__ == "__main__":
                 print (mix.universes())
             elif i == '2':
                 mix.set_universes (2)
+                mix.set_ola_uni (1, 5)
                 print (mix.universes())
             elif i == '3':
                 mix.set_mixval (2, 1,255)

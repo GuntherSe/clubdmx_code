@@ -15,18 +15,41 @@ from patch import Patch
 from ola import OscOla
 from roombaseclass import Roombase
 
-room = Roombase ("C:\\Users\\Gunther\\OneDrive\\Programmierung\\clubdmx_rooms\\test")
+roompath = os.environ.get ("ROOMPATH")
+if roompath:
+    os.chdir (roompath)
+print ("ich bin hier: ", os.getcwd())
 
-patch = Patch()
-patch.set_path (room.path())
-patch.open ("LED stripe")
-patch.set_universes (2)
+patch = Patch ()
+patch.set_path (os.getcwd())
+patchname = os.environ.get ("PATCHFILE")
+if patchname:
+    patch.open (patchname)
+else:
+    print ("Environment-Variable PATCHFILE nicht angegeben.")
+    exit (1)
+
 ola   = OscOla ()
-ola.set_ola_ip ("192.168.0.11")
-print("Verbinde zu OLA-device: {0}".format (ola.ola_ip))
+olaname = os.environ.get ("OLAIP")
+if olaname:
+    ola.set_ola_ip (olaname)
+    print("Verbinde zu OLA-device: {0}".format (ola.ola_ip))
+else:
+    print ("Environment-Variable PATCHFILE nicht angegeben.")
+    exit (1)
+
+# room = Roombase ("C:\\Users\\Gunther\\OneDrive\\Programmierung\\clubdmx_rooms\\test")
+
+# patch = Patch()
+# patch.set_path (room.path())
+# patch.open ("LED stripe")
+# patch.set_universes (2)
+# ola   = OscOla ()
+# ola.set_ola_ip ("192.168.0.11")
+# print("Verbinde zu OLA-device: {0}".format (ola.ola_ip))
 ola.start_mixing()
 
-Cue.set_path (room.path())
+Cue.set_path (os.getcwd())
 
 cue1 = Cuebutton (patch)
 cue1.open ("led stripe red")

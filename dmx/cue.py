@@ -47,12 +47,11 @@ class Cue ():
             if not os.environ.get ("PYTHONANYWHERE") == "true":
                 Cue.contrib.start ()
             Cue.init_done = 1
-            # Cue.contrib.start_mixing ()
 
         self.count = id (self) # eindeutige id für contrib-mix
         self.patch = patch
         self.content = [] # Struktur: [[Head1,Att1,Lev1], [Head2,Att2,Lev2], ...]
-        self._cuefields = [] # Struktur: ['HeadNr', 'Attr', 'Level']
+        self._cuefields = [] # ['HeadNr', 'Attr', 'Level']
         self._autoupdate = False # Auto-Update wenn _level == 0
         fname = os.path.join (Cue.CUEPATH, "_neu")
         self.file     = Csvfile (fname)   # Default Cue File Name
@@ -65,7 +64,6 @@ class Cue ():
         self.location = ""  # in welcher Cue-Gruppe
                             # (cuebuttons, exebuttons1, exebuttons2, 
                             # cuefaders, exefaders)
-        # self.line = 0 # Zeilennummer (ab 0) aus csv-Datei
         self.id       = ""  # = location + Zeilennummer (ab 0) in 
                             # CSV-Datei der Cue-Gruppe
                             # wird bei startup erzeugt
@@ -125,16 +123,19 @@ class Cue ():
             with open (filename, 'r',encoding='utf-8') as pf: # zum Lesen öffnen und einlesen
                 reader = csv.DictReader (pf, restval= '')
                 self._cuefields = reader.fieldnames
-                for row in reader:
-                    attribs = [] # zugehörige Attribute
-                    for item in reader.fieldnames:
-                        attribs.append (row[item])
-                    self.content.append (attribs)
+                if self._cuefields:
+                    for row in reader:
+                        attribs = [] # zugehörige Attribute
+                        for item in self._cuefields:
+                            attribs.append (row[item])
+                        self.content.append (attribs)
+                else:
+                    logger.error ("cuefields nicht definiert.")
             self.verify()
             self.filetime = os.path.getmtime (filename)
         else:
+            # kein File gefunden oder keine Änderungen
             pass
-            # print ("Cuefile nicht gefunden: ", filename)
 
 
     def cuecontent (self):
@@ -149,6 +150,8 @@ class Cue ():
                     ... ]
         """
         ret = []
+        if not self._cuefields:
+            return ret
         for line in self.content:
             retline = {}
             for i in range (len (line)):
@@ -182,21 +185,22 @@ class Cue ():
         else:
             savename = os.path.join (Cue.CUEPATH, newname)+os.extsep+"csv"
         # print ("Savename: ", savename)
-        
-        with open (savename, 'w', newline='',encoding='utf-8') as cf:
-            writer = csv.writer(cf) 
-            # Header schreiben:
-            writer.writerow (self._cuefields)
-            # cuecontent schreiben:
-            rows = len (self.content)
-            fields = len (self._cuefields)
-            for z in range(rows): # Zeile
-                row = []
-                for k in range (fields): #Feld
-                    row.append (self.content[z][k])
-                # print (row)
-                writer.writerow (row)
-
+        if self._cuefields:
+            with open (savename, 'w', newline='',encoding='utf-8') as cf:
+                writer = csv.writer(cf) 
+                # Header schreiben:
+                writer.writerow (self._cuefields)
+                # cuecontent schreiben:
+                rows = len (self.content)
+                fields = len (self._cuefields)
+                for z in range(rows): # Zeile
+                    row = []
+                    for k in range (fields): #Feld
+                        row.append (self.content[z][k])
+                    # print (row)
+                    writer.writerow (row)
+        else:
+            logger.error ("Cuefields nicht definiert!")
 
     def verify (self) -> bool:
         """ Cue File prüfen
@@ -275,31 +279,34 @@ class Cue ():
         """ Mix Output Funktion
 
         den in contrib ermittelten Wert (HTP/LTP) für das Attribut setzen
+        für jedes Attribut in jedem Head genau 1 Wert (nicht mehrmals aufrufen)
+        wird nur bei Änderungen aufgerufen
         """
         if not self.contrib.paused:
-            # head,attr = head_attr.split(sep='-')
             self.patch.set_attribute (head, attr, val)
         # print ("mix:", head, attr, val)
 
 
 # --- Attribut Methoden: -----------------------------------------------------
-# nicht in Verwendung!!
     def set_attribute (self, head:str, attr:str, level:str):
         """ ["head","attr","level"] in _cuecontent anhängen oder level ändern
         """
         # prüfen, ob head,attrib bereits in _cuecontent:
-        hindex = self._cuefields.index("HeadNr") # 0
-        aindex = self._cuefields.index("Attr")   # 1
-        lindex = self._cuefields.index("Level")  # 2
-        rows = len (self.content)
-        found = 0
-        for z in range(rows):   # Zeile
-            if (head == self.content[z][hindex]) and \
-                (attr == self.content[z][aindex]):
-                found = 1
-                self.content[z][lindex] = level # level geändert
-        if not found:
-            self.content.append ([head,attr,level])
+        if self._cuefields:
+            hindex = self._cuefields.index("HeadNr") # 0
+            aindex = self._cuefields.index("Attr")   # 1
+            lindex = self._cuefields.index("Level")  # 2
+            rows = len (self.content)
+            found = 0
+            for z in range(rows):   # Zeile
+                if (head == self.content[z][hindex]) and \
+                    (attr == self.content[z][aindex]):
+                    found = 1
+                    self.content[z][lindex] = level # level geändert
+            if not found:
+                self.content.append ([head,attr,level])
+        else:
+            logger.error ("Cuefields nicht definiert!")
         # print (self.content)
 
 
@@ -307,21 +314,24 @@ class Cue ():
         """ ["head","attr", ...] aus _cuecontent entfernen
         """
         # head,attrib in _cuecontent suchen:
-        hindex = self._cuefields.index("HeadNr") # 0
-        aindex = self._cuefields.index("Attr")   # 1
-        rows = len (self.content)
-        found = -1
-        for z in range(rows):   # Zeile
-            if (head == self.content[z][hindex]) and \
-                (attr == self.content[z][aindex]):
-                found = z
-        if found != -1:
-            rem = self.content.pop (found)
-            self.logger.debug (rem)
+        if self._cuefields:
+            hindex = self._cuefields.index("HeadNr") # 0
+            aindex = self._cuefields.index("Attr")   # 1
+            rows = len (self.content)
+            found = -1
+            for z in range(rows):   # Zeile
+                if (head == self.content[z][hindex]) and \
+                    (attr == self.content[z][aindex]):
+                    found = z
+            if found != -1:
+                rem = self.content.pop (found)
+                self.logger.debug (rem)
+        else:
+            logger.error ("Cuefields nicht definiert!")
         # print (self.content)
 
 
-    def has_key (self, head:str, attrib:str) ->bytes:
+    def has_key (self, head:str, attrib:str) ->str:
         """ prüfen, ob key in Cue enthalten ist
 
         key: headnr-attrib
@@ -331,7 +341,7 @@ class Cue ():
         for row in self.content:
             if row[0] == head and row[1] == attrib:
                 return row[2]
-        return False
+        return ""
 
 # ------------------------------------------------------------------------------
 # Level ändern:

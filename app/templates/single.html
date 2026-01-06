@@ -12,7 +12,7 @@
 {% block header %}
 <div class="container-fluid">
   <h2 class="row">
-    <div class="col">{% block title %}Single: {% endblock %}
+    <div class="col">{% block title %}Head: {% endblock %}
     </div>
     <div class="col currenthead"></div>      
   </h2>
@@ -38,7 +38,7 @@
 
 {% block content %}
 <div id="center">
-  <h4>Head Details:</h4>
+  <h4>Details:</h4>
   <div id="headlist" 
        items="  {% for item in headlist %}{{ item|e }} {% endfor %}"
        index="{{ headindex }}">

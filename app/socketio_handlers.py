@@ -1,19 +1,25 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from collections import deque
+# from collections import deque
 from threading import Lock
 from app import socketio
 from flask_socketio import emit
-from flask import session
+# from flask import session
 
 from midiutils import press_cuebutton, midifader_monitor, midi_commandlist
+from visudata import Visudata
+import time
+
+faderupdate_time = 0
 
 import logging
 logger = logging.getLogger ("clubdmx")
 # from loggingbase import Logbase
 
 import globs
+from cuelist import Cuelist
+
 sync_thread = None
 thread_lock = Lock ()
 
@@ -38,6 +44,7 @@ def connect ():
     
 @socketio.on('slider value changed')
 def slidervalue_changed(message):
+    global faderupdate_time
     """ Sliderlevel für Cuefader und Cuelistfader über socketio empfangen 
     index ab 1
     """
@@ -53,8 +60,29 @@ def slidervalue_changed(message):
             midifader_monitor ("cuefader", index, int(float(level)/2))
     else: # cuelistfader
         globs.cltable[index].level = float(level) / 255
-        
-    emit('update slidervalue', message, broadcast=True)
+
+    curtime = time.time()    
+    if curtime > faderupdate_time + 0.1: # 1/10 sec
+        emit('update slidervalue', message, broadcast=True)
+
+
+@socketio.on ("get slider position")
+def get_sliderposition (message):
+    """ get slider position on document.ready 
+    """
+    ret = {}
+    data = []
+    slidertype = message["fadertype"]
+    if slidertype == "cuefader":
+        for item in globs.fadertable:
+            data.append (int (item.level * 255))
+    else: # cuelistfader
+        for item in globs.cltable:
+            data.append (int (item.level * 255))
+    ret["data"] = data
+    ret["fadertype"] = slidertype
+    emit ("init slider position", ret) #, broadcast=True)
+
 
 @socketio.on ("cuebutton pressed")
 def button_pressed (message):
@@ -63,18 +91,61 @@ def button_pressed (message):
     """
     index = int (message["index"])
     press_cuebutton (index)
-    # message["status"] = status
-    # emit ("update buttonstatus", message, broadcast=True)
 
-# --- Edit/Select Umschaltung ------------------------------------
-@socketio.on ("editmode changed")
-def editmode_changed (message):
-    """ Bearbeitungsmodus: edit/select
 
-    edit: Zellen bearbeiten
-    select: Objektauswahl, z.B. Zeile in CSV oder Head in Stage
+# --- Attribute view -----------------------------------------------------
+
+visu = Visudata (globs.patch)
+
+def attribute_view (*viewdata):
+    """ Anzeige der Attributdaten auf website mit socketio 
     """
-    # logger.debug (f"SESSION'editmode' = {session['editmode']}")
-    emit ("update editmode", message)
+    # logger.debug (f"attribute_view: {viewdata}")
+    globs.sync_data.append ({"event_name":"update attribute",
+                    "data":{"head":viewdata[0], 
+                            "attr":viewdata[1],
+                            "val":viewdata[2]}})
 
+visu.set_output_function (attribute_view)    
+globs.topcue.contrib.set_viewfunction (visu.view)
+
+# --- Cuedata view ---------------------------------------------------------
+def cuedata_to_dict (vd:list) ->dict:
+    """ List data in dict wandeln
+    """
+    return {"listnum":     vd[0],
+            "fading_in":   vd[1],
+            "fading_out":  vd[2],
+            "is_paused":   vd[3],
+            "current_id":  vd[4],
+            "current_text":vd[5],
+            "next_id":     vd[6],
+            "next_text":   vd[7]
+            }
+
+
+def cuedata_view (*viewdata):
+    """ Cuedata auf die Website schicken
+    """
+    # logger.debug (f"cue_view: {viewdata}")
+    globs.sync_data.append ({"event_name":"update cueview",
+                             "data": cuedata_to_dict (viewdata[1]) 
+                           })
+
+Cuelist.set_vievfunction (cuedata_view)
+
+@socketio.on ("get cuelist data")
+def get_cuelist_data (message):
+    """ initialize cuelist(s)
+    """
+    index = int (message["index"])
+    # logger.debug (f"index: {index}")
+    if index == -1:
+        # init data für alle cuelists
+        for item in globs.cltable:
+            cuedata = item.get_viewdata ()
+            emit ("update cueview", cuedata_to_dict (cuedata))
+    else:
+        cuedata = globs.cltable[index].get_viewdata ()
+        emit ("update cueview", cuedata_to_dict (cuedata))
 

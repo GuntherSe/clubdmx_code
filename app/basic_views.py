@@ -150,7 +150,6 @@ def index ():
 def cuefader ():
     """ Fader-Seite:
     sendet Daten zu cuefaders und exefaders
-    Die Fadertabelle ist bereits bei load_fadertable erzeugt
     data: je ein dict für jede location von Fadern
     """
     data = get_faderdata ()

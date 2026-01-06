@@ -151,8 +151,9 @@ style="left:{{ left }}; top:{{ top }}; width:{{ width }}; height:{{ height }};"
     $(document).ready ( function () {  
       initStageMouse ();
       // selectableStageElements ();
-      periodic_attribstatus ();
+      // periodic_attribstatus ();
       csvSavediscardButtons ();
+      // Scroll-Tasten:
       $(".scroll-down").on ("click", function (){
         var stagetop = $("#csvtable").scrollTop ();
         var height = $("#csvtable").height ();

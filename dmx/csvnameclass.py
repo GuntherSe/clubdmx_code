@@ -15,7 +15,7 @@ suche nach fname.ccsv, fname.csv
 Auswahl der richtigen Datei
 Backup, Sichern
 """
-    def __init__(self, newname=None):
+    def __init__(self, newname=""):
 
         self.CSVEXT = os.extsep + "csv"
         self.CHGEXT = os.extsep + "ccsv"
@@ -35,13 +35,13 @@ Backup, Sichern
             #print (self.csvname, self.ccsvname)
         else:
             self.PATH     = os.path.dirname(os.path.realpath(__file__))
-            self._file    = None 
-            self.csvname  = None
-            self.ccsvname = None
+            self._file    = "" 
+            self.csvname  = ""
+            self.ccsvname = ""
             #print (self.PATH, "kein CSV-File")
         # print ("Csvname.init: Filename", self._file)    
 
-    def name (self, newname = None):
+    def name (self, newname = ""):
         """ Filename ändern bzw aktuellen Filenamen retournieren
 
         voller Pfadname, zuerst .ccsv, dann .csv
@@ -50,14 +50,14 @@ Backup, Sichern
             self.__init__ (newname)
 
         if not self._file:
-            return None
+            return ""
         
         if os.path.isfile (self.ccsvname):
             return self.ccsvname
         else:
             return self.csvname
 
-    def shortname (self):
+    def shortname (self) ->str:
         """ Name ohne Pfad und Endung"""
         return self._file
 
@@ -70,7 +70,7 @@ Backup, Sichern
         else:
             return self.shortname() + self.CSVEXT
 
-    def path (self):
+    def path (self) ->str:
         """ Pfad """
         return self.PATH
 
@@ -141,10 +141,10 @@ Backup, Sichern
                     ret ["message"]  = "sichern erfolgreich"
                     return ret
                 except IOError as e:
-                    ret ["message"]="Konnte File nicht kopieren (IOError). " + e
+                    ret ["message"]=f"Konnte File nicht kopieren (IOError): {e}"
                     return ret
                 except:
-                    ret ["message"]= "Unerwarteter Fehler:"+ sys.exc_info()
+                    ret ["message"]= f"Unerwarteter Fehler: {sys.exc_info()}" 
                     return ret
 
         else: # newname == "":
@@ -160,10 +160,10 @@ Backup, Sichern
                         ret ["message"]  = "Backup erfolgreich"
                         return ret
                     except IOError as e:
-                        ret ["message"]="Konnte File nicht kopieren (IOError). " + e
+                        ret ["message"]=f"Konnte File nicht kopieren (IOError): {e}" 
                         return ret
                     except:
-                        ret ["message"]="Unerwarteter Fehler: "+ sys.exc_info()
+                        ret ["message"]=f"Unerwarteter Fehler: {sys.exc_info()}" 
                         return ret
                 else: # csvname existiert nicht
                     ret ["message"] ="Fehler: "+ self.csvname+ " existiert nicht"

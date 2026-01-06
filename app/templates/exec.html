@@ -69,25 +69,10 @@
       $(".slider").width (sliderwidth);
     });
 
-//    $(".text").addClass ("edittext_data");
-//    prepEdit();
-    
     sliderwidth = $(".col-8").width();
+    $(".slider").width (sliderwidth);
 
     activateCuebuttons ();
-    // activateCuedetails ();
-    // editableCsvFields (); // deaktiviert: hier kein Editieren
-
-    // slider erzeugen:
-    var sliderlevels;
-    $.get ("/getinfo/sliderval", function (data) {
-      sliderlevels = $.parseJSON(data);
-      var i;
-      for (i = 0; i < sliderlevels.length; i++){
-        activateSlider(i, sliderlevels, "cuefader");
-      };
-      $(".slider").width (sliderwidth);
-    });
 
     $('input.inputslider').on('input', function(event) {
         socket.emit('slider value changed', {
@@ -97,9 +82,7 @@
         });
         return false;
     });
-
-    // periodic_faderstatus ();
-    // periodic_buttonstatus ();
+    socket.emit ("get slider position", {fadertype: "cuefader"});
 
   });     // ende document ready
 

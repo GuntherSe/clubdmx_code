@@ -215,8 +215,8 @@ def allstatus () ->json:
 
     ret = {}
     num_cl = len (globs.cltable)
-    levels = [int (globs.cltable[i].level *255) for i in range (num_cl)]
-    ret["levels"] = levels
+    # levels = [int (globs.cltable[i].level *255) for i in range (num_cl)]
+    # ret["levels"] = levels
     status = [globs.cltable[i].status () for i in range (num_cl)]
     ret["status"] = status
     return json.dumps (ret)
@@ -235,7 +235,7 @@ def status (index:str) ->json:
     ret = {}
     idx = int (index)
     if idx in range (len (globs.cltable)):
-        ret["level"]  = int (globs.cltable[idx].level *255) 
+        # ret["level"]  = int (globs.cltable[idx].level *255) 
         ret["status"] = globs.cltable[idx].status ()
 
     return json.dumps (ret)

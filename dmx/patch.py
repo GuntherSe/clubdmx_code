@@ -36,7 +36,7 @@ class Patch (Mix):
             Mix.__init__(self)
             self.set_universes (1)
             self.pdict = {}  # Dict der in Patch gefundenen Heads, PatchDict
-            self._pfields = [] # Liste der Patch-Attribute
+            self._pfields = [] # type: ignore # Liste der Patch-Attribute
             self.vdict = {}  # Dict der virtuellen Heads, VirtualDict
             self.hdict = {}  # Dict der Attribute der verwendeten Heads, HeadDict
             # Path ermitteln:
@@ -105,7 +105,7 @@ class Patch (Mix):
                 count = 0
                 for row in reader:
                     attribs = [] # zugehörige Attribute
-                    for item in self._pfields:
+                    for item in self._pfields: # type: ignore
                         attribs.append (row[item])
                     self.pdict[count] = attribs
                     count += 1
@@ -116,7 +116,9 @@ class Patch (Mix):
         ret = True
         
         for val in self.pdict.values():
-            hindex = self.pfields().index("HeadType")
+            if self._pfields is None:
+                return False
+            hindex = self._pfields.index("HeadType") # type: ignore
             hdtype = val[hindex] # HeadType
 
             if hdtype:
@@ -144,7 +146,7 @@ class Patch (Mix):
         """ Zeile 'key' aus pdict 
         """
         ret = {}
-        if key in self.pdict.keys ():
+        if key in self.pdict.keys () and self._pfields is not None:
             for i in range (len (self._pfields)):
                 ret[self._pfields[i]] = self.pdict[key][i]
         return ret
@@ -154,11 +156,11 @@ class Patch (Mix):
         """ configure Mix according to Universes in patch
         """
         ret = []
-        if "Addr" not in self._pfields:
+        if self._pfields is None or "Addr" not in self._pfields:
             print ("Feld 'Addr' nicht vorhanden")
             return ret
         
-        aindex = int (self.pfields().index("Addr"))
+        aindex = int (self._pfields.index("Addr")) # type: ignore
         for k, v in self.pdict.items ():
             address = v[aindex]
             uni, dmx = address.split (sep='-')
@@ -181,9 +183,15 @@ class Patch (Mix):
             self.set_ola_uni (1, 1)
 
 
-    def headlist (self) -> set:
+    def headlist (self) -> list:
         """ Liste aller Heads """
-        index = int (self.pfields().index("HeadNr"))
+        pfields = self._pfields
+        if pfields is None or "HeadNr" not in pfields:
+            return []
+        if pfields is not None:
+            index = int (pfields.index("HeadNr"))
+        else:
+            return []
         hlist = []
         for cnt in self.pdict:
             hlist.append (self.pdict[cnt][index])
@@ -194,7 +202,10 @@ class Patch (Mix):
 
     def get_headindex (self, headnr:str) ->list:
         """ einen oder mehrere Indizes zu 'headnr' finden """
-        index = int (self.pfields().index("HeadNr"))
+        pfields = self._pfields
+        if pfields is None:
+            return []
+        index = int (pfields.index("HeadNr"))
         found = False
         ilist = []
         for cnt in self.pdict:
@@ -204,7 +215,7 @@ class Patch (Mix):
         if found:
             return ilist
         else:
-            return False
+            return []
     
 
     def headdetails (self, headnr:str) -> list:
@@ -217,8 +228,8 @@ class Patch (Mix):
         if ilist:
             for item in ilist:
                 line = {}
-                for i in range (len (self._pfields)):
-                    line[self._pfields[i]] = self.pdict[item][i]
+                for i in range (len (self._pfields)): # type: ignore
+                    line[self._pfields[i]] = self.pdict[item][i] # type: ignore
                 ret.append (line)
         return ret
         
@@ -232,7 +243,7 @@ class Patch (Mix):
         nur erster gefundener Head wird berücksichtigt.
         Achtung: Heads mit gleicher Headnr müssen gleiche HeadType haben
         """
-        hindex = int (self.pfields().index("HeadType"))
+        hindex = int (self._pfields.index("HeadType")) # type: ignore
         heads = self.get_headindex (headnr)
         if heads:
             head = heads[0] # nur erste Headnr berücksichtigt.
@@ -252,7 +263,7 @@ class Patch (Mix):
         Liefert Dict der Attribute eines Heads, Unterschiedlich je nach Head
         Struktur z.B. Dimmer: {'Intensity': ['0', 'HTP', '0', '255']}
         """
-        hindex = int (self.pfields().index("HeadType"))
+        hindex = int (self._pfields.index("HeadType")) # type: ignore
         
         # geändert: headnr != key
         if key in self.pdict.keys():
@@ -269,8 +280,11 @@ class Patch (Mix):
             if os.path.isfile (fname):
                 with open (fname, 'r',encoding='utf-8',newline='') as headfile:
                     reader = csv.DictReader (headfile)
-                    hfields = list (reader.fieldnames) # Kopie von fieldnames
-                    hfields.remove ("Attrib")
+                    if reader.fieldnames is not None:
+                        hfields = list (reader.fieldnames) # Kopie von fieldnames
+                        hfields.remove ("Attrib")
+                    else:
+                        return {}
 #                    print (hfields)
                     attribdict["fieldnames"] = hfields
                     for row in reader:
@@ -280,6 +294,7 @@ class Patch (Mix):
                         attribdict[row["Attrib"]] = attribs
 #                print (attribdict)
             return attribdict
+        return {}
 
 
     def _get_hdict (self):
@@ -288,7 +303,10 @@ class Patch (Mix):
         Struktur: {'Dimmer': {'Intensity': ['0', 'HTP', '0', '255']}, ... }
         """
         self.hdict = {}
-        hindex = self.pfields().index("HeadType")
+        pfields = self._pfields
+        if pfields is None:
+            return
+        hindex = pfields.index("HeadType")
         for key in self.pdict.keys():
             if not self.pdict[key][hindex] in self.hdict.keys():
 #                print ("neu: {}".format (self.pdict[key][hindex]))
@@ -303,7 +321,10 @@ class Patch (Mix):
         """
         self.vdict = {}  # Dict der virtuellen Heads, VirtualDict
 
-        hindex = self.pfields().index("HeadType")
+        pfields = self._pfields
+        if pfields is None:
+            return
+        hindex = pfields.index("HeadType")
         for pkey in self.pdict.keys(): # alle Heads prüfen
             hdtype = self.pdict [pkey][hindex] # Head Type
             #print (hdtype)
@@ -323,7 +344,7 @@ class Patch (Mix):
 
 # File Methoden: --------------------------------------------------------------
         
-    def open (self, fname:str) -> bool:
+    def open (self, fname:str) -> dict:
         """ fname öffnen,
         entsprechende Dict-Methoden anwenden,
         """
@@ -364,7 +385,7 @@ class Patch (Mix):
         with open (savename, 'w', newline='',encoding='utf-8') as pf:
             writer = csv.writer(pf) #, quoting=csv.QUOTE_ALL)
 # Header schreiben:
-            writer.writerow (self._pfields)
+            writer.writerow (self._pfields) # type: ignore
 
 # self.pdict schreiben
             # print (self.pdict.keys())
@@ -390,16 +411,16 @@ class Patch (Mix):
         """ einen neuen Head einfügen
         HeadNr ist 1 + max(pdict.keys())
         """
-        hindex = self.pfields().index("HeadType")
+        hindex = self._pfields.index("HeadType") # type: ignore
         if self.pdict: # kein leeres pdict
             maxi = max(self.pdict.keys()) + 1
         else:
             maxi = 0
-        num = len (self._pfields)
+        num = len (self._pfields) # type: ignore
 
         params = []
         for i in range (num):
-            arg = input ("{}: ".format (self._pfields[i]))
+            arg = input ("{}: ".format (self._pfields[i])) # type: ignore
             params.append (arg)
 #        print (params)
 # auf Konsistenz prüfen:
@@ -439,8 +460,8 @@ class Patch (Mix):
         if heads:
             for hindex in heads: # alle heads mit HeadNr 'headnr'
                 if hindex in self.pdict.keys():
-                    tindex  = self.pfields().index("HeadType")  #TypeIndex
-                    aindex  = self.pfields().index("Addr")      #AddrIndex
+                    tindex  = self._pfields.index("HeadType")  # type: ignore #TypeIndex
+                    aindex  = self._pfields.index("Addr")      # type: ignore #AddrIndex
                     hdtype = self.pdict[hindex][tindex]         # z.B. "Dimmer"
                     try:
                         row = self.hdict[hdtype] # Head Infos
@@ -489,7 +510,7 @@ class Patch (Mix):
                             self.set_mixval (uni, dmx+offset, value)
 
 
-    def attribute (self, headnr:str, attrib:str) -> bytes:
+    def attribute (self, headnr:str, attrib:str) -> int:
         """ Liefert Attributwert von Head
 
         Spezial: Virtuelle Attribute
@@ -504,9 +525,9 @@ class Patch (Mix):
         # geändert: headnr != key
 
         if hindex in self.pdict.keys():
-            tindex = self.pfields().index("HeadType")  # TypeIndex
+            tindex = self._pfields.index("HeadType")  # type: ignore # TypeIndex
             hdtype = self.pdict[hindex][tindex]        # HeadType z.B. "Dimmer"
-            aindex = self.pfields().index("Addr")      # AddrIndex
+            aindex = self._pfields.index("Addr")      # type: ignore # AddrIndex
             address = self.pdict[hindex][aindex] 
             uni,headdmx = address.split(sep='-')
             uni         = int (uni)
@@ -526,7 +547,7 @@ class Patch (Mix):
                     else:
                         offset = int(attr)
                         return (self.mixval (uni, headdmx+offset ))
-        return ''
+        return 0
                     
     def attribtype (self, headnr:str, attrib:str) ->str:
         """ liefert Attributtyp: 'HTP' oder 'LTP'
@@ -538,7 +559,7 @@ class Patch (Mix):
             hindex = None
 
         if hindex in self.pdict.keys():
-            tindex = int (self.pfields().index("HeadType"))
+            tindex = int (self._pfields.index("HeadType")) # type: ignore
             hdtype = self.pdict[hindex][tindex] # z.B. "Dimmer"
             # print ("patch-hdtype: ", hdtype)
             row = self.hdict[hdtype]
@@ -547,28 +568,10 @@ class Patch (Mix):
                 attype = row[attrib][fn.index("Type")]
                 return attype # HTP, LTP, vLTP
             except KeyError:
-                return None
+                return ""
         else:
-            return None
+            return ""
                  
-
-    # def offset (self, headindex:int, attrib:str) ->int:
-    #     """ liefert für attrib Abstand von der Startadresse
-    #     """
-    #     if headindex in self.pdict.keys():
-    #         tindex = int (self.pfields().index("HeadType"))
-    #         hdtype = self.pdict[headindex][tindex] # z.B. "Dimmer"
-    #         # print ("patch-hdtype: ", hdtype)
-    #         row = self.hdict[hdtype]
-    #         fn = row["fieldnames"] # fieldnames im Headfile
-    #         try:
-    #             offset = row[attrib][fn.index("Addr")]
-    #             return int(offset)
-    #         except:
-    #             return None
-    #     else:
-    #         return None
-
 
     def color (self, headnr:str) ->list:
         """ Farbwerte des Head in aktuellem Mix
@@ -584,16 +587,6 @@ class Patch (Mix):
             hindex = None
         attriblist = self.attriblist (headnr)
         if hindex in self.pdict.keys():
-            # Startadresse:
-            # aindex = int(self.pfields().index("Addr"))
-            # startaddr = self.pdict[hindex][aindex]
-            # uni,chan = startaddr.split (sep='-')
-            # for attrib in ["Red", "Green", "Blue"]:
-            #     # Farbe aus Mix ablesen und in rgbcolor eintragen:
-            #     if attrib in attriblist:
-            #         offset = self.offset (hindex, attrib)
-            #         channel = int(chan) + offset
-            #         rgbcolor[1+offset] = self.mixval (int(uni),channel)
             if "Red" in attriblist:
                 rgbcolor[1] = self.attribute (headnr, "Red")
             if "Green" in attriblist:
@@ -605,7 +598,7 @@ class Patch (Mix):
                 rgbcolor[1] = max (rgbcolor[1], attlevel)
                 rgbcolor[2] = max (rgbcolor[2], int(attlevel * 0.75))
             if "White" in attriblist:
-                attlevel = int (self.attribute (headnr, "White")) * 0.8
+                attlevel = int (self.attribute (headnr, "White") * 0.8)
                 rgbcolor[1] = max (rgbcolor[1], attlevel)
                 rgbcolor[2] = max (rgbcolor[2], attlevel)
                 rgbcolor[3] = max (rgbcolor[3], attlevel)
@@ -621,7 +614,8 @@ class Patch (Mix):
             else: # kein LED - dann level == Wert des ersten Attributs
                 level = self.attribute (headnr, attriblist[0])
 
-            rgbcolor[0] = f"{int (level/2.55)}%"
+            # rgbcolor[0] = f"{int(level/2.55)}%"
+            rgbcolor[0] = level
                
         return rgbcolor
 

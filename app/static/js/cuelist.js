@@ -101,6 +101,37 @@ $('input.inputslider').on('input', function(event) {
     return false;
 });
 
+socket.on ("update cueview", function (data){
+  // console.log (data)
+  var numstring = data["listnum"];
+  $("#currentid-"+numstring).text (data["current_id"]);
+  $("#nextid-"+numstring).text (data["next_id"]);
+  $("#currenttext-"+numstring).text (data["current_text"]);
+  $("#nexttext-"+numstring).text (data["next_text"]);
+
+  $("#fadein-indicator-"+numstring)
+    .attr ("aria-valuenow", data["fading_in"])
+    .css ("width", data["fading_in"] + "%");
+  $("#fadeout-indicator-"+numstring)
+    .attr ("aria-valuenow", data["fading_out"])
+    .css ("width", data["fading_out"] + "%");
+
+  let currentid = "tr.id-" + data["current_id"].replace ('.', '-');
+  let nextid = "tr.id-" + data["next_id"].replace ('.', '-');
+  $("tr").removeClass ("table-info table-success")
+  $(currentid).addClass ("table-info");
+  $(nextid).addClass ("table-success");
+
+  // Pause-Status:
+  var pauseid = ".pausebut-" + numstring;
+  if (data["is_paused"] == "true") {
+    $(pauseid).removeClass ("btn-secondary").addClass ("btn-warning");
+  } else {
+    $(pauseid).removeClass ("btn-warning").addClass ("btn-secondary");
+  };
+
+});
+
 // socket.on('update slidervalue', function(msg) {
 //     //console.log('slider value updated');
 //     let elem = $('#' + msg.who);

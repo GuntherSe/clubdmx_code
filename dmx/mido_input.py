@@ -48,8 +48,9 @@ class Midi (MidiOutput, threading.Thread):
                     Midi.pause_cond.wait ()
 
                 for i in range (4):
-                    if self.in_ports[i].port:    
-                        for msg in  self.in_ports[i].port.iter_pending ():
+                    port = self.in_ports[i].port
+                    if port is not None:    
+                        for msg in port.iter_pending ():
                             self.in_ports[i].eval_msg (msg)
             time.sleep (0.02)
 
@@ -118,7 +119,7 @@ class Midi (MidiOutput, threading.Thread):
 
 
 
-    def set_indevice (self, pos:int, num:int) ->str:
+    def set_indevice (self, pos:int, num:int) ->dict:
         """ Midigerät zuweisen
         
         pos: Position in self.in_devices, 0 <= pos < 4

@@ -19,7 +19,7 @@ sys.path.insert (1, app_path)
 sys.path.insert (1, dmx_path)
 
 from app import create_app, db, socketio
-from flask_socketio import emit
+# from flask_socketio import emit
 
 from auth.models import User
 

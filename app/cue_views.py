@@ -79,7 +79,7 @@ def cueedit ():
                     "data":{"status":"true"}})
     for line in tmpcue.cuecontent():
         level = globs.topcue.has_key (line[0], line[1])
-        if level == False:
+        if level == "":
             level = int (line[2])
         # in topcue eintragen:
         set_topcue_status (1)

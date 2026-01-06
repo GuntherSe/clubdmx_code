@@ -15,12 +15,11 @@ patchname = os.environ.get ("PATCHFILE")
 
 patch = Patch ()
 patch.set_path (os.getcwd())
-patch.open (patchname)
-# unis = patch.get_unis ()
-# if len (unis):
-#     patch.set_unis (unis)
-#else: universes = 1
-
+if patchname:
+    patch.open (patchname)
+else:
+    print ("Environment-Variable PATCHFILE nicht angegeben.")
+    exit (1)
 
 infotxt = """
 ---- Lichtpult Patch Test -----
@@ -68,7 +67,7 @@ try:
             print (infotxt)
         elif i == 'm':
             uni = input ("Universum: ")
-            print (patch.show_mix(uni))
+            print (patch.show_mix(int(uni)))
         elif i == 's':
             patch.save ()
         elif i == 'n':
@@ -120,7 +119,7 @@ try:
         elif i == '4':
             #test remove_head()
             hd = input ("Head Index zum Entfernen: ")
-            patch.remove_head (hd)
+            patch.remove_head (int(hd))
         elif i == '5':
             # Test hdict:
             print (patch.hdict["Dimmer"]["Intensity"])

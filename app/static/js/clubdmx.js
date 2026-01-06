@@ -71,92 +71,24 @@ function hideSecondNav () {
 
 // ---------------------------------------------------------------------
 // Slider in cuefader und executer:
-// Funktion zum Slider erzeugen:
-// function makeSlider (num, sliderlevel, fadertype) {
-//   var numstring = num.toString();
-//   var cmdstring;
-//   if (fadertype == "cuefader") {
-//     // cuefader
-//     cmdstring = "/sliderlevel/" + numstring;
-//   } else {
-//     // cuelist level fader
-//     cmdstring = "/cuelistlevel/" + numstring;
-//   }
-//   $("#sl-"+numstring)
-//     .slider({value:sliderlevel[num],
-//               max:255,
-//               slide: function (event, ui){
-//                   var sliderval = {level:ui.value};
-//                   $.post (cmdstring, sliderval);
-//               }
-//     });
-// }
-
 function activateSlider (num, sliderlevel, fadertype) {
   var numstring = num.toString();
-  var cmdstring;
-  if (fadertype == "cuefader") {
-    // cuefader
-    cmdstring = "/sliderlevel/" + numstring;
-  } else {
-    // cuelist level fader
-    cmdstring = "/cuelistlevel/" + numstring;
-  }
+  // var cmdstring;
+  // if (fadertype == "cuefader") {
+  //   // cuefader
+  //   cmdstring = "/sliderlevel/" + numstring;
+  // } else {
+  //   // cuelist level fader
+  //   cmdstring = "/cuelistlevel/" + numstring;
+  // }
   $("#"+ fadertype + "-" + +numstring)
     .val(sliderlevel[num]);
-    // .on ("input", function () {
-    //   var sliderval = {level:this.value};
-    //   $.post (cmdstring, sliderval);
-    //   }
-    // );  
 }
-
-// function faderStatus (num, statusarray) {
-//   // level aus der fadertable wird auf Fader übertragen
-//   var numstring = num.toString ();
-//   var level = statusarray[num] ;
-// //  $("#sl-"+numstring).slider ("option", "value", level);
-//   $("#slider-"+numstring).val (level);
-// }
-
-// function periodic_faderstatus () {
-//   // siehe: https://stackoverflow.com/questions/5052543/how-to-fire-ajax-request-periodically
-//   // aktuelle Faderwerte der Cuefader am Schieberegler zeigen:       
-//   var sliderlevels;
-//   // var sliderwidth = $(".col-8").width();
-//   $.ajax ({
-//     url: "/getinfo/sliderval", 
-//     success: function(data){
-//       sliderlevels = $.parseJSON(data);
-//       var i;
-//       for (i = 0; i < sliderlevels.length; i++){
-//           faderStatus (i, sliderlevels);
-//           // $(".slider").width (sliderwidth);
-//       };
-//     },
-//     complete: function () {
-//       setTimeout (periodic_faderstatus, 1000);
-//     }
-//   }); // ende $.ajax
-// }
-
 
 // ----------------------------------------------------------------------------
 // Buttons in cuebuttons und executer:
-
 function activateCuebuttons () {
   $(".cuebutton").click ( function (event){
-    // var status;
-    // var parentcard = $(this).parent (".card");
-    // if ( parentcard.hasClass ("active") ) {
-    //   parentcard.removeClass ("active");
-    // } else {
-    //   parentcard.addClass ("active");
-    // };
-    // var index = $(this).attr ("index");
-    // var args = {index:index};
-    // $.get ("/buttonpress", args);
-
     socket.emit ("cuebutton pressed", {
       id: $(this).attr ("id"),
       index: $(this).attr("index")
@@ -164,36 +96,6 @@ function activateCuebuttons () {
     return false;
   });
 }
-
-function buttonStatus (num, statusarray) {
-// Anzeige, ob Button aktiv oder nicht aktiv ist.
-  var numstring = (num).toString();
-  var parentcard = $('#but-'+numstring).parent (".card");
-  if (statusarray[num] == 1) {
-      parentcard.addClass ("active");
-  } else {
-      parentcard.removeClass ("active");
-  }
-};
-
-// siehe: https://stackoverflow.com/questions/5052543/how-to-fire-ajax-request-periodically
-function periodic_buttonstatus () {
-// periodischer Aufruf zum Holen des Buttonstatus
-  $.ajax ({
-      url: "/getinfo/buttonstatus", 
-      success: function(data){
-      var statusarray = $.parseJSON(data);
-      var i;
-      for (i = 0; i < statusarray.length; i++){
-          buttonStatus(i, statusarray);
-      }
-      },
-      complete: function () {
-      setTimeout (periodic_buttonstatus, 1000);
-      }
-  }); // ende $.ajax
-}
-
 
 // ----------------------------------------------------------------------------
 // Filebuttons 'ansehen' und '>Topcue' 
@@ -265,53 +167,16 @@ function activateAttribSlider (head, attrib, level, url) {
 };
       
 
-// function makeCueAttribSlider (head, attrib, level, url) {
-//   // Slider fürs Cue-Edit erzeugen
-//   // siehe: cuefader.html, stage.html
-//   // console.log ("makeCueAttribSlider:" + head +" "+ attrib +" "+ level);
-//   $('#attrib-'+head+attrib)
-//       .slider({
-//           orientation:"vertical",
-//           range: "min",
-//           value:level,
-//           min: 0,
-//           max:255,
-//           slide: function (event, ui){
-//               //console.log (attrib + ": level: " + ui.value);
-//               var args = {head:head, attrib:attrib, level:ui.value};
-//               $.post (url, args);
-//               $("#sessiondata").attr ("topcuecontent", "true");
-//           }
-//       });
-// };
-      
-
 function modaldialogToPython (clickid, url, args) {
 // bei Klick auf clickId wird url aufgerufen:
 // Modaldaten werden geholt
 // mit Drücken des selectButton werden die Daten
 // an den Server gepostet, anschließend: location.reload
-  // function stringSelect (e) {
-  //         var newname = $("#input-text").first().val();
-  //         var data = {selectButton:"true", name:newname};
-  //         // neu 6.2.2021:
-  //         data.args = JSON.stringify (args);
-  //         $.post (url, data, function () {
-  //             location.reload (); 
-  //         });
-  // };
-
   $(clickid).on ("click", function () {
     $.get (url, args, function (data) {
       $("#dialogModal").html (data);
       $("#viewModal").modal ();
       // auswerten bei Strings:
-      // $("#selectButton").on ('click', stringSelect ());
-      // $(document).keypress (function (e) {
-      //   if (e.keycode == 13 || e.which == 13) { // enter
-      //     stringSelect ();
-      //   };
-      // });
       $("#selectButton").on ('click', function(){
           var newname = $("#input-text").first().val();
           var data = {selectButton:"true", name:newname};
@@ -360,44 +225,44 @@ function csvSavediscardButtons () {
 };
 
 // siehe: https://stackoverflow.com/questions/5052543/how-to-fire-ajax-request-periodically
-function periodic_commonstatus () {
-  // periodischer Aufruf zum Holen der variablen Basisdaten
-    $.ajax ({
-        url: "/getinfo/commonstatus", 
-        success: function(data){
-          var jdata = JSON.parse (data);
-          //console.log ("common: " + JSON.stringify (jdata));
-          // if (jdata["editmode"] == "select") {
-          //   setEditmode ("select");
-          // } else {
-          //   setEditmode ("edit");
-          // };
-          // Buttons zu CSV-Zeilen cut/paste:
-          // werden von der aktuellen Seite verwaltet, d.h. wenn Zeilen 
-          // ausgewählt werden, dann sind diese sichtbar.
-          // insert/clear sind per User auf allen betreffenden Seiten
-          // sichtbar (wenn Daten im Clipboard sind)
-          if (jdata["csvclipboard"] == "true") {
-            $(".csvClipboard").removeClass ("d-none");
-          } else {
-            $("csvClipboard").addClass ("d-none");
-          };
-          // initMouseMode ();
-          // Topcue Menü anzeigen:
-          // if (jdata["topcuecontent"] == "true") {
-          //   showSecondNav ();
-          // } else {
-          //   hideSecondNav ();
-          // }; 
+// function periodic_commonstatus () {
+//   // periodischer Aufruf zum Holen der variablen Basisdaten
+//     $.ajax ({
+//         url: "/getinfo/commonstatus", 
+//         success: function(data){
+//           var jdata = JSON.parse (data);
+//           //console.log ("common: " + JSON.stringify (jdata));
+//           // if (jdata["editmode"] == "select") {
+//           //   setEditmode ("select");
+//           // } else {
+//           //   setEditmode ("edit");
+//           // };
+//           // Buttons zu CSV-Zeilen cut/paste:
+//           // werden von der aktuellen Seite verwaltet, d.h. wenn Zeilen 
+//           // ausgewählt werden, dann sind diese sichtbar.
+//           // insert/clear sind per User auf allen betreffenden Seiten
+//           // sichtbar (wenn Daten im Clipboard sind)
+//           if (jdata["csvclipboard"] == "true") {
+//             $(".csvClipboard").removeClass ("d-none");
+//           } else {
+//             $("csvClipboard").addClass ("d-none");
+//           };
+//           // initMouseMode ();
+//           // Topcue Menü anzeigen:
+//           // if (jdata["topcuecontent"] == "true") {
+//           //   showSecondNav ();
+//           // } else {
+//           //   hideSecondNav ();
+//           // }; 
 
-        },
-        complete: function () {
-        setTimeout (periodic_commonstatus, 1000);
-        }
-    }); // ende $.ajax
-  }
+//         },
+//         complete: function () {
+//         setTimeout (periodic_commonstatus, 1000);
+//         }
+//     }); // ende $.ajax
+//   }
 
-
+// ----- Socket -------------------------------------------------------------
 // siehe socketio_basic:
 var ip = location.host;
 // alert ("IP des Host: " + ip);
@@ -414,8 +279,23 @@ socket.on('update slidervalue', function(msg) {
       elem.val(msg.data);}
 });
 
+socket.on ("init slider position", function(msg) {
+  let fadertype = msg.fadertype;
+  var idstring;
+  if (fadertype == "cuefader") {
+    idstring = "#cuefader-";
+  } else {
+    idstring = "#cuelistfader-";
+  };
+  // console.log ("init slider: " + msg.data + " " + msg.data.length);
+  for ( var fader=0; fader < msg.data.length; fader++ ) {
+    $(idstring + fader.toString()).val (msg.data[fader]);
+  };
+
+});
+
 socket.on('update buttonstatus', function(msg) {
-    console.log('button status updated');
+    // console.log('button status updated');
     let but_id = "but-"+msg.index;
     let status = msg.status;
     var parentcard = $("#"+but_id).parent (".card");

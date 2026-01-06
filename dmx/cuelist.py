@@ -22,6 +22,9 @@ from cuelistbase import Cuelistbase
 
 class Cuelist (Cuelistbase):
 
+    timeout = 0.05 # 0.02
+    running = False
+
     def __init__ (self, patch):
         Cuelistbase.__init__ (self, patch)
 
@@ -42,21 +45,34 @@ class Cuelist (Cuelistbase):
 
     @classmethod 
     def run (cls):
-        """ Kalkulations-loop """
+        """ Kalkulations-loop 
+        """
+        # oldcalc = [[] for i in cls.instances]
         while True:
-            cls.calc_all_cuelists ()
+            tm = time.time()
+            try:
+                for instance in cls.instances:
+                    viewdata = instance.calc_cuecontent (tm)
+                    if viewdata != instance.oldview:
+                        instance.oldview = viewdata
+                        if viewdata:
+                            instance.view_function (viewdata)
+            except: # instances-Liste kann neu erzeugt werden
+                pass
+            
+            # cls.calc_all_cuelists ()
             time.sleep (cls.timeout)
 
-    @classmethod
-    def calc_all_cuelists (cls):
-        """ alle Faderlevel berechnen 
-        """
-        tm = time.time ()
-        try:
-            for instance in cls.instances:
-                instance.calc_cuecontent (tm)
-        except: # instances-Liste kann neu erzeugt werden
-            pass
+    # @classmethod
+    # def calc_all_cuelists (cls):
+    #     """ alle Faderlevel berechnen 
+    #     """
+    #     tm = time.time ()
+    #     try:
+    #         for instance in cls.instances:
+    #             instance.calc_cuecontent (tm)
+    #     except: # instances-Liste kann neu erzeugt werden
+    #         pass
 
 
     def is_fading (self) ->bool:
@@ -65,7 +81,7 @@ class Cuelist (Cuelistbase):
             return True
         return False
 
-    def tmfactor (self, id:float, tm:"time") -> dict: #, direction:str) -> dict:
+    def tmfactor (self, id:float, tm:float) -> dict: #, direction:str) -> dict:
         """ Fadefaktor berechnen
         
         id: ID des Cues
@@ -130,7 +146,7 @@ class Cuelist (Cuelistbase):
         return {"in":infactor, "out":outfactor, "xfade":xfade}
 
 
-    def calc_cuecontent (self, tm:"time"):
+    def calc_cuecontent (self, tm:float):
         """ aktuellen Content berechnen 
 
         outcue._cuecontent berechnen, wird permanent durchgeführt, siehe self.run()
@@ -145,10 +161,6 @@ class Cuelist (Cuelistbase):
 
         # Multiplikator berechnen:
         curfactor = self.tmfactor (self.nextid, tm) #, "out")
-        # nextfactor = self.tmfactor (self.nextid, tm, "in")
-        # if curfactor["xfade"] == True: # crossfade
-        #     self.is_fading_out = self.is_fading_in
-            # curfactor["out"] = 1 - curfactor["in"]
 
         # Übergänge berechnen:
 
@@ -244,6 +256,7 @@ class Cuelist (Cuelistbase):
                 self.go_time = -1
             self.go ()
 
+        return self.get_viewdata ()
 
     def go (self, cuenr:str=""):
         """ Fade beginnen und Startzeit speichern 
@@ -306,7 +319,7 @@ class Cuelist (Cuelistbase):
             self.elapsed_tm = time.time () - self.start_tm
         else:
             self.go ()
-
+        self.view_function (self.get_viewdata())
 
     def output_to_current (self):
         """output Cue wird current Cue, wenn GO während fading_in 
@@ -349,16 +362,28 @@ if __name__ == "__main__":
     """
     import pprint # pretty print
 
-
-    os.chdir ("C:\\Users\\Gunther\\OneDrive\\Programmierung\\clubdmx_rooms\\develop")
+    roompath = os.environ.get ("ROOMPATH")
+    if roompath:
+        os.chdir (roompath)
     print ("ich bin hier: ", os.getcwd())
-    patch = Patch()
+
+    patch = Patch ()
     patch.set_path (os.getcwd())
-    patch.open ("LED stripe dimmer")
+    patchname = os.environ.get ("PATCHFILE")
+    if patchname:
+        patch.open (patchname)
+    else:
+        print ("Environment-Variable PATCHFILE nicht angegeben.")
+        exit (1)
 
     ola   = OscOla ()
-    ola.set_ola_ip ("192.168.0.11")
-    print("Verbinde zu OLA-device: {0}".format (ola.ola_ip))
+    olaname = os.environ.get ("OLAIP")
+    if olaname:
+        ola.set_ola_ip (olaname)
+        print("Verbinde zu OLA-device: {0}".format (ola.ola_ip))
+    else:
+        print ("Environment-Variable PATCHFILE nicht angegeben.")
+        exit (1)
     ola.start_mixing()
 
     patch.set_universes (2)

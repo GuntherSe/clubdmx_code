@@ -36,7 +36,7 @@ from collections import deque
 from configclass  import Config
 from ola          import OscOla
 from patch        import Patch
-from cue          import Cue
+# from cue          import Cue
 from cuebutton    import Cuebutton
 from cuelist      import Cuelist
 from cuechild     import Topcue

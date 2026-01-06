@@ -101,7 +101,9 @@
 //      };
     //  $(".slider").width (sliderwidth);
 //    });
-    periodic_allcueliststatus ();
+//    periodic_allcueliststatus ();
+    socket.emit ("get slider position", {fadertype: "cuelistfader"});
+    socket.emit ("get cuelist data", {index:-1});
 
     // Buttons aktivieren:
     activateCuelistbuttons (); // Bedienbuttons: GO, PAUSE etc.

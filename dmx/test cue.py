@@ -18,7 +18,11 @@ print ("ich bin hier: ", os.getcwd())
 patch = Patch()
 patch.set_path (os.getcwd())
 patchfile = os.environ.get ("PATCHFILE")
-patch.open (patchfile)
+if patchfile:
+    patch.open (patchfile)
+else:
+    print ("Environment-Variable PATCHFILE nicht angegeben.")
+    exit (1)
 ola   = OscOla ()
 olaip = os.environ.get ("OLAIP", default="127.0.0.1")
 ola.set_ola_ip (olaip)
@@ -43,7 +47,7 @@ infotxt = """
 Kommandos: x = Exit
            # = zeige diese Info 
 
-           c = Zeige Cuelist 1
+           c = Zeige Cue 1
            m = Zeige Mix Universum 1
            f = Zeige Cue File Name
            d = Cue 1 speichern

@@ -162,6 +162,12 @@
   $('document').ready (function () {
     // clIndex bestimmen:
     clIndex = $("#cuelistindex").attr ("index");
+    console.log ("index: " + clIndex);
+    if (clIndex.length) {
+      socket.emit ("get cuelist data", {index:clIndex});
+    } else {
+      socket.emit ("get cuelist data", {index:-1});
+    };
     
     // editierbare Spalten:
     colEdit ();
@@ -170,7 +176,6 @@
 
     // speichern/verwerfen-Buttons
     csvSavediscardButtons ();
-
 
     filedialogToPython (".openButton", "/csv/open", {"option":"cuelist"});
     filedialogToPython (".saveasButton", "/csv/saveas", {"option":"cuelist"});
@@ -190,7 +195,6 @@
     // Editor von cl-pages aufgerufen, hat einen cuelist-Index:
     if (clIndex.length) {
       clIndexString = clIndex.toString ();
-
       // Slider:
       var sliderwidth;
       // Sliderbreite mit Fenserbreite verändern:
@@ -200,17 +204,19 @@
       });
   
       sliderwidth = $(".col-12").width();
+      $(".slider").width (sliderwidth);
   
       // slider erzeugen:
-      $.get ("/cuelist/status/"+clIndexString, function (data) {
-        // console.log ("data: " + data);
-        var jdata = $.parseJSON(data);
-        var level = [jdata["level"]];
-        activateSlider(clIndex, level, "cuelistfader");
-        $(".slider").width (sliderwidth);
-      });
+//      $.get ("/cuelist/status/"+clIndexString, function (data) {
+//        // console.log ("data: " + data);
+//        var jdata = $.parseJSON(data);
+//        var level = [jdata["level"]];
+//        activateSlider(clIndex, level, "cuelistfader");
+//        $(".slider").width (sliderwidth);
+//      });
+      socket.emit ("get slider position", {fadertype: "cuelistfader"});
   
-      periodic_cueliststatus ();
+//      periodic_cueliststatus ();
       $(document).keyup ( function (event) {
         event.preventDefault();
         var args = {index:clIndex};
@@ -227,8 +233,6 @@
            break;
         };
       });
-//    } else {
-//      console.log ("kein Cuelist-Index.")
     };
   });
 </script>
