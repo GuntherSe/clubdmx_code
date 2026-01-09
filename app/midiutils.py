@@ -147,7 +147,7 @@ def eval_midi (pos, msg):
                     midifader_monitor ("cuefader", fader , msg.value)
                 elif globs.SHIFT <= fader < 2*globs.SHIFT: # cuelist
                     globs.cltable[fader-globs.SHIFT].level = msg.value / 127
-                    message = {"who":"cuelistfader-"+str(fader), 
+                    message = {"who":"cuelistfader-"+str(fader-globs.SHIFT), 
                                "data":str(msg.value * 2)}
                     globs.sync_data.append ({"event_name":"update slidervalue",
                                        "data":message})

@@ -73,7 +73,7 @@ class Cuelistbase ():
     logger = logging.getLogger (__name__)
     file_handler = baselogger.filehandler ("cuelist.log")
     logger.addHandler (file_handler)
-    view_function = None
+    # view_function = None
 
     def __init__ (self, patch):
         self.__class__.instances.append (self)

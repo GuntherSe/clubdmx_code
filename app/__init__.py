@@ -41,13 +41,13 @@ def create_app (test_config=None):
 
     # Ausnahme PYTHONANYWHERE: 
     # hier auswerten, damit startup funktioniert.
-    val = os.environ.get ("PYTHONANYWHERE") 
-    if val: 
+    val = os.environ.get ("PYTHONANYWHERE", "false") 
+    if val == "true": 
         globs.PYTHONANYWHERE = val
         app.config["PYTHONANYWHERE"] = val
     else:
         globs.PYTHONANYWHERE = "false"
-        app.config["PYTHONANYWHERE"] = "false",
+        app.config["PYTHONANYWHERE"] = "false"
 
     # User-Datenbank:
     db.init_app(app)

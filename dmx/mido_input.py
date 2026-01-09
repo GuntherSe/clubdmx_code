@@ -19,7 +19,7 @@ class Midi (MidiOutput, threading.Thread):
 
     Evaluierung als callback ausführen 
     """
-
+    timeout = 0.05
     paused = False
     pause_cond = threading.Condition (threading.Lock ())
 
@@ -52,7 +52,7 @@ class Midi (MidiOutput, threading.Thread):
                     if port is not None:    
                         for msg in port.iter_pending ():
                             self.in_ports[i].eval_msg (msg)
-            time.sleep (0.02)
+            time.sleep (self.timeout)
 
 
     @classmethod
