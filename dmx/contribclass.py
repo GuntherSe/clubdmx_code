@@ -50,7 +50,7 @@ class Contrib (threading.Thread):
         # mix_function: contrib nach Kriterien bewerten, Mix erstellen
         self.view_function = self.silent_view
         # view-function: contrib-mix anzeigen
-        self._sleep = 2
+        self._sleep = 2 # wird in cclass Cue adaptiert
         # Prüfen, ob Mix verändert wurde. Nur dann output ausgeben
         self.curmix = {}
         self.mix_changed = True
