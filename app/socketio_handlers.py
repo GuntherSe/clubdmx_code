@@ -29,7 +29,7 @@ def background_sync ():
         if globs.sync_data:
             current = globs.sync_data.popleft()
             socketio.emit (current["event_name"], current["data"])
-        time.sleep (0.05)
+        time.sleep (0.005)
             
 
 @socketio.event
