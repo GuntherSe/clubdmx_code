@@ -15,6 +15,7 @@ from cuebutton import Cuebutton
 from cuelist import Cuelist
 from csvfileclass import Csvfile
 from midiutils import check_midicontroller
+from cuelist_utils import cuedata_view
 from startup_levels import backup_currentlevels, restore_currentlevels
 from startup_levels import button_locations, fader_locations
 
@@ -328,4 +329,6 @@ def make_cuelistpages (currentlevels:dict={}, with_currentlevels:bool=True) :
         
     Cuelist.instances = new_cltable
     globs.cltable = new_cltable
+    # Cuelist View-Funktion neu zuweisen:
+    Cuelist.set_vievfunction (cuedata_view)
 

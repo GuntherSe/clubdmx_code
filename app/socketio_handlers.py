@@ -8,6 +8,7 @@ from flask_socketio import emit
 # from flask import session
 
 from midiutils import press_cuebutton, midifader_monitor, midi_commandlist
+from cuelist_utils import cuedata_to_dict
 from visudata import Visudata
 import time
 
@@ -24,12 +25,12 @@ sync_thread = None
 thread_lock = Lock ()
 
 def background_sync ():
-    """ Sync clubDMX data """
+    """ Sync clubDMX data for viewing in website"""
     while True:
-        if globs.sync_data:
+        while globs.sync_data:
             current = globs.sync_data.popleft()
             socketio.emit (current["event_name"], current["data"])
-        time.sleep (0.005)
+        time.sleep (0.04)
             
 
 @socketio.event
@@ -111,29 +112,8 @@ visu.set_output_function (attribute_view)
 globs.topcue.contrib.set_viewfunction (visu.view)
 
 # --- Cuedata view ---------------------------------------------------------
-def cuedata_to_dict (vd:list) ->dict:
-    """ List data in dict wandeln
-    """
-    return {"listnum":     vd[0],
-            "fading_in":   vd[1],
-            "fading_out":  vd[2],
-            "is_paused":   vd[3],
-            "current_id":  vd[4],
-            "current_text":vd[5],
-            "next_id":     vd[6],
-            "next_text":   vd[7]
-            }
 
-
-def cuedata_view (*viewdata):
-    """ Cuedata auf die Website schicken
-    """
-    # logger.debug (f"cue_view: {viewdata}")
-    globs.sync_data.append ({"event_name":"update cueview",
-                             "data": cuedata_to_dict (viewdata[1]) 
-                           })
-
-Cuelist.set_vievfunction (cuedata_view)
+# Cuelist.set_vievfunction (cuedata_view)
 
 @socketio.on ("get cuelist data")
 def get_cuelist_data (message):

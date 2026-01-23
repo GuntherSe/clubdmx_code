@@ -220,11 +220,19 @@ class Cuelistbase ():
         else:
             pause = "false"
         line = self.line (self.currentpos)
-        curid = line["Id"]
-        curtext = line["Text"]
+        if line:
+            curid = line["Id"]
+            curtext = line["Text"]
+        else:
+            curid = 0
+            curtext = ""
         line = self.line (self.nextprep)
-        nextid = line["Id"]
-        nexttext = line["Text"]
+        if line:
+            nextid = line["Id"]
+            nexttext = line["Text"]
+        else:
+            nextid = 0
+            nexttext = ""
         
         return [self.__class__.instances.index(self),
                 self.fadein_percent,
