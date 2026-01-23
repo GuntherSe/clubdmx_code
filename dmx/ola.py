@@ -7,18 +7,13 @@
 
 """
 
-# OLARECEIVESTRING = "/ola/universe/"
 OLASENDSTRING    = "/dmx/universe/"
 
-# import math
 import socket
 import threading
 import array
 import time
-# import urllib.request # um ola plugins neu zu laden mit "localhost:9090/reload"
 
-# from pythonosc import dispatcher
-# from pythonosc import osc_server
 from pythonosc import osc_message_builder
 from pythonosc import udp_client
 
@@ -39,49 +34,18 @@ class OscOla (Mix):
     Vor Verwendung festzulegende Variablen:
     ola_ip, out_port, universes, 
     """
-
-    # olacount = 0
-    
     def __init__(self):
-        # OscOla.olacount += 1
-        # print ("Ola Count", OscOla.olacount)
         
         self.ola_ip = "127.0.0.1"
         self.out_port = 7770
-        # self.ola_unis = [] # Zuordnung mix - OLA Univesum
-        # basic ola-universes, len = self._universes:
-        # self.set_universes (1)    
         Mix.__init__(self)
 
-        self.timeout = 0.05 # 0.05
+        self.timeout = 0.04 # 0.05
         self.mix_thread = threading.Thread(target=self.run, daemon=True)
-        # self.mix_thread.setDaemon (True)
-        # self.__mixing = False
         self.paused = False
-        # self.pause_cond = threading.Condition (threading.Lock ())
 
         self.client = udp_client.UDPClient(self.ola_ip, self.out_port)
 
-        # self.mix_thread.start ()
-
-
-    # def set_universes (self, num:int):
-    #     """ Anzahl der Universen festlegen         
-
-    #     plus clear ola_unis list
-    #     """
-    #     Mix.set_universes (self, num)
-    #     self.ola_unis.clear ()
-    #     for count in range (num):
-    #         self.ola_unis.append (count+1)
-
-
-
-    # def universes (self):
-    #     """ get number of universes
-    #     """
-    #     return len (self.ola_unis)
-    
 
     def set_ola_ip (self, newip):
         self.ola_ip = newip
@@ -93,37 +57,13 @@ class OscOla (Mix):
         self.client.__init__ (self.ola_ip, self.out_port)
 
 
-    # def set_ola_uni (self, mix:int, olanum:int):
-    #     """ pair mix-count to OLA-count  
-        
-    #     mix: count from 1
-    #     olanum: count from 1
-    #     """
-    #     self.ola_unis[mix-1] = olanum
-
-
-    # def set_unis (self, unilist:list):
-    #     """ configure uns according to patch 
-    #     """
-    #     num = len (unilist)
-    #     if num:
-    #         self.set_universes (num)
-    #         for idx, item in enumerate (unilist):
-    #             self.set_ola_uni (1+idx, item)
-    #     else: #default
-    #         self.set_universes (1)
-    #         self.set_ola_uni (1, 1)
-
     def update_uni(self, uni): 
         """ mix-Werte nach Ola senden
 
         uni: zählen ab 1
         """
-        # if len (self.ola_unis) == 0:
-        #     return
         msgaddress = OLASENDSTRING + f"{uni}"
         self.msg = osc_message_builder.OscMessageBuilder(address = msgaddress)
-#        arg = array.array('B', self.__mix[uni-1]).tostring()
         arg = array.array('B', self.show_mix(uni)).tobytes()
         self.msg.add_arg (arg)
         self.msg = self.msg.build()
@@ -133,9 +73,6 @@ class OscOla (Mix):
     def run (self): # 
         """ Mix an Ola senden """
         while True:
-            # universes = self.universes()
-            # for i in range (universes):
-            #     self.update_uni (1+i)
             for uni in self._ola_unis:
                 self.update_uni (uni)
             time.sleep(self.timeout)

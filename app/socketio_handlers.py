@@ -19,7 +19,6 @@ logger = logging.getLogger ("clubdmx")
 # from loggingbase import Logbase
 
 import globs
-from cuelist import Cuelist
 
 sync_thread = None
 thread_lock = Lock ()

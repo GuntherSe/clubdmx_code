@@ -43,7 +43,7 @@ class Cue ():
             # else: CUEPATH wurde mit set_path bereits gesetzt
             Cue.contrib.set_output_function (self.mixoutput)
             Cue.contrib.set_mix_function (Cue.contrib.cue_mix)
-            Cue.contrib.set_sleeptime (0.025) #0.025
+            Cue.contrib.set_sleeptime (0.04) #0.025
             if not os.environ.get ("PYTHONANYWHERE") == "true":
                 Cue.contrib.start ()
             Cue.init_done = 1
