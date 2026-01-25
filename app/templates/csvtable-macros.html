@@ -50,7 +50,7 @@
             {% if filebuttons == "cue" %} 
               {{ cuebuttons (item[field]) }}
             {% elif filebuttons == "cuelist" %}
-              {{ cuelistbuttons (item[field]) }}
+              {{ cuelistbuttons (item[field], rowloop.index - 1) }}
             {% endif %}
           {% endif %}
         </td>
@@ -209,6 +209,13 @@
     {{ button_elem ("newpatchButton", "neue Zeile(n)", 
         svgid = "#svg-plus" ,
         endpoint= url_for ("patchform.patchnew", 
+                            next=request.referrer) ) }}
+  {% elif option == "pages" %}
+    {{ button_elem ("newlineButton", "neue Cueliste", 
+        svgid = "#svg-plus" ,
+        endpoint= url_for ("forms.csvline", 
+                            name=fullname(), 
+                            option=option,
                             next=request.referrer) ) }}
   {% else %}
     {{ button_elem ("newlineButton", "neue Zeile", 

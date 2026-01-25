@@ -118,7 +118,7 @@ def testtable ():
 def contrib ():
     """ contrib anzeigen """
     fieldnames = ["index", "key", "level", "extra"]
-    items = globs.Cue.contrib.to_dictlist ()
+    items = globs.topcue.contrib.to_dictlist ()
     return render_template ("contrib.html", 
         fieldnames = fieldnames,
         style = "table-sm table-striped",

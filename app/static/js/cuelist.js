@@ -59,6 +59,7 @@ function cuelistStatus (num, data) {
 }
 
 function periodic_allcueliststatus () {
+  // nicht verwendet: socketio übermittelt aktuellen Status
   // siehe: https://stackoverflow.com/questions/5052543/how-to-fire-ajax-request-periodically
   // aktuelle Faderwerte der Cuelist Levels am Schieberegler zeigen:    
   // verwendet in cl-pages.html   
@@ -104,6 +105,7 @@ $('input.inputslider').on('input', function(event) {
 socket.on ("update cueview", function (data){
   // console.log (data)
   var numstring = data["listnum"];
+  var clIndex = $("#cuelistindex").attr ("index");
   $("#currentid-"+numstring).text (data["current_id"]);
   $("#nextid-"+numstring).text (data["next_id"]);
   $("#currenttext-"+numstring).text (data["current_text"]);
@@ -116,11 +118,13 @@ socket.on ("update cueview", function (data){
     .attr ("aria-valuenow", data["fading_out"])
     .css ("width", data["fading_out"] + "%");
 
-  let currentid = "tr.id-" + data["current_id"].replace ('.', '-');
-  let nextid = "tr.id-" + data["next_id"].replace ('.', '-');
-  $("tr").removeClass ("table-info table-success")
-  $(currentid).addClass ("table-info");
-  $(nextid).addClass ("table-success");
+  if (numstring == clIndex) { // Tabellenzeilen Hintergrundfarbe:
+    let currentid = "tr.id-" + data["current_id"].replace ('.', '-');
+    let nextid = "tr.id-" + data["next_id"].replace ('.', '-');
+    $("tr").removeClass ("table-info table-success")
+    $(currentid).addClass ("table-info");
+    $(nextid).addClass ("table-success");
+  }
 
   // Pause-Status:
   var pauseid = ".pausebut-" + numstring;

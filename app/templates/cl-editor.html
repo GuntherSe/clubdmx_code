@@ -125,6 +125,7 @@
   }
 
   function periodic_cueliststatus () {
+    // nicht verwendet: socketio übermittelt aktuellen Status
     // siehe: https://stackoverflow.com/questions/5052543/how-to-fire-ajax-request-periodically
     // aktuelle Statusdaten zeigen:     
     $.ajax ({
@@ -162,7 +163,7 @@
   $('document').ready (function () {
     // clIndex bestimmen:
     clIndex = $("#cuelistindex").attr ("index");
-    console.log ("index: " + clIndex);
+    // console.log ("index: " + clIndex);
     if (clIndex.length) {
       socket.emit ("get cuelist data", {index:clIndex});
     } else {

@@ -215,11 +215,26 @@ def open ():
             session["selected_cuelist"] = fileroot
             # session["open_requested"] = True
             return "ok"
+        
+        if option == "pages": # cuelist Pages
+            session.pop ("selected_cuelist", None)
+            globs.cfg.set ("pages", fileroot)
+            globs.cfg.save_data ()
+            for item in globs.cltable:
+                item.level = 0
+            make_cuelistpages ()
+            flash ("Cuelisten-Tabelle geladen.", category="success")
 
         if option == "midibutton":
             flash (f"Midibuttons ausgewählt: {fileroot}")
+            globs.cfg.set ("midi_buttons", fileroot)
+            globs.cfg.save_data ()
+            get_midicommandlist ()
+
             return "ok"
-            
+        # unbekannte option:
+        return "ok"
+
     ret = {}
     ret["spath"] = request.args.get ("option")
     ret["dialogbox"] = render_template ("modaldialog.html", body="filedialog")

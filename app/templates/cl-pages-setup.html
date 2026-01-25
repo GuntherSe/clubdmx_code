@@ -3,28 +3,8 @@
 {% import "csvtable-macros.html" as tbl with context %}
 {% import "base-macros.html" as base with context %}
 
-{#  Macro file_item: 
-    erzeugt einen Listeneintrag in den Fileselector, mit dem die
-    anzuzeigende Tabelle ausgewählt wird
-
-{% macro file_item (text, loc) -%}
-  {% if loc.status == "active" %}
-  <a href="#" 
-     class="list-group-item list-group-item-action active" 
-     aria-current="true">
-     {{ text }}
-  </a>
-  {% else %}
-  <a href="{{ url_for ('basic.buttontable', sel=loc.cuelist) }}" 
-     class="list-group-item list-group-item-action">
-    {{ text }}
-  </a>
-  {% endif %}  
-{%- endmacro %}
-#}
-
 {% block header %}
-  <h2> {% block title %} Cuelist Pages-Info {% endblock %} </h2>
+  <h2> {% block title %} Cuelisten Info {% endblock %} </h2>
 {% endblock %}
 
 {% block subtitle %}
