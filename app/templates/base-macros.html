@@ -65,13 +65,15 @@
 {% macro cuebuttons (name) %}
   <div class="btn-group float-right" role="group">
     <button type="button" 
-            class="btn btn-sm btn-outline-secondary cueview"
+            class="btn btn-sm btn-outline-secondary 
+                  bg-light text-secondary cueview"
             name="{{ name }}">
       Liste
     </button>
     {% if current_user.role == "standard" or current_user.role == "admin" %}
     <button type="button" 
-            class="btn btn-sm btn-outline-secondary cueedit"
+            class="btn btn-sm btn-outline-secondary 
+                  bg-light text-secondary cueedit"
             name="{{ name }}">
       >Topcue
     </button>
@@ -92,7 +94,8 @@
       Edit
     </a> -->
     <button type="button" 
-            class="btn btn-sm btn-outline-secondary cuelistview"
+            class="btn btn-sm btn-outline-secondary 
+                  bg-light text-secondary cuelistview"
             name="{{ name }}" index="{{ index }}" >
       Editor
     </button>
