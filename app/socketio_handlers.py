@@ -52,15 +52,18 @@ def slidervalue_changed(message):
     # sliders = len (globs.fadertable)
     curslider = message["who"].split(sep='-') # 'slider-1'
     slidertype = message["fadertype"]
-    index = int (curslider[1]) 
+    if slidertype != "masterfader":
+        index = int (curslider[1]) 
     # if index in range (sliders):
     level = message["data"]
     if slidertype == "cuefader":
         globs.fadertable[index].level = float(level) / 255
         if globs.PYTHONANYWHERE == "false" and globs.midiactive:
             midifader_monitor ("cuefader", index, int(float(level)/2))
-    else: # cuelistfader
+    elif slidertype == "cuelistfader":
         globs.cltable[index].level = float(level) / 255
+    else: # masterfader
+        globs.Cue.contrib.masterlevel = float(level) / 255
 
     curtime = time.time()    
     if curtime > faderupdate_time + 0.1: # 1/10 sec
@@ -77,9 +80,11 @@ def get_sliderposition (message):
     if slidertype == "cuefader":
         for item in globs.fadertable:
             data.append (int (item.level * 255))
-    else: # cuelistfader
+    elif slidertype == "cuelistfader": 
         for item in globs.cltable:
             data.append (int (item.level * 255))
+    else: # masterfader:
+        data.append (int (255 * globs.Cue.contrib.masterlevel))
     ret["data"] = data
     ret["fadertype"] = slidertype
     emit ("init slider position", ret) #, broadcast=True)

@@ -288,14 +288,14 @@ und: https://codepen.io/sosuke/pen/Pjoqqp
   text-align: left; 
   top: 0px;
   left: 25px;
-  color: blueviolet;
+  /* color: blueviolet; */
 }
 .stage-element.head > .itemText {
   position: absolute;
   text-align: left;
   top: 82px;
   left: 5px;
-  color:rgb(42, 33, 173)
+  /* color:rgb(42, 33, 173) */
 }
 .stage-element.head > .itemComment {
   position: absolute;
@@ -303,7 +303,7 @@ und: https://codepen.io/sosuke/pen/Pjoqqp
   top: 30px;
   left: 25px;
   font-size: 0.8rem;
-  color:rgb(42, 33, 173)
+  /* color:rgb(42, 33, 173) */
 }
 .stage-element.head > .intensity-container {
   position: absolute;
@@ -344,7 +344,7 @@ und: https://codepen.io/sosuke/pen/Pjoqqp
   top: 0px;
   right: 5px;
   text-align: right; 
-  color: blueviolet;
+  /* color: blueviolet; */
 }
 .mobil-element.head > .itemText {
   position: absolute;

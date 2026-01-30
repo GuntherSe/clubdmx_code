@@ -10,6 +10,7 @@ from flask_login import login_required
 
 import logging
 
+from cue import Cue
 from cuebutton import Cuebutton
 
 from ola import get_ip_address
@@ -134,6 +135,7 @@ def index ():
     patchfile = Csvfile (globs.patch.file.name())
     local_ip = get_ip_address ()
     pictures = list_pictures ()
+    masterlevel = int (255 * Cue.contrib.masterlevel)
     # current_app.logger.info('index aufgerufen.')
 
     return render_template ("index.html",
@@ -142,7 +144,8 @@ def index ():
                             local_ip = local_ip,
                             ola_ip = globs.ola.ola_ip,
                             pictures = pictures,
-                            room = room)
+                            room = room,
+                            masterlevel = masterlevel)
 
 
 @basic.route ("/cuefader")

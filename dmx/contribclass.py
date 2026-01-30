@@ -44,14 +44,16 @@ class Contrib (threading.Thread):
         # self.setDaemon (True)
 
         self.contribs = {}
+        # output_function: den Mix an output schicken:
         self.output_function = print
-        # output_function: den Mix an output schicken
+        # mix_function: contrib nach Kriterien bewerten, Mix erstellen:
         self.mix_function = self.no_mix
-        # mix_function: contrib nach Kriterien bewerten, Mix erstellen
+        # view-function: contrib-mix anzeigen:
         self.view_function = self.silent_view
-        # view-function: contrib-mix anzeigen
-        self._sleep = 2 # wird in cclass Cue adaptiert
-        # Prüfen, ob Mix verändert wurde. Nur dann output ausgeben
+        self._sleep = 2 # wird in class Cue adaptiert
+        # Masterlevel:
+        self.masterlevel = 1.0 # Wert in [0..1]
+        # Prüfen, ob Mix verändert wurde. Nur dann output ausgeben:
         self.curmix = {}
         self.mix_changed = True
 
@@ -236,7 +238,7 @@ class Contrib (threading.Thread):
                 # data: wenn key==Head-Attrib -> [att_level, att_type] 
                 #       wenn key==faderlevel  -> [level, time]
                 if data[1] == "HTP":
-                    newlevel = faderlevel * int(data[0])
+                    newlevel = faderlevel * int(data[0]) * self.masterlevel
                     if key in tempmix.keys() : 
                         if tempmix[key][2] != -1: #kein topcue
                             dmxval = max (tempmix[key][0], newlevel)

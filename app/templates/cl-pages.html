@@ -90,18 +90,6 @@
     $(".slider").width (sliderwidth);
 
     // slider erzeugen:
-//    $.get ("/cuelist/allstatus", function (data) {
-      // console.log ("data: " + data);
-//      var jdata = $.parseJSON(data);
-//      var sliderlevels = jdata["levels"];
-
-//      var i;
-//      for (i = 0; i < sliderlevels.length; i++){
-//        activateSlider(i, sliderlevels, "cuelistfader");
-//      };
-    //  $(".slider").width (sliderwidth);
-//    });
-//    periodic_allcueliststatus ();
     socket.emit ("get slider position", {fadertype: "cuelistfader"});
     socket.emit ("get cuelist data", {index:-1});
 

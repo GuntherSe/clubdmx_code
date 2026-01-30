@@ -275,7 +275,8 @@ socket.on('after connect', function(msg) {
 socket.on('update slidervalue', function(msg) {
     //console.log('slider value updated');
     let elem = $('#' + msg.who);
-    if (elem.is (":focus") ) {} else {
+//    if (elem.is (":active") ) {} else {
+    if (!elem.is (":active")) {
       elem.val(msg.data);}
 });
 
@@ -284,12 +285,16 @@ socket.on ("init slider position", function(msg) {
   var idstring;
   if (fadertype == "cuefader") {
     idstring = "#cuefader-";
-  } else {
+    for ( var fader=0; fader < msg.data.length; fader++ ) {
+      $(idstring + fader.toString()).val (msg.data[fader]);
+    };
+  } else if (fadertype == "cuelistfader") {
     idstring = "#cuelistfader-";
-  };
-  // console.log ("init slider: " + msg.data + " " + msg.data.length);
-  for ( var fader=0; fader < msg.data.length; fader++ ) {
-    $(idstring + fader.toString()).val (msg.data[fader]);
+    for ( var fader=0; fader < msg.data.length; fader++ ) {
+      $(idstring + fader.toString()).val (msg.data[fader]);
+    };
+  } else { // masterfader
+    $("#masterslider").val (msg.data);
   };
 
 });

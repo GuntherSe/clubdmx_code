@@ -58,39 +58,39 @@ function cuelistStatus (num, data) {
   };
 }
 
-function periodic_allcueliststatus () {
-  // nicht verwendet: socketio übermittelt aktuellen Status
-  // siehe: https://stackoverflow.com/questions/5052543/how-to-fire-ajax-request-periodically
-  // aktuelle Faderwerte der Cuelist Levels am Schieberegler zeigen:    
-  // verwendet in cl-pages.html   
-  $.ajax ({
-    url: "/cuelist/allstatus", 
-    success: function(data) {
-      var jdata = $.parseJSON(data);
-      // Status:
-      var clstatus = jdata["status"];
-      var data;
-      for (i = 0; i < clstatus.length; i++){
-        data = clstatus[i] ;
-        cuelistStatus (i, data);
-      };
-      // Slider:
-      // var sliderlevels = jdata["levels"];
-      // var i;
-      // try {
-      //   for (i = 0; i < sliderlevels.length; i++){
-      //       faderStatus (i, sliderlevels);
-      //   };
-      // }
-      // catch(err) {
-      //   console.log ("Fehler in Sliderlevel: " + err);
-      // }
-    },
-    complete: function () {
-      setTimeout (periodic_allcueliststatus, 500);
-    }
-  }); // ende $.ajax
-}
+// function periodic_allcueliststatus () {
+//   // nicht verwendet: socketio übermittelt aktuellen Status
+//   // siehe: https://stackoverflow.com/questions/5052543/how-to-fire-ajax-request-periodically
+//   // aktuelle Faderwerte der Cuelist Levels am Schieberegler zeigen:    
+//   // verwendet in cl-pages.html   
+//   $.ajax ({
+//     url: "/cuelist/allstatus", 
+//     success: function(data) {
+//       var jdata = $.parseJSON(data);
+//       // Status:
+//       var clstatus = jdata["status"];
+//       var data;
+//       for (i = 0; i < clstatus.length; i++){
+//         data = clstatus[i] ;
+//         cuelistStatus (i, data);
+//       };
+//       // Slider:
+//       // var sliderlevels = jdata["levels"];
+//       // var i;
+//       // try {
+//       //   for (i = 0; i < sliderlevels.length; i++){
+//       //       faderStatus (i, sliderlevels);
+//       //   };
+//       // }
+//       // catch(err) {
+//       //   console.log ("Fehler in Sliderlevel: " + err);
+//       // }
+//     },
+//     complete: function () {
+//       setTimeout (periodic_allcueliststatus, 500);
+//     }
+//   }); // ende $.ajax
+// }
   
 // An event handler for a change of value 
 $('input.inputslider').on('input', function(event) {

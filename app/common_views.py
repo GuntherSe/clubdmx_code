@@ -8,8 +8,6 @@ import sys
 from flask import Blueprint, render_template, request, json, redirect
 from flask import session, flash, url_for #, send_from_directory
 from flask_login import login_required #, current_user
-# from flask_cachecontrol import dont_cache
-# from cuebutton import Cuebutton
 
 from apputils import standarduser_required, admin_required, redirect_url
 from apputils import calc_mixoutput
@@ -24,7 +22,6 @@ from roomclass import Room
 from startup import load_config
 # from startup_func import fadertable_items
 from filedialog_util import list_dir
-
 
 common = Blueprint ("common", __name__, url_prefix="", 
                   static_folder="static", template_folder="templates")

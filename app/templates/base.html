@@ -9,12 +9,6 @@
   {%- endif %}
 {%- endmacro %}
 
-{# % macro get_topcuecontent () -%}
-  {% if session["topcuecontent"] -%}{{ session["topcuecontent"] }}
-  {%- else -%}
-  {%- endif %}
-{%- endmacro % #}
-
 {% macro get_modalactive () -%}
   {% if session["modalactive"] -%}{{ session["modalactive"] }}
   {%- else -%}
@@ -33,7 +27,6 @@
   {%- endif %}
 {%- endmacro %}
 
-
 {% macro pagetitle () -%}
 <div class="text-primary">
   {% block header %}{% endblock %} 
@@ -47,6 +40,14 @@
   {% block content %}{% endblock %}  
 {%- endmacro %}
 
+{% macro masterslider (level) -%}
+  <div class="container my-auto">
+      <p class="mt-1">Master</p>
+      <input type="range" min="0" max="255" class="inputslider mb-1" 
+      id="masterslider" value="{{ level }}">
+  </div>
+{%- endmacro %}
+{# ----------------------------------------------------------------------- #}
 
 <head>
   <meta charset="utf-8">
