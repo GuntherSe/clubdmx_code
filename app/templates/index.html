@@ -12,7 +12,9 @@
    Versionsnummer anpassen #}
 
 {% block workspace %}
- {{ masterslider (masterlevel) }}
+  {% if current_user.is_authenticated %}
+    {{ masterslider (masterlevel) }}
+  {% endif %}
 {% endblock %}
 
 {% block content %}
