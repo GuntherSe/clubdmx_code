@@ -252,6 +252,7 @@ def saveas ():
     Datenbank: 'option' nicht gesetzt.
                'spath' muss in request.form['args'] sein
     """
+    global currentfile
     if request.method == 'POST':
         # Filename:
         path = request.form["path"]
@@ -264,14 +265,14 @@ def saveas ():
 
         if "spath" in args: # aufgerufen von der Datenbank
             # aktuell angezeigte Tabelle
-            spath = args["spath"]
-            storename = "visible" + spath
-            current = session[storename]
-            current = current.replace ('+', os.sep)
-
-            basecsv = Csvfile (current)
+            # spath = args["spath"]
+            # storename = "visible" + spath
+            # current = session[storename]
+            # current = current.replace ('+', os.sep)
+            # basecsv = Csvfile (current)
+            basecsv = Csvfile (currentfile)
             ret = basecsv.backup (fullname)
-            session[storename] = fullname
+            # session[storename] = fullname
             flash (ret["message"], category=ret["category"])
             return "ok"
 
@@ -349,6 +350,9 @@ def saveas ():
     ret = {}
     if "spath" in request.args:
         ret["spath"] = request.args.get ("spath")
+        # current file = zu kopierendes File:
+        currentfile = session ["visible" + ret["spath"]]
+        currentfile = currentfile.replace ('+', os.sep)
     else:
         ret["spath"] = request.args.get ("option")
     ret["ftype"] = ".csv"

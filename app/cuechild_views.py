@@ -16,7 +16,7 @@ from csvfileclass import Csvfile
 from cue import Cue
 from startup_func import make_fadertable, make_cuebuttons
 from apputils import standarduser_required, admin_required, redirect_url
-from csv_views import evaluate_option
+# from csv_views import evaluate_option
 from apputils import set_topcue_status
 
 
@@ -113,7 +113,6 @@ def topsave (option:str):
             else:
                 ret = globs.topcue.to_csv (csvfile)
                 # automatisches update von Cue
-                # evaluate_option ("cue")
             flash (ret["message"], category=ret["category"])
 
             # Option auswerten:
@@ -171,10 +170,18 @@ def topsave (option:str):
                     clfile = session["selected_cuelist"]
                     fullname = os.path.join (clpath, clfile)
                     csvfile.name (fullname)
+                    lastline = csvfile.lastline ()
                     newline = {}
                     # defaults in newline eintragen:
                     globs.room.check_csv_line (newline, "cuelist")
                     newline["Filename"] = filename
+                    newline["Text"] = filename
+                    # last values for Fadein, Stay, Fadeout, Waitin, Waitout:
+                    newline["Fadein"] = lastline["Fadein"]
+                    newline["Stay"] = lastline["Stay"]
+                    newline["Fadeout"] = lastline["Fadeout"]
+                    newline["Waitin"] = lastline["Waitin"]
+                    newline["Waitout"] = lastline["Waitout"]
                     # Id ist vom Typ Counter:
                     nextid = csvfile.nextint ("Id")
                     newline["Id"] = nextid

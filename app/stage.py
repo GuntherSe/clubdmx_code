@@ -313,43 +313,6 @@ def default_attributes ():
     return "ok"
 
 
-
-# @stage.route ("/oneheadfader", methods=['GET','POST'])
-# def oneheadfader ():
-#     """ Fader für einen Head erzeugen 
-
-#     Faderdaten an Mix schicken """
-
-#     if request.method == 'POST':
-#         head   = request.form["head"]
-#         attrib = request.form["attrib"]
-#         level  = request.form["level"]
-#         globs.topcue.add_item (head, attrib, level)
-#         return "ok"
-#         # print (f"Head: {head}, Attribut: {attrib}, Level: {level}")
-    
-#     head = request.args.get ("head")
-#     headlist = globs.patch.headlist ()
-#     if head in headlist:
-#         ret = {}
-#         attribs = globs.patch.attriblist (head)
-#         ret["attribs"] = attribs
-#         levels = {}
-#         heads  = [] # wird für attribslider.html benötigt, hier: [head,head,...]
-#         for att in attribs:
-#             levels[att] = globs.patch.attribute (head, att)
-#             heads.append (head)
-#         ret["levels"] = levels
-#         ret["table"]   = render_template ("attribslider.html", 
-#                                          heads=heads,
-#                                          attribs=attribs,
-#                                          labels=attribs,
-#                                          title="Head: "+head)
-#         return json.dumps (ret)
-#     else:
-#         return "false"
-
-
 @stage.route ("/import_patch")
 def import_patch ():
     """ für alle Heads aus Patch ein Element auf der Stage erzeugen 
@@ -441,14 +404,3 @@ def singleindex ():
         return "0"
 
 
-# -------------------------------------------------------------------------
-# Modul-Test:    
-if __name__ == "__main__":
-    fname = "conftest.csv"
-    csvfile = Csvfile (fname)
-
-    print ("Fieldnames: ", csvfile.fieldnames())
-    data = csvfile.to_dictlist()
-    print ("data: ", data)
-    print ("data[0]: ", data[0])
-    print ("data[1]['value']: ", data[1]['value'])

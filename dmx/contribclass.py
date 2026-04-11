@@ -330,7 +330,11 @@ class Contrib (threading.Thread):
         Berücksichtigt wie cue_mix die Faderlevel und HTP/LTP
         return: list of triples (head:str, attrib:str, val:int)
         """
-        snapshot = self.mixvalues ()
+        tmp = self.mixvalues ()
+        snapshot = []
+        for item in tmp:
+            head,attrib = item[0].split (sep="-")
+            snapshot.append ([head, attrib, item[1]])
         return snapshot
 
 

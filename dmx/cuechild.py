@@ -7,12 +7,10 @@ Cues in Fader-Tabelle
 
 """
 
-# import time
 import csv
 
 from cue  import Cue
 from csvfileclass import Csvfile
-# from csv_views import evaluate_option
 
 class Topcue (Cue):
 
@@ -73,19 +71,6 @@ class Topcue (Cue):
         self.level = 1.0
         # print ("clear: ", self.content)
 
-    # def to_dictlist (self) ->list:
-    #     """ _cuecontent in csvfile.to_dictlist() Format 
-
-    #     Format: [{'HeadNr':'x','Attr':'y','Intensity':'z'}, {...}, {...}]
-    #     für die Anzeige in Modaldialog """
-        
-    #     ret = []
-    #     for row in self.content:
-    #         line = {}
-    #         for i in range (len (self._cuefields)):
-    #             line[self._cuefields[i]] = row[i] 
-    #         ret.append (line)
-    #     return ret
 
     def to_csv (self, csvfile:Csvfile) ->dict:
         """ Inhalt von self.content in csvfile schreiben 
