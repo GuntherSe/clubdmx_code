@@ -175,6 +175,12 @@ function modaldialogToPython (clickid, url, args) {
   $(clickid).on ("click", function () {
     $.get (url, args, function (data) {
       $("#dialogModal").html (data);
+
+      // set focus on input field:
+      $('#viewModal').on('shown.bs.modal', function() {
+        $('.focusedInput').trigger('focus');
+      });
+
       $("#viewModal").modal ();
       // auswerten bei Strings:
       $("#selectButton").on ('click', function(){
@@ -186,15 +192,10 @@ function modaldialogToPython (clickid, url, args) {
               location.reload (); 
           });
       });
-      $(document).keypress (function (e) {
+
+      $("#viewModal").keypress (function (e) {
         if (e.keycode == 13 || e.which == 13) {
-          var newname = $("#input-text").first().val();
-          var data = {selectButton:"true", name:newname};
-          // neu 6.2.2021:
-          data.args = JSON.stringify (args);
-          $.post (url, data, function () {
-              location.reload (); 
-          });
+          $("#selectButton").click();
         };
       });
       $(".close-modal").on ("click", function(){
@@ -225,42 +226,7 @@ function csvSavediscardButtons () {
 };
 
 // siehe: https://stackoverflow.com/questions/5052543/how-to-fire-ajax-request-periodically
-// function periodic_commonstatus () {
-//   // periodischer Aufruf zum Holen der variablen Basisdaten
-//     $.ajax ({
-//         url: "/getinfo/commonstatus", 
-//         success: function(data){
-//           var jdata = JSON.parse (data);
-//           //console.log ("common: " + JSON.stringify (jdata));
-//           // if (jdata["editmode"] == "select") {
-//           //   setEditmode ("select");
-//           // } else {
-//           //   setEditmode ("edit");
-//           // };
-//           // Buttons zu CSV-Zeilen cut/paste:
-//           // werden von der aktuellen Seite verwaltet, d.h. wenn Zeilen 
-//           // ausgewählt werden, dann sind diese sichtbar.
-//           // insert/clear sind per User auf allen betreffenden Seiten
-//           // sichtbar (wenn Daten im Clipboard sind)
-//           if (jdata["csvclipboard"] == "true") {
-//             $(".csvClipboard").removeClass ("d-none");
-//           } else {
-//             $("csvClipboard").addClass ("d-none");
-//           };
-//           // initMouseMode ();
-//           // Topcue Menü anzeigen:
-//           // if (jdata["topcuecontent"] == "true") {
-//           //   showSecondNav ();
-//           // } else {
-//           //   hideSecondNav ();
-//           // }; 
-
-//         },
-//         complete: function () {
-//         setTimeout (periodic_commonstatus, 1000);
-//         }
-//     }); // ende $.ajax
-//   }
+// function periodic_commonstatus () 
 
 // ----- Socket -------------------------------------------------------------
 // siehe socketio_basic:

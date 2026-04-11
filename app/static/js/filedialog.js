@@ -38,9 +38,15 @@ function filedialogToPython (clickid, url, args) {
             getFDparams (modalData);
 
             $("#dialogModal").html (modalData.dialogbox);
+
+            // set focus on input field:
+            $('#viewModal').on('shown.bs.modal', function() {
+                $('.focusedInput').trigger('focus');
+            });
+    
             $("#viewModal").modal();
             fileExplore (fileDialogParams);
-    
+
             // Auswertung beim Schließen:
             $("#viewModal").on ('hidden.bs.modal', function(){
                 // console.log ("sp:" + JSON.stringify(fileDialogParams));
@@ -71,7 +77,13 @@ function filedialogToPython (clickid, url, args) {
                 //console.log ("Modal close");
                 $.post ("/forms/modalclose");
             });
-        
+
+            $("#viewModal").keypress (function (e) {
+              if (e.keycode == 13 || e.which == 13) {
+                $("#selectButton").click();
+              };
+            });
+
             // selectbutton aktivieren, Unterscheidung close und select:
             $("#selectButton").on ('click', function(){
                 fileDialogParams.select = 'true';

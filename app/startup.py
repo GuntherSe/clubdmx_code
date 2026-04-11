@@ -39,7 +39,7 @@ def get_roompath ():
       'clubdmx_rooms' anlegen
     roombase: Ordner, der alle Räume (=subdirs) enthält
     roompath: Pfad zu dem zuletzt verwendeten Raum = roombase + subdir
-    roompath ist in current_room gespeichert
+    roompath ist in global:current_room gespeichert
     """
     global current_room
     roombase = os.environ.get ("CLUBDMX_ROOMPATH")

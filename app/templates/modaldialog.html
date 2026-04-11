@@ -21,8 +21,8 @@ Anzeigen:
 <div class="input-group mb-3">
   <div class="input-group-prepend">
     <span class="input-group-text" id="basic-addon1">Name</span>
-    <input type="text" class="form-control" id="input-text"
-    aria-label="input-text" aria-describedby="basic-addon1">
+    <input type="text" class="form-control focusedInput" id="input-text"
+    aria-label="input-text" aria-describedby="basic-addon1" autofocus="autofocus">
   </div>
 </div>
 {% endmacro %}
@@ -45,7 +45,7 @@ Anzeigen:
 {% endmacro %}
 
 <!-- Modal für Dialog -->
-<div class="modal" id="viewModal" tabindex="-1" role="dialog" 
+<div id="viewModal" class="modal" tabindex="-1" role="dialog" 
    aria-labelledby="modal-title" aria-hidden="true">
   <div class="modal-dialog modal-dialog-scrollable" role="document">
     {# form oder div #}
@@ -107,10 +107,10 @@ Anzeigen:
             {% else %}
               <span class="input-group-text" id="basic-addon1">Datei</span>
             {% endif %}
-          <input type="text" class="form-control" id="filename"
-          aria-label="filename" aria-describedby="basic-addon1">
+            <input type="text" class="form-control focusedInput" id="filename"
+            aria-label="filename" aria-describedby="basic-addon1" autofocus="autofocus">
           </div>
-          <button type="button" class="btn btn-primary" id="selectButton"
+          <button type="submit" class="btn btn-primary" id="selectButton"
               data-dismiss="modal">wählen</button>
           <button type="button" class="btn btn-secondary close-modal" 
               data-dismiss="modal">schließen</button>

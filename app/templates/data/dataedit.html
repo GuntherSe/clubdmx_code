@@ -112,15 +112,15 @@
       // history for stage, if called by stage/show:
       // see: https://stackoverflow.com/questions/36712575/get-url-parameter-with-jquery
       var url = window.location.href;
-      var arguments = url.split('?')[1]
-      if (arguments) {
-        arguments = arguments.split('=');
-        arguments.shift();
+      var args = url.split('?')[1]
+      if (args) {
+        args = args.split('=');
+        args.shift();
       }else {
-        arguments = "default";
+        args = "default";
       }
 
-      if (arguments == "stage") {
+      if (args == "stage") {
         $("#sessiondata").attr ("history", "/stage/show");
       } else {
         $("#sessiondata").attr ("history", "/dataform/config");
