@@ -133,7 +133,8 @@
             </p>
             <p>
               Die aktuelle Konfiguration ist <b class="px-1">{{ confname }}</b>, 
-              der Patch ist <b class="px-1">{{ patchname }}</b>.
+              der Patch ist <b class="px-1">
+                <a href="{{ url_for ('data.patch') }}"> {{ patchname }}</a></b>.
             </p>
             <p>
               Meine aktuelle IP ist <b class="px-1">{{ local_ip }}</b>

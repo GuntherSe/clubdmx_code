@@ -60,9 +60,9 @@ class MidiDevice ():
             description = devlist[devindex][3]     # str
             try:
                 if miditype == "input":
-                    self.port = mido.open_input (description)
+                    self.port = mido.open_input (description) # type: ignore
                 else:
-                    self.port = mido.open_output (description)
+                    self.port = mido.open_output (description) # type: ignore
             except:
                 return {"name":mdev.NO_MIDI_DEVICE, "result":"false"} 
 
@@ -141,9 +141,9 @@ class MidiOutput ():
         devs = [] # die fertige Liste
         appended = [] # zur Kontrolle, ob mehrfach eingefügt wird
         if mode == "input":
-            devlist = mido.get_input_names ()
+            devlist = mido.get_input_names () # type: ignore
         elif mode == "output":
-            devlist = mido.get_output_names ()
+            devlist = mido.get_output_names () # type: ignore
         else:
             return devs
 
@@ -171,7 +171,7 @@ class MidiOutput ():
             return f"{pos} nicht gültig."
 
 
-    def set_outdevice (self, pos:int, num:int) ->str:
+    def set_outdevice (self, pos:int, num:int) ->dict:
         """ Midigerät zuweisen
         
         pos: Position in self.out_ports, 0 <= pos < 4
@@ -311,12 +311,12 @@ Kommandos: x = Exit
                 print (ret)
             elif cmd[0] == 'c':
                 try:
-                    mididev.led_on (int(cmd[1]), cmd[2])
+                    mididev.led_on (int(cmd[1]), int(cmd[2]))
                 except:
                     mididev.led_on (0,0)
             elif cmd[0] == 'v':
                 try:
-                    mididev.led_off (int(cmd[1]), cmd[2])
+                    mididev.led_off (int(cmd[1]), int(cmd[2]))
                 except:
                     mididev.led_off (0,0)
 

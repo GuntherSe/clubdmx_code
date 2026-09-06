@@ -33,7 +33,7 @@ def list_drive_devices () ->list:
         devices.append (drive)
     return devices
 
-def drive_properties (devlist) -> "print":
+def drive_properties (devlist) :
     """ alle Properties ausgeben """
     for device in devlist:
         print ("Availability: ", device.Availability)
@@ -59,7 +59,7 @@ def drive_properties (devlist) -> "print":
         print ("")
 
 
-def list_media_devices(devlist:list=None) ->list:
+def list_media_devices(devlist:list=[]) ->list:
     """ alle removable-Laufwerke auflisten 
     Liste aus drive-Objekten
     """
@@ -98,7 +98,7 @@ def is_mounted(device):
     return os.path.ismount (device)
 
 
-def is_removable(device:str, devlist:list=None):
+def is_removable(device:str, devlist:list=[]):
 
     # devices = []
     if not devlist:
@@ -110,7 +110,7 @@ def is_removable(device:str, devlist:list=None):
     return False
 
 
-def get_size(device:str, devlist:list=None):
+def get_size(device:str, devlist:list=[]):
 
     devices = []
     if not devlist:
@@ -125,7 +125,7 @@ def get_size(device:str, devlist:list=None):
             return size
 
 
-def get_model(device:str, devlist:list=None):
+def get_model(device:str, devlist:list=[]):
     devices = []
     if not devlist:
         c = wmi.WMI ()
@@ -136,7 +136,7 @@ def get_model(device:str, devlist:list=None):
     return "unbekannt"
 
 
-def get_vendor(device:str, devlist:list=None):
+def get_vendor(device:str, devlist:list=[]):
     """ in NT nicht verfügbar 
     Kompatibilität mit Posix
     """
@@ -145,7 +145,7 @@ def get_vendor(device:str, devlist:list=None):
 
 
 
-def get_label(device:str, devlist:list=None) ->str:
+def get_label(device:str, devlist:list=[]) ->str:
     """ benutzerfreundlicher String zur Identifizierung von device
     """
     # devices = []

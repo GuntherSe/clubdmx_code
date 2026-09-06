@@ -154,7 +154,7 @@ def get_vendor(device):
             return f.read().strip()
     return None
 
-def get_label(device:str, devlist:list=None) ->str:
+def get_label(device:str, devlist:list=[]) ->str:
     """ benutzerfreundlicher String zur Identifizierung von device
     """
     name  = get_device_name(device)
