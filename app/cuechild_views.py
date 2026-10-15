@@ -177,11 +177,13 @@ def topsave (option:str):
                     newline["Filename"] = filename
                     newline["Text"] = filename
                     # last values for Fadein, Stay, Fadeout, Waitin, Waitout:
-                    newline["Fadein"] = lastline["Fadein"]
-                    newline["Stay"] = lastline["Stay"]
-                    newline["Fadeout"] = lastline["Fadeout"]
-                    newline["Waitin"] = lastline["Waitin"]
-                    newline["Waitout"] = lastline["Waitout"]
+                    if lastline:
+                        newline["Fadein"] = lastline["Fadein"]
+                        newline["Stay"] = lastline["Stay"]
+                        newline["Fadeout"] = lastline["Fadeout"]
+                        newline["Waitin"] = lastline["Waitin"]
+                        newline["Waitout"] = lastline["Waitout"]
+                    
                     # Id ist vom Typ Counter:
                     nextid = csvfile.nextint ("Id")
                     newline["Id"] = nextid

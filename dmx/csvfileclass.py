@@ -414,7 +414,10 @@ Backup, Sichern
         """ get last line of csv file 
         """
         content = self.to_dictlist ()
-        return content [-1]
+        if content:
+            return content [-1]
+        else:
+            return []
 
 
     def sort (self, field:str) -> dict:
