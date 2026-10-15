@@ -10,7 +10,7 @@
 # alias clubdmx='$HOME/clubdmx_code/app_start.sh'
 # Anschließend Terminal neu starten
 
-# --- Startoptionen: ----------------------------------
+# --- Startoptionen: -----------------------------------
 # werden in /etc/environment mit Environment-Variablen festgelegt
 # z.B.: in /etc/environment am Ende: export GUNICORNSTART="/usr/bin/gunicorn3 --daemon"
 # oder Terminal Start mit Rückeldungen: export GUNICORNSTART="gunicorn"
