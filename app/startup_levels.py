@@ -164,6 +164,8 @@ def autosave_cuelevels ():
         level_to_csv ("fader")
         level_to_csv ("button")
         level_to_csv ("cuelist")
+        globs.cfgbase.set ("masterlevel", str(globs.Cue.contrib.masterlevel))
+        globs.cfgbase.save_data ()
         time.sleep (30)
 
 

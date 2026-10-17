@@ -305,6 +305,9 @@ class Cuelist (Cuelistbase):
 
         self.setnextcue (self.nextprep) 
         if self.nextpos != self.currentpos:
+            # Test JUMP = Go on 0:
+            # self.cuedict[self.nextid]["Fadein"] = 0
+            
             self.is_fading_in = True
             self.is_fading_out = True
             self.is_loaded = False

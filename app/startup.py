@@ -320,6 +320,13 @@ def load_config (with_currentlevels=False):
         # savecuelevels auf 0 setzen, nur eine der beiden Optionen sinnvoll:
         globs.cfg.set ("savecuelevels", "0")
 
+    # Wert für Masterfader:
+    savecuelevels = globs.cfg.get ("savecuelevels")
+    if savecuelevels:
+        ml = globs.cfgbase.get ("masterlevel")
+        if ml:
+            Cue.contrib.masterlevel = float (ml)
+
     if with_currentlevels:
         make_fadertable (faderlevels)
         make_cuebuttons (buttonlevels)

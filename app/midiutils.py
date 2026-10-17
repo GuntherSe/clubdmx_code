@@ -18,7 +18,7 @@ from apputils import set_topcue_status
 
 # Strings zur Identifizierung der Midi-Kommandos:
 midi_commandlist =  ["TopcueClear", "CuelistGo", "CuelistPause", 
-                "CuelistPlus", "CuelistMinus", "CuelistBack"]
+                "CuelistPlus", "CuelistMinus", "CuelistBack", "MasterFader"]
 # Sammlung der Infos zu Midi-Commands abseits von den Commands, die in den
 # diversen csv-Tabellen eingetragen sind: cuefader, cuebutton, cuelist-pages
 # 
@@ -153,7 +153,7 @@ def eval_midi (pos, msg):
                                        "data":message})
                     midifader_monitor ("cuelist", fader-globs.SHIFT ,msg.value)
                 else: # Zusatz
-                    pass
+                    eval_extrafader (pos, ctrlindex, msg.value)
         elif msg.control in globs.midi.in_ports[pos].buttons: # Button erkannt
             ctrlindex = globs.midi.in_ports[pos].buttons.index (msg.control)
             if ctrlindex in globs.midi.in_buttons[pos]:
@@ -171,7 +171,7 @@ def eval_midi (pos, msg):
                 # keine Werte zwischen SHIFT und 2*SHIFT
                 else: # Zusatz-Buttons
                     # print (f"Special Midibutton: {data}")
-                    eval_midicommand (pos, ctrlindex, msg.value)
+                    eval_extrabutton (pos, ctrlindex, msg.value)
 
 
 def midifader_monitor (table: str, index:int, level:int):
@@ -197,6 +197,7 @@ def get_midicommandlist ():
     """
     midi_commanddict.clear ()
     globs.midi.clear_lists ("button", lo=2*globs.SHIFT, hi=3*globs.SHIFT)
+    globs.midi.clear_lists ("fader",  lo=2*globs.SHIFT, hi=3*globs.SHIFT)
     if globs.PYTHONANYWHERE == "false":
         filename = globs.cfg.get ("midi_buttons")
         csvfile = Csvfile (os.path.join (globs.room.midibuttonpath(), filename))
@@ -209,9 +210,6 @@ def get_midicommandlist ():
             ctype = content[count]["Type"] # 'Button' oder 'Fader'
             incnr, outcnr, ctrl = check_midicontroller (incnr,outcnr,ctrl)
             # Eintrag in command-Dict:
-            # if ctrl:
-            #     key = str(incnr-1) + '-' + str(ctrl-1)
-            #     midi_commanddict[key] = content[count]
             # Midi-Input:
             if incnr and ctrl:
                 key = str(incnr-1) + '-' + str(ctrl-1)
@@ -232,8 +230,8 @@ def get_midicommandlist ():
                     globs.midi.out_faders[outcnr-1][ctrl-1] = count + 2*globs.SHIFT
 
 
-def eval_midicommand (device:int, ctrl:int, val:int):
-    """ Midi-Input aus den Zusatz-Kommands auswerten
+def eval_extrabutton (device:int, ctrl:int, val:int):
+    """ Midi-Input Button aus den Zusatz-Kommands auswerten
     
     device: Geräte-Nummer ab 0
     ctrl: Controller-Nummer ab 0
@@ -278,6 +276,36 @@ def eval_midicommand (device:int, ctrl:int, val:int):
             if index in range (len (globs.cltable)):
                 globs.cltable[index].go ("-1")
                 pausebutton_monitor (index)
+
+
+def eval_extrafader (device:int, ctrl:int, val:int):
+    """ MIDI-Input Fader aus den Zusatz-Kommandos auswerten
+    
+    device: Geräte-Nummer ab 0
+    ctrl: Controller-Nummer ab 0
+    val: Controller-Wert, 0 <= val <= 127. Nur Drücken auswerten, 
+         Loslassen nicht auswerten
+    mit mido-Modul kein Debuggen möglich? 
+    Leider mit mido.port.callback nicht, daher Midi-Input mit Thread
+    """
+    key = str(device) + '-' + str(ctrl)
+    # print ("key: ", key, ", val: ", val)
+    if key in midi_commanddict:
+        line = midi_commanddict[key]
+        # aktuell keine Fader mit Parameter
+        # if len (line["Parameter"]):
+        #     params = line["Parameter"].split()
+        #     index = int(params[0]) - 1
+        # else:
+        #     index = -1
+        if line["Command"] == "MasterFader" :
+            globs.Cue.contrib.masterlevel = float(val) / 127
+            message = {"who":"masterslider",
+                       "data":str(val * 2)}
+            globs.sync_data.append ({"event_name":"update slidervalue",
+                                       "data":message})
+
+
 
 
 def pausebutton_monitor (index:int):
