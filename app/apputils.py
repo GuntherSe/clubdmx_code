@@ -25,6 +25,8 @@ from functools import wraps
 from flask_login import current_user
 from flask import flash, redirect, url_for, request, session
 from startup_levels import button_locations, fader_locations
+from midiutils import set_topcue_status, press_cuebutton
+
 
 # --- Redirect back Funktion -------------------------------------
 # siehe: https://stackoverflow.com/questions/14277067/redirect-back-in-flask
@@ -138,25 +140,6 @@ def dbrestore (usbsrc:str, dbname:str = "") -> dict:
     mount.mnt.unmount (usbsrc)
     return ret
 
-
-# --- Topcue Status ---------------------------------------------------
-def set_topcue_status (status:int):
-    """ Status des topcue.content an Website schicken
-
-    Eintrag in sysnc_data. Der Aufruf dieser Funktion kommt vor der
-    Änderung des Topcue-Status. Damit ist gewährleistet, dass die 
-    sync_data Liste nur bei Änderungen beschickt wird.    
-    """
-    if status == 1:
-        if not len (globs.topcue.content):
-            # socketio.emit ("update topcue status", {"status":"true"})
-            globs.sync_data.append ({"event_name":"update topcue status",
-                            "data":{"status":"true"}})
-    else:
-        if len (globs.topcue.content):
-            # socketio.emit ("update topcue status", {"status":"false"})
-            globs.sync_data.append ({"event_name":"update topcue status",
-                            "data":{"status":"false"}})
 
 # --- Clipboard Status --------------------------------------------------
 def set_clipboard_status (status:int):
@@ -290,6 +273,23 @@ def evaluate_osc (address, *arg):
             cl = search_for (id, globs.cltable)
             if cl and  0.0 <= val <= 1.0:
                 cl.level = val
+                message = {"who":"cuelistfader-"+str(num-1), 
+                            "data":str(val * 255)}
+                globs.sync_data.append ({"event_name":"update slidervalue",
+                                    "data":message})
+
+        elif command == "/masterfader":
+            try:
+                val = float (args[0])
+            except:
+                return
+            if 0.0 <= val <= 1.0:
+                globs.Cue.contrib.masterlevel = val
+                message = {"who":"masterslider",
+                           "data":str(val * 255)}
+                globs.sync_data.append ({"event_name":"update slidervalue",
+                                       "data":message})
+
 
         # cuebuttons:
         elif command in buttonaddr:
@@ -302,7 +302,7 @@ def evaluate_osc (address, *arg):
             id = button_locations[pos] + str (num-1)
             but = search_for (id, globs.buttontable)
             if but:
-                but.go ()
+                press_cuebutton (globs.buttontable.index(but))
 
         #cuefader
         elif command in faderaddr:
@@ -317,4 +317,8 @@ def evaluate_osc (address, *arg):
             fader = search_for (id, globs.fadertable)
             if fader and 0.0 <= val <= 1.0:
                 fader.level = val
-                
+                message = {"who":"cuefader-"+str(num-1), 
+                            "data":str(val * 255)}
+                globs.sync_data.append ({"event_name":"update slidervalue",
+                                    "data":message})
+                                    

@@ -17,7 +17,7 @@ from cue import Cue
 from startup_func import make_fadertable, make_cuebuttons
 from apputils import standarduser_required, admin_required, redirect_url
 # from csv_views import evaluate_option
-from apputils import set_topcue_status
+from midiutils import set_topcue_status
 
 
 import globs

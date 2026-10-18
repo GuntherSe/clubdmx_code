@@ -38,7 +38,8 @@ class OscInput (threading.Thread):
         self.dispatcher.set_default_handler (self.default_handler)
 
         self.addresses = ["/button", "/exebutton1", "/exebutton2", "/fader",
-           "/exefader", "/head", "/clear", "/go", "/pause", "/cuelistfader"]
+           "/exefader", "/head", "/clear", "/go", "/pause", "/cuelistfader",
+           "/masterfader"]
         for addr in self.addresses:
             self.dispatcher.map (addr, self.eval)
 

@@ -14,7 +14,7 @@ import os
 import os.path
 
 from csvfileclass import Csvfile
-from apputils import set_topcue_status
+# from apputils import set_topcue_status
 
 # Strings zur Identifizierung der Midi-Kommandos:
 midi_commandlist =  ["TopcueClear", "CuelistGo", "CuelistPause", 
@@ -24,6 +24,24 @@ midi_commandlist =  ["TopcueClear", "CuelistGo", "CuelistPause",
 # 
 # Der Inhalt der Midibutton-Tabelle als Dict ist hier:
 midi_commanddict = {}
+
+# --- Topcue Status ---------------------------------------------------
+def set_topcue_status (status:int):
+    """ Status des topcue.content an Website schicken
+
+    Eintrag in sysnc_data. Der Aufruf dieser Funktion kommt vor der
+    Änderung des Topcue-Status. Damit ist gewährleistet, dass die 
+    sync_data Liste nur bei Änderungen beschickt wird.    
+    """
+    if status == 1:
+        if not len (globs.topcue.content):
+            globs.sync_data.append ({"event_name":"update topcue status",
+                            "data":{"status":"true"}})
+    else:
+        if len (globs.topcue.content):
+            globs.sync_data.append ({"event_name":"update topcue status",
+                            "data":{"status":"false"}})
+
 
 def command_choices () ->list:
     """ choices-Liste aus Commands, die mit Midi-Buttons ausgelöst werden

@@ -71,19 +71,19 @@ function hideSecondNav () {
 
 // ---------------------------------------------------------------------
 // Slider in cuefader und executer:
-function activateSlider (num, sliderlevel, fadertype) {
-  var numstring = num.toString();
-  // var cmdstring;
-  // if (fadertype == "cuefader") {
-  //   // cuefader
-  //   cmdstring = "/sliderlevel/" + numstring;
-  // } else {
-  //   // cuelist level fader
-  //   cmdstring = "/cuelistlevel/" + numstring;
-  // }
-  $("#"+ fadertype + "-" + +numstring)
-    .val(sliderlevel[num]);
-}
+// function activateSlider (num, sliderlevel, fadertype) {
+//   var numstring = num.toString();
+//   // var cmdstring;
+//   // if (fadertype == "cuefader") {
+//   //   // cuefader
+//   //   cmdstring = "/sliderlevel/" + numstring;
+//   // } else {
+//   //   // cuelist level fader
+//   //   cmdstring = "/cuelistlevel/" + numstring;
+//   // }
+//   $("#"+ fadertype + "-" + +numstring)
+//     .val(sliderlevel[num]);
+// }
 
 // ----------------------------------------------------------------------------
 // Buttons in cuebuttons und executer:

@@ -9,7 +9,7 @@ import csv
 from flask import Blueprint, render_template, request, json 
 from flask import session
 from common_views import check_clipboard
-from apputils import set_topcue_status
+from midiutils import set_topcue_status
 
 import globs
 

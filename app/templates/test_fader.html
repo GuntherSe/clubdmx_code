@@ -89,16 +89,30 @@
     });
 
     sliderwidth = $(".col-8").width();
-    // slider erzeugen:
-    var sliderlevels;
-    $.get ("/getinfo/sliderval", function (data) {
-      sliderlevels = $.parseJSON(data);
-      var i;
-      for (i = 0; i < sliderlevels.length; i++){
-        activateSlider (i, sliderlevels, "cuefader");
-      };
-      $(".slider").width (sliderwidth);
+
+    // An event handler for a change of value 
+    $('input.inputslider').on('input', function(event) {
+        socket.emit('slider value changed', {
+            who: $(this).attr('id'),
+            fadertype: "cuefader",
+            data: $(this).val()
+        });
+        return false;
     });
+  
+    // init sliderposition:
+    socket.emit ("get slider position", {fadertype: "cuefader"});
+
+    // slider erzeugen:
+//    var sliderlevels;
+//    $.get ("/getinfo/sliderval", function (data) {
+      // sliderlevels = $.parseJSON(data);
+      // var i;
+      // for (i = 0; i < sliderlevels.length; i++){
+        // activateSlider (i, sliderlevels, "cuefader");
+    //   };
+    //   $(".slider").width (sliderwidth);
+    // });
 
     initMouseMode ();
     activateCuedetails ();

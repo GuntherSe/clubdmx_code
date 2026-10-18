@@ -11,7 +11,9 @@ from flask import url_for, flash, redirect, session, make_response
 from flask_login import login_required, current_user
 
 from apputils import standarduser_required, redirect_url
-from apputils import calc_mixoutput, set_topcue_status
+from apputils import calc_mixoutput 
+from midiutils import set_topcue_status
+
 
 from csvfileclass import Csvfile
 from csvnameclass import Csvname

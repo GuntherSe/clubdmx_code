@@ -280,7 +280,7 @@ class Cuelist (Cuelistbase):
                     self.increment_nextprep ()
             # bei GO nach Pause bleibt nextpos gleich
             self.logger.debug ("GO next...")
-        elif cuenr == "-1": # go back
+        elif cuenr == "-1" or cuenr == -1: # go back
             if self.is_paused:
                 # self.nextpos = self.currentpos
                 self.nextprep = self.currentpos
