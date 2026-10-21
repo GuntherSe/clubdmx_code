@@ -47,14 +47,37 @@
         $("#mixoutput").html (mix);
       },
       complete: function () {
-        setTimeout (periodic_mixstatus, 1000);
+        setTimeout (periodic_mixstatus, 10000);
       }
     }); // ende $.ajax
   }
 
+  socket.on ("update mix output", function (data) {
+    // reveive mix output and render to output.html
+    // let data = msg.data;
+    // var mix = $.parseJSON(msg);
+    var mix = $.parseJSON(data);
+    var item;
+    $("#mixoutput").html ('<div id="mixrow" class="row"></div>');
+    for (var i=0; i < mix.length; i++) {
+      item = mix[i].split (":");
+      // $("#mixoutput").append ("X" + item[0] + "X" + item[1] + "X ");
+      $("#mixrow").append ('<div class="mix-element col-2 col-md-1">'
+        + '<div class="universum">' + item[0] + '</div>' 
+        + '<div class="mixval">' + item[1] + '</div>' 
+        + '</div>');
+      };
+    }
+  )
+
   $("document").ready (function () {
 
-    periodic_mixstatus ();
+    function startTimer () {
+      timer = setInterval (function () {
+        socket.emit ("get mix output")}, 200);
+    }
+    startTimer ();
+    // periodic_mixstatus ();
   });     // ende document ready
 </script>
 {% endblock %}

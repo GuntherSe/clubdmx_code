@@ -273,7 +273,8 @@ def evaluate_osc (address, *arg):
             cl = search_for (id, globs.cltable)
             if cl and  0.0 <= val <= 1.0:
                 cl.level = val
-                message = {"who":"cuelistfader-"+str(num-1), 
+                message = {"who":"cuelistfader-"
+                           + str(globs.cltable.index (cl)), 
                             "data":str(val * 255)}
                 globs.sync_data.append ({"event_name":"update slidervalue",
                                     "data":message})
@@ -317,7 +318,8 @@ def evaluate_osc (address, *arg):
             fader = search_for (id, globs.fadertable)
             if fader and 0.0 <= val <= 1.0:
                 fader.level = val
-                message = {"who":"cuefader-"+str(num-1), 
+                message = {"who":"cuefader-"
+                           + str(globs.fadertable.index (fader)), 
                             "data":str(val * 255)}
                 globs.sync_data.append ({"event_name":"update slidervalue",
                                     "data":message})

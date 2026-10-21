@@ -5,9 +5,10 @@
 from threading import Lock
 from app import socketio
 from flask_socketio import emit
-# from flask import session
+from flask import render_template, json 
 
 from midiutils import press_cuebutton, midifader_monitor, midi_commandlist
+from apputils import calc_mixoutput
 from cuelist_utils import cuedata_to_dict
 from visudata import Visudata
 import time
@@ -66,7 +67,7 @@ def slidervalue_changed(message):
         globs.Cue.contrib.masterlevel = float(level) / 255
 
     curtime = time.time()    
-    if curtime > faderupdate_time + 0.1: # 1/10 sec
+    if curtime >= faderupdate_time + 0.05: # 5/100 sec
         emit('update slidervalue', message, broadcast=True)
 
 
@@ -87,7 +88,7 @@ def get_sliderposition (message):
         data.append (int (255 * globs.Cue.contrib.masterlevel))
     ret["data"] = data
     ret["fadertype"] = slidertype
-    emit ("init slider position", ret) #, broadcast=True)
+    emit ("init slider position", ret)
 
 
 @socketio.on ("cuebutton pressed")
@@ -98,6 +99,25 @@ def button_pressed (message):
     index = int (message["index"])
     press_cuebutton (index)
 
+
+@socketio.on ("get mix output")
+def get_dmx_output ():
+    """ emit mix output 
+    """
+    ret = {}
+    items = []
+    unis = globs.patch.get_unis ()
+    if globs.PYTHONANYWHERE == "true":
+        # keine threads, daher aktuelle Berechnungen machen:
+        calc_mixoutput ()
+    for uni in unis:
+        mix = globs.patch.show_mix (uni)
+        for i, val in enumerate (mix):
+            if val:
+                # items.append (f"{uni}-{i+1}:{val}")
+                items.append (f"{uni}-{i+1}:{val}")
+    # ret["data"] = render_template ("output-content.html", items = items)
+    emit ("update mix output", json.dumps (items))
 
 # --- Attribute view -----------------------------------------------------
 

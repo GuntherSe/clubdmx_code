@@ -399,26 +399,26 @@ function selection_headslider () {
   });
 }
 
-function periodic_attribstatus () {
-  $.ajax ({
-    url: "/getinfo/attributes", 
-    success: function(data){
-      var attributes = $.parseJSON(data);
-      var cssclass, color;
-      for (var key in attributes) {
-        cssclass = ".head-" + key;
-        color = "rgb("  + attributes[key][1] + "," 
-                        + attributes[key][2] + ","
-                        + attributes[key][3] + ")";
-        $(cssclass).css ("height", attributes[key][0])
-                   .css ("background-color", color) ;        
-      }
-    },
-    complete: function () {
-      setTimeout (periodic_attribstatus, 1000);
-    }
-  }); // ende $.ajax 
-}
+// function periodic_attribstatus () {
+//   $.ajax ({
+//     url: "/getinfo/attributes", 
+//     success: function(data){
+//       var attributes = $.parseJSON(data);
+//       var cssclass, color;
+//       for (var key in attributes) {
+//         cssclass = ".head-" + key;
+//         color = "rgb("  + attributes[key][1] + "," 
+//                         + attributes[key][2] + ","
+//                         + attributes[key][3] + ")";
+//         $(cssclass).css ("height", attributes[key][0])
+//                    .css ("background-color", color) ;        
+//       }
+//     },
+//     complete: function () {
+//       setTimeout (periodic_attribstatus, 1000);
+//     }
+//   }); // ende $.ajax 
+// }
 function attribstatus () {
   // Attribute anzeigen
   $.get ("/getinfo/attributes", function(data) {

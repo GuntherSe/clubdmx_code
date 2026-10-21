@@ -100,8 +100,8 @@ class OscInput (threading.Thread):
         if not self.in_port:
             self.in_port = newport
 
-            # self.server = osc_server.ThreadingOSCUDPServer ( 
-            self.server = osc_server.BlockingOSCUDPServer ( 
+            self.server = osc_server.ThreadingOSCUDPServer ( 
+            # self.server = osc_server.BlockingOSCUDPServer ( 
                 ("0.0.0.0", self.in_port), self.dispatcher)
             threading.Thread.__init__ (self, target=self.server.serve_forever,
                                        daemon=True)

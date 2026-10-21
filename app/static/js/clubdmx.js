@@ -241,8 +241,9 @@ socket.on('after connect', function(msg) {
 socket.on('update slidervalue', function(msg) {
     //console.log('slider value updated');
     let elem = $('#' + msg.who);
-    if (!elem.is (":active")) {
-      elem.val(msg.data);}
+    // if (!elem.is (":active")) {
+      elem.val(msg.data);
+    // }
 });
 
 socket.on ("init slider position", function(msg) {
